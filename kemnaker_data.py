@@ -3,7 +3,7 @@ import json
 import ssl
 import urllib.request
 import urllib.error
-from datetime import datetime, date
+from datetime import datetime, date, timezone, timedelta
 
 from paths import is_frozen, base_dir, resource_path
 
@@ -154,11 +154,18 @@ def format_date_id(dt_str):
         return ""
     try:
         dt = datetime.fromisoformat(dt_str)
+        wib = timezone(timedelta(hours=7))
+        if dt.tzinfo is None:
+            if os.environ.get("VERCEL") or dt.hour < 7:
+                dt = dt.replace(tzinfo=timezone.utc).astimezone(wib)
+        else:
+            dt = dt.astimezone(wib)
         bulan = [
             "", "Januari", "Februari", "Maret", "April", "Mei", "Juni",
             "Juli", "Agustus", "September", "Oktober", "November", "Desember"
         ]
-        return f"{dt.day} {bulan[dt.month]} {dt.year}, {dt.strftime('%H:%M')} WIB"
+        time_str = dt.strftime('%H:%M')
+        return f"{dt.day} {bulan[dt.month]} {dt.year}, {time_str} WIB"
     except Exception:
         return dt_str[:10]
 
@@ -248,10 +255,11 @@ def transform_unit_data(raw_units_dict, last_updated=None):
             "officials": officials
         })
         
+    now_iso = datetime.now(timezone.utc).isoformat()
     return {
         "success": True,
-        "last_updated": last_updated or datetime.now().isoformat(),
-        "date_formatted": format_date_id(last_updated or datetime.now().isoformat()),
+        "last_updated": last_updated or now_iso,
+        "date_formatted": format_date_id(last_updated or now_iso),
         "units": units_list
     }
 
@@ -325,7 +333,7 @@ def get_kemnaker_data(force_refresh=False):
             with open(fallback_path, "r", encoding="utf-8") as f:
                 raw_fallback = json.load(f)
                 cache_data = {
-                    "last_updated": datetime.now().isoformat(),
+                    "last_updated": datetime.now(timezone.utc).isoformat(),
                     "units_dict": raw_fallback
                 }
         except Exception:
@@ -335,7 +343,11 @@ def get_kemnaker_data(force_refresh=False):
     if cache_data and "last_updated" in cache_data:
         try:
             dt = datetime.fromisoformat(cache_data["last_updated"])
-            is_today = (dt.date() == date.today())
+            wib = timezone(timedelta(hours=7))
+            today_wib = datetime.now(wib).date()
+            dt_wib = dt.astimezone(wib) if dt.tzinfo else (dt + timedelta(hours=7) if os.environ.get("VERCEL") or dt.hour < 7 else dt)
+            dt_date = dt_wib.date() if hasattr(dt_wib, "date") else dt.date()
+            is_today = (dt_date == today_wib)
         except Exception:
             is_today = False
 
@@ -347,7 +359,7 @@ def get_kemnaker_data(force_refresh=False):
         fresh_dict = fetch_from_kemnaker_portal()
         if fresh_dict and len(fresh_dict) >= len(UNITS) // 2:
             new_cache = {
-                "last_updated": datetime.now().isoformat(),
+                "last_updated": datetime.now(timezone.utc).isoformat(),
                 "units_dict": fresh_dict
             }
             try:

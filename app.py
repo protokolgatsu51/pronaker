@@ -101,6 +101,11 @@ def proxy_kemnaker_photo():
     if not raw_url or not raw_url.startswith("https://portal.kemnaker.go.id/"):
         return ("Invalid URL", 400)
     
+    # On Vercel or cloud environments where Kemnaker portal blocks datacenter IPs (403),
+    # redirect client browser to fetch directly from portal.kemnaker.go.id
+    if os.environ.get("VERCEL"):
+        return redirect(raw_url, code=302)
+
     fname = hashlib.md5(raw_url.encode("utf-8")).hexdigest() + os.path.splitext(raw_url)[1]
     if not os.path.splitext(fname)[1]:
         fname += ".jpg"
@@ -114,14 +119,17 @@ def proxy_kemnaker_photo():
         ctx = ssl.create_default_context()
         ctx.check_hostname = False
         ctx.verify_mode = ssl.CERT_NONE
-        req = urllib.request.Request(raw_url, headers={"User-Agent": "Mozilla/5.0"})
+        req = urllib.request.Request(raw_url, headers={
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+            "Referer": "https://portal.kemnaker.go.id/"
+        })
         with urllib.request.urlopen(req, timeout=8, context=ctx) as res:
             content = res.read()
             with open(cache_file, "wb") as f:
                 f.write(content)
         return send_file(cache_file)
     except Exception as e:
-        return (f"Failed to fetch photo: {e}", 502)
+        return redirect(raw_url, code=302)
 
 
 from generate import (

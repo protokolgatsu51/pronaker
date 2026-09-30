@@ -2197,6 +2197,9 @@
         font-size: 19px;
       }
     }
+
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    .spin-animation { animation: spin 0.8s linear infinite; }
   </style>
 </head>
 
@@ -3101,7 +3104,7 @@
             item.dataset.searchText = `${nameText} ${posText}`;
 
             const rawPhoto = opt.dataset.photo || "";
-            const photoUrl = rawPhoto ? `/api/kemnaker-photo?url=${encodeURIComponent(rawPhoto)}` : "";
+            const photoUrl = rawPhoto || "";
             const personSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`;
             let avatarHtml = "";
             if (photoUrl) {
@@ -3218,7 +3221,7 @@
           if (iconDiv) {
             const selectedOpt = this.selectEl.options[this.selectEl.selectedIndex];
             const rawSelPhoto = (selectedOpt && selectedOpt.dataset.photo) ? selectedOpt.dataset.photo : "";
-            const selPhoto = rawSelPhoto ? `/api/kemnaker-photo?url=${encodeURIComponent(rawSelPhoto)}` : "";
+            const selPhoto = rawSelPhoto || "";
             if (selPhoto && this.selectEl.value !== "") {
               iconDiv.innerHTML = `<img src="${escapeHtml(selPhoto)}" style="width: 22px; height: 22px; border-radius: 6px; object-fit: cover; display: block;" alt="" onerror="this.remove()">`;
             } else {
@@ -3504,17 +3507,36 @@
       const batchStatusText = document.getElementById("kemnakerBatchStatusText");
       const dateBadge = document.getElementById("kemnakerDateBadge");
       const batchDateBadge = document.getElementById("kemnakerBatchDateBadge");
+      const refreshBtns = document.querySelectorAll(".btn-bubble-action[onclick*='refreshKemnakerData']");
 
       if (!forceRefresh && kemnakerDataCache && kemnakerDataCache.units && kemnakerDataCache.units.length > 0) {
         populateKemnakerUnits(kemnakerDataCache.units);
         return;
       }
 
-      if (statusText) statusText.textContent = "⏳ Mengambil data bagan kemnaker.go.id...";
-      if (batchStatusText) batchStatusText.textContent = "⏳ Mengambil data bagan kemnaker.go.id...";
+      refreshBtns.forEach(b => {
+        b.disabled = true;
+        if (!b.dataset.origHtml) b.dataset.origHtml = b.innerHTML;
+        b.innerHTML = `
+          <svg class="spin-animation" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="2" x2="12" y2="6"></line>
+            <line x1="12" y1="18" x2="12" y2="22"></line>
+            <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+            <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+            <line x1="2" y1="12" x2="6" y2="12"></line>
+            <line x1="18" y1="12" x2="22" y2="12"></line>
+            <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+            <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+          </svg>
+          Memperbarui...
+        `;
+      });
+
+      if (statusText) statusText.textContent = "⏳ Memperbarui data struktur dari kemnaker.go.id...";
+      if (batchStatusText) batchStatusText.textContent = "⏳ Memperbarui data struktur dari kemnaker.go.id...";
 
       try {
-        const url = "/api/kemnaker-units" + (forceRefresh ? "?refresh=1" : "");
+        const url = "/api/kemnaker-units" + (forceRefresh ? "?refresh=1&_t=" + Date.now() : "");
         const res = await fetch(url);
         const data = await res.json();
         if (data && data.success && data.units && data.units.length > 0) {
@@ -3529,14 +3551,38 @@
             batchStatusText.textContent = "📅 Data terupdate: " + (data.date_formatted || "Hari ini");
           }
           populateKemnakerUnits(data.units);
+
+          if (forceRefresh) {
+            refreshBtns.forEach(b => {
+              b.innerHTML = `✓ Terperbarui`;
+              b.style.color = "#059669";
+              b.style.borderColor = "#10b981";
+            });
+            setTimeout(() => {
+              refreshBtns.forEach(b => {
+                b.innerHTML = b.dataset.origHtml || "Perbarui Data";
+                b.style.color = "";
+                b.style.borderColor = "";
+                b.disabled = false;
+              });
+            }, 2500);
+          }
         } else {
           if (statusText) statusText.textContent = "⚠️ Menggunakan data offline yang tersedia.";
           if (batchStatusText) batchStatusText.textContent = "⚠️ Menggunakan data offline yang tersedia.";
+          refreshBtns.forEach(b => {
+            b.disabled = false;
+            if (b.dataset.origHtml) b.innerHTML = b.dataset.origHtml;
+          });
         }
       } catch (err) {
         console.error("Gagal load kemnaker data:", err);
         if (statusText) statusText.textContent = "⚠️ Menggunakan data cadangan lokal.";
         if (batchStatusText) batchStatusText.textContent = "⚠️ Menggunakan data cadangan lokal.";
+        refreshBtns.forEach(b => {
+          b.disabled = false;
+          if (b.dataset.origHtml) b.innerHTML = b.dataset.origHtml;
+        });
       }
     }
 
