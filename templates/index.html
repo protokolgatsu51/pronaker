@@ -1,0 +1,4758 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Name Table Kemnaker RI</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo_kemnaker.png') }}">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='logo_kemnaker.png') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600;1,700&display=swap"
+    rel="stylesheet">
+
+  <style>
+    @font-face {
+      font-family: "MyriadPro";
+      src: url("{{ url_for('static', filename='fonts/MYRIADPRO-REGULAR.woff') }}") format("woff");
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: "MyriadPro";
+      src: url("{{ url_for('static', filename='fonts/MYRIADPRO-BOLD.woff') }}") format("woff");
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    :root {
+      --kemnaker-blue: #15406a;
+      --kemnaker-blue-dark: #0f3356;
+      --kemnaker-blue-light: #1e5a94;
+      --kemnaker-accent-yellow: #ffc233;
+      --primary-blue: #15406a;
+      --primary-hover: #0f3356;
+      --text-navy: #0b223f;
+      --text-muted: #64748b;
+      --bg-light: #f8fafc;
+      --border-color: #e2e8f0;
+      --card-shadow: 0 10px 30px -5px rgba(21, 64, 106, 0.12), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      max-width: 100vw;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body {
+      font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-navy);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* --- Top Navbar --- */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: #ffffff;
+      border-bottom: 1px solid #eef2f6;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+      height: 72px;
+    }
+
+    .nav-container {
+      max-width: 1240px;
+      height: 100%;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .kemnaker-brand-icon {
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+      transition: transform 0.2s ease;
+    }
+
+    .brand-divider {
+      width: 1.5px;
+      height: 24px;
+      background: #cbd5e1;
+      margin: 0 2px;
+    }
+
+    .brand-logo:hover .kemnaker-brand-icon {
+      transform: scale(1.03);
+    }
+
+    .brand-title {
+      display: inline-flex;
+      gap: 5px;
+      font-size: 19px;
+      font-weight: 800;
+      color: #15406a;
+      letter-spacing: -0.3px;
+      line-height: 1.2;
+    }
+
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      list-style: none;
+    }
+
+    .nav-link {
+      font-size: 14px;
+      font-weight: 600;
+      color: #475569;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 9999px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      color: var(--kemnaker-blue);
+      background: #eef3f8;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 9px 20px;
+      border-radius: 9999px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+      outline: none;
+    }
+
+    .btn-outline {
+      background: #ffffff;
+      color: #1e293b;
+      border: 1.5px solid #cbd5e1;
+    }
+
+    .btn-outline:hover {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+      color: #0f172a;
+    }
+
+    .btn-primary-blue {
+      background: var(--kemnaker-blue);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(21, 64, 106, 0.35);
+    }
+
+    .btn-primary-blue:hover {
+      background: var(--kemnaker-blue-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(21, 64, 106, 0.45);
+    }
+
+    /* --- Hero Section --- */
+    .hero-section {
+      position: relative;
+      background: radial-gradient(circle at 85% 20%, #1a4e80 0%, #15406a 45%, #0b243d 100%);
+      color: #ffffff;
+      overflow: hidden;
+      padding: 54px 24px 0;
+      min-height: calc(100vh - 64px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* Concentric circles / blueprint background pattern (identical to Maganghub) */
+    .hero-pattern {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle at 20% 35%, rgba(255, 255, 255, 0.05) 0, rgba(255, 255, 255, 0.05) 80px, transparent 81px),
+        radial-gradient(circle at 20% 35%, rgba(255, 255, 255, 0.03) 0, rgba(255, 255, 255, 0.03) 160px, transparent 161px),
+        radial-gradient(circle at 80% 50%, rgba(255, 255, 255, 0.04) 0, rgba(255, 255, 255, 0.04) 220px, transparent 221px),
+        radial-gradient(circle at 80% 50%, rgba(255, 255, 255, 0.03) 0, rgba(255, 255, 255, 0.03) 380px, transparent 381px),
+        radial-gradient(circle, rgba(255, 255, 255, 0.12) 1.2px, transparent 1.2px);
+      background-size: auto, auto, auto, auto, 36px 36px;
+      opacity: 0.9;
+    }
+
+    .hero-container {
+      position: relative;
+      width: 100%;
+      max-width: 1240px;
+      margin: 0 auto;
+    }
+
+    .hero-header {
+      max-width: 820px;
+      margin-bottom: 28px;
+    }
+
+    .hero-title {
+      font-size: 34px;
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.8px;
+      margin-bottom: 12px;
+    }
+
+    .highlight-silver {
+      color: #e2e8f0;
+      background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 50%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-style: italic;
+      font-weight: 800;
+      position: relative;
+    }
+
+    .hero-desc {
+      font-size: 11.5px;
+      color: #e2e8f0;
+      line-height: 1.6;
+      max-width: 680px;
+      font-weight: 400;
+      opacity: 0.95;
+    }
+
+    /* --- Dashboard Layout --- */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 460px minmax(0, 1fr);
+      width: 100%;
+      gap: 32px;
+      align-items: start;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 1060px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* --- Left Side: Generator Control Card --- */
+    .generator-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.25);
+      color: var(--text-navy);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+
+    .tab-switch-wrap {
+      display: flex;
+      background: #f1f5f9;
+      padding: 4px;
+      border-radius: 12px;
+      margin-bottom: 22px;
+      gap: 4px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #64748b;
+      background: transparent;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn.active {
+      background: var(--kemnaker-blue);
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(21, 64, 106, 0.35);
+    }
+
+    .tab-btn:hover:not(.active) {
+      color: var(--kemnaker-blue);
+      background: rgba(21, 64, 106, 0.05);
+    }
+
+    /* --- Navbar Source Switcher (TAMU vs KEMNAKER) --- */
+    .nav-source-switcher {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      background: #eef2f6;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 9999px;
+      padding: 3.5px;
+      gap: 2px;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06);
+      user-select: none;
+      isolation: isolate;
+    }
+
+    /* Sliding pill / bubble indicator */
+    .nav-source-glider {
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-radius: 9999px;
+      background: var(--kemnaker-blue);
+      background: linear-gradient(135deg, var(--kemnaker-blue) 0%, #164673 100%);
+      box-shadow: 0 3px 12px rgba(21, 64, 106, 0.38), 0 1px 3px rgba(0, 0, 0, 0.12);
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0;
+      will-change: transform, width;
+    }
+
+    .nav-source-glider.ready {
+      opacity: 1;
+    }
+
+    .nav-source-glider.animated {
+      transition: transform 0.35s cubic-bezier(0.34, 1.25, 0.64, 1),
+        width 0.35s cubic-bezier(0.34, 1.25, 0.64, 1),
+        height 0.35s cubic-bezier(0.34, 1.25, 0.64, 1),
+        opacity 0.2s ease;
+    }
+
+    .nav-source-btn {
+      position: relative;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 13.5px;
+      font-weight: 600;
+      padding: 7px 18px;
+      border-radius: 9999px;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      outline: none;
+      color: #475569;
+      background: transparent !important;
+      box-shadow: none !important;
+      line-height: 1;
+      transition: color 0.25s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .nav-source-btn svg {
+      transition: transform 0.25s cubic-bezier(0.34, 1.3, 0.64, 1);
+    }
+
+    .nav-source-btn:hover:not(.active) {
+      color: var(--kemnaker-blue);
+      background: transparent !important;
+    }
+
+    .nav-source-btn:hover:not(.active) svg {
+      transform: scale(1.08);
+    }
+
+    .nav-source-btn.active {
+      color: #ffffff !important;
+      font-weight: 700;
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+
+    .nav-source-btn.active svg {
+      transform: scale(1.05);
+    }
+
+    .nav-source-btn .badge-source-tag {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 9999px;
+      background: #cbd5e1;
+      color: #475569;
+      line-height: 1;
+      letter-spacing: 0.2px;
+      transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+    }
+
+    .nav-source-btn.active .badge-source-tag {
+      background: var(--kemnaker-accent-yellow);
+      color: #0f172a;
+      transform: scale(1.02);
+    }
+
+    .kemnaker-selectors-box {
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 18px;
+    }
+
+    .kemnaker-sync-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+      font-size: 11px;
+      color: #64748b;
+    }
+
+    /* =========================================================================
+       Modern Custom Dropdown Component (Kemnaker Theme: Unit Kerja, Jabatan, Font)
+       ========================================================================= */
+    .custom-select-wrapper {
+      position: relative;
+      width: 100%;
+      user-select: none;
+      font-family: inherit;
+    }
+
+    .custom-select-wrapper.open {
+      z-index: 1000;
+    }
+
+    .feature-pill-card:has(.custom-select-wrapper.open) {
+      z-index: 60;
+    }
+
+    /* Trigger Button */
+    .custom-select-trigger {
+      width: 100%;
+      min-height: 44px;
+      padding: 11px 14px;
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 600;
+      font-family: inherit;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      cursor: pointer;
+      outline: none;
+      box-sizing: border-box;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+      text-align: left;
+    }
+
+    .custom-select-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #94a3b8;
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      transition: color 0.15s ease;
+    }
+
+    .custom-select-icon svg {
+      width: 18px;
+      height: 18px;
+      display: block;
+    }
+
+    .custom-select-trigger:hover:not(.disabled) .custom-select-icon,
+    .custom-select-wrapper.open .custom-select-icon {
+      color: var(--kemnaker-blue);
+    }
+
+    .custom-select-trigger.disabled .custom-select-icon {
+      color: #cbd5e1;
+    }
+
+    .custom-select-trigger:hover:not(.disabled) {
+      border-color: #94a3b8;
+      background: #fbfcfe;
+    }
+
+    .custom-select-wrapper.open .custom-select-trigger {
+      border-color: var(--kemnaker-blue);
+      box-shadow: 0 0 0 3.5px rgba(21, 64, 106, 0.12), 0 2px 8px rgba(21, 64, 106, 0.08);
+      background: #ffffff;
+    }
+
+    .custom-select-trigger.disabled {
+      background: #f1f5f9 !important;
+      color: #94a3b8 !important;
+      border-color: #e2e8f0 !important;
+      cursor: not-allowed !important;
+      box-shadow: none !important;
+    }
+
+    .custom-select-value {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: #0f172a;
+    }
+
+    .custom-select-trigger.disabled .custom-select-value,
+    .custom-select-value.is-placeholder {
+      color: #94a3b8;
+      font-weight: 500;
+    }
+
+    .custom-select-chevron {
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: transform 0.25s cubic-bezier(0.34, 1.3, 0.64, 1), color 0.2s ease;
+    }
+
+    .custom-select-wrapper.open .custom-select-chevron {
+      transform: rotate(180deg);
+      color: var(--kemnaker-blue);
+    }
+
+    .custom-select-trigger.disabled .custom-select-chevron {
+      color: #cbd5e1;
+    }
+
+    /* Floating Menu Panel */
+    .custom-select-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      z-index: 9999;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1.5px solid rgba(21, 64, 106, 0.16);
+      border-radius: 14px;
+      padding: 6px;
+      box-shadow: 0 16px 38px -4px rgba(15, 23, 42, 0.18), 0 6px 16px -2px rgba(21, 64, 106, 0.1);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-6px) scale(0.98);
+      transform-origin: top center;
+      transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+        visibility 0.2s;
+      pointer-events: none;
+    }
+
+    .custom-select-wrapper.open .custom-select-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .custom-select-wrapper.drop-up .custom-select-menu {
+      top: auto;
+      bottom: calc(100% + 6px);
+      transform-origin: bottom center;
+    }
+
+    /* Search Bar inside dropdown */
+    .custom-select-search-wrap {
+      position: relative;
+      padding: 4px;
+      margin-bottom: 6px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .custom-select-search-input {
+      width: 100%;
+      padding: 8px 10px 8px 32px;
+      font-size: 12.5px;
+      font-weight: 500;
+      font-family: inherit;
+      color: #1e293b;
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      outline: none;
+      box-sizing: border-box;
+      transition: all 0.15s ease;
+    }
+
+    .custom-select-search-input:focus {
+      background: #ffffff;
+      border-color: var(--kemnaker-blue);
+      box-shadow: 0 0 0 2.5px rgba(21, 64, 106, 0.12);
+    }
+
+    .custom-select-search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Options List */
+    .custom-select-options {
+      max-height: 250px;
+      overflow-y: auto;
+      padding: 2px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      scrollbar-width: thin;
+      scrollbar-color: #cbd5e1 transparent;
+    }
+
+    .custom-select-options::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    .custom-select-options::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+
+    .custom-select-options::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    /* Individual Option Item */
+    .custom-select-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #334155;
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+      line-height: 1.35;
+      text-decoration: none;
+    }
+
+    .custom-select-option:hover {
+      background: #f0f5fa;
+      color: var(--kemnaker-blue);
+      transform: translateX(2px);
+    }
+
+    .custom-select-option.selected {
+      background: linear-gradient(135deg, rgba(21, 64, 106, 0.09) 0%, rgba(21, 64, 106, 0.03) 100%);
+      color: var(--kemnaker-blue);
+      font-weight: 700;
+    }
+
+    .custom-select-opt-content {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .custom-select-opt-avatar {
+      position: relative;
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
+      background: #eef3f8;
+      color: #1e3a5f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+      border: 1px solid rgba(21, 64, 106, 0.12);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      transition: all 0.15s ease;
+    }
+
+    .custom-select-opt-avatar.has-photo {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+    }
+
+    .custom-select-opt-avatar img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: inherit;
+      display: block;
+      z-index: 1;
+    }
+
+    .custom-select-option:hover .custom-select-opt-avatar:not(.has-photo) {
+      background: #e2eaf2;
+      color: var(--kemnaker-blue);
+    }
+
+    .custom-select-option:hover .custom-select-opt-avatar.has-photo {
+      border-color: var(--kemnaker-blue);
+      transform: scale(1.04);
+    }
+
+    .custom-select-option.selected .custom-select-opt-avatar:not(.has-photo) {
+      background: var(--kemnaker-blue);
+      color: #ffffff;
+      border-color: var(--kemnaker-blue);
+      box-shadow: 0 2px 6px rgba(21, 64, 106, 0.35);
+    }
+
+    .custom-select-option.selected .custom-select-opt-avatar.has-photo {
+      border-color: var(--kemnaker-blue);
+      box-shadow: 0 0 0 2px rgba(21, 64, 106, 0.25);
+    }
+
+    .custom-select-opt-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .custom-select-opt-title {
+      display: block;
+      font-weight: 600;
+      color: inherit;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .custom-select-opt-sub {
+      display: block;
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 2px;
+      font-weight: 400;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .custom-select-option.selected .custom-select-opt-sub {
+      color: #1e3a5f;
+    }
+
+    .custom-select-opt-check {
+      color: var(--kemnaker-blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      opacity: 0;
+      transform: scale(0.6);
+      transition: all 0.18s cubic-bezier(0.34, 1.3, 0.64, 1);
+    }
+
+    .custom-select-option.selected .custom-select-opt-check {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .custom-select-empty {
+      padding: 18px 12px;
+      text-align: center;
+      font-size: 12.5px;
+      color: #94a3b8;
+      font-style: italic;
+    }
+
+    /* Compact variation for Feature Card / Bubble (Font Select) */
+    .custom-select-wrapper.compact {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .custom-select-wrapper.compact .custom-select-trigger {
+      padding: 5px 10px;
+      min-height: 30px;
+      font-size: 11.5px;
+      font-weight: 700;
+      border-radius: 8px;
+      border-color: #cbd5e1;
+      background: #ffffff;
+      color: #1e293b;
+    }
+
+    .custom-select-wrapper.compact .custom-select-trigger:hover {
+      border-color: #94a3b8;
+    }
+
+    .custom-select-wrapper.compact .custom-select-menu {
+      border-radius: 12px;
+      padding: 4px;
+      min-width: 220px;
+      box-shadow: 0 14px 32px -4px rgba(15, 23, 42, 0.2);
+    }
+
+    .custom-select-wrapper.compact .custom-select-option {
+      padding: 7px 10px;
+      font-size: 12px;
+      border-radius: 7px;
+    }
+
+    .custom-select-opt-badge {
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 9999px;
+      background: #ecfdf5;
+      color: #059669;
+      margin-left: 6px;
+      white-space: nowrap;
+      letter-spacing: 0.2px;
+    }
+
+    .custom-select-opt-badge.badge-kemnaker {
+      background: #eef3f8;
+      color: var(--kemnaker-blue);
+      border: 1px solid #cbdbe9;
+    }
+
+    .custom-select-opt-badge.badge-action {
+      background: #f1f5f9;
+      color: #475569;
+    }
+
+    .custom-select-divider {
+      height: 1px;
+      background: #e2e8f0;
+      margin: 4px 6px;
+    }
+
+    .form-input.input-readonly-kemnaker,
+    .bulk-textarea.input-readonly-kemnaker {
+      background-color: #f1f5f9 !important;
+      color: #1e293b !important;
+      cursor: not-allowed !important;
+      border-color: #cbd5e1 !important;
+      font-weight: 600;
+      box-shadow: none !important;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 7px;
+    }
+
+    .form-label .label-tag {
+      font-size: 11px;
+      font-weight: 600;
+      color: #15406a;
+      background: #eef3f8;
+      padding: 1px 8px;
+      border-radius: 4px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-wrapper .input-icon {
+      position: absolute;
+      left: 14px;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .input-wrapper.input-wrapper-textarea {
+      align-items: flex-start;
+    }
+
+    .input-wrapper.input-wrapper-textarea .input-icon {
+      top: 13px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 14px 12px 42px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      color: #0f172a;
+      background: #ffffff;
+      transition: all 0.2s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 3.5px rgba(21, 64, 106, 0.15);
+    }
+
+    textarea.form-input {
+      min-height: 80px;
+      resize: vertical;
+      padding-top: 10px;
+      line-height: 1.4;
+    }
+
+    .input-hint {
+      font-size: 11.5px;
+      color: #64748b;
+      margin-top: 5px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-submit-action {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 13px 20px;
+      background: linear-gradient(135deg, #15406a 0%, #0f3356 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 6px 18px rgba(21, 64, 106, 0.35);
+      margin-top: 6px;
+    }
+
+    .btn-submit-action:hover {
+      background: linear-gradient(135deg, #1a4e80 0%, #15406a 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 22px rgba(21, 64, 106, 0.45);
+    }
+
+    .output-action-group {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    @media (max-width: 440px) {
+      .output-action-group {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .btn-output-green {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 14px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+      white-space: nowrap;
+      text-decoration: none;
+      width: 100%;
+    }
+
+    .btn-output-green:hover {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(16, 185, 129, 0.45);
+    }
+
+    .btn-output-print {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 12px 14px;
+      background: #ffffff;
+      color: var(--kemnaker-blue);
+      border: 1.5px solid var(--kemnaker-blue);
+      border-radius: 12px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(21, 64, 106, 0.08);
+      white-space: nowrap;
+      width: 100%;
+    }
+
+    .btn-output-print:hover {
+      background: #eef3f8;
+      border-color: var(--kemnaker-blue-dark);
+      color: var(--kemnaker-blue-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(21, 64, 106, 0.16);
+    }
+
+    /* Bulk Input Tab Styles */
+    .bulk-info-banner {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #166534;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      line-height: 1.45;
+      margin-bottom: 14px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .bulk-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .bulk-counter-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #eef3f8;
+      color: #15406a;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .bulk-btn-group {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-bulk-tool {
+      background: #f8fafc;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+      padding: 4px 11px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-bulk-tool:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+      border-color: #94a3b8;
+    }
+
+    .bulk-textarea {
+      width: 100%;
+      min-height: 175px;
+      padding: 12px 14px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 10px;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 12.5px;
+      line-height: 1.5;
+      color: #1e293b;
+      resize: vertical;
+      background: #f8fafc;
+      transition: all 0.2s;
+      box-sizing: border-box;
+    }
+
+    .bulk-textarea:focus {
+      border-color: #15406a;
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(21, 64, 106, 0.15);
+      outline: none;
+    }
+
+    .bulk-pdf-notice {
+      background: #eef3f8;
+      border: 1px solid #cbdbe9;
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-top: 12px;
+      margin-bottom: 16px;
+      font-size: 12px;
+      color: #15406a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bulk-csv-toggle {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px dashed #e2e8f0;
+      font-size: 12px;
+      color: #64748b;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Flash Alert */
+    .flash-alert {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #dc2626;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* --- Right Side: Live Preview & Floating Badges --- */
+    @keyframes pulseLiveDot {
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+      }
+
+      70% {
+        transform: scale(1.15);
+        box-shadow: 0 0 0 5px rgba(239, 68, 68, 0);
+      }
+
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+      }
+    }
+
+    .preview-showcase {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .preview-card-frame {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      width: 100%;
+    }
+
+    .preview-top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .preview-headline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #15406a;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .preview-headline .badge-live {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ef4444;
+      display: inline-block;
+      animation: pulseLiveDot 2s infinite ease-in-out;
+    }
+
+    .font-pill-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      background: #ecfdf5;
+      color: #059669;
+      border: 1px solid #a7f3d0;
+    }
+
+    .font-pill-status .status-circle {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10b981;
+    }
+
+    /* Bulk Vertical Stack Live Preview */
+    .bulk-stack-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      padding: 8px 14px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+    }
+
+    .bulk-stack-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #15406a;
+    }
+
+    .bulk-stack-hint {
+      font-size: 11.5px;
+      color: #64748b;
+    }
+
+    .bulk-cards-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-height: 640px;
+      overflow-y: auto;
+      padding-right: 6px;
+      scrollbar-width: thin;
+      scrollbar-color: #cbd5e1 #f1f5f9;
+    }
+
+    .bulk-cards-list::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .bulk-cards-list::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 6px;
+    }
+
+    .bulk-cards-list::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 6px;
+    }
+
+    .bulk-cards-list::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    .bulk-card-item {
+      flex-shrink: 0;
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.2s ease;
+    }
+
+    .bulk-card-item:hover {
+      border-color: #9ab8d6;
+      box-shadow: 0 6px 18px rgba(21, 64, 106, 0.12);
+    }
+
+    .bulk-card-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 8px 12px;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    .bulk-card-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow: hidden;
+    }
+
+    .sheet-number-pill {
+      background: #15406a;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      flex-shrink: 0;
+    }
+
+    .sheet-person-name {
+      font-weight: 700;
+      color: #1e293b;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sheet-person-position {
+      font-size: 11.5px;
+      color: #64748b;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 200px;
+      flex-shrink: 0;
+    }
+
+    .bulk-card-viewport {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      background: #ffffff;
+    }
+
+    .bulk-card-canvas {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 832.08pt;
+      height: 372.72pt;
+      background: #ffffff;
+      transform-origin: top left;
+    }
+
+    .bulk-card-canvas .bulk-bg {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 832.08pt;
+      height: 372.72pt;
+      display: block;
+    }
+
+    .bulk-empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      background: #f8fafc;
+      border: 1.5px dashed #cbd5e1;
+      border-radius: 12px;
+      color: #64748b;
+    }
+
+    .bulk-empty-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 12px;
+      background: #e2e8f0;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+    }
+
+    /* Card Canvas Viewport */
+    .preview-scale-wrap {
+      width: 100%;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      background: #ffffff;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    }
+
+    .preview-inner {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    #card {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 832.08pt;
+      height: 372.72pt;
+      background: #ffffff;
+      transform-origin: top left;
+    }
+
+    #bg {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 832.08pt;
+      height: 372.72pt;
+      display: block;
+    }
+
+    .block {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 832.08pt;
+      height: 372.72pt;
+    }
+
+    #block-flip,
+    .block-flip {
+      transform: rotate(180deg);
+      transform-origin: 416.04pt 186.36pt;
+    }
+
+    .preview-bottom-info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 14px;
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    /* Floating badge pills - Now Interactive Controls (2x2 Grid) */
+    .floating-badges-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    @media (max-width: 768px) {
+      .floating-badges-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .feature-pill-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 14px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      transition: all 0.2s ease;
+      min-height: 80px;
+    }
+
+    .feature-pill-card:hover {
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.16);
+      border-color: #9ab8d6;
+    }
+
+    .feature-pill-card.bubble-empty-card {
+      background: rgba(248, 250, 252, 0.85);
+      border: 1.5px dashed #cbd5e1;
+    }
+
+    .pill-card-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: #eef3f8;
+      color: #15406a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .feature-pill-card.bubble-empty-card .pill-card-icon {
+      background: #f1f5f9;
+      color: #94a3b8;
+    }
+
+    .pill-card-text {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .pill-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .pill-card-title {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.2;
+    }
+
+    .pill-status-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 9999px;
+      background: #ecfdf5;
+      color: #059669;
+      border: 1px solid #a7f3d0;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .pill-status-badge.badge-neutral {
+      background: #f1f5f9;
+      color: #475569;
+      border-color: #e2e8f0;
+    }
+
+    .pill-status-badge.badge-custom {
+      background: #eef3f8;
+      color: #15406a;
+      border-color: #cbdbe9;
+    }
+
+    .bubble-actions-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 6px;
+      flex-wrap: wrap;
+    }
+
+    .btn-bubble-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 9px;
+      border-radius: 7px;
+      background: #f1f5f9;
+      color: #1e293b;
+      border: 1px solid #cbd5e1;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      line-height: 1.2;
+    }
+
+    .btn-bubble-action:hover {
+      background: #e2e8f0;
+      border-color: #94a3b8;
+      color: #0f172a;
+    }
+
+    .btn-bubble-reset {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 7px;
+      background: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-bubble-reset:hover {
+      background: #fee2e2;
+    }
+
+    .bubble-select-input {
+      width: 100%;
+      font-size: 11px;
+      font-weight: 600;
+      color: #1e293b;
+      padding: 4px 8px;
+      border-radius: 7px;
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.15s ease;
+    }
+
+    .bubble-select-input:focus {
+      border-color: #15406a;
+      box-shadow: 0 0 0 2px rgba(21, 64, 106, 0.15);
+    }
+
+    .bubble-segmented-group {
+      display: inline-flex;
+      background: #f1f5f9;
+      border-radius: 8px;
+      padding: 2px;
+      gap: 2px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .bubble-segment-btn {
+      border: none;
+      background: transparent;
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      color: #64748b;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .bubble-segment-btn.active {
+      background: #15406a;
+      color: #ffffff;
+      box-shadow: 0 2px 5px rgba(21, 64, 106, 0.3);
+    }
+
+    .btn-direct-print {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11.5px;
+      font-weight: 800;
+      padding: 5px 12px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #15406a 0%, #0f3356 100%);
+      color: #ffffff;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(21, 64, 106, 0.3);
+      transition: all 0.15s ease;
+    }
+
+    .btn-direct-print:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(21, 64, 106, 0.4);
+      background: linear-gradient(135deg, #1a4e80 0%, #15406a 100%);
+    }
+
+    .btn-direct-print:active {
+      transform: translateY(0);
+    }
+
+    /* --- Footer --- */
+    .footer {
+      position: relative;
+      z-index: 2;
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 24px 0 28px;
+      margin-top: 56px;
+      width: 100%;
+    }
+
+    .footer-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 0 8px;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .footer-kemnaker-logo {
+      height: 32px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25));
+    }
+
+    .footer-copy {
+      font-size: 12.5px;
+      color: rgba(255, 255, 255, 0.65);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .footer-copy-sep {
+      display: inline-block;
+      opacity: 0.6;
+    }
+
+    /* =========================================================================
+       Comprehensive Mobile & Tablet Responsive Media Queries
+       Optimized for iPhone (320px - 430px), Android (360px - 412px), & Tablets
+       ========================================================================= */
+
+    @media (max-width: 768px) {
+      /* Navbar */
+      .navbar {
+        height: 60px;
+        width: 100%;
+        max-width: 100vw;
+      }
+
+      .nav-container {
+        padding: 0 10px;
+        gap: 6px;
+        width: 100%;
+        max-width: 100vw;
+      }
+
+      .brand-logo {
+        gap: 6px;
+        min-width: 0;
+        flex-shrink: 0;
+      }
+
+      .kemnaker-brand-icon {
+        height: 28px;
+      }
+
+      .brand-divider {
+        height: 20px;
+        margin: 0 1px;
+      }
+
+      /* Tulisan Name Table Generator dibuat kebawah (stacked) */
+      .brand-title {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        font-size: 10px;
+        font-weight: 800;
+        line-height: 1.1;
+        letter-spacing: -0.2px;
+        white-space: nowrap;
+      }
+
+      .nav-source-switcher {
+        padding: 2.5px;
+        gap: 2px;
+        border-radius: 9999px;
+        flex-shrink: 0;
+      }
+
+      .nav-source-btn {
+        padding: 5px 8.5px;
+        font-size: 11px;
+        gap: 3px;
+        font-weight: 700;
+      }
+
+      .nav-source-btn svg {
+        width: 12px;
+        height: 12px;
+      }
+
+      /* Sembunyikan badge Auto di layar HP agar tab pilihan tidak terpotong */
+      .badge-source-tag {
+        display: none !important;
+      }
+
+      /* Hero Section */
+      .hero-section {
+        padding: 22px 14px 0;
+        min-height: auto;
+        width: 100%;
+        max-width: 100vw;
+      }
+
+      .hero-header {
+        margin-bottom: 16px;
+      }
+
+      .hero-title {
+        font-size: 24px;
+        line-height: 1.25;
+        letter-spacing: -0.4px;
+        margin-bottom: 6px;
+      }
+
+      .hero-desc {
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      /* Dashboard Grid */
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        margin-top: 6px;
+        width: 100%;
+        max-width: 100%;
+      }
+
+      /* Generator Card */
+      .generator-card {
+        padding: 16px 14px;
+        border-radius: 16px;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .tab-switch-wrap {
+        padding: 3px;
+        gap: 3px;
+        margin-bottom: 16px;
+      }
+
+      .tab-btn {
+        padding: 8px 10px;
+        font-size: 12.5px;
+        gap: 5px;
+      }
+
+      .form-group {
+        margin-bottom: 12px;
+      }
+
+      .form-label {
+        font-size: 12px;
+        margin-bottom: 4px;
+      }
+
+      .form-input {
+        font-size: 14px;
+        padding: 9px 12px 9px 36px;
+        border-radius: 10px;
+      }
+
+      .input-icon {
+        left: 12px;
+        width: 14px;
+        height: 14px;
+      }
+
+      .input-hint {
+        font-size: 10.5px;
+        margin-top: 4px;
+      }
+
+      .kemnaker-selectors-box {
+        padding: 12px 10px;
+        margin-bottom: 14px;
+        border-radius: 10px;
+      }
+
+      .kemnaker-sync-bar {
+        flex-direction: column;
+        gap: 8px;
+        align-items: stretch;
+        text-align: center;
+      }
+
+      .btn-refresh-kemnaker {
+        width: 100%;
+        justify-content: center;
+        padding: 6px 10px;
+        font-size: 11.5px;
+      }
+
+      .output-action-group {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .btn-output-green {
+        padding: 12px 16px;
+        font-size: 13.5px;
+        width: 100%;
+      }
+
+      .btn-output-print {
+        padding: 11px 16px;
+        font-size: 13px;
+        width: 100%;
+      }
+
+      .bulk-info-banner {
+        padding: 8px 10px;
+        font-size: 11px;
+        margin-bottom: 10px;
+      }
+
+      .bulk-toolbar {
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .bulk-textarea {
+        font-size: 13px;
+        padding: 10px;
+        min-height: 120px;
+      }
+
+      .bulk-csv-toggle {
+        flex-direction: column;
+        gap: 6px;
+        text-align: center;
+        align-items: center;
+      }
+
+      /* Preview Panel */
+      .preview-panel {
+        padding: 16px 14px;
+        border-radius: 16px;
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .preview-header {
+        margin-bottom: 10px;
+      }
+
+      .preview-bottom-info {
+        flex-direction: column;
+        gap: 5px;
+        align-items: flex-start;
+        font-size: 11px;
+        margin-top: 10px;
+      }
+
+      /* Floating Badges & Settings Controls */
+      .floating-badges-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .feature-pill-card {
+        padding: 10px 12px;
+        border-radius: 12px;
+        min-height: auto;
+        gap: 10px;
+      }
+
+      .pill-card-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+      }
+
+      .pill-card-title {
+        font-size: 12px;
+      }
+
+      .pill-status-badge {
+        font-size: 9.5px;
+        padding: 1.5px 6px;
+      }
+
+      .bubble-segmented-group {
+        width: 100%;
+        display: flex;
+      }
+
+      .bubble-segment-btn {
+        flex: 1;
+        text-align: center;
+        padding: 5px 4px;
+        font-size: 10.5px;
+      }
+
+      /* Footer - Tetap Rata Kiri Seperti Awal */
+      .footer {
+        margin-top: 36px;
+        padding: 20px 14px 24px;
+        width: 100%;
+        max-width: 100vw;
+      }
+
+      .footer-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start; /* Tetap rata kiri */
+        justify-content: flex-start;
+        text-align: left; /* Rata kiri */
+        gap: 12px;
+        width: 100%;
+        padding: 0;
+      }
+
+      .footer-brand {
+        display: flex;
+        flex-direction: row; /* Logo tetap di sebelah kiri tulisan */
+        align-items: center;
+        justify-content: flex-start;
+        gap: 10px;
+        text-align: left;
+      }
+
+      .footer-kemnaker-logo {
+        height: 28px;
+        width: auto;
+        flex-shrink: 0;
+        display: block;
+      }
+
+      .footer-brand span {
+        font-size: 12.5px;
+        font-weight: 700;
+        color: #ffffff;
+        text-align: left;
+        line-height: 1.35;
+      }
+
+      .footer-copy {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left; /* Rata kiri */
+        gap: 2px;
+        font-size: 11.5px;
+        line-height: 1.55;
+        color: rgba(255, 255, 255, 0.65);
+        width: 100%;
+        white-space: normal;
+      }
+
+      .footer-copy-sep {
+        display: none;
+      }
+
+      .footer-copy .footer-copy-l1 {
+        text-align: left;
+        display: block;
+      }
+
+      .footer-copy .footer-copy-l2 {
+        text-align: left;
+        display: block;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .navbar {
+        height: 56px;
+      }
+
+      .nav-container {
+        padding: 0 8px;
+        gap: 4px;
+      }
+
+      .kemnaker-brand-icon {
+        height: 26px;
+      }
+
+      .brand-divider {
+        height: 18px;
+        margin: 0 1px;
+      }
+
+      .brand-title {
+        font-size: 9.5px;
+        line-height: 1.08;
+      }
+
+      .nav-source-switcher {
+        padding: 2px;
+        border-radius: 9999px;
+      }
+
+      .nav-source-btn {
+        padding: 4.5px 7px;
+        font-size: 10.5px;
+        gap: 2.5px;
+      }
+
+      .nav-source-btn svg {
+        width: 11px;
+        height: 11px;
+      }
+
+      .hero-title {
+        font-size: 21px;
+      }
+
+      .hero-desc {
+        font-size: 11px;
+      }
+
+      .tab-btn {
+        padding: 7px 6px;
+        font-size: 11.5px;
+      }
+
+      .bubble-segment-btn {
+        font-size: 9.5px;
+        padding: 4px 2px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .nav-container {
+        padding: 0 5px;
+        gap: 3px;
+      }
+
+      .kemnaker-brand-icon {
+        height: 23px;
+      }
+
+      .brand-title {
+        font-size: 8.5px;
+      }
+
+      .nav-source-btn {
+        padding: 3.5px 5.5px;
+        font-size: 9.5px;
+        gap: 2px;
+      }
+
+      .nav-source-btn svg {
+        width: 10px;
+        height: 10px;
+      }
+
+      .hero-title {
+        font-size: 19px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Top Navbar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="/" class="brand-logo" id="navBrandLogo">
+        <img src="{{ url_for('static', filename='LogoKemnakerRI.png') }}" alt="Logo Kementerian Ketenagakerjaan RI"
+          class="kemnaker-brand-icon">
+        <div class="brand-divider"></div>
+        <span class="brand-title">
+          <span>Name</span>
+          <span>Table</span>
+          <span>Generator</span>
+        </span>
+      </a>
+
+      <div class="nav-actions">
+        <div class="nav-source-switcher" role="group" aria-label="Pilihan Sumber Data">
+          <div class="nav-source-glider" id="navSourceGlider" aria-hidden="true"></div>
+          <button type="button" class="nav-source-btn active" id="btnNavSourceTamu" onclick="setGlobalSource('tamu')"
+            title="Mode Tamu / Umum">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span>TAMU</span>
+          </button>
+          <button type="button" class="nav-source-btn" id="btnNavSourceKemnaker" onclick="setGlobalSource('kemnaker')"
+            title="Mode Pejabat Resmi Kemnaker RI">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+            </svg>
+            <span>KEMNAKER</span>
+            <span class="badge-source-tag">Auto</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section" id="generatorSection">
+    <div class="hero-pattern"></div>
+    <div class="hero-container">
+
+      <!-- Hero Header -->
+      <div class="hero-header">
+        <h1 class="hero-title">
+          Name Table <span class="highlight-silver">Standar</span> Kemnaker RI
+        </h1>
+        <p class="hero-desc">
+          Pilih metode input, masukkan nama dan jabatan, cek hasilnya, lalu download/cetak PDF
+        </p>
+      </div>
+
+      <!-- Flash Message if any -->
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      {% for m in messages %}
+      <div class="flash-alert">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        {{ m }}
+      </div>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+
+      <!-- Dashboard Interactive Grid -->
+      <div class="dashboard-grid">
+
+        <!-- Left: Form Controls Card -->
+        <div class="generator-card">
+          <!-- Tab Switcher -->
+          <div class="tab-switch-wrap">
+            <button type="button" class="tab-btn active" id="tabSingleBtn" onclick="switchTab('single')">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              Input Tunggal
+            </button>
+            <button type="button" class="tab-btn" id="tabBatchBtn" onclick="switchTab('batch')">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              Input Banyak
+            </button>
+          </div>
+
+          <!-- Tab 1: Single Generator Form -->
+          <div id="tabSingleContent">
+            <!-- Kemnaker Selectors (Auto-filled from kemnaker.go.id) -->
+            <div id="kemnakerSelectorsContainer" class="kemnaker-selectors-box" style="display: none;">
+              <div class="form-group" style="margin-bottom: 12px;">
+                <label for="kemnakerUnitSelect" class="form-label" style="margin-bottom: 5px;">
+                  <span>Unit Kerja</span>
+                  <span class="label-tag" id="kemnakerDateBadge">kemnaker.go.id</span>
+                </label>
+                <div class="input-wrapper">
+                  <div class="input-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                      <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                  </div>
+                  <select id="kemnakerUnitSelect" class="form-input" onchange="onKemnakerUnitChanged()"
+                    style="padding-left: 42px; cursor: pointer; font-weight: 600;">
+                    <option value="">-- Pilih Unit Kerja --</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 8px;">
+                <label for="kemnakerOfficialSelect" class="form-label" style="margin-bottom: 5px;">
+                  <span>Pejabat & Jabatan</span>
+                  <span class="label-tag" id="kemnakerCountBadge">0 Pilihan</span>
+                </label>
+                <div class="input-wrapper">
+                  <div class="input-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                      <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                    </svg>
+                  </div>
+                  <select id="kemnakerOfficialSelect" class="form-input" onchange="onKemnakerOfficialChanged()" disabled
+                    style="padding-left: 42px; cursor: pointer; font-weight: 600;">
+                    <option value="">-- Pilih Unit Kerja Terlebih Dahulu --</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="kemnaker-sync-bar">
+                <span id="kemnakerStatusText">📅 Sumber bagan resmi kemnaker.go.id</span>
+                <button type="button" class="btn-bubble-action" onclick="refreshKemnakerData(true)"
+                  style="padding: 3px 8px; font-size: 10.5px; border-radius: 6px;">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="23 4 23 10 17 10"></polyline>
+                    <polyline points="1 20 1 14 7 14"></polyline>
+                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                  </svg>
+                  Perbarui Data
+                </button>
+              </div>
+            </div>
+
+            <form id="single-form" action="{{ url_for('generate_single') }}" method="post">
+              <input type="hidden" name="input_source" id="inputSourceHidden" value="tamu">
+              <input type="hidden" name="content_mode" class="sync-mode-val" value="both">
+              <input type="hidden" name="sides" class="sync-sides-val" value="2">
+              <input type="hidden" name="font_choice" class="sync-font-val" value="MyriadPro">
+              <input type="hidden" name="custom_bg_data" class="sync-bg-val" value="">
+              <input type="hidden" name="custom_font_data" class="sync-font-data-val" value="">
+              <input type="hidden" name="custom_font_name" class="sync-font-name-val" value="">
+
+              <div class="form-group" id="nameGroup">
+                <label for="name" class="form-label">
+                  <span id="nameLabelText">Nama</span>
+                  <span class="label-tag" id="nameCharCounter">0/24 karakter</span>
+                </label>
+                <div class="input-wrapper input-wrapper-textarea">
+                  <div class="input-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                  </div>
+                  <textarea id="name" name="name" class="form-input" maxlength="24" placeholder="Masukkan Nama Lengkap"
+                    required rows="1" style="min-height: 48px; height: 48px; resize: none;"></textarea>
+                </div>
+                <div class="input-hint" id="nameInputHint">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                  </svg>
+                  <span id="nameHintText">Maksimal 24 karakter (ukuran font tetap 45.86 pt, tidak diperkecil).</span>
+                </div>
+              </div>
+
+              <div class="form-group" id="posGroup">
+                <label for="position" class="form-label">
+                  <span id="posLabelText">Jabatan / Posisi</span>
+                  <span class="label-tag" id="posCharCounter">0/128 karakter</span>
+                </label>
+                <div class="input-wrapper input-wrapper-textarea">
+                  <div class="input-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                      <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                    </svg>
+                  </div>
+                  <textarea id="position" name="position" class="form-input" maxlength="128"
+                    placeholder="Masukkan Jabatan atau Posisi Lengkap" required></textarea>
+                </div>
+                <div class="input-hint" id="posInputHint">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                  </svg>
+                  <span id="posHintText">Tekan <strong>Enter</strong> untuk membagi baris 1 &amp; 2 sesuai keinginan
+                    (maks. 128 karakter, maks. 2 baris).</span>
+                </div>
+              </div>
+
+              <div class="output-action-group">
+                <button type="submit" class="btn-output-green" id="btnGenerateSingle">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                  <span>Generate & Unduh PDF</span>
+                </button>
+                <button type="button" class="btn-output-print" onclick="printCurrentCards()">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                    <rect x="6" y="14" width="12" height="8"></rect>
+                  </svg>
+                  <span>Cetak Langsung</span>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Tab 2: Bulk Input (Banyak Sekaligus) -->
+          <div id="tabBatchContent" style="display: none;">
+            <form action="{{ url_for('generate_batch') }}" method="post" enctype="multipart/form-data">
+              <input type="hidden" name="input_source" id="inputSourceHiddenBatch" value="tamu">
+              <input type="hidden" name="content_mode" class="sync-mode-val" value="both">
+              <input type="hidden" name="sides" class="sync-sides-val" value="2">
+              <input type="hidden" name="font_choice" class="sync-font-val" value="MyriadPro">
+              <input type="hidden" name="custom_bg_data" class="sync-bg-val" value="">
+              <input type="hidden" name="custom_font_data" class="sync-font-data-val" value="">
+              <input type="hidden" name="custom_font_name" class="sync-font-name-val" value="">
+
+              <!-- Kemnaker Batch Selectors (Auto-filled structure from kemnaker.go.id) -->
+              <div id="kemnakerBatchSelectorsContainer" class="kemnaker-selectors-box"
+                style="display: none; margin-bottom: 14px;">
+                <div class="form-group" style="margin-bottom: 8px;">
+                  <label for="kemnakerBatchUnitSelect" class="form-label" style="margin-bottom: 5px;">
+                    <span>Unit Kerja Kemnaker RI</span>
+                    <span class="label-tag" id="kemnakerBatchDateBadge">kemnaker.go.id</span>
+                  </label>
+                  <div class="input-wrapper">
+                    <div class="input-icon">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                      </svg>
+                    </div>
+                    <select id="kemnakerBatchUnitSelect" class="form-input" onchange="onKemnakerBatchUnitChanged()"
+                      style="padding-left: 42px; cursor: pointer; font-weight: 600;">
+                      <option value="">-- Pilih Unit Kerja --</option>
+                      <option value="__all__">🏛️ Semua Unit Kerja Kemnaker RI (Seluruh Pejabat)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="kemnaker-sync-bar">
+                  <span id="kemnakerBatchStatusText">📋 Seluruh struktur pejabat unit kerja akan otomatis masuk ke
+                    daftar</span>
+                  <button type="button" class="btn-bubble-action" onclick="refreshKemnakerData(true)"
+                    style="padding: 3px 8px; font-size: 10.5px; border-radius: 6px;">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="23 4 23 10 17 10"></polyline>
+                      <polyline points="1 20 1 14 7 14"></polyline>
+                      <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                    </svg>
+                    Perbarui Data
+                  </button>
+                </div>
+              </div>
+
+              <div class="bulk-info-banner" id="bulkInfoBanner">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  style="flex-shrink: 0; margin-top: 1px;">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                <div>
+                  <strong>Format Cerdas:</strong> 1 orang per baris. Pemisah bisa berupa tanda baca apapun (seperti
+                  kurung <code>(Jabatan)</code>, strip <code>-</code>, titik dua <code>:</code>, <code>Tab</code>, koma
+                  <code>,</code>, atau titik koma <code>;</code>). Gelar otomatis dihapus &amp; nama &gt; 24 karakter
+                  otomatis disingkat.
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 0;">
+                <div class="bulk-toolbar">
+                  <span class="bulk-counter-badge" id="bulkCounter">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2.5">
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="9" cy="7" r="4"></circle>
+                      <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    <span id="bulkCountText">0 Baris Data</span>
+                  </span>
+                  <div class="bulk-btn-group">
+                    <button type="button" class="btn-bulk-tool" onclick="isiContohBulk()">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                      </svg>
+                      Isi Contoh
+                    </button>
+                    <button type="button" class="btn-bulk-tool" onclick="clearBulk()">
+                      Hapus
+                    </button>
+                  </div>
+                </div>
+
+                <textarea id="bulk_data" name="bulk_data" class="bulk-textarea"
+                  placeholder="Contoh:&#10;Dr. H. Budi Santoso Wijaya, S.E., M.M., CPE. (Sekretaris Jenderal)&#10;Nurul Aisyah Maharani Putri, M.Bus. - Direktur Jenderal PHI dan Jamsos&#10;Prof. Dr. Ir. Muhammad Fauzan Ramadhan, S.T., IPU. : Kepala Badan&#10;Permatasari Wulan, M.A.	Direktur Jenderal Binwasnaker"
+                  required oninput="updateBulkData()" onclick="handleBulkCursor()"
+                  onkeyup="handleBulkCursor()"></textarea>
+              </div>
+
+              <!-- Output Note -->
+              <div class="bulk-pdf-notice">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  style="flex-shrink: 0;">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="12" y1="18" x2="12" y2="12"></line>
+                  <line x1="9" y1="15" x2="15" y2="15"></line>
+                </svg>
+                <span><strong>Output:</strong> 1 File PDF gabungan (semua nama disatukan dalam 1 file dengan
+                  lembar/halaman terpisah).</span>
+              </div>
+
+              <div class="output-action-group">
+                <button type="submit" class="btn-output-green" id="btnGenerateBatch">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                  <span>Generate & Unduh PDF</span>
+                </button>
+                <button type="button" class="btn-output-print" onclick="printCurrentCards()">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                    <rect x="6" y="14" width="12" height="8"></rect>
+                  </svg>
+                  <span>Cetak Langsung</span>
+                </button>
+              </div>
+
+              <div class="bulk-csv-toggle" id="bulkCsvToggle">
+                <span>Atau impor langsung dari file:</span>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                  <label for="csv_file"
+                    style="color: var(--primary-blue); font-weight: 700; cursor: pointer; text-decoration: underline;">
+                    Pilih File CSV
+                  </label>
+                  <input type="file" id="csv_file" name="csv_file" accept=".csv" style="display: none;"
+                    onchange="handleCsvFile(this)">
+                  <span>|</span>
+                  <a href="{{ url_for('download_sample_csv') }}" style="color: #64748b; text-decoration: none;">Unduh
+                    Format CSV</a>
+                </div>
+              </div>
+            </form>
+          </div>
+
+        </div>
+
+        <!-- Right: Real-time Live Preview & Feature Badges -->
+        <div class="preview-showcase">
+          <div class="preview-card-frame">
+            <div class="preview-top-bar">
+              <div class="preview-headline">
+                <span class="badge-live"></span>
+                <span id="previewHeadlineText">PREVIEW LANGSUNG</span>
+              </div>
+              <div class="font-pill-status" id="fontStatusPill" style="display: none;">
+                <span class="status-circle"></span>
+                <span id="fontStatus">Myriad Pro Memuat…</span>
+              </div>
+            </div>
+
+            <!-- Single Mode Viewport -->
+            <div id="singlePreviewContainer">
+              <div class="preview-scale-wrap">
+                <div class="preview-inner" id="previewInner">
+                  <div id="card">
+                    <img id="bg" src="{{ url_for('static', filename='bg_template.png') }}" alt="Background Template">
+                    <div id="block-normal" class="block"></div>
+                    <div id="block-flip" class="block"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="preview-bottom-info">
+                <span>Resolusi Asli: <strong>832.08 × 372.72 pt</strong> (~11.6 × 5.2 in)</span>
+                <span>Rasio Cetak: <strong>1:1 Vektor Presisi</strong></span>
+              </div>
+            </div>
+
+            <!-- Bulk Mode Viewport (Berderet ke Bawah) -->
+            <div id="bulkPreviewContainer" style="display: none;">
+              <div class="bulk-stack-header">
+                <span class="bulk-stack-badge" id="bulkStackBadge">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                  </svg>
+                  <span id="bulkTotalSheetsText">0 Lembar PDF</span>
+                </span>
+                <span class="bulk-stack-hint">Semua lembar digabung dalam 1 file PDF</span>
+              </div>
+
+              <!-- Vertical Scrollable Stack of Cards -->
+              <div id="bulkCardsList" class="bulk-cards-list"></div>
+
+              <div class="preview-bottom-info" style="margin-top: 12px;">
+                <span>Setiap nama dicetak pada lembar terpisah</span>
+                <span id="bulkBottomStatus">Total: <strong>0 Halaman PDF</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Floating Feature Badges (Matching Maganghub style) -->
+          <!-- Interactive Feature Controls (4 Bubbles) -->
+          <div class="floating-badges-row">
+            <!-- Bubble 1: Template Background -->
+            <div class="feature-pill-card" id="bubbleBg">
+              <div class="pill-card-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+              </div>
+              <div class="pill-card-text">
+                <div class="pill-card-header">
+                  <span class="pill-card-title">Template Background</span>
+                  <span class="pill-status-badge badge-neutral" id="bgBadgeStatus">Default</span>
+                </div>
+                <div class="bubble-actions-row">
+                  <input type="file" id="customBgFileInput" accept="image/png, image/jpeg, image/jpg, image/webp"
+                    style="display: none;">
+                  <button type="button" class="btn-bubble-action" id="btnTriggerBgUpload">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="17 8 12 3 7 8"></polyline>
+                      <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    Ganti Gambar
+                  </button>
+                  <button type="button" class="btn-bubble-reset" id="btnResetCustomBg" style="display: none;"
+                    title="Kembalikan ke template awal">
+                    ↺ Reset Default
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bubble 2: Jenis & Upload Font -->
+            <div class="feature-pill-card" id="bubbleFont">
+              <div class="pill-card-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 7V4h16v3M9 20h6M12 4v16"></path>
+                </svg>
+              </div>
+              <div class="pill-card-text">
+                <div class="pill-card-header">
+                  <span class="pill-card-title">Jenis Font</span>
+                  <span class="pill-status-badge" id="fontBadgeStatus">Default</span>
+                </div>
+                <div class="bubble-actions-row">
+                  <select id="fontSelectInput" class="bubble-select-input">
+                    <option value="MyriadPro" selected>Myriad Pro</option>
+                    <option value="Arial">Arial</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Calibri">Calibri</option>
+                    <option value="__custom__">+ Upload Font Kustom (.ttf/.otf)...</option>
+                  </select>
+                  <input type="file" id="customFontFileInput" accept=".ttf,.otf,.woff,.woff2" style="display: none;">
+                </div>
+              </div>
+            </div>
+
+            <!-- Bubble 3: Tampilan Sisi Kartu -->
+            <div class="feature-pill-card" id="bubbleSides">
+              <div class="pill-card-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="23 4 23 10 17 10"></polyline>
+                  <polyline points="1 20 1 14 7 14"></polyline>
+                  <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                </svg>
+              </div>
+              <div class="pill-card-text">
+                <div class="pill-card-header">
+                  <span class="pill-card-title">Tampilan Sisi</span>
+                  <span class="pill-status-badge badge-neutral" id="sidesBadgeStatus">2 Sisi</span>
+                </div>
+                <div class="bubble-actions-row">
+                  <div class="bubble-segmented-group">
+                    <button type="button" class="bubble-segment-btn active" id="btnSides2" onclick="setSidesOption(2)">
+                      2 Sisi (180°)
+                    </button>
+                    <button type="button" class="bubble-segment-btn" id="btnSides1" onclick="setSidesOption(1)">
+                      1 Sisi Saja
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bubble 4: Opsi Tambahan (Tampilan Konten) -->
+            <div class="feature-pill-card" id="bubbleContentMode">
+              <div class="pill-card-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="21" y1="10" x2="3" y2="10"></line>
+                  <line x1="21" y1="6" x2="3" y2="6"></line>
+                  <line x1="21" y1="14" x2="3" y2="14"></line>
+                  <line x1="21" y1="18" x2="3" y2="18"></line>
+                </svg>
+              </div>
+              <div class="pill-card-text">
+                <div class="pill-card-header">
+                  <span class="pill-card-title">Opsi Tampilan</span>
+                  <span class="pill-status-badge badge-neutral" id="modeBadgeStatus">Nama &amp; Jabatan</span>
+                </div>
+                <div class="bubble-actions-row">
+                  <div class="bubble-segmented-group" style="width: 100%; display: flex; gap: 2px;">
+                    <button type="button" class="bubble-segment-btn active" id="btnModeBoth"
+                      onclick="setContentModeOption('both')"
+                      style="flex: 1; text-align: center; padding: 4px 4px; font-size: 10px;">
+                      Nama &amp; Jabatan
+                    </button>
+                    <button type="button" class="bubble-segment-btn" id="btnModeName"
+                      onclick="setContentModeOption('name_only')"
+                      style="flex: 1; text-align: center; padding: 4px 4px; font-size: 10px;">
+                      Nama Saja
+                    </button>
+                    <button type="button" class="bubble-segment-btn" id="btnModePos"
+                      onclick="setContentModeOption('position_only')"
+                      style="flex: 1; text-align: center; padding: 4px 4px; font-size: 10px;">
+                      Jabatan Saja
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Footer seamlessly inside the blue wallpaper -->
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-brand">
+          <img src="{{ url_for('static', filename='Logo_Kementerian_Ketenagakerjaan_White.png') }}"
+            alt="Logo Kementerian Ketenagakerjaan RI" class="footer-kemnaker-logo">
+          <span>Kementerian Ketenagakerjaan Republik Indonesia</span>
+        </div>
+        <div class="footer-copy">
+          <span class="footer-copy-l1">&copy; Kementerian Ketenagakerjaan Republik Indonesia 2026</span>
+          <span class="footer-copy-sep">&bull;</span>
+          <span class="footer-copy-l2">Hak Cipta Dilindungi Undang-Undang.</span>
+        </div>
+      </div>
+    </footer>
+  </section>
+
+  <!-- Scripts -->
+  <script src="{{ url_for('static', filename='nametag.js') }}?v=8"></script>
+  <script>
+    let currentTab = "single";
+    let currentBulkIndex = 0;
+
+    const BG_TEMPLATE_URL = "{{ url_for('static', filename='bg_template.png') }}";
+
+    // Global settings state
+    let currentContentMode = "both";
+    let currentSides = 2;
+    let currentBgUrl = BG_TEMPLATE_URL;
+    let currentFontChoice = "MyriadPro";
+    let currentFontFamily = "MyriadPro, Arial, Helvetica, sans-serif";
+    let customFontData = "";
+    let customFontName = "";
+    let customBgData = "";
+
+    // Global Source State: "tamu" (default) or "kemnaker"
+    let currentGlobalSource = "tamu";
+    let kemnakerDataCache = null;
+    let tamuDraftName = "";
+    let tamuDraftPos = "";
+    let tamuDraftBulk = "";
+
+    const nameInput = document.getElementById("name");
+    const positionInput = document.getElementById("position");
+    const fontStatus = document.getElementById("fontStatus");
+    const fontStatusPill = document.getElementById("fontStatusPill");
+
+    // Sliding indicator logic for Navbar Source Switcher
+    function updateNavGlider(animate = true) {
+      const switcher = document.querySelector(".nav-source-switcher");
+      const glider = document.getElementById("navSourceGlider");
+      const activeBtn = document.querySelector(".nav-source-btn.active");
+      if (!switcher || !glider || !activeBtn) return;
+
+      if (!animate) {
+        glider.classList.remove("animated");
+      }
+
+      const left = activeBtn.offsetLeft;
+      const top = activeBtn.offsetTop;
+      const width = activeBtn.offsetWidth;
+      const height = activeBtn.offsetHeight;
+
+      glider.style.width = width + "px";
+      glider.style.height = height + "px";
+      glider.style.transform = `translate3d(${left}px, ${top}px, 0)`;
+      glider.classList.add("ready");
+
+      if (animate) {
+        if (!glider.classList.contains("animated")) {
+          void glider.offsetWidth; // trigger reflow
+          glider.classList.add("animated");
+        }
+      }
+    }
+    window.updateNavGlider = updateNavGlider;
+
+    // Position glider immediately on script load
+    updateNavGlider(false);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const glider = document.getElementById("navSourceGlider");
+        if (glider) glider.classList.add("animated");
+      });
+    });
+    window.addEventListener("resize", () => updateNavGlider(false));
+
+    // =========================================================================
+    // Modern Custom Dropdown System (Kemnaker Theme: Unit Kerja, Jabatan, Font)
+    // =========================================================================
+    function escapeHtml(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    class ModernDropdown {
+      constructor(selectEl, config = {}) {
+        this.selectEl = selectEl;
+        this.config = Object.assign({
+          withIcon: false,
+          searchable: false,
+          compact: false,
+          searchPlaceholder: "Cari...",
+          defaultPlaceholder: "-- Pilih --",
+          isOfficial: false,
+          isFont: false
+        }, config);
+
+        this.wrapper = null;
+        this.trigger = null;
+        this.valueSpan = null;
+        this.menu = null;
+        this.searchInput = null;
+        this.optionsContainer = null;
+        this.isOpen = false;
+
+        this.init();
+      }
+
+      init() {
+        if (!this.selectEl) return;
+        // Visually hide native select
+        this.selectEl.style.display = "none";
+
+        // Build wrapper
+        this.wrapper = document.createElement("div");
+        this.wrapper.className = "custom-select-wrapper" +
+          (this.config.withIcon ? " with-icon" : "") +
+          (this.config.compact ? " compact" : "");
+        this.wrapper.id = "customSelect_" + this.selectEl.id;
+
+        // Trigger
+        this.trigger = document.createElement("button");
+        this.trigger.type = "button";
+        this.trigger.className = "custom-select-trigger";
+        this.trigger.setAttribute("aria-haspopup", "listbox");
+        this.trigger.setAttribute("aria-expanded", "false");
+
+        // Inherit icon from parent .input-wrapper if present (Unit Kerja, Jabatan, etc.)
+        const parentWrapper = this.selectEl.closest(".input-wrapper");
+        const existingIcon = parentWrapper ? parentWrapper.querySelector(".input-icon") : null;
+        if (existingIcon) {
+          existingIcon.style.display = "none";
+          const iconDiv = document.createElement("div");
+          iconDiv.className = "custom-select-icon";
+          iconDiv.innerHTML = existingIcon.innerHTML;
+          this.trigger.appendChild(iconDiv);
+        }
+
+        this.valueSpan = document.createElement("span");
+        this.valueSpan.className = "custom-select-value";
+        this.trigger.appendChild(this.valueSpan);
+
+        const chevronSvg = `
+          <svg class="custom-select-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        `;
+        this.trigger.insertAdjacentHTML("beforeend", chevronSvg);
+
+        // Menu
+        this.menu = document.createElement("div");
+        this.menu.className = "custom-select-menu";
+
+        // Search input if searchable
+        if (this.config.searchable) {
+          const searchWrap = document.createElement("div");
+          searchWrap.className = "custom-select-search-wrap";
+          searchWrap.innerHTML = `
+            <span class="custom-select-search-icon">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </span>
+            <input type="text" class="custom-select-search-input" placeholder="${this.config.searchPlaceholder}">
+          `;
+          this.searchInput = searchWrap.querySelector("input");
+          this.searchInput.addEventListener("input", (e) => this.filter(e.target.value));
+          this.searchInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              const firstVis = this.optionsContainer.querySelector(".custom-select-option:not([style*='display: none'])");
+              if (firstVis) firstVis.click();
+            }
+          });
+          this.menu.appendChild(searchWrap);
+        }
+
+        this.optionsContainer = document.createElement("div");
+        this.optionsContainer.className = "custom-select-options";
+        this.optionsContainer.setAttribute("role", "listbox");
+        this.menu.appendChild(this.optionsContainer);
+
+        this.wrapper.appendChild(this.trigger);
+        this.wrapper.appendChild(this.menu);
+
+        // Insert wrapper into DOM right after native select
+        this.selectEl.parentNode.insertBefore(this.wrapper, this.selectEl.nextSibling);
+
+        // Event listeners
+        this.trigger.addEventListener("click", (e) => {
+          e.stopPropagation();
+          if (this.selectEl.disabled) return;
+          this.toggle();
+        });
+
+        // Populate options
+        this.sync();
+
+        // Attach MutationObserver to native select
+        this.observer = new MutationObserver(() => this.sync());
+        this.observer.observe(this.selectEl, { childList: true, attributes: true, attributeFilter: ["disabled"] });
+
+        this.selectEl._modernDropdown = this;
+      }
+
+      toggle() {
+        if (this.isOpen) {
+          this.close();
+        } else {
+          this.open();
+        }
+      }
+
+      open() {
+        if (this.selectEl.disabled) return;
+        // Close other dropdowns
+        document.querySelectorAll(".custom-select-wrapper.open").forEach(w => {
+          if (w !== this.wrapper) {
+            w.classList.remove("open");
+            w.querySelector(".custom-select-trigger")?.setAttribute("aria-expanded", "false");
+          }
+        });
+
+        // Determine drop-up vs drop-down
+        const rect = this.wrapper.getBoundingClientRect();
+        const spaceBelow = window.innerHeight - rect.bottom;
+        const menuHeight = 260;
+        if (spaceBelow < menuHeight && rect.top > spaceBelow) {
+          this.wrapper.classList.add("drop-up");
+        } else {
+          this.wrapper.classList.remove("drop-up");
+        }
+
+        this.wrapper.classList.add("open");
+        this.trigger.setAttribute("aria-expanded", "true");
+        this.isOpen = true;
+
+        if (this.searchInput) {
+          this.searchInput.value = "";
+          this.filter("");
+          setTimeout(() => this.searchInput.focus(), 60);
+        }
+
+        // Scroll active item into view
+        const selectedOpt = this.optionsContainer.querySelector(".custom-select-option.selected");
+        if (selectedOpt) {
+          setTimeout(() => selectedOpt.scrollIntoView({ block: "nearest" }), 50);
+        }
+      }
+
+      close() {
+        this.wrapper.classList.remove("open");
+        this.trigger.setAttribute("aria-expanded", "false");
+        this.isOpen = false;
+      }
+
+      sync() {
+        // Disabled state
+        const isDisabled = this.selectEl.disabled;
+        this.trigger.classList.toggle("disabled", isDisabled);
+
+        // Options rebuild
+        this.optionsContainer.innerHTML = "";
+        const options = Array.from(this.selectEl.options);
+        const curVal = this.selectEl.value;
+
+        let selectedText = "";
+        let isPlaceholder = false;
+
+        if (options.length === 0) {
+          this.valueSpan.textContent = this.config.defaultPlaceholder;
+          this.valueSpan.classList.add("is-placeholder");
+          return;
+        }
+
+        options.forEach((opt, idx) => {
+          // Special divider for font select before upload
+          if (this.config.isFont && opt.value === "__custom__" && idx > 0) {
+            const div = document.createElement("div");
+            div.className = "custom-select-divider";
+            this.optionsContainer.appendChild(div);
+          }
+
+          const item = document.createElement("div");
+          item.className = "custom-select-option" + (opt.value === curVal ? " selected" : "");
+          item.dataset.value = opt.value;
+          item.dataset.searchText = opt.textContent;
+
+          let contentHtml = "";
+
+          if (this.config.isOfficial && opt.value !== "") {
+            // 2-line layout for officials: Name in bold, Position in subtitle
+            const rawText = opt.textContent;
+            let posText = "";
+            let nameText = rawText;
+            if (rawText.includes(" — ")) {
+              const parts = rawText.split(" — ");
+              posText = parts[0] || "";
+              nameText = parts[1] || parts[0];
+            } else if (rawText.includes(" - ")) {
+              const parts = rawText.split(" - ");
+              posText = parts[0] || "";
+              nameText = parts[1] || parts[0];
+            }
+            item.dataset.searchText = `${nameText} ${posText}`;
+
+            const rawPhoto = opt.dataset.photo || "";
+            const photoUrl = rawPhoto ? `/api/kemnaker-photo?url=${encodeURIComponent(rawPhoto)}` : "";
+            const personSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`;
+            let avatarHtml = "";
+            if (photoUrl) {
+              avatarHtml = `
+                <div class="custom-select-opt-avatar has-photo">
+                  <img src="${escapeHtml(photoUrl)}" alt="" loading="lazy" onerror="this.parentElement.classList.remove('has-photo'); this.remove();">
+                  ${personSvg}
+                </div>
+              `;
+            } else {
+              avatarHtml = `<div class="custom-select-opt-avatar">${personSvg}</div>`;
+            }
+
+            contentHtml = `
+              <div class="custom-select-opt-content">
+                ${avatarHtml}
+                <div class="custom-select-opt-text">
+                  <span class="custom-select-opt-title">${escapeHtml(nameText)}</span>
+                  ${posText ? `<span class="custom-select-opt-sub">${escapeHtml(posText)}</span>` : ""}
+                </div>
+              </div>
+            `;
+          } else if (this.config.isFont) {
+            let badgeHtml = "";
+            let fontStyle = "";
+            if (opt.value === "MyriadPro") {
+              badgeHtml = `<span class="custom-select-opt-badge badge-kemnaker">Standar Kemnaker</span>`;
+              fontStyle = 'style="font-family: MyriadPro, Arial, sans-serif;"';
+            } else if (opt.value === "Arial") {
+              fontStyle = 'style="font-family: Arial, sans-serif;"';
+            } else if (opt.value === "Times New Roman") {
+              fontStyle = 'style="font-family: \'Times New Roman\', serif;"';
+            } else if (opt.value === "Calibri") {
+              fontStyle = 'style="font-family: Calibri, sans-serif;"';
+            } else if (opt.value === "__custom__") {
+              badgeHtml = `<span class="custom-select-opt-badge badge-action">Upload</span>`;
+            } else if (opt.value.startsWith("CustomUserFont")) {
+              badgeHtml = `<span class="custom-select-opt-badge badge-action">Kustom</span>`;
+            }
+
+            contentHtml = `
+              <div class="custom-select-opt-content" ${fontStyle}>
+                <span class="custom-select-opt-title">${escapeHtml(opt.textContent)}</span>
+                ${badgeHtml}
+              </div>
+            `;
+          } else {
+            // Unit kerja or general
+            let iconHtml = "";
+            let badgeHtml = "";
+            if (opt.value === "__all__") {
+              badgeHtml = `<span class="custom-select-opt-badge badge-kemnaker">Semua</span>`;
+            } else if (opt.value !== "") {
+              iconHtml = `
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--kemnaker-blue); flex-shrink: 0;">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+              `;
+            }
+
+            contentHtml = `
+              <div class="custom-select-opt-content">
+                ${iconHtml}
+                <div class="custom-select-opt-text">
+                  <span class="custom-select-opt-title">${escapeHtml(opt.textContent)}</span>
+                </div>
+                ${badgeHtml}
+              </div>
+            `;
+          }
+
+          const checkSvg = `
+            <svg class="custom-select-opt-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          `;
+
+          item.innerHTML = contentHtml + checkSvg;
+
+          item.addEventListener("click", () => {
+            this.selectValue(opt.value);
+            this.close();
+          });
+
+          this.optionsContainer.appendChild(item);
+
+          if (opt.value === curVal || (curVal === "" && idx === 0)) {
+            selectedText = opt.textContent;
+            isPlaceholder = (opt.value === "");
+          }
+        });
+
+        // Update trigger text
+        if (!selectedText) {
+          const selectedOpt = this.selectEl.options[this.selectEl.selectedIndex];
+          selectedText = selectedOpt ? selectedOpt.textContent : this.config.defaultPlaceholder;
+          isPlaceholder = (!selectedOpt || selectedOpt.value === "");
+        }
+
+        if (this.config.isOfficial && this.selectEl.value !== "") {
+          if (selectedText.includes(" — ")) {
+            const parts = selectedText.split(" — ");
+            selectedText = `${parts[1]} (${parts[0]})`;
+          }
+        }
+
+        this.valueSpan.textContent = selectedText;
+        this.valueSpan.classList.toggle("is-placeholder", isPlaceholder);
+
+        // Update trigger icon with selected official photo if available
+        if (this.config.isOfficial) {
+          const iconDiv = this.trigger.querySelector(".custom-select-icon");
+          if (iconDiv) {
+            const selectedOpt = this.selectEl.options[this.selectEl.selectedIndex];
+            const rawSelPhoto = (selectedOpt && selectedOpt.dataset.photo) ? selectedOpt.dataset.photo : "";
+            const selPhoto = rawSelPhoto ? `/api/kemnaker-photo?url=${encodeURIComponent(rawSelPhoto)}` : "";
+            if (selPhoto && this.selectEl.value !== "") {
+              iconDiv.innerHTML = `<img src="${escapeHtml(selPhoto)}" style="width: 22px; height: 22px; border-radius: 6px; object-fit: cover; display: block;" alt="" onerror="this.remove()">`;
+            } else {
+              iconDiv.innerHTML = `
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                </svg>
+              `;
+            }
+          }
+        }
+      }
+
+      selectValue(val) {
+        this.selectEl.value = val;
+        // Dispatch events
+        this.selectEl.dispatchEvent(new Event("change", { bubbles: true }));
+        if (typeof this.selectEl.onchange === "function") {
+          this.selectEl.onchange();
+        }
+        this.sync();
+      }
+
+      filter(query) {
+        const q = (query || "").trim().toLowerCase();
+        const items = this.optionsContainer.querySelectorAll(".custom-select-option");
+        let visibleCount = 0;
+
+        items.forEach(item => {
+          const text = (item.dataset.searchText || "").toLowerCase();
+          const match = !q || text.includes(q);
+          item.style.display = match ? "flex" : "none";
+          if (match) visibleCount++;
+        });
+
+        let emptyMsg = this.optionsContainer.querySelector(".custom-select-empty");
+        if (visibleCount === 0) {
+          if (!emptyMsg) {
+            emptyMsg = document.createElement("div");
+            emptyMsg.className = "custom-select-empty";
+            emptyMsg.textContent = "Tidak ditemukan hasil yang cocok";
+            this.optionsContainer.appendChild(emptyMsg);
+          }
+          emptyMsg.style.display = "block";
+        } else if (emptyMsg) {
+          emptyMsg.style.display = "none";
+        }
+      }
+    }
+
+    // Global click-outside & escape listeners
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".custom-select-wrapper")) {
+        document.querySelectorAll(".custom-select-wrapper.open").forEach(w => {
+          w.classList.remove("open");
+          w.querySelector(".custom-select-trigger")?.setAttribute("aria-expanded", "false");
+        });
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        document.querySelectorAll(".custom-select-wrapper.open").forEach(w => {
+          w.classList.remove("open");
+          w.querySelector(".custom-select-trigger")?.setAttribute("aria-expanded", "false");
+        });
+      }
+    });
+
+    function initAllModernDropdowns() {
+      const unitSingle = document.getElementById("kemnakerUnitSelect");
+      const offSingle = document.getElementById("kemnakerOfficialSelect");
+      const unitBatch = document.getElementById("kemnakerBatchUnitSelect");
+      const fontSelect = document.getElementById("fontSelectInput");
+
+      if (unitSingle && !unitSingle._modernDropdown) {
+        new ModernDropdown(unitSingle, {
+          withIcon: true,
+          searchable: true,
+          searchPlaceholder: "Cari unit kerja...",
+          defaultPlaceholder: "-- Pilih Unit Kerja --"
+        });
+      }
+
+      if (offSingle && !offSingle._modernDropdown) {
+        new ModernDropdown(offSingle, {
+          withIcon: true,
+          searchable: true,
+          isOfficial: true,
+          searchPlaceholder: "Cari nama pejabat / jabatan...",
+          defaultPlaceholder: "-- Pilih Pejabat & Jabatan --"
+        });
+      }
+
+      if (unitBatch && !unitBatch._modernDropdown) {
+        new ModernDropdown(unitBatch, {
+          withIcon: true,
+          searchable: true,
+          searchPlaceholder: "Cari unit kerja...",
+          defaultPlaceholder: "-- Pilih Unit Kerja --"
+        });
+      }
+
+      if (fontSelect && !fontSelect._modernDropdown) {
+        new ModernDropdown(fontSelect, {
+          compact: true,
+          isFont: true,
+          defaultPlaceholder: "Pilih Font"
+        });
+      }
+    }
+
+    function syncAllModernDropdowns() {
+      ["kemnakerUnitSelect", "kemnakerOfficialSelect", "kemnakerBatchUnitSelect", "fontSelectInput"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el && el._modernDropdown) {
+          el._modernDropdown.sync();
+        }
+      });
+    }
+    window.syncAllModernDropdowns = syncAllModernDropdowns;
+    window.initAllModernDropdowns = initAllModernDropdowns;
+
+    // Initialize modern dropdowns immediately on script run
+    initAllModernDropdowns();
+
+    async function setGlobalSource(source) {
+      currentGlobalSource = source || "tamu";
+      const btnTamu = document.getElementById("btnNavSourceTamu");
+      const btnKemnaker = document.getElementById("btnNavSourceKemnaker");
+      const singleContainer = document.getElementById("kemnakerSelectorsContainer");
+      const batchContainer = document.getElementById("kemnakerBatchSelectorsContainer");
+      const hiddenSourceSingle = document.getElementById("inputSourceHidden");
+      const hiddenSourceBatch = document.getElementById("inputSourceHiddenBatch");
+      const bulkBanner = document.getElementById("bulkInfoBanner");
+      const bulkCsv = document.getElementById("bulkCsvToggle");
+
+      const nameEl = document.getElementById("name");
+      const posEl = document.getElementById("position");
+      const bulkEl = document.getElementById("bulk_data");
+      const nameHint = document.getElementById("nameHintText");
+      const posHint = document.getElementById("posHintText");
+
+      if (btnTamu) btnTamu.classList.toggle("active", currentGlobalSource === "tamu");
+      if (btnKemnaker) btnKemnaker.classList.toggle("active", currentGlobalSource === "kemnaker");
+      if (hiddenSourceSingle) hiddenSourceSingle.value = currentGlobalSource;
+      if (hiddenSourceBatch) hiddenSourceBatch.value = currentGlobalSource;
+
+      // Animate the sliding bubble indicator to the active option
+      updateNavGlider(true);
+
+      if (currentGlobalSource === "kemnaker") {
+        if (singleContainer) singleContainer.style.display = "block";
+        if (batchContainer) batchContainer.style.display = "block";
+        if (bulkBanner) bulkBanner.style.display = "none";
+        if (bulkCsv) bulkCsv.style.display = "none";
+
+        // 1. Single form adjustments
+        if (nameEl) {
+          if (!nameEl.hasAttribute("readonly")) {
+            tamuDraftName = nameEl.value;
+          }
+          nameEl.setAttribute("readonly", "readonly");
+          nameEl.classList.add("input-readonly-kemnaker");
+          nameEl.removeAttribute("maxlength");
+        }
+        if (posEl) {
+          if (!posEl.hasAttribute("readonly")) {
+            tamuDraftPos = posEl.value;
+          }
+          posEl.setAttribute("readonly", "readonly");
+          posEl.classList.add("input-readonly-kemnaker");
+        }
+        if (nameHint) {
+          nameHint.innerHTML = "Nama terisi lengkap dari Kemnaker. <strong>Gelar otomatis dibersihkan pada pratinjau &amp; cetak PDF</strong>.";
+        }
+        if (posHint) {
+          posHint.textContent = "Jabatan terisi otomatis dari struktur bagan resmi Kemnaker RI.";
+        }
+
+        // 2. Batch form adjustments
+        if (bulkEl) {
+          if (!bulkEl.hasAttribute("readonly")) {
+            tamuDraftBulk = bulkEl.value;
+          }
+          bulkEl.setAttribute("readonly", "readonly");
+          bulkEl.classList.add("input-readonly-kemnaker");
+          bulkEl.placeholder = "Pilih Unit Kerja di atas untuk memuat seluruh struktur pejabat ke daftar ini.";
+        }
+
+        // Ensure inputs are initially empty and dropdowns default to "-- Pilih ......... --"
+        const unitSelect = document.getElementById("kemnakerUnitSelect");
+        const offSelect = document.getElementById("kemnakerOfficialSelect");
+        const countBadge = document.getElementById("kemnakerCountBadge");
+        if (unitSelect) unitSelect.value = "";
+        if (offSelect) {
+          offSelect.innerHTML = '<option value="">-- Pilih Unit Kerja Terlebih Dahulu --</option>';
+          offSelect.disabled = true;
+        }
+        if (countBadge) countBadge.textContent = "0 Pilihan";
+        if (nameEl) {
+          nameEl.value = "";
+          nameEl.placeholder = "Pilih Unit Kerja & Jabatan di atas";
+        }
+        if (posEl) {
+          posEl.value = "";
+          posEl.placeholder = "Pilih Unit Kerja & Jabatan di atas";
+        }
+
+        const batchUnitSelect = document.getElementById("kemnakerBatchUnitSelect");
+        if (batchUnitSelect) batchUnitSelect.value = "";
+        if (bulkEl) bulkEl.value = "";
+
+        await loadKemnakerData();
+        if (typeof syncAllModernDropdowns === "function") syncAllModernDropdowns();
+
+      } else {
+        // --- TAMU MODE (Bersih / Default Awal Buka) ---
+        if (singleContainer) singleContainer.style.display = "none";
+        if (batchContainer) batchContainer.style.display = "none";
+        if (bulkBanner) bulkBanner.style.display = "flex";
+        if (bulkCsv) bulkCsv.style.display = "flex";
+
+        // 1. Single form reset
+        if (nameEl) {
+          nameEl.removeAttribute("readonly");
+          nameEl.classList.remove("input-readonly-kemnaker");
+          nameEl.maxLength = currentContentMode === "name_only" ? 36 : 24;
+          nameEl.value = tamuDraftName || "";
+          nameEl.placeholder = currentContentMode === "position_only"
+            ? "Tidak digunakan dalam mode Jabatan Saja"
+            : (currentContentMode === "name_only" ? "Masukkan Nama (bisa 1 atau 2 baris)" : "Masukkan Nama Lengkap");
+        }
+        if (posEl) {
+          posEl.removeAttribute("readonly");
+          posEl.classList.remove("input-readonly-kemnaker");
+          posEl.value = tamuDraftPos || "";
+          posEl.placeholder = currentContentMode === "name_only"
+            ? "Tidak digunakan dalam mode Nama Saja"
+            : (currentContentMode === "position_only" ? "Masukkan Jabatan (bisa 1 s/d 3 baris)" : "Masukkan Jabatan atau Posisi Lengkap");
+        }
+        if (nameHint) {
+          nameHint.textContent = currentContentMode === "name_only"
+            ? "Maksimal 36 karakter (font 60 pt). Tekan Enter untuk membagi 2 baris."
+            : "Maksimal 24 karakter (ukuran font tetap 45.86 pt, tidak diperkecil).";
+        }
+        if (posHint) {
+          posHint.innerHTML = "Tekan <strong>Enter</strong> untuk membagi baris 1 &amp; 2 sesuai keinginan (maks. 128 karakter, maks. 2 baris).";
+        }
+
+        const singleUnitSelect = document.getElementById("kemnakerUnitSelect");
+        if (singleUnitSelect) singleUnitSelect.value = "";
+        const singleOffSelect = document.getElementById("kemnakerOfficialSelect");
+        if (singleOffSelect) {
+          singleOffSelect.innerHTML = '<option value="">-- Pilih Unit Kerja Terlebih Dahulu --</option>';
+          singleOffSelect.disabled = true;
+        }
+
+        // 2. Batch form reset
+        if (bulkEl) {
+          bulkEl.removeAttribute("readonly");
+          bulkEl.classList.remove("input-readonly-kemnaker");
+          bulkEl.value = tamuDraftBulk || "";
+          bulkEl.placeholder = `Contoh:\nDr. H. Budi Santoso Wijaya, S.E., M.M., CPE. (Sekretaris Jenderal)\nNurul Aisyah Maharani Putri, M.Bus. - Direktur Jenderal PHI dan Jamsos\nProf. Dr. Ir. Muhammad Fauzan Ramadhan, S.T., IPU. : Kepala Badan\nPermatasari Wulan, M.A.\tDirektur Jenderal Binwasnaker`;
+        }
+
+        const batchUnitSelect = document.getElementById("kemnakerBatchUnitSelect");
+        if (batchUnitSelect) batchUnitSelect.value = "";
+
+        if (typeof syncAllModernDropdowns === "function") syncAllModernDropdowns();
+      }
+
+      update();
+      updateBulkData();
+      if (typeof syncAllModernDropdowns === "function") syncAllModernDropdowns();
+    }
+    window.setGlobalSource = setGlobalSource;
+    window.setSingleSource = setGlobalSource;
+
+    async function loadKemnakerData(forceRefresh = false) {
+      const statusText = document.getElementById("kemnakerStatusText");
+      const batchStatusText = document.getElementById("kemnakerBatchStatusText");
+      const dateBadge = document.getElementById("kemnakerDateBadge");
+      const batchDateBadge = document.getElementById("kemnakerBatchDateBadge");
+
+      if (!forceRefresh && kemnakerDataCache && kemnakerDataCache.units && kemnakerDataCache.units.length > 0) {
+        populateKemnakerUnits(kemnakerDataCache.units);
+        return;
+      }
+
+      if (statusText) statusText.textContent = "⏳ Mengambil data bagan kemnaker.go.id...";
+      if (batchStatusText) batchStatusText.textContent = "⏳ Mengambil data bagan kemnaker.go.id...";
+
+      try {
+        const url = "/api/kemnaker-units" + (forceRefresh ? "?refresh=1" : "");
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data && data.success && data.units && data.units.length > 0) {
+          kemnakerDataCache = data;
+          const shortDate = data.date_formatted ? data.date_formatted.split(",")[0] : "kemnaker.go.id";
+          if (dateBadge) dateBadge.textContent = shortDate;
+          if (batchDateBadge) batchDateBadge.textContent = shortDate;
+          if (statusText) {
+            statusText.textContent = "📅 Data terupdate: " + (data.date_formatted || "Hari ini");
+          }
+          if (batchStatusText) {
+            batchStatusText.textContent = "📅 Data terupdate: " + (data.date_formatted || "Hari ini");
+          }
+          populateKemnakerUnits(data.units);
+        } else {
+          if (statusText) statusText.textContent = "⚠️ Menggunakan data offline yang tersedia.";
+          if (batchStatusText) batchStatusText.textContent = "⚠️ Menggunakan data offline yang tersedia.";
+        }
+      } catch (err) {
+        console.error("Gagal load kemnaker data:", err);
+        if (statusText) statusText.textContent = "⚠️ Menggunakan data cadangan lokal.";
+        if (batchStatusText) batchStatusText.textContent = "⚠️ Menggunakan data cadangan lokal.";
+      }
+    }
+
+    function isValidOfficialName(name) {
+      if (!name) return false;
+      const s = String(name).trim();
+      if (!s) return false;
+      if (!/[A-Za-z0-9]/.test(s)) return false;
+      if (["kosong", "belum ada", "vacant", "nihil", "n/a", "none", "null", "plt", "plt.", "plh", "plh.", "pj", "pj."].includes(s.toLowerCase())) return false;
+      return true;
+    }
+
+    function populateKemnakerUnits(units) {
+      const unitSelect = document.getElementById("kemnakerUnitSelect");
+      const batchUnitSelect = document.getElementById("kemnakerBatchUnitSelect");
+
+      // Ensure 'menteri-ketenagakerjaan' (Kementerian Ketenagakerjaan RI) is ALWAYS at the very top
+      const sortedUnits = [...(units || [])].sort((a, b) => {
+        if (a.slug === "menteri-ketenagakerjaan") return -1;
+        if (b.slug === "menteri-ketenagakerjaan") return 1;
+        return 0;
+      });
+
+      if (unitSelect) {
+        const currentVal = unitSelect.value;
+        unitSelect.innerHTML = '<option value="">-- Pilih Unit Kerja --</option>';
+        sortedUnits.forEach(u => {
+          const opt = document.createElement("option");
+          opt.value = u.slug;
+          opt.textContent = (u.name || "").replace(/\s*\([^)]*\)/g, "").trim();
+          unitSelect.appendChild(opt);
+        });
+        if (currentVal) {
+          unitSelect.value = currentVal;
+          onKemnakerUnitChanged();
+        }
+      }
+
+      if (batchUnitSelect) {
+        const currentBatchVal = batchUnitSelect.value;
+        batchUnitSelect.innerHTML = `
+          <option value="">-- Pilih Unit Kerja --</option>
+          <option value="__all__">🏛️ Semua Unit Kerja Kemnaker RI (Seluruh Pejabat)</option>
+        `;
+        sortedUnits.forEach(u => {
+          const opt = document.createElement("option");
+          opt.value = u.slug;
+          opt.textContent = (u.name || "").replace(/\s*\([^)]*\)/g, "").trim();
+          batchUnitSelect.appendChild(opt);
+        });
+        if (currentBatchVal) {
+          batchUnitSelect.value = currentBatchVal;
+          onKemnakerBatchUnitChanged();
+        }
+      }
+
+      if (typeof syncAllModernDropdowns === "function") syncAllModernDropdowns();
+    }
+
+    function getOfficialRank(pos, slug) {
+      const p = (pos || "").toLowerCase();
+      if (slug === "menteri-ketenagakerjaan") {
+        if (p.includes("wakil menteri")) return 1;
+        if (p.includes("sekretaris jenderal") || p.includes("sesjen")) return 2;
+        if (p.includes("inspektur jenderal")) return 3;
+        if (p.includes("direktur jenderal")) return 4;
+        if (p.includes("kepala badan")) return 5;
+        if (p.includes("staf ahli")) return 6;
+        return 10;
+      }
+      if (p.includes("sekretaris") || p.includes("sesditjen") || p.includes("sesitjen") || p.includes("sesbadan")) {
+        return 1;
+      }
+      if (["direktur", "inspektur", "kepala biro", "kepala pusat"].some(k => p.includes(k))) {
+        return 2;
+      }
+      if (["kepala balai besar", "kepala sekretariat"].some(k => p.includes(k))) {
+        return 3;
+      }
+      if (p.includes("kepala balai")) {
+        return 4;
+      }
+      return 5;
+    }
+
+    function getSortedUnitOfficials(unit) {
+      if (!unit || !unit.officials) return [];
+      const leaders = unit.officials.filter(o => o.is_leader && isValidOfficialName(o.name));
+      const nonLeaders = unit.officials.filter(o => !o.is_leader && isValidOfficialName(o.name));
+      nonLeaders.sort((a, b) => getOfficialRank(a.position, unit.slug) - getOfficialRank(b.position, unit.slug));
+      return [...leaders, ...nonLeaders];
+    }
+
+    function onKemnakerUnitChanged() {
+      const unitSelect = document.getElementById("kemnakerUnitSelect");
+      const officialSelect = document.getElementById("kemnakerOfficialSelect");
+      const countBadge = document.getElementById("kemnakerCountBadge");
+      const nameEl = document.getElementById("name");
+      const posEl = document.getElementById("position");
+      if (!unitSelect || !officialSelect) return;
+
+      const slug = unitSelect.value;
+      if (!slug || !kemnakerDataCache || !kemnakerDataCache.units) {
+        officialSelect.innerHTML = '<option value="">-- Pilih Unit Kerja Terlebih Dahulu --</option>';
+        officialSelect.disabled = true;
+        if (countBadge) countBadge.textContent = "0 Pilihan";
+        if (nameEl) nameEl.value = "";
+        if (posEl) posEl.value = "";
+        if (typeof syncAllModernDropdowns === "function") syncAllModernDropdowns();
+        update();
+        return;
+      }
+
+      const selectedUnit = kemnakerDataCache.units.find(u => u.slug === slug);
+      if (!selectedUnit || !selectedUnit.officials || selectedUnit.officials.length === 0) {
+        officialSelect.innerHTML = '<option value="">(Belum ada data jabatan)</option>';
+        officialSelect.disabled = true;
+        if (countBadge) countBadge.textContent = "0 Pilihan";
+        if (nameEl) nameEl.value = "";
+        if (posEl) posEl.value = "";
+        if (typeof syncAllModernDropdowns === "function") syncAllModernDropdowns();
+        update();
+        return;
+      }
+
+      // Sort officials: Leader first, then Sekretaris ALWAYS right after, then Direktur/dll.
+      const validOfficials = getSortedUnitOfficials(selectedUnit);
+      if (validOfficials.length === 0) {
+        officialSelect.innerHTML = '<option value="">(Belum ada pejabat aktif)</option>';
+        officialSelect.disabled = true;
+        if (countBadge) countBadge.textContent = "0 Pilihan";
+        if (nameEl) nameEl.value = "";
+        if (posEl) posEl.value = "";
+        if (typeof syncAllModernDropdowns === "function") syncAllModernDropdowns();
+        update();
+        return;
+      }
+
+      officialSelect.innerHTML = '<option value="">-- Pilih Pejabat & Jabatan --</option>';
+      validOfficials.forEach((o, idx) => {
+        const opt = document.createElement("option");
+        opt.value = idx;
+        const expandedPos = typeof expandKemnakerPosition === "function" ? expandKemnakerPosition(o.position) : o.position;
+        const cleanName = typeof stripTrailingPunctuation === "function" ? stripTrailingPunctuation(o.name) : o.name;
+        opt.textContent = `${expandedPos} — ${cleanName}`;
+        if (o.photo) opt.dataset.photo = o.photo;
+        officialSelect.appendChild(opt);
+      });
+
+      officialSelect.disabled = false;
+      officialSelect.value = "";
+      if (countBadge) countBadge.textContent = `${validOfficials.length} Pilihan`;
+
+      // Inputs remain empty until user explicitly chooses a specific official!
+      if (nameEl) nameEl.value = "";
+      if (posEl) posEl.value = "";
+      if (typeof syncAllModernDropdowns === "function") syncAllModernDropdowns();
+      update();
+    }
+
+    function onKemnakerOfficialChanged() {
+      const unitSelect = document.getElementById("kemnakerUnitSelect");
+      const officialSelect = document.getElementById("kemnakerOfficialSelect");
+      const nameEl = document.getElementById("name");
+      const posEl = document.getElementById("position");
+      if (!unitSelect || !officialSelect || !kemnakerDataCache) return;
+
+      const slug = unitSelect.value;
+      const rawIdx = officialSelect.value;
+      if (rawIdx === "") {
+        if (nameEl) nameEl.value = "";
+        if (posEl) posEl.value = "";
+        if (typeof syncAllModernDropdowns === "function") syncAllModernDropdowns();
+        update();
+        return;
+      }
+
+      const idx = parseInt(rawIdx, 10);
+      if (isNaN(idx)) return;
+
+      const selectedUnit = kemnakerDataCache.units.find(u => u.slug === slug);
+      if (!selectedUnit || !selectedUnit.officials) return;
+
+      const validOfficials = getSortedUnitOfficials(selectedUnit);
+      if (!validOfficials[idx]) return;
+
+      const official = validOfficials[idx];
+      const expandedPos = typeof expandKemnakerPosition === "function" ? expandKemnakerPosition(official.position) : official.position;
+      const cleanName = typeof stripTrailingPunctuation === "function" ? stripTrailingPunctuation(official.name) : official.name;
+
+      if (nameEl) nameEl.value = cleanName;
+      if (posEl) posEl.value = expandedPos;
+
+      update();
+      if (typeof syncAllModernDropdowns === "function") syncAllModernDropdowns();
+    }
+
+    function onKemnakerBatchUnitChanged() {
+      const batchUnitSelect = document.getElementById("kemnakerBatchUnitSelect");
+      const bulkEl = document.getElementById("bulk_data");
+      const statusText = document.getElementById("kemnakerBatchStatusText");
+      if (!batchUnitSelect || !bulkEl || !kemnakerDataCache) return;
+
+      const slug = batchUnitSelect.value;
+      if (!slug) {
+        bulkEl.value = "";
+        if (statusText) statusText.textContent = "📋 Silakan pilih Unit Kerja di atas untuk memuat pejabat";
+        updateBulkData();
+        return;
+      }
+
+      let officialsList = [];
+      if (slug === "__all__") {
+        // Ensure menteri-ketenagakerjaan is processed FIRST so the Minister & leaders are at the very top!
+        const sortedUnits = [...(kemnakerDataCache.units || [])].sort((a, b) => {
+          if (a.slug === "menteri-ketenagakerjaan") return -1;
+          if (b.slug === "menteri-ketenagakerjaan") return 1;
+          return 0;
+        });
+
+        sortedUnits.forEach(u => {
+          if (u.officials && u.officials.length > 0) {
+            officialsList = officialsList.concat(getSortedUnitOfficials(u));
+          }
+        });
+      } else {
+        const selectedUnit = (kemnakerDataCache.units || []).find(u => u.slug === slug);
+        if (selectedUnit && selectedUnit.officials) {
+          officialsList = getSortedUnitOfficials(selectedUnit);
+        }
+      }
+
+      // Deduplicate officials list: if name or position is already seen, do not double it!
+      const seenNames = new Set();
+      const seenPositions = new Set();
+      const uniqueOfficials = [];
+
+      officialsList.forEach(o => {
+        const cleanName = typeof stripTrailingPunctuation === "function" ? stripTrailingPunctuation(o.name) : o.name;
+        const expandedPos = typeof expandKemnakerPosition === "function" ? expandKemnakerPosition(o.position) : o.position;
+        const cleanedTitleName = typeof cleanTitles === "function" ? cleanTitles(cleanName) : cleanName;
+
+        const nk = (cleanedTitleName || cleanName).toLowerCase().replace(/[^a-z0-9]/g, "");
+        const pk = (expandedPos || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+
+        let isDup = false;
+        if (nk && seenNames.has(nk)) isDup = true;
+        if (pk && seenPositions.has(pk)) isDup = true;
+
+        if (!isDup) {
+          if (nk) seenNames.add(nk);
+          if (pk) seenPositions.add(pk);
+          uniqueOfficials.push({
+            name: cleanName,
+            position: expandedPos
+          });
+        }
+      });
+
+      if (slug === "__all__") {
+        if (statusText) statusText.textContent = `🏛️ Memuat seluruh unit: ${uniqueOfficials.length} pejabat aktif Kemnaker RI (tanpa duplikasi)`;
+      } else {
+        const selectedUnit = (kemnakerDataCache.units || []).find(u => u.slug === slug);
+        const cleanUnitName = selectedUnit ? (selectedUnit.name || "").replace(/\s*\([^)]*\)/g, "").trim() : "";
+        if (statusText) statusText.textContent = `📋 Unit: ${cleanUnitName} (${uniqueOfficials.length} pejabat aktif)`;
+      }
+
+      if (uniqueOfficials.length > 0) {
+        const lines = uniqueOfficials.map(o => `${o.name} (${o.position})`);
+        bulkEl.value = lines.join("\n");
+      } else {
+        bulkEl.value = "";
+      }
+
+      updateBulkData();
+    }
+    window.onKemnakerBatchUnitChanged = onKemnakerBatchUnitChanged;
+
+    function refreshKemnakerData(force) {
+      loadKemnakerData(force);
+    }
+
+    function updateCharCounters() {
+      const nameVal = nameInput ? nameInput.value : "";
+      const posVal = positionInput ? positionInput.value : "";
+      const nameCounter = document.getElementById("nameCharCounter");
+      const posCounter = document.getElementById("posCharCounter");
+      const maxName = currentContentMode === "name_only" ? 36 : 24;
+      const maxPos = 128;
+      if (nameCounter) {
+        if (currentGlobalSource === "kemnaker" && nameVal) {
+          nameCounter.textContent = `Auto Kemnaker (${nameVal.length} karakter)`;
+          nameCounter.style.color = "";
+        } else {
+          nameCounter.textContent = `${nameVal.length}/${maxName} karakter`;
+          nameCounter.style.color = nameVal.length >= maxName ? "#b91c1c" : "";
+        }
+      }
+      if (posCounter) {
+        if (currentGlobalSource === "kemnaker" && posVal) {
+          posCounter.textContent = `Auto Kemnaker (${posVal.length} karakter)`;
+          posCounter.style.color = "";
+        } else {
+          posCounter.textContent = `${posVal.length}/${maxPos} karakter`;
+          posCounter.style.color = posVal.length >= maxPos ? "#b91c1c" : "";
+        }
+      }
+    }
+
+    function update() {
+      updateCharCounters();
+      if (typeof setFontFamily === "function") setFontFamily(currentFontFamily);
+      if (typeof setCardSides === "function") setCardSides(currentSides);
+      if (typeof setBackgroundUrl === "function") setBackgroundUrl(currentBgUrl);
+      if (typeof setContentMode === "function") setContentMode(currentContentMode);
+
+      if (currentTab === "single") {
+        if (typeof renderCard === "function") {
+          let renderName = nameInput ? nameInput.value : "";
+          let renderPos = positionInput ? positionInput.value : "";
+
+          if (typeof stripTrailingPunctuation === "function") {
+            renderName = stripTrailingPunctuation(renderName);
+            renderPos = stripTrailingPunctuation(renderPos);
+          }
+
+          if (currentGlobalSource === "kemnaker" && renderName) {
+            if (currentContentMode === "name_only") {
+              const cleaned = typeof cleanTitles === "function" ? cleanTitles(renderName) : renderName;
+              renderName = (cleaned || renderName).substring(0, 36).trim();
+            } else if (currentContentMode === "position_only") {
+              renderName = "";
+            } else {
+              // 'both'
+              if (typeof formatBulkName === "function") {
+                renderName = formatBulkName(renderName, 24);
+              } else if (typeof cleanTitles === "function") {
+                renderName = cleanTitles(renderName).substring(0, 24).trim();
+              }
+            }
+          }
+
+          if (currentGlobalSource === "kemnaker" && renderPos && currentContentMode === "position_only") {
+            renderPos = renderPos.substring(0, 128).trim();
+          }
+
+          renderCard(renderName, renderPos, { mode: currentContentMode });
+        }
+      } else {
+        renderBulkPreview();
+      }
+    }
+
+    function setContentModeOption(mode) {
+      currentContentMode = mode || "both";
+      if (typeof setContentMode === "function") setContentMode(currentContentMode);
+
+      const btnBoth = document.getElementById("btnModeBoth");
+      const btnName = document.getElementById("btnModeName");
+      const btnPos = document.getElementById("btnModePos");
+      const modeBadge = document.getElementById("modeBadgeStatus");
+
+      if (btnBoth) btnBoth.classList.toggle("active", currentContentMode === "both");
+      if (btnName) btnName.classList.toggle("active", currentContentMode === "name_only");
+      if (btnPos) btnPos.classList.toggle("active", currentContentMode === "position_only");
+
+      const nameGroup = document.getElementById("nameGroup");
+      const posGroup = document.getElementById("posGroup");
+      const nameInputEl = document.getElementById("name");
+      const posInputEl = document.getElementById("position");
+      const nameHint = document.getElementById("nameHintText");
+      const posHint = document.getElementById("posHintText");
+
+      if (currentContentMode === "name_only") {
+        if (modeBadge) {
+          modeBadge.textContent = "Nama";
+          modeBadge.className = "pill-status-badge badge-custom";
+        }
+        if (nameGroup) nameGroup.style.display = "block";
+        if (posGroup) posGroup.style.display = "none";
+        if (nameInputEl) {
+          nameInputEl.required = true;
+          if (currentGlobalSource === "kemnaker") {
+            nameInputEl.removeAttribute("maxlength");
+          } else {
+            nameInputEl.maxLength = 36;
+          }
+          nameInputEl.placeholder = "Masukkan Nama (bisa 1 atau 2 baris)";
+          nameInputEl.style.minHeight = "68px";
+          nameInputEl.style.height = "68px";
+          nameInputEl.style.resize = "vertical";
+        }
+        if (posInputEl) {
+          posInputEl.required = false;
+        }
+        if (nameHint) {
+          nameHint.innerHTML = currentGlobalSource === "kemnaker"
+            ? "Nama terisi lengkap dari Kemnaker. <strong>Gelar otomatis dibersihkan pada pratinjau &amp; cetak PDF</strong>."
+            : "Maksimal 36 karakter (font 60 pt). Tekan Enter untuk membagi 2 baris.";
+        }
+      } else if (currentContentMode === "position_only") {
+        if (modeBadge) {
+          modeBadge.textContent = "Jabatan";
+          modeBadge.className = "pill-status-badge badge-custom";
+        }
+        if (nameGroup) nameGroup.style.display = "none";
+        if (posGroup) posGroup.style.display = "block";
+        if (nameInputEl) {
+          nameInputEl.required = false;
+        }
+        if (posInputEl) {
+          posInputEl.required = true;
+          posInputEl.maxLength = 128;
+          posInputEl.placeholder = "Masukkan Jabatan (bisa 1 s/d 3 baris)";
+          posInputEl.style.minHeight = "68px";
+          posInputEl.style.height = "68px";
+          posInputEl.style.resize = "vertical";
+        }
+        if (posHint) {
+          posHint.textContent = currentGlobalSource === "kemnaker"
+            ? "Jabatan terisi otomatis dari struktur bagan resmi Kemnaker RI (maks. 3 baris)."
+            : "Maksimal hingga 3 baris teks terisi penuh (ukuran teks otomatis menyesuaikan). Tekan Enter untuk membagi baris.";
+        }
+      } else {
+        // 'both' (default)
+        if (modeBadge) {
+          modeBadge.textContent = "Nama & Jabatan";
+          modeBadge.className = "pill-status-badge badge-neutral";
+        }
+        if (nameGroup) nameGroup.style.display = "block";
+        if (posGroup) posGroup.style.display = "block";
+        if (nameInputEl) {
+          nameInputEl.required = true;
+          if (currentGlobalSource === "kemnaker") {
+            nameInputEl.removeAttribute("maxlength");
+          } else {
+            nameInputEl.maxLength = 24;
+          }
+          nameInputEl.placeholder = "Masukkan Nama Lengkap";
+          nameInputEl.style.minHeight = "48px";
+          nameInputEl.style.height = "48px";
+          nameInputEl.style.resize = "none";
+        }
+        if (posInputEl) {
+          posInputEl.required = true;
+          posInputEl.maxLength = 128;
+          posInputEl.placeholder = "Masukkan Jabatan atau Posisi Lengkap";
+          posInputEl.style.minHeight = "80px";
+          posInputEl.style.height = "";
+          posInputEl.style.resize = "vertical";
+        }
+        if (nameHint) {
+          nameHint.innerHTML = currentGlobalSource === "kemnaker"
+            ? "Nama terisi lengkap dari Kemnaker. <strong>Gelar otomatis dibersihkan pada pratinjau &amp; cetak PDF</strong>."
+            : "Maksimal 24 karakter (ukuran font tetap 45.86 pt, tidak diperkecil).";
+        }
+        if (posHint) {
+          posHint.innerHTML = currentGlobalSource === "kemnaker"
+            ? "Jabatan terisi otomatis dari struktur bagan resmi Kemnaker RI."
+            : "Tekan <strong>Enter</strong> untuk membagi baris 1 &amp; 2 sesuai keinginan (maks. 128 karakter, maks. 2 baris).";
+        }
+      }
+
+      document.querySelectorAll(".sync-mode-val").forEach(el => el.value = currentContentMode);
+      update();
+    }
+    window.setContentModeOption = setContentModeOption;
+
+    const PT_TO_PX = 96 / 72;
+
+    function fitPreview() {
+      const wrap = document.querySelector(".preview-scale-wrap");
+      if (wrap && wrap.clientWidth) {
+        const cardWidthPx = CARD.PAGE_W * PT_TO_PX;
+        const cardHeightPx = CARD.PAGE_H * PT_TO_PX;
+        const scale = wrap.clientWidth / cardWidthPx;
+        const cardElem = document.getElementById("card");
+        const previewInner = document.getElementById("previewInner");
+        if (cardElem) cardElem.style.transform = `scale(${scale})`;
+        if (previewInner) previewInner.style.height = (cardHeightPx * scale) + "px";
+      }
+
+      if (currentTab === "batch") {
+        renderBulkPreview();
+      }
+    }
+
+    nameInput.addEventListener("input", update);
+    positionInput.addEventListener("input", update);
+    nameInput.addEventListener("blur", () => {
+      if (nameInput.value && typeof stripTrailingPunctuation === "function") {
+        nameInput.value = stripTrailingPunctuation(nameInput.value);
+        update();
+      }
+    });
+    positionInput.addEventListener("blur", () => {
+      if (positionInput.value && typeof stripTrailingPunctuation === "function") {
+        positionInput.value = stripTrailingPunctuation(positionInput.value);
+        update();
+      }
+    });
+    nameInput.addEventListener("keydown", (e) => {
+      if (currentContentMode === "both" && e.key === "Enter") {
+        e.preventDefault();
+      }
+    });
+    window.addEventListener("resize", fitPreview);
+
+    function escapeHtml(text) {
+      if (!text) return "";
+      return text.toString()
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // Tab switcher logic
+    function switchTab(tab) {
+      currentTab = tab;
+      const singleBtn = document.getElementById("tabSingleBtn");
+      const batchBtn = document.getElementById("tabBatchBtn");
+      const singleContent = document.getElementById("tabSingleContent");
+      const batchContent = document.getElementById("tabBatchContent");
+      const singlePreview = document.getElementById("singlePreviewContainer");
+      const bulkPreview = document.getElementById("bulkPreviewContainer");
+      const headline = document.getElementById("previewHeadlineText");
+
+      if (tab === "single") {
+        singleBtn.classList.add("active");
+        batchBtn.classList.remove("active");
+        singleContent.style.display = "block";
+        batchContent.style.display = "none";
+        if (singlePreview) singlePreview.style.display = "block";
+        if (bulkPreview) bulkPreview.style.display = "none";
+        if (headline) headline.textContent = "PREVIEW LANGSUNG";
+
+        if (currentGlobalSource === "kemnaker") {
+          const singleContainer = document.getElementById("kemnakerSelectorsContainer");
+          if (singleContainer) singleContainer.style.display = "block";
+        }
+
+        fitPreview();
+        update();
+      } else {
+        batchBtn.classList.add("active");
+        singleBtn.classList.remove("active");
+        batchContent.style.display = "block";
+        singleContent.style.display = "none";
+        if (singlePreview) singlePreview.style.display = "none";
+        if (bulkPreview) bulkPreview.style.display = "block";
+        if (headline) headline.textContent = "PREVIEW LANGSUNG";
+
+        if (currentGlobalSource === "kemnaker") {
+          const batchContainer = document.getElementById("kemnakerBatchSelectorsContainer");
+          if (batchContainer) batchContainer.style.display = "block";
+
+          const batchUnitSelect = document.getElementById("kemnakerBatchUnitSelect");
+          const singleUnitSelect = document.getElementById("kemnakerUnitSelect");
+          if (batchUnitSelect && !batchUnitSelect.value && singleUnitSelect && singleUnitSelect.value) {
+            batchUnitSelect.value = singleUnitSelect.value;
+            onKemnakerBatchUnitChanged();
+          }
+        }
+
+        updateBulkData();
+      }
+    }
+
+    // Bulk data parsing & Live Preview logic
+    function parseBulkData(text) {
+      if (!text) return [];
+      const lines = text.split(/\r?\n/);
+      const rows = [];
+      lines.forEach((rawLine, lineIdx) => {
+        const line = rawLine.trim();
+        if (!line) return;
+
+        if (currentContentMode === "name_only") {
+          const split = typeof splitNameAndPosition === "function"
+            ? splitNameAndPosition(line)
+            : { name: line, position: "" };
+          let rawName = (split.name || line).trim();
+          if (rawName.toLowerCase() in { "name": 1, "nama": 1, "nama lengkap": 1, "nama pegawai": 1, "nama pejabat": 1 }) return;
+          const cleaned = typeof cleanTitles === "function" ? cleanTitles(rawName) : rawName;
+          const fmtName = (typeof stripTrailingPunctuation === "function" ? stripTrailingPunctuation(cleaned || rawName) : (cleaned || rawName)).substring(0, 36).trim();
+          if (fmtName) {
+            rows.push({
+              name: fmtName,
+              rawName: rawName,
+              position: "",
+              lineIndex: lineIdx
+            });
+          }
+          return;
+        }
+
+        if (currentContentMode === "position_only") {
+          const split = typeof splitNameAndPosition === "function"
+            ? splitNameAndPosition(line)
+            : { name: "", position: line };
+          let rawPos = (split.position || line).trim();
+          if (rawPos.toLowerCase() in { "position": 1, "jabatan": 1, "posisi": 1 }) return;
+          const fmtPos = (typeof stripTrailingPunctuation === "function" ? stripTrailingPunctuation(rawPos) : rawPos).substring(0, 128).trim();
+          if (fmtPos) {
+            rows.push({
+              name: "",
+              rawName: "",
+              position: fmtPos,
+              lineIndex: lineIdx
+            });
+          }
+          return;
+        }
+
+        // Mode 'both' (default)
+        // Split using punctuation or parentheses
+        const split = typeof splitNameAndPosition === "function"
+          ? splitNameAndPosition(line)
+          : { name: line, position: "" };
+        let rawName = (split.name || "").trim();
+        let rawPos = (split.position || "").trim();
+
+        // Filter header row if accidentally included
+        if (rawName.toLowerCase() in { "name": 1, "nama": 1, "nama lengkap": 1, "nama pegawai": 1, "nama pejabat": 1 }) {
+          if (!rawPos || rawPos.toLowerCase() in { "jabatan": 1, "position": 1, "posisi": 1 }) return;
+        }
+
+        if (rawName) {
+          // Auto remove titles & abbreviate if > 24 chars
+          const formattedName = typeof formatBulkName === "function"
+            ? formatBulkName(rawName, 24)
+            : (typeof stripTrailingPunctuation === "function" ? stripTrailingPunctuation(rawName) : rawName).substring(0, 24);
+          const clampedPos = (typeof stripTrailingPunctuation === "function" ? stripTrailingPunctuation(rawPos) : rawPos).substring(0, 128);
+
+          rows.push({
+            name: formattedName,
+            rawName: rawName,
+            position: clampedPos,
+            lineIndex: lineIdx
+          });
+        }
+      });
+
+      // Deduplicate rows: hanya berlaku untuk Kemnaker! Untuk Tamu biarkan sesuai input yang dimasukkan.
+      if (currentGlobalSource === "kemnaker" && typeof deduplicateBulkRows === "function") {
+        return deduplicateBulkRows(rows, currentContentMode, "kemnaker");
+      }
+      return rows;
+    }
+
+    function updateBulkData() {
+      const textarea = document.getElementById("bulk_data");
+      const countText = document.getElementById("bulkCountText");
+      if (!textarea) return;
+
+      const rows = parseBulkData(textarea.value);
+      const count = rows.length;
+      if (countText) {
+        countText.textContent = count === 1 ? "1 Baris Data" : count + " Baris Data";
+      }
+
+      if (currentTab === "batch") {
+        renderBulkPreview();
+      }
+    }
+
+    function renderBulkPreview() {
+      const textarea = document.getElementById("bulk_data");
+      const container = document.getElementById("bulkCardsList");
+      const totalSheetsText = document.getElementById("bulkTotalSheetsText");
+      const bottomStatus = document.getElementById("bulkBottomStatus");
+
+      if (!textarea || !container) return;
+      const rows = parseBulkData(textarea.value);
+
+      if (rows.length === 0) {
+        if (totalSheetsText) totalSheetsText.textContent = "0 Lembar PDF";
+        if (bottomStatus) bottomStatus.innerHTML = "Total: <strong>0 Halaman PDF</strong>";
+        container.innerHTML = `
+          <div class="bulk-empty-state">
+            <div class="bulk-empty-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+            </div>
+            <div style="font-weight: 700; color: #1e293b; margin-bottom: 4px;">Belum Ada Baris Data</div>
+            <div style="font-size: 12px;">Ketik atau tempel data nama dan jabatan di kolom kiri untuk melihat pratinjau semua lembar di sini.</div>
+          </div>
+        `;
+        return;
+      }
+
+      if (totalSheetsText) totalSheetsText.textContent = rows.length + " Lembar PDF";
+      if (bottomStatus) bottomStatus.innerHTML = `Total: <strong>${rows.length} Halaman PDF</strong> (Siap Cetak)`;
+
+      // Calculate responsive scale for each card
+      const cardWidthPx = CARD.PAGE_W * PT_TO_PX;
+      const cardHeightPx = CARD.PAGE_H * PT_TO_PX;
+      const containerW = container.clientWidth || 540;
+      const itemW = Math.max(280, containerW - 14);
+      const scale = itemW / cardWidthPx;
+      const itemH = Math.round(cardHeightPx * scale);
+
+      const activeBg = currentBgUrl || BG_TEMPLATE_URL;
+      const isSingleSide = currentSides === 1;
+
+      let html = "";
+      rows.forEach((r, idx) => {
+        const titleText = currentContentMode === "position_only" ? (r.position || '-') : (r.name || '-');
+        const subText = currentContentMode === "both" ? (r.position || '-') : '';
+        html += `
+          <div class="bulk-card-item" id="bulk-item-${idx}">
+            <div class="bulk-card-bar">
+              <div class="bulk-card-bar-left">
+                <span class="sheet-number-pill">Lembar ${idx + 1}</span>
+                <span class="sheet-person-name" title="Asli: ${escapeHtml(r.rawName || r.name || r.position)}">${escapeHtml(titleText)}</span>
+              </div>
+              ${subText ? `<span class="sheet-person-position" title="${escapeHtml(subText)}">${escapeHtml(subText)}</span>` : ''}
+            </div>
+            <div class="bulk-card-viewport" style="height: ${itemH}px;">
+              <div class="bulk-card-canvas" style="transform: scale(${scale});">
+                <img class="bulk-bg" src="${activeBg}" alt="Card Background">
+                <div id="bulk-normal-${idx}" class="block"></div>
+                <div id="bulk-flip-${idx}" class="block block-flip" style="${isSingleSide ? 'display: none;' : ''}"></div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+
+      // Draw text inside each canvas with exact layout engine
+      rows.forEach((r, idx) => {
+        const normal = document.getElementById("bulk-normal-" + idx);
+        const flip = document.getElementById("bulk-flip-" + idx);
+        const safeName = (r.name || "").toString();
+        const safePos = (r.position || "").toString();
+        const lines = typeof wrapPosition === "function" ? wrapPosition(safePos) : [safePos];
+        const blockOpts = { mode: currentContentMode, rawPosition: safePos };
+        if (typeof layoutBlock === "function") {
+          if (normal) layoutBlock(normal, safeName, lines, blockOpts);
+          if (flip) {
+            if (isSingleSide) {
+              flip.style.display = "none";
+            } else {
+              flip.style.display = "block";
+              layoutBlock(flip, safeName, lines, blockOpts);
+            }
+          }
+        }
+      });
+    }
+
+    function handleBulkCursor() {
+      if (currentTab !== "batch") return;
+      const textarea = document.getElementById("bulk_data");
+      if (!textarea) return;
+      const cursor = textarea.selectionStart;
+      const textBefore = textarea.value.substring(0, cursor);
+      const currentLine = textBefore.split(/\r?\n/).length - 1;
+      const rows = parseBulkData(textarea.value);
+      const matchIdx = rows.findIndex(r => r.lineIndex === currentLine);
+      if (matchIdx !== -1) {
+        const itemElem = document.getElementById("bulk-item-" + matchIdx);
+        if (itemElem) {
+          itemElem.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          itemElem.style.borderColor = "#15406a";
+          setTimeout(() => { itemElem.style.borderColor = ""; }, 1000);
+        }
+      }
+    }
+
+    function isiContohBulk() {
+      if (currentGlobalSource === "kemnaker") {
+        const batchUnit = document.getElementById("kemnakerBatchUnitSelect");
+        if (batchUnit && batchUnit.options.length > 2) {
+          batchUnit.selectedIndex = 2; // Sekretariat Jenderal
+          onKemnakerBatchUnitChanged();
+        }
+        return;
+      }
+      const textarea = document.getElementById("bulk_data");
+      if (!textarea) return;
+      const sample = [
+        "Dr. H. Budi Santoso Wijaya, S.E., M.M., CPE. (Sekretaris Jenderal)",
+        "Nurul Aisyah Maharani Putri, M.Bus. - Direktur Jenderal PHI dan Jamsos",
+        "Prof. Dr. Ir. Muhammad Fauzan Ramadhan, S.T., IPU. : Kepala Balai Besar Pelatihan Vokasi",
+        "Dimas Arya Kurniawan Setiawan, S.H., M.H.\tKepala Biro Umum"
+      ].join("\n");
+      textarea.value = sample;
+      updateBulkData();
+      textarea.focus();
+    }
+
+    function clearBulk() {
+      const textarea = document.getElementById("bulk_data");
+      if (!textarea) return;
+      textarea.value = "";
+      const batchUnitSelect = document.getElementById("kemnakerBatchUnitSelect");
+      if (batchUnitSelect) batchUnitSelect.value = "";
+      updateBulkData();
+      if (!textarea.hasAttribute("readonly")) {
+        textarea.focus();
+      }
+    }
+
+    function handleCsvFile(input) {
+      if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const content = e.target.result;
+          const textarea = document.getElementById("bulk_data");
+          if (textarea) {
+            textarea.value = content;
+            updateBulkData();
+          }
+        };
+        reader.readAsText(file);
+      }
+    }
+
+    // -------------------------------------------------------------------------
+    // Interactive Feature 1: Background Template Upload & Reset
+    // -------------------------------------------------------------------------
+    const bgFileInput = document.getElementById("customBgFileInput");
+    const btnTriggerBgUpload = document.getElementById("btnTriggerBgUpload");
+    const btnResetCustomBg = document.getElementById("btnResetCustomBg");
+    const bgBadgeStatus = document.getElementById("bgBadgeStatus");
+
+    if (btnTriggerBgUpload && bgFileInput) {
+      btnTriggerBgUpload.addEventListener("click", () => bgFileInput.click());
+      bgFileInput.addEventListener("change", (e) => {
+        if (e.target.files && e.target.files[0]) {
+          const file = e.target.files[0];
+          const reader = new FileReader();
+          reader.onload = function (evt) {
+            const dataUrl = evt.target.result;
+            currentBgUrl = dataUrl;
+            customBgData = dataUrl;
+            if (typeof setBackgroundUrl === "function") setBackgroundUrl(dataUrl);
+            const singleBg = document.getElementById("bg");
+            if (singleBg) singleBg.src = dataUrl;
+            if (bgBadgeStatus) {
+              bgBadgeStatus.textContent = "Kustom Aktif";
+              bgBadgeStatus.className = "pill-status-badge badge-custom";
+            }
+            if (btnResetCustomBg) btnResetCustomBg.style.display = "inline-flex";
+            document.querySelectorAll(".sync-bg-val").forEach(el => el.value = dataUrl);
+            update();
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+
+    if (btnResetCustomBg) {
+      btnResetCustomBg.addEventListener("click", () => {
+        if (bgFileInput) bgFileInput.value = "";
+        currentBgUrl = BG_TEMPLATE_URL;
+        customBgData = "";
+        if (typeof setBackgroundUrl === "function") setBackgroundUrl(BG_TEMPLATE_URL);
+        const singleBg = document.getElementById("bg");
+        if (singleBg) singleBg.src = BG_TEMPLATE_URL;
+        if (bgBadgeStatus) {
+          bgBadgeStatus.textContent = "Default";
+          bgBadgeStatus.className = "pill-status-badge badge-neutral";
+        }
+        btnResetCustomBg.style.display = "none";
+        document.querySelectorAll(".sync-bg-val").forEach(el => el.value = "");
+        update();
+      });
+    }
+
+    // -------------------------------------------------------------------------
+    // Interactive Feature 2: Font Choice & Custom Font Upload
+    // -------------------------------------------------------------------------
+    const fontSelectInput = document.getElementById("fontSelectInput");
+    const customFontFileInput = document.getElementById("customFontFileInput");
+    const fontBadgeStatus = document.getElementById("fontBadgeStatus");
+
+    function applyFontChoice(choice, familyName, dataUrl, displayName) {
+      currentFontChoice = choice;
+      currentFontFamily = familyName;
+      if (typeof setFontFamily === "function") setFontFamily(familyName);
+
+      if (fontBadgeStatus) {
+        fontBadgeStatus.textContent = displayName || choice;
+        if (choice === "MyriadPro") {
+          fontBadgeStatus.className = "pill-status-badge";
+        } else if (dataUrl) {
+          fontBadgeStatus.className = "pill-status-badge badge-custom";
+        } else {
+          fontBadgeStatus.className = "pill-status-badge badge-neutral";
+        }
+      }
+
+      if (fontStatus) fontStatus.textContent = (displayName || choice) + " Siap";
+
+      document.querySelectorAll(".sync-font-val").forEach(el => el.value = choice);
+      document.querySelectorAll(".sync-font-data-val").forEach(el => el.value = dataUrl || "");
+      document.querySelectorAll(".sync-font-name-val").forEach(el => el.value = choice);
+
+      update();
+      fitPreview();
+    }
+
+    if (fontSelectInput) {
+      fontSelectInput.addEventListener("change", (e) => {
+        const val = e.target.value;
+        if (val === "__custom__") {
+          if (customFontFileInput) customFontFileInput.click();
+        } else if (val === "Arial") {
+          applyFontChoice("Arial", "Arial, sans-serif", "", "Arial");
+        } else if (val === "Times New Roman") {
+          applyFontChoice("Times New Roman", "'Times New Roman', Times, serif", "", "Times New Roman");
+        } else if (val === "Calibri") {
+          applyFontChoice("Calibri", "Calibri, Candara, sans-serif", "", "Calibri");
+        } else if (val === "MyriadPro") {
+          applyFontChoice("MyriadPro", "MyriadPro, Arial, Helvetica, sans-serif", "", "Myriad Pro");
+        }
+      });
+    }
+
+    if (customFontFileInput) {
+      customFontFileInput.addEventListener("change", (e) => {
+        if (e.target.files && e.target.files[0]) {
+          const file = e.target.files[0];
+          const reader = new FileReader();
+          reader.onload = function (evt) {
+            const dataUrl = evt.target.result;
+            const cleanFontName = "CustomUserFont";
+            const fontStyle = document.createElement("style");
+            fontStyle.textContent = `@font-face { font-family: "${cleanFontName}"; src: url("${dataUrl}"); }`;
+            document.head.appendChild(fontStyle);
+
+            customFontData = dataUrl;
+            customFontName = cleanFontName;
+
+            let opt = document.getElementById("optCustomUploaded");
+            if (!opt) {
+              opt = document.createElement("option");
+              opt.id = "optCustomUploaded";
+              fontSelectInput.insertBefore(opt, fontSelectInput.lastElementChild);
+            }
+            opt.value = cleanFontName;
+            const shortName = file.name.length > 18 ? file.name.substring(0, 15) + "..." : file.name;
+            opt.textContent = "Kustom: " + shortName;
+            opt.selected = true;
+            fontSelectInput.value = cleanFontName;
+
+            applyFontChoice(cleanFontName, `"${cleanFontName}", sans-serif`, dataUrl, "Kustom: " + file.name.split(".")[0]);
+            if (typeof syncAllModernDropdowns === "function") syncAllModernDropdowns();
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+
+    // -------------------------------------------------------------------------
+    // Interactive Feature 3: Sides Mode Selection (2 Sisi vs 1 Sisi)
+    // -------------------------------------------------------------------------
+    function setSidesOption(sides) {
+      currentSides = parseInt(sides, 10) || 2;
+      if (typeof setCardSides === "function") setCardSides(currentSides);
+
+      const btn2 = document.getElementById("btnSides2");
+      const btn1 = document.getElementById("btnSides1");
+      const sidesBadge = document.getElementById("sidesBadgeStatus");
+
+      if (currentSides === 2) {
+        if (btn2) btn2.classList.add("active");
+        if (btn1) btn1.classList.remove("active");
+        if (sidesBadge) {
+          sidesBadge.textContent = "2 Sisi";
+          sidesBadge.className = "pill-status-badge badge-neutral";
+        }
+        const flip = document.getElementById("block-flip");
+        if (flip) flip.style.display = "block";
+      } else {
+        if (btn1) btn1.classList.add("active");
+        if (btn2) btn2.classList.remove("active");
+        if (sidesBadge) {
+          sidesBadge.textContent = "1 Sisi Saja";
+          sidesBadge.className = "pill-status-badge badge-custom";
+        }
+        const flip = document.getElementById("block-flip");
+        if (flip) flip.style.display = "none";
+      }
+
+      document.querySelectorAll(".sync-sides-val").forEach(el => el.value = currentSides.toString());
+      update();
+    }
+    window.setSidesOption = setSidesOption;
+
+    // -------------------------------------------------------------------------
+    // Interactive Feature 4: Direct Print (Cetak Langsung Tanpa Unduh)
+    // -------------------------------------------------------------------------
+    function printCurrentCards() {
+      let cards = [];
+      if (currentTab === "single") {
+        const n = (nameInput ? nameInput.value : "").trim();
+        const p = (positionInput ? positionInput.value : "").trim();
+        if (currentContentMode === "name_only") {
+          if (!n) {
+            alert("Silakan masukkan nama pada kolom input terlebih dahulu.");
+            if (nameInput) nameInput.focus();
+            return;
+          }
+          cards = [{ name: n, position: "" }];
+        } else if (currentContentMode === "position_only") {
+          if (!p) {
+            alert("Silakan masukkan jabatan pada kolom input terlebih dahulu.");
+            if (positionInput) positionInput.focus();
+            return;
+          }
+          cards = [{ name: "", position: p }];
+        } else {
+          if (!n) {
+            alert("Silakan masukkan nama pada kolom input terlebih dahulu.");
+            if (nameInput) nameInput.focus();
+            return;
+          }
+          cards = [{ name: n, position: p }];
+        }
+      } else {
+        const textarea = document.getElementById("bulk_data");
+        const rows = parseBulkData(textarea ? textarea.value : "");
+        if (!rows || rows.length === 0) {
+          alert("Silakan isi data bulk terlebih dahulu sebelum mencetak.");
+          if (textarea) textarea.focus();
+          return;
+        }
+        cards = rows;
+      }
+
+      const activeBg = currentBgUrl || BG_TEMPLATE_URL;
+      const isSingleSide = currentSides === 1;
+      const activeFontFamily = currentFontFamily;
+
+      let fontFacesHtml = "";
+      if (customFontData && customFontName) {
+        fontFacesHtml = `
+          @font-face {
+            font-family: "${customFontName}";
+            src: url("${customFontData}");
+          }
+        `;
+      } else {
+        fontFacesHtml = `
+          @font-face {
+            font-family: "MyriadPro";
+            src: url("/static/fonts/MYRIADPRO-REGULAR.woff") format("woff");
+            font-weight: 400;
+          }
+          @font-face {
+            font-family: "MyriadPro";
+            src: url("/static/fonts/MYRIADPRO-BOLD.woff") format("woff");
+            font-weight: 700;
+          }
+        `;
+      }
+
+      let cardsHtml = "";
+      cards.forEach((c, idx) => {
+        cardsHtml += `
+          <div class="card-page">
+            <img class="bg-img" src="${activeBg}" alt="Card Background">
+            <div id="print-normal-${idx}" class="block"></div>
+            ${isSingleSide ? '' : `<div id="print-flip-${idx}" class="block block-flip"></div>`}
+          </div>
+        `;
+      });
+
+      const printHtml = `
+        <!doctype html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <title>Cetak Name Table - Kemnaker RI</title>
+          <style>
+            ${fontFacesHtml}
+            @page {
+              size: 832.08pt 372.72pt;
+              margin: 0;
+            }
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            html, body { margin: 0; padding: 0; width: 832.08pt; background: #ffffff; }
+            .card-page {
+              position: relative;
+              width: 832.08pt;
+              height: 372.72pt;
+              overflow: hidden;
+              background: #ffffff;
+              page-break-after: always;
+              break-after: page;
+            }
+            .card-page:last-child {
+              page-break-after: auto;
+              break-after: auto;
+            }
+            .bg-img {
+              position: absolute;
+              left: 0; top: 0;
+              width: 832.08pt;
+              height: 372.72pt;
+              display: block;
+            }
+            .block {
+              position: absolute;
+              left: 0; top: 0;
+              width: 832.08pt;
+              height: 372.72pt;
+            }
+            .block-flip {
+              transform: rotate(180deg);
+              transform-origin: 416.04pt 186.36pt;
+            }
+          </style>
+        </head>
+        <body>
+          ${cardsHtml}
+          <script src="/static/nametag.js"><\/script>
+          <script>
+            async function doPrint() {
+              if (window.setFontFamily) window.setFontFamily('${activeFontFamily}');
+              if (window.setCardSides) window.setCardSides(${currentSides});
+              if (window.setContentMode) window.setContentMode('${currentContentMode}');
+              try {
+                await Promise.all([
+                  document.fonts.load('700 ${60 * 96 / 72}px "${customFontName || currentFontChoice}"'),
+                  document.fonts.load('700 ${45.86 * 96 / 72}px "${customFontName || currentFontChoice}"'),
+                  document.fonts.load('400 ${18 * 96 / 72}px "${customFontName || currentFontChoice}"'),
+                  document.fonts.ready,
+                ]);
+              } catch (e) {}
+              const CARDS_DATA = ${JSON.stringify(cards)};
+              CARDS_DATA.forEach((card, idx) => {
+                const normal = document.getElementById("print-normal-" + idx);
+                const flip = document.getElementById("print-flip-" + idx);
+                const safeName = (card.name || "").toString();
+                const safePos = (card.position || "").toString();
+                const lines = wrapPosition(safePos);
+                const blockOpts = { mode: '${currentContentMode}', rawPosition: safePos };
+                if (normal) layoutBlock(normal, safeName, lines, blockOpts);
+                if (flip && ${isSingleSide ? 'false' : 'true'}) layoutBlock(flip, safeName, lines, blockOpts);
+              });
+              setTimeout(() => {
+                window.focus();
+                window.print();
+              }, 350);
+            }
+            doPrint();
+          <\/script>
+        </body>
+        </html>
+      `;
+
+      let printIframe = document.getElementById("printCardsIframe");
+      if (!printIframe) {
+        printIframe = document.createElement("iframe");
+        printIframe.id = "printCardsIframe";
+        printIframe.style.position = "fixed";
+        printIframe.style.right = "0";
+        printIframe.style.bottom = "0";
+        printIframe.style.width = "0";
+        printIframe.style.height = "0";
+        printIframe.style.border = "none";
+        document.body.appendChild(printIframe);
+      }
+
+      printIframe.contentDocument.open();
+      printIframe.contentDocument.write(printHtml);
+      printIframe.contentDocument.close();
+    }
+    window.printCurrentCards = printCurrentCards;
+
+    // Font loading check on page init
+    Promise.all([
+      document.fonts.load(`700 ${60 * 96 / 72}px MyriadPro`),
+      document.fonts.load(`700 ${45.86 * 96 / 72}px MyriadPro`),
+      document.fonts.load(`400 ${18 * 96 / 72}px MyriadPro`),
+      document.fonts.ready,
+    ]).then(() => {
+      fontStatus.textContent = "Myriad Pro Siap";
+      fontStatusPill.style.background = "#ecfdf5";
+      fontStatusPill.style.color = "#059669";
+      fontStatusPill.style.borderColor = "#a7f3d0";
+      updateNavGlider(false);
+      update();
+      fitPreview();
+    }).catch(() => {
+      fontStatus.textContent = "Font Fallback";
+      updateNavGlider(false);
+      update();
+      fitPreview();
+    });
+
+    // Initial render
+    window.addEventListener("DOMContentLoaded", () => {
+      initAllModernDropdowns();
+      syncAllModernDropdowns();
+      updateNavGlider(false);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          const glider = document.getElementById("navSourceGlider");
+          if (glider) glider.classList.add("animated");
+        });
+      });
+      update();
+      fitPreview();
+    });
+    setTimeout(() => { updateNavGlider(false); syncAllModernDropdowns(); update(); fitPreview(); }, 400);
+    setTimeout(() => { updateNavGlider(false); syncAllModernDropdowns(); update(); fitPreview(); }, 1000);
+  </script>
+</body>
+
+</html>

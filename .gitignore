@@ -1,0 +1,39 @@
+# Python virtual environments (local only)
+venv/
+env/
+.venv/
+ENV/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# PyInstaller & Desktop build artifacts
+build/
+dist/
+*.spec
+*.exe
+*.iss
+
+# Temporary & Test files
+scratch/
+test_*.png
+test_*.pdf
+
+# Generated user PDFs & Caches
+output/*
+!output/.gitkeep
+photo_cache/
+
+# Operating System & IDE files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+*.log

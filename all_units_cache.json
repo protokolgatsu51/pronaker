@@ -1,0 +1,390 @@
+{
+  "sekretariat-jendral": {
+    "unit_name": "Sekretariat Jenderal",
+    "slug": "sekretariat-jendral",
+    "leader": {
+      "name": "Dr. Cris Kuntadi, S.E., M.M",
+      "position": "Sekretaris Jenderal",
+      "photo": ""
+    },
+    "staff": [
+      {
+        "name": "Prof. Dede Rahmat Hidayat, M.Psi., Ph.D",
+        "position": "Direktur Politeknik Ketenagakerjaan",
+        "photo": "https://portal.kemnaker.go.id/storage/attachments/6e5/1a5/8e1/2fVlyXwJhroXdmm4DIjZwYoIuTLtLFDHMUdQEUDm.jpeg"
+      },
+      {
+        "name": "Siti Kustiati, S.E., M.Si",
+        "position": "Kepala Biro Perencanaan dan Manajemen Kinerja",
+        "photo": "https://portal.kemnaker.go.id/storage/attachments/f81/b39/8e3/G5GzOmbhA6pfIL8FxzUcWBZR9LkqirC5qtGT0mSg.jpeg"
+      },
+      {
+        "name": "Dian Kreshnadjati, S.E, M.M",
+        "position": "Kepala Biro Organisasi dan Sumber Daya Manusia Aparatur",
+        "photo": "https://portal.kemnaker.go.id/storage/attachments/987/a32/372/VUt38eJS5nx4NXGbmQoflIFWrppiYFGT3Iw1I8JN.jpg"
+      },
+      {
+        "name": "Irma Puspita, S.IP., M.Si",
+        "position": "Kepala Biro Keuangan dan Barang Milik Negara",
+        "photo": "https://portal.kemnaker.go.id/storage/attachments/e0f/7ea/965/yw4og9rnWoOPns5CBjODtJzIlsm4ylMVIGb8T8Dp.jpg"
+      },
+      {
+        "name": "Muhammad Arif Hidayat, M.Eng, M.P.P",
+        "position": "Kepala Biro Kerjasama",
+        "photo": "https://portal.kemnaker.go.id/storage/attachments/839/6c4/793/aCf6w2EwEmmQDyF8OOlis0cGuxe2zZ0ML6KbVlj0.jpg"
+      },
+      {
+        "name": "Dr. Narsih, S.Pd., M.M",
+        "position": "Kepala Pusat Pengembangan Sumber Daya Manusia Ketenagakerjaan",
+        "photo": "https://portal.kemnaker.go.id/storage/attachments/2cb/103/fbb/PgQaOvXw4zvLximNyfAFsBNeek4kZyUAEVJOR3au.jpg"
+      },
+      {
+        "name": "Faried Abdurrahman Nur Yuliono, S.STP., M.M",
+        "position": "Kepala Biro Hubungan Masyarakat",
+        "photo": ""
+      },
+      {
+        "name": "R. Nurhidajat, S.E., M.Ec.Dev",
+        "position": "Kepala Pusat Pasar Kerja",
+        "photo": "https://portal.kemnaker.go.id/storage/attachments/2f6/d65/bbe/ZICT4DgXbsuO3s6ZMJM6c70YrQEfc2Scta1dbwbV.jpg"
+      },
+      {
+        "name": "Reni Mursidayanti, S.H., M.H",
+        "position": "Kepala Biro Hukum",
+        "photo": ""
+      },
+      {
+        "name": "Tuti Haryanti, S.T., M.Si",
+        "position": "Kepala Biro Umum",
+        "photo": "https://portal.kemnaker.go.id/storage/attachments/620/36c/c56/8hkqe9MlCFgwfa04VFdBLzgFFSLxZk38lYPtLgOb.jpg"
+      }
+    ]
+  },
+  "inspektorat-jendral": {
+    "unit_name": "Inspektorat Jenderal",
+    "slug": "inspektorat-jendral",
+    "leader": {
+      "name": "Dr. Ir. Roni Dwi Susanto, M.Si",
+      "position": "Inspektur Jenderal",
+      "photo": "https://portal.kemnaker.go.id/storage/attachments/c6b/7b1/4a4/e0sVMS7zCpDvrBJLpyx50HErTSnMSfYyq17XWg81.jpeg"
+    },
+    "staff": [
+      {
+        "name": "Eva Trisiana, S.S., M.Bus",
+        "position": "Sekretaris Inspektorat Jenderal",
+        "photo": "https://portal.kemnaker.go.id/storage/attachments/cef/dac/745/FNsjGkdwogBpc4arCRjaw1QmQCOYsX8bof76DTku.jpg"
+      },
+      {
+        "name": "Mukhtar Rosyid Harjono, S.Si., M.T",
+        "position": "Inspektur I",
+        "photo": "https://portal.kemnaker.go.id/storage/attachments/810/2ec/bff/Yh3YQIe3fLOrpJaAJA9DCGfKX56KeeFi49TxpLq2.jpg"
+      },
+      {
+        "name": "Dodo Setiadi, S.H., M.Si",
+        "position": "Inspektur II",
+        "photo": "https://portal.kemnaker.go.id/storage/attachments/9ed/3bc/23d/CUr4v41QQxpPFu3kBD7mJ50KJqMMmKxUN9H2AUUd.jpg"
+      },
+      {
+        "name": "Dr. M. Heru Susanto, S.E.,  M.M",
+        "position": "Inspektur III",
+        "photo": "https://portal.kemnaker.go.id/storage/attachments/fb5/33d/46c/265ZBm1HMvM9bgF3JgD5rOPbVZ9sf0xl5MbajgWh.jpg"
+      },
+      {
+        "name": "Rizqi Akhdes Prihatin, S.E., M.Si",
+        "position": "Inspektur IV",
+        "photo": ""
+      }
+    ]
+  },
+  "barenbang": {
+    "unit_name": "Barenbang",
+    "slug": "barenbang",
+    "leader": {
+      "name": "Prof. Anwar Sanusi, Ph.D",
+      "position": "Kepala Badan Perencanaan dan Pengembangan Ketenagakerjaan",
+      "photo": "https://portal.kemnaker.go.id/storage/attachments/94f/583/869/bwy651M4P2th1DI0MNYYovsePGsi6m7BM7irFO8k.jpg"
+    },
+    "staff": [
+      {
+        "name": "Hery Budoyo, S.T., M.M",
+        "position": "Sekretaris Badan Perencanaan dan Pengembangan Ketenagakerjaan",
+        "photo": ""
+      },
+      {
+        "name": "Dr. Ghazmahadi, S.T., M.M",
+        "position": "Kepala Pusat Pengembangan Kebijakan Ketenagakerjaan",
+        "photo": "https://portal.kemnaker.go.id/storage/attachments/626/5d5/955/KQcgAnIDuhgQN76jf69po7pBKeM2f3izfBxvssuB.png"
+      },
+      {
+        "name": "Dr. Mohammad Mustafa Sarinanto, M.Eng",
+        "position": "Kepala Pusat Perencanaan Ketenagakerjaan",
+        "photo": "https://portal.kemnaker.go.id/storage/attachments/c96/ec4/02d/dVKsrHlYr2Xhd9WCP0ZaGqnTbOE4QGnp9qiDyNgH.jpg"
+      },
+      {
+        "name": "Baderi, S.Sos., M.E",
+        "position": "Kepala Pusat Data dan Teknologi Informasi Ketenagakerjaan",
+        "photo": "https://portal.kemnaker.go.id/storage/attachments/69f/4b0/e48/nxdpb3JKyANoatffByiHdc9NkOFTHguFVpW26NaA.jpg"
+      }
+    ]
+  },
+  "binalattas": {
+    "unit_name": "Binalavotas",
+    "slug": "binalattas",
+    "leader": {
+      "name": "Darmawansyah, S.T., M.Si",
+      "position": "Direktur Jenderal Pembinaan Pelatihan Vokasi Dan Produktivitas",
+      "photo": "https://portal.kemnaker.go.id/storage/attachments/eae/794/49f/l4FHk8QczY1mlgmEVxflLpKvDnUKOYdGexySosXH.jpg"
+    },
+    "staff": [
+      {
+        "name": "Memey Meirita Handayani, S.E., M.M",
+        "position": "Sekretaris Direktorat Jenderal Pembinaan Pelatihan Vokasi dan Produktivitas",
+        "photo": ""
+      },
+      {
+        "name": "Dr. Ir. Abdullah Qiqi Asmara, S.T., M.Si., M.Kom., IPU",
+        "position": "Direktur Bina Standardisasi Kompetensi dan Program Pelatihan",
+        "photo": ""
+      },
+      {
+        "name": "Andri Susila, S.T., M.Si",
+        "position": "Direktur Bina Kelembagaan Pelatihan Vokasi",
+        "photo": ""
+      },
+      {
+        "name": "Dr. Teguh Djatmiko, S.E., Ak.,  M.M",
+        "position": "Direktur Bina Instruktur dan Tenaga Pelatihan",
+        "photo": "https://portal.kemnaker.go.id/storage/attachments/05a/4e3/58e/VMB3Zr5qlA5x5mmU5YkB9DuM98AOWANhCglOnjGi.jpg"
+      },
+      {
+        "name": "Surya Lukita Warman, B.Eng., M.Sc",
+        "position": "Direktur Bina Penyelenggaraan Pelatihan Vokasi dan Pemagangan",
+        "photo": ""
+      },
+      {
+        "name": "Muhammad Ali, S.S, M.A, Ph.D",
+        "position": "Direktur Bina Peningkatan Produktivitas",
+        "photo": ""
+      },
+      {
+        "name": "Moh. Amir Syarifuddin, S.T., M.M",
+        "position": "Kepala Sekretariat Badan Nasional Sertifikasi Profesi",
+        "photo": ""
+      }
+    ]
+  },
+  "binapenta-pkk": {
+    "unit_name": "Binapenta & PKK",
+    "slug": "binapenta-pkk",
+    "leader": {
+      "name": "Prof. Dr. Sugeng Heri Suseno S.Pi., M.Si",
+      "position": "Direktur Jenderal Pembinaan Penempatan Tenaga Kerja dan Perluasan Kesempatan Kerja",
+      "photo": "https://portal.kemnaker.go.id/storage/attachments/574/8b7/b2a/Wt7QoRGESMDFhE4CkU97TWK6MRtc4ipLn9GWoXCd.jpg"
+    },
+    "staff": [
+      {
+        "name": "Iwan Darmawan",
+        "position": "Sekretaris Direktorat Jenderal Pembinaan Penempatan Tenaga Kerja dan Perluasan Kesempatan Kerja",
+        "photo": ""
+      },
+      {
+        "name": "Isnarti Hasan, S.E., M.Si",
+        "position": "Direktur Bina Penempatan Tenaga Kerja",
+        "photo": ""
+      },
+      {
+        "name": "Anggun Sintana, S.E., M.M",
+        "position": "Direktur Bina Penempatan Tenaga Kerja Khusus",
+        "photo": ""
+      },
+      {
+        "name": "Nuryanti, S.E., M.E",
+        "position": "Direktur Bina Perluasan Kesempatan Kerja",
+        "photo": ""
+      },
+      {
+        "name": "Rendra Setiawan, S.S",
+        "position": "Direktur Pengendalian Penggunaan Tenaga Kerja Asing",
+        "photo": ""
+      },
+      {
+        "name": "Soman Wisnu Darma, S.Si., M.T",
+        "position": "Direktur Bina Pengantar Kerja",
+        "photo": ""
+      },
+      {
+        "name": "Aris Budiyanto",
+        "position": "Kepala Balai Besar Perluasan Kesempatan Kerja Bandung Barat",
+        "photo": ""
+      }
+    ]
+  },
+  "phi-jsk": {
+    "unit_name": "PHI - JSK",
+    "slug": "phi-jsk",
+    "leader": {
+      "name": "Dra. Indah Anggoro Putri, M. Bus",
+      "position": "Direktur Jenderal Pembinaan Hubungan Industrial dan Jaminan Sosial Tenaga Kerja",
+      "photo": "https://portal.kemnaker.go.id/storage/attachments/5d4/2ef/a6f/0JAcLrzgnixJe7xNSWdozCaREWCYZUZfHL1dKRkJ.jpg"
+    },
+    "staff": [
+      {
+        "name": "Agatha Widianawati, S.H., M.H",
+        "position": "Sekretaris Direktorat Jenderal Pembinaan Hubungan Industrial dan Jaminan Sosial Tenaga Kerja",
+        "photo": ""
+      },
+      {
+        "name": "Swartoko, S.E., M.T",
+        "position": "Direktur Bina Mediator Hubungan Industrial",
+        "photo": ""
+      },
+      {
+        "name": "Decky Haedar Ulum, S.E., M.Kes",
+        "position": "Direktur Kelembagaan dan Pencegahan Perselisihan Hubungan Industrial",
+        "photo": ""
+      },
+      {
+        "name": "Arnando Jujur Pardamean  Siregar, S.H., M.H",
+        "position": "Direktur Penyelesaian Perselisihan Hubungan Industrial",
+        "photo": "https://portal.kemnaker.go.id/storage/attachments/5d6/4d7/fa8/mY4Av749eV15cL9QlUjznOm6k6ERSM4hIwJBLsu5.jpg"
+      },
+      {
+        "name": "Dhatun Kuswandari, S.H., M.H",
+        "position": "Direktur Hubungan Kerja dan Pengupahan",
+        "photo": "https://portal.kemnaker.go.id/storage/attachments/317/61c/04d/Ubof0UqDB1mA9b0nks4Fy16GJMHcbb0tg6u5lsRZ.jpg"
+      },
+      {
+        "name": "Decky Haedar Ulum, S.E., M.Kes",
+        "position": "Plt. Direktur Jaminan Sosial Tenaga Kerja dan Fasilitasi Kesejahteraan Pekerja",
+        "photo": ""
+      }
+    ]
+  },
+  "binwasnaker-k3": {
+    "unit_name": "Binwasnaker & K3",
+    "slug": "binwasnaker-k3",
+    "leader": {
+      "name": "Ir. Ismail Pakaya, M.E",
+      "position": "Direktur Jenderal Pembinaan Pengawasan Ketenagakerjaan Keselamatan dan Kesehatan Kerja",
+      "photo": ""
+    },
+    "staff": [
+      {
+        "name": "Dr. Agus Triyono, S.Si., M.Kes",
+        "position": "Sekretaris Direktorat Jenderal Pembinaan Pengawasan Ketenagakerjaan dan Keselamatan dan Kesehatan Kerja",
+        "photo": ""
+      },
+      {
+        "name": "Drs. Muhamad Idham, M.K.K.K",
+        "position": "Direktur Bina Pengawas Ketenagakerjaan dan Penguji Keselamatan dan Kesehatan Kerja",
+        "photo": ""
+      },
+      {
+        "name": "Yuli Adiratna, S.H., M.Hum",
+        "position": "Direktur Bina Sistem Pengawasan Ketenagakerjaan",
+        "photo": ""
+      },
+      {
+        "name": "dr. Muzakir, M.K.M",
+        "position": "Direktur Bina Kelembagaan Keselamatan dan Kesehatan Kerja",
+        "photo": ""
+      },
+      {
+        "name": "Muchamad Yusuf, S.T., M.Si",
+        "position": "Direktur Bina Pengujian Keselamatan dan Kesehatan Kerja",
+        "photo": ""
+      },
+      {
+        "name": "dr. Yessie Kualasari, M.K.K.K",
+        "position": "Kepala Balai Besar Keselamatan dan Kesehatan Kerja Jakarta",
+        "photo": "https://portal.kemnaker.go.id/storage/attachments/425/05b/3c3/qMR4vvUzRpOMXCGpwJs2uogV4Py6FGu62lcbv7l3.K"
+      },
+      {
+        "name": "dr. Ventje Sri Setiyanto",
+        "position": "Kepala Balai Keselamatan dan Kesehatan Kerja Makassar",
+        "photo": ""
+      },
+      {
+        "name": "Dr. Suseno Hadi, M.E.M",
+        "position": "Kepala Balai Keselamatan dan Kesehatan Kerja Bandung",
+        "photo": ""
+      },
+      {
+        "name": "dr. Santi Yuliandari, M.Kes",
+        "position": "Kepala Balai Keselamatan dan Kesehatan Kerja Medan",
+        "photo": ""
+      },
+      {
+        "name": "dr. Erwin Anjasmara Ichsan, M.K.M",
+        "position": "Kepala Balai Keselamatan dan Kesehatan Kerja Samarinda",
+        "photo": ""
+      }
+    ]
+  },
+  "menteri-ketenagakerjaan": {
+    "unit_name": "Kementerian Ketenagakerjaan RI",
+    "slug": "menteri-ketenagakerjaan",
+    "leader": {
+      "name": "Prof. Yassierli, S.T., M.T., Ph.D",
+      "position": "Menteri Ketenagakerjaan Republik Indonesia",
+      "photo": "https://portal.kemnaker.go.id/storage/attachments/f9f/0c8/81f/yI7Y2FgvqGKm9DiIAK3ROIdmUImuog21yhgZii5R.png"
+    },
+    "staff": [
+      {
+        "name": "Dr. Ir. H. Afriansyah Noor, S.T., M.Si., IPU",
+        "position": "Wakil Menteri Ketenagakerjaan Republik Indonesia",
+        "photo": "https://portal.kemnaker.go.id/storage/attachments/2fa/85e/cda/Vv5xU7NyE7u2qjlzxDJ2vNpeEDoZg3twOwoE0JzG.jpg"
+      },
+      {
+        "name": "Dr. Cris Kuntadi, S.E., M.M",
+        "position": "Sekretaris Jenderal",
+        "photo": ""
+      },
+      {
+        "name": "Dr. Ir. Roni Dwi Susanto, M.Si",
+        "position": "Inspektur Jenderal",
+        "photo": "https://portal.kemnaker.go.id/storage/attachments/eaf/0e4/5d5/597a7uOFaJ8piPPu41CYmbGzaOkcHaZlNXyXCh7Y.jpeg"
+      },
+      {
+        "name": "Indah Anggoro Putri, M. Bus",
+        "position": "Direktur Jenderal Pembinaan Hubungan Industrial dan Jaminan Sosial Tenaga Kerja",
+        "photo": "https://portal.kemnaker.go.id/storage/attachments/b0a/333/c27/Wb8nBuhmbM2wLhhzsdyz9kk5kJa8CPSTLb9jlqFl.jpg"
+      },
+      {
+        "name": "Ir. Ismail Pakaya, M.E",
+        "position": "Direktur Jenderal Pembinaan Pengawasan Ketenagakerjaan Keselamatan dan Kesehatan Kerja",
+        "photo": ""
+      },
+      {
+        "name": "Darmawansyah, S.T., M.Si",
+        "position": "Direktur Jenderal Pembinaan Pelatihan Vokasi Dan Produktivitas",
+        "photo": "https://portal.kemnaker.go.id/storage/attachments/c0d/144/ba6/YWBzZPbC2cXkJvj3j8PhBEfhR5NWEOn4MWfeeSuB.jpg"
+      },
+      {
+        "name": "Prof. Dr. Sugeng Heri Suseno S.Pi., M.Si",
+        "position": "Direktur Jenderal Pembinaan Penempatan Tenaga Kerja dan Perluasan Kesempatan Kerja",
+        "photo": "https://portal.kemnaker.go.id/storage/attachments/3d0/a54/e49/vJLOyGZyucpW6X7Fo1KSqfMbZMQB8dACkqSePme2.jpg"
+      },
+      {
+        "name": "Prof. Anwar Sanusi, Ph.D",
+        "position": "Kepala Badan Perencanaan dan Pengembangan Ketenagakerjaan",
+        "photo": "https://portal.kemnaker.go.id/storage/attachments/2c6/08b/4c8/hFqZhpM8orgKzRHClmGRh9VuWhiEVsiJADZ6XmhH.jpg"
+      },
+      {
+        "name": "Drs. Aris Wahyudi, M.Si",
+        "position": "Staf Ahli Bidang Ekonomi Ketenagakerjaan",
+        "photo": "https://portal.kemnaker.go.id/storage/attachments/7fa/228/459/9eZQCt6ahcPei5ibbZqpz20nOJCbOlPuz9p8zycr.jpg"
+      },
+      {
+        "name": "Agung Nur Rohmad, S.T., M.M",
+        "position": "Staf Ahli Bidang Hubungan Internasional",
+        "photo": "https://portal.kemnaker.go.id/storage/attachments/016/b24/05c/SLI6yOC8i4VQH93FNjZSOmoLspgXeDKkRbLgxHTW.jpg"
+      },
+      {
+        "name": "Estiarty Haryani, S.Pt., M.T",
+        "position": "Staf Ahli Bidang Hubungan Antar Lembaga",
+        "photo": ""
+      }
+    ]
+  }
+}

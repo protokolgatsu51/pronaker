@@ -1,0 +1,160 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  {% if custom_font_data %}
+  @font-face {
+    font-family: "{{ custom_font_name or 'CustomFont' }}";
+    src: url("{{ custom_font_data }}");
+  }
+  {% else %}
+  @font-face {
+    font-family: "MyriadPro";
+    src: url("{{ asset_prefix }}fonts/MYRIADPRO-REGULAR.woff") format("woff");
+    font-weight: 400;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "MyriadPro";
+    src: url("{{ asset_prefix }}fonts/MYRIADPRO-BOLD.woff") format("woff");
+    font-weight: 700;
+    font-style: normal;
+  }
+  {% endif %}
+
+  @page {
+    size: 832.08pt 372.72pt;
+    margin: 0;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #ffffff;
+    width: 832.08pt;
+    line-height: 1;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .card-page {
+    position: relative;
+    width: 832.08pt;
+    height: 372.72pt;
+    max-height: 372.72pt;
+    overflow: hidden;
+    background: #ffffff;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .card-page:last-child {
+    page-break-after: auto;
+    break-after: auto;
+  }
+
+  .bg-img {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 832.08pt;
+    height: 372.72pt;
+    display: block;
+  }
+
+  .block {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 832.08pt;
+    height: 372.72pt;
+  }
+
+  .block-flip {
+    transform: rotate(180deg);
+    transform-origin: 416.04pt 186.36pt;
+  }
+</style>
+</head>
+<body>
+  {% for card in cards %}
+  <div class="card-page">
+    {% if custom_bg_data %}
+    <img class="bg-img" src="{{ custom_bg_data }}" alt="Card Background">
+    {% else %}
+    <img class="bg-img" src="{{ asset_prefix }}bg_template.png" alt="Card Background">
+    {% endif %}
+    <div id="block-normal-{{ loop.index0 }}" class="block"></div>
+    {% if sides != '1' %}
+    <div id="block-flip-{{ loop.index0 }}" class="block block-flip"></div>
+    {% endif %}
+  </div>
+  {% endfor %}
+
+  <script src="{{ asset_prefix }}nametag.js"></script>
+  <script>
+    const CARDS = {{ cards|tojson }};
+    const CONTENT_MODE = {{ (content_mode or 'both')|tojson }};
+
+    {% if custom_font_data %}
+    const targetFontName = "{{ custom_font_name or 'CustomFont' }}";
+    const targetFontFamily = `"${targetFontName}", sans-serif`;
+    {% elif font_choice == 'Arial' %}
+    const targetFontName = "Arial";
+    const targetFontFamily = "Arial, sans-serif";
+    {% elif font_choice == 'Times New Roman' %}
+    const targetFontName = "Times New Roman";
+    const targetFontFamily = "'Times New Roman', Times, serif";
+    {% elif font_choice == 'Calibri' %}
+    const targetFontName = "Calibri";
+    const targetFontFamily = "Calibri, Candara, sans-serif";
+    {% else %}
+    const targetFontName = "MyriadPro";
+    const targetFontFamily = "MyriadPro, Arial, Helvetica, sans-serif";
+    {% endif %}
+
+    if (window.setFontFamily) window.setFontFamily(targetFontFamily);
+    if (window.setCardSides) window.setCardSides({{ 1 if sides == '1' else 2 }});
+    if (window.setContentMode) window.setContentMode(CONTENT_MODE);
+
+    function paint() {
+      CARDS.forEach((card, idx) => {
+        const normal = document.getElementById("block-normal-" + idx);
+        const flip = document.getElementById("block-flip-" + idx);
+        const safeName = (card.name || "").toString();
+        const safePos = (card.position || "").toString();
+        const lines = wrapPosition(safePos);
+        const blockOpts = { mode: CONTENT_MODE, rawPosition: safePos };
+        if (normal) layoutBlock(normal, safeName, lines, blockOpts);
+        if (flip && {{ 'false' if sides == '1' else 'true' }}) layoutBlock(flip, safeName, lines, blockOpts);
+      });
+    }
+
+    async function init() {
+      try {
+        await Promise.all([
+          document.fonts.load(`700 ${60 * 96 / 72}px "${targetFontName}"`),
+          document.fonts.load(`700 ${45.86 * 96 / 72}px "${targetFontName}"`),
+          document.fonts.load(`400 ${18 * 96 / 72}px "${targetFontName}"`),
+          document.fonts.ready,
+        ]);
+      } catch (err) {
+        console.warn("Font preloading error:", err);
+      }
+      paint();
+      window.__rendered = true;
+    }
+
+    init();
+  </script>
+</body>
+</html>
