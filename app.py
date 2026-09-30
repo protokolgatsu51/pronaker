@@ -9,6 +9,7 @@ import csv
 import io
 import os
 import zipfile
+from urllib.parse import parse_qs
 
 from flask import Flask, render_template, request, send_file, flash, redirect, url_for, jsonify
 
@@ -24,13 +25,33 @@ app = Flask(
 )
 app.secret_key = "dev-only-not-secret"  # fine for a local prototype
 
+class VercelPathMiddleware:
+    """WSGI middleware to normalize PATH_INFO from Vercel proxy/rewrites."""
+    def __init__(self, wsgi_app):
+        self.wsgi_app = wsgi_app
+
+    def __call__(self, environ, start_response):
+        qs = parse_qs(environ.get("QUERY_STRING", ""))
+        if "path" in qs and qs["path"]:
+            p = "/" + qs["path"][0].lstrip("/")
+            environ["PATH_INFO"] = p
+        elif environ.get("HTTP_X_FORWARDED_URI"):
+            environ["PATH_INFO"] = environ["HTTP_X_FORWARDED_URI"].split("?")[0]
+        elif environ.get("HTTP_X_MATCHED_PATH"):
+            environ["PATH_INFO"] = environ["HTTP_X_MATCHED_PATH"].split("?")[0]
+        else:
+            path = environ.get("PATH_INFO", "")
+            if path in ("/api/index.py", "/api/index", "/api", ""):
+                environ["PATH_INFO"] = "/"
+
+        return self.wsgi_app(environ, start_response)
+
+app.wsgi_app = VercelPathMiddleware(app.wsgi_app)
+
 OUTPUT_DIR = output_dir()
 
 
 @app.route("/", methods=["GET"])
-@app.route("/api", methods=["GET"])
-@app.route("/api/index", methods=["GET"])
-@app.route("/api/index.py", methods=["GET"])
 def index():
     return render_template("index.html")
 
