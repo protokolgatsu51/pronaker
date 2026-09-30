@@ -28,6 +28,9 @@ OUTPUT_DIR = output_dir()
 
 
 @app.route("/", methods=["GET"])
+@app.route("/api", methods=["GET"])
+@app.route("/api/index", methods=["GET"])
+@app.route("/api/index.py", methods=["GET"])
 def index():
     return render_template("index.html")
 
