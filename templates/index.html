@@ -323,11 +323,16 @@
       opacity: 1;
     }
 
-    .tab-switch-glider.animated {
+    .tab-switch-glider.animated,
+    .tab-switch-glider.ready:not(.no-animate) {
       transition: transform 0.35s cubic-bezier(0.34, 1.25, 0.64, 1),
         width 0.35s cubic-bezier(0.34, 1.25, 0.64, 1),
         height 0.35s cubic-bezier(0.34, 1.25, 0.64, 1),
         opacity 0.2s ease;
+    }
+
+    .tab-switch-glider.no-animate {
+      transition: none !important;
     }
 
     .tab-btn {
@@ -409,11 +414,16 @@
       opacity: 1;
     }
 
-    .nav-source-glider.animated {
+    .nav-source-glider.animated,
+    .nav-source-glider.ready:not(.no-animate) {
       transition: transform 0.35s cubic-bezier(0.34, 1.25, 0.64, 1),
         width 0.35s cubic-bezier(0.34, 1.25, 0.64, 1),
         height 0.35s cubic-bezier(0.34, 1.25, 0.64, 1),
         opacity 0.2s ease;
+    }
+
+    .nav-source-glider.no-animate {
+      transition: none !important;
     }
 
     .nav-source-btn {
@@ -1777,11 +1787,16 @@
       opacity: 1;
     }
 
-    .bubble-glider.animated {
+    .bubble-glider.animated,
+    .bubble-glider.ready:not(.no-animate) {
       transition: transform 0.3s cubic-bezier(0.34, 1.25, 0.64, 1),
         width 0.3s cubic-bezier(0.34, 1.25, 0.64, 1),
         height 0.3s cubic-bezier(0.34, 1.25, 0.64, 1),
         opacity 0.2s ease;
+    }
+
+    .bubble-glider.no-animate {
+      transition: none !important;
     }
 
     .bubble-segment-btn {
@@ -2984,7 +2999,7 @@
   </section>
 
   <!-- Scripts -->
-  <script src="{{ url_for('static', filename='nametag.js') }}?v=20261001b"></script>
+  <script src="{{ url_for('static', filename='nametag.js') }}?v=20261001c"></script>
   <script>
     let currentTab = "single";
     let currentBulkIndex = 0;
@@ -3027,7 +3042,15 @@
 
       if (width <= 0 || height <= 0) return;
 
-      if (!animate) {
+      if (animate) {
+        // Ensure transition is active BEFORE changing transform so the slide animation ALWAYS plays on the first click
+        gliderEl.classList.remove("no-animate");
+        if (!gliderEl.classList.contains("animated")) {
+          gliderEl.classList.add("animated");
+          void gliderEl.offsetWidth; // Force browser to register CSS transition
+        }
+      } else {
+        gliderEl.classList.add("no-animate");
         gliderEl.classList.remove("animated");
       }
 
@@ -3036,11 +3059,12 @@
       gliderEl.style.transform = `translate3d(${left}px, ${top}px, 0)`;
       gliderEl.classList.add("ready");
 
-      if (animate) {
-        if (!gliderEl.classList.contains("animated")) {
-          void gliderEl.offsetWidth; // trigger reflow
+      // Once positioned with animate=false, re-enable animation on the next frame so all future clicks animate smoothly
+      if (!animate) {
+        requestAnimationFrame(() => {
+          gliderEl.classList.remove("no-animate");
           gliderEl.classList.add("animated");
-        }
+        });
       }
     }
 
@@ -5008,7 +5032,7 @@
         </head>
         <body>
           ${cardsHtml}
-          <script src="/static/nametag.js?v=20261001b"><\/script>
+          <script src="/static/nametag.js?v=20261001c"><\/script>
           <script>
             async function doPrint() {
               if (window.setFontFamily) window.setFontFamily('${activeFontFamily}');
@@ -5074,12 +5098,12 @@
       fontStatusPill.style.background = "#ecfdf5";
       fontStatusPill.style.color = "#059669";
       fontStatusPill.style.borderColor = "#a7f3d0";
-      updateNavGlider(false);
+      updateAllGliders(false);
       update();
       fitPreview();
     }).catch(() => {
       fontStatus.textContent = "Font Fallback";
-      updateNavGlider(false);
+      updateAllGliders(false);
       update();
       fitPreview();
     });
@@ -5088,18 +5112,12 @@
     window.addEventListener("DOMContentLoaded", () => {
       initAllModernDropdowns();
       syncAllModernDropdowns();
-      updateNavGlider(false);
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          const glider = document.getElementById("navSourceGlider");
-          if (glider) glider.classList.add("animated");
-        });
-      });
+      updateAllGliders(false);
       update();
       fitPreview();
     });
-    setTimeout(() => { updateNavGlider(false); syncAllModernDropdowns(); update(); fitPreview(); }, 400);
-    setTimeout(() => { updateNavGlider(false); syncAllModernDropdowns(); update(); fitPreview(); }, 1000);
+    setTimeout(() => { updateAllGliders(false); syncAllModernDropdowns(); update(); fitPreview(); }, 400);
+    setTimeout(() => { updateAllGliders(false); syncAllModernDropdowns(); update(); fitPreview(); }, 1000);
   </script>
 </body>
 
