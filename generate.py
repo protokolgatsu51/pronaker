@@ -39,6 +39,8 @@ MAX_TEXT_WIDTH = 625.0           # available width before position text wraps
                                   # (calibrated so the reference example wraps
                                   # exactly like your sample PDF; re-tune if
                                   # you drop in a real Myriad Pro font file)
+MAX_NAME_WIDTH = 668.0           # available width before name text must be abbreviated
+NAME_BOX_WIDTH = 668.0           # centered name text box boundary
 
 NAME_FONT_SIZE = 45.86
 POSITION_FONT_SIZE = 18.0
@@ -196,40 +198,79 @@ def clean_titles(name):
     s = re.sub(r'\s+', ' ', s)
     return s
 
-def format_bulk_name(raw_name, max_len=24):
+def get_name_text_width_pt(text, font=None, font_size=None):
+    if not text:
+        return 0.0
+    upper = str(text).strip().upper()
+    f = font or NAME_FONT
+    sz = font_size or NAME_FONT_SIZE
+    try:
+        return pdfmetrics.stringWidth(upper, f, sz)
+    except Exception:
+        w = 0.0
+        for ch in upper:
+            if ch in "MW@#%":
+                w += 40.0
+            elif ch in "IJ.:,'!|()[]":
+                w += 13.0
+            elif ch in "QOGCDHNU":
+                w += 33.0
+            elif ch in "EFLSTZ":
+                w += 25.0
+            elif ch == " ":
+                w += 15.0
+            else:
+                w += 29.0
+        return w
+
+def fits_name(text, max_len=24, max_width=MAX_NAME_WIDTH):
+    if not text:
+        return True
+    if len(text) > max_len:
+        return False
+    if get_name_text_width_pt(text) > max_width:
+        return False
+    return True
+
+def format_bulk_name(raw_name, max_len=24, max_width=MAX_NAME_WIDTH):
     """
     1. Removes all front and back titles.
-    2. If length > max_len: abbreviates the last name (e.g. Firmansyah -> F.).
-    3. If still > max_len: uses words from beginning as much as fits (max_len).
+    2. If length > max_len or text width > max_width: abbreviates the last name (e.g. Firmansyah -> F.).
+    3. If still > max_len or > max_width: uses words from beginning as much as fits.
     """
     cleaned = strip_trailing_punctuation(clean_titles(raw_name))
     if not cleaned:
         return ""
-    if len(cleaned) <= max_len:
+    if fits_name(cleaned, max_len=max_len, max_width=max_width):
         return cleaned
 
     words = cleaned.split()
     if len(words) > 1:
-        # Abbreviate last name
+        # 1. Abbreviate last name
         last_word = words[-1]
         initial = last_word[0].upper() + "."
         candidate = " ".join(words[:-1]) + " " + initial
-        if len(candidate) <= max_len:
+        if fits_name(candidate, max_len=max_len, max_width=max_width):
             return candidate
 
-        # If still > max_len: take words from beginning as much as fits
+        # 2. If still exceeds max_len or max_width: take words from beginning as much as fits
         result = ""
         for i in range(len(words) - 1):
             next_cand = (result + " " + words[i]).strip()
-            if len(next_cand) <= max_len:
+            if fits_name(next_cand + " " + initial, max_len=max_len, max_width=max_width):
+                result = next_cand
+            elif fits_name(next_cand, max_len=max_len, max_width=max_width):
                 result = next_cand
             else:
                 init_cand = (result + " " + words[i][0].upper() + ".").strip()
-                if len(init_cand) <= max_len:
+                if fits_name(init_cand, max_len=max_len, max_width=max_width):
                     result = init_cand
                 break
-        if result and len(result) <= max_len:
-            return result
+        if result:
+            if fits_name(result + " " + initial, max_len=max_len, max_width=max_width):
+                return result + " " + initial
+            if fits_name(result, max_len=max_len, max_width=max_width):
+                return result
 
     return strip_trailing_punctuation(cleaned[:max_len].strip())
 
@@ -696,7 +737,11 @@ def _draw_block(c, name, position_lines, content_mode="both"):
 
     # Default 'both' mode
     safe_name = name.upper()
-    c.setFont(NAME_FONT, NAME_FONT_SIZE)
+    font_sz = NAME_FONT_SIZE
+    w = get_name_text_width_pt(safe_name, NAME_FONT, font_sz)
+    if w > MAX_NAME_WIDTH and w > 0:
+        font_sz = font_sz * (MAX_NAME_WIDTH / w)
+    c.setFont(NAME_FONT, font_sz)
     c.drawCentredString(CENTER_X, NAME_BASELINE_Y, safe_name)
 
     c.setFont(POSITION_FONT, POSITION_FONT_SIZE)

@@ -21,7 +21,8 @@ const CARD = {
                                // Myriad Pro metrics; calibrated so the
                                // reference example wraps exactly like your
                                // sample PDF)
-  NAME_BOX_WIDTH: 700.0,      // pt, wide centering box for the name
+  NAME_BOX_WIDTH: 668.0,      // pt, centered name text box boundary
+  MAX_NAME_WIDTH: 668.0,      // pt, maximum text width before auto-abbreviation
   NAME_FONT_SIZE: 45.86,      // pt
   POSITION_FONT_SIZE: 18.0,   // pt
   NAME_FONT_WEIGHT: 700,
@@ -547,7 +548,13 @@ function layoutBlock(container, name, positionLines, options = {}) {
   // Mode: Nama & Jabatan (Default standard layout)
   const safeName = (name || "").toString().trim().toUpperCase();
   if (safeName) {
-    const fontSize = CARD.NAME_FONT_SIZE;
+    let fontSize = CARD.NAME_FONT_SIZE;
+    const measuredW = typeof getNameTextWidthPt === "function"
+      ? getNameTextWidthPt(safeName)
+      : measureTextWidthPt(safeName, CARD.NAME_FONT_WEIGHT, fontSize);
+    if (measuredW > CARD.NAME_BOX_WIDTH && CARD.NAME_BOX_WIDTH > 0) {
+      fontSize = Math.floor(fontSize * (CARD.NAME_BOX_WIDTH / measuredW) * 10) / 10;
+    }
     const nameTop = boxTopForBaseline(CARD.NAME_BASELINE_Y, fontSize);
     container.appendChild(makeLine(safeName, {
       top: nameTop,
@@ -694,37 +701,73 @@ function cleanTitles(name) {
   return s;
 }
 
-function formatBulkName(rawName, maxLen = 24) {
+function getNameTextWidthPt(text) {
+  if (!text) return 0;
+  const upper = String(text).trim().toUpperCase();
+  if (typeof measureTextWidthPt === "function") {
+    try {
+      const w = measureTextWidthPt(upper, CARD.NAME_FONT_WEIGHT || 700, CARD.NAME_FONT_SIZE || 45.86);
+      if (w > 0) return w;
+    } catch (e) {}
+  }
+  // Precise character-based fallback if canvas measurement is unavailable
+  let w = 0;
+  for (const ch of upper) {
+    if ("MW@#%".includes(ch)) w += 40.0;
+    else if ("IJ.:,'!|()[]".includes(ch)) w += 13.0;
+    else if ("QOGCDHNU".includes(ch)) w += 33.0;
+    else if ("EFLSTZ".includes(ch)) w += 25.0;
+    else if (ch === " ") w += 15.0;
+    else w += 29.0;
+  }
+  return w;
+}
+
+function fitsName(candidate, maxLen = 24, maxWidth = (typeof CARD !== "undefined" && CARD.MAX_NAME_WIDTH) ? CARD.MAX_NAME_WIDTH : 668.0) {
+  if (!candidate) return true;
+  if (candidate.length > maxLen) return false;
+  if (getNameTextWidthPt(candidate) > maxWidth) return false;
+  return true;
+}
+
+function formatBulkName(rawName, maxLen = 24, maxWidth = (typeof CARD !== "undefined" && CARD.MAX_NAME_WIDTH) ? CARD.MAX_NAME_WIDTH : 668.0) {
   const cleaned = stripTrailingPunctuation(cleanTitles(rawName));
   if (!cleaned) return "";
-  if (cleaned.length <= maxLen) return cleaned;
+  if (fitsName(cleaned, maxLen, maxWidth)) return cleaned;
 
   const words = cleaned.split(" ");
   if (words.length > 1) {
-    // Abbreviate last name: e.g. "Firmansyah" -> "F."
+    // 1. Abbreviate last name: e.g. "Firmansyah" -> "F."
     const lastWord = words[words.length - 1];
     const initial = lastWord.charAt(0).toUpperCase() + ".";
     const candidate = words.slice(0, -1).join(" ") + " " + initial;
-    if (candidate.length <= maxLen) {
+    if (fitsName(candidate, maxLen, maxWidth)) {
       return candidate;
     }
 
-    // If still > maxLen: "gunakan nama dari awalan saja secukup nya"
+    // 2. If still > maxLen or > maxWidth: keep words from beginning as much as fits
     let result = "";
     for (let i = 0; i < words.length - 1; i++) {
       const nextCand = (result ? result + " " + words[i] : words[i]).trim();
-      if (nextCand.length <= maxLen) {
+      if (fitsName(nextCand + " " + initial, maxLen, maxWidth)) {
+        result = nextCand;
+      } else if (fitsName(nextCand, maxLen, maxWidth)) {
         result = nextCand;
       } else {
         const initCand = (result ? result + " " + words[i].charAt(0).toUpperCase() + "." : words[i].charAt(0).toUpperCase() + ".").trim();
-        if (initCand.length <= maxLen) {
+        if (fitsName(initCand, maxLen, maxWidth)) {
           result = initCand;
         }
         break;
       }
     }
-    if (result && result.length <= maxLen) {
-      return result;
+    if (result) {
+      if (fitsName(result + " " + initial, maxLen, maxWidth)) {
+        return result + " " + initial;
+      }
+      if (fitsName(result, maxLen, maxWidth)) {
+        return result;
+      }
     }
   }
   return stripTrailingPunctuation(cleaned.substring(0, maxLen).trim());
@@ -904,6 +947,8 @@ window.wrap60pt = wrap60pt;
 window.layoutBlock = layoutBlock;
 window.cleanTitles = cleanTitles;
 window.formatBulkName = formatBulkName;
+window.getNameTextWidthPt = getNameTextWidthPt;
+window.fitsName = fitsName;
 window.splitNameAndPosition = splitNameAndPosition;
 window.cleanPositionText = cleanPositionText;
 window.stripTrailingPunctuation = stripTrailingPunctuation;
