@@ -84,15 +84,16 @@ LEADING_LIST_PREFIX_PATTERN = re.compile(
 )
 
 FRONT_TITLES_PATTERN = re.compile(
-    r'^\s*(?:'
-    r'Plt\.?|PLT\.?|Plh\.?|PLH\.?|Pj\.?|PJ\.?|'
+    r'^\s*(?:(?:Plt\.?|PLT\.?|Plh\.?|PLH\.?|Pj\.?|PJ\.?)\s+)?'
+    r'(?:'
     r'Prof\.?\s+Dr\.?\s+Ir\.?|Prof\.?\s+Dr\.?|Prof\.?\s+Ir\.?|Prof\.?|'
     r'Dr\.?\s+Ir\.?|Dr\.?\s+Dr\.?|Dr\.?\s+drg\.?|Dr\.?\s+dr\.?|'
     r'Drs\.?|Dra\.?|Drg\.?|Drh\.?|Ir\.?|Ns\.?|Apt\.?|'
     r'Dr\.?|dr\.?|drg\.?|drh\.?|apt\.?|'
-    r'H\.?|Hj\.?|Haji|Hajjah|'
-    r'Bpk\.?|Bapak|Ibu|Sdr\.?|Sdri\.?'
-    r')\s+',
+    r'Bpk\.?|Bapak|Ibu|Sdr\.?|Sdri\.?|'
+    r'K\.?\s*H\.?|Kiai\s+Haji|Kyai\s+Haji|'
+    r'Hajjah|Hajah|Haji|Hjh\.?|Hj\.?|H\.|(?:\bH\b\.?)'
+    r')(?:\.|\s+|$)',
     re.IGNORECASE
 )
 
@@ -145,16 +146,20 @@ BACK_TITLES_PATTERN = re.compile(
     r'CISA|CISM|CISSP|CEH|'
     r'CRA|CRP|CRGP|CSO|CGO|CGP|'
     r'Ak\.?|Akt\.?|CA\b|BKP|CTA|ACPA|'
-    r'MM\.PD'
+    r'MM\.PD|'
+    r'H\.|Hj\.|Haji|Hajjah|Hajah|Hjh\.?'
     r')\b\.?',
     re.IGNORECASE
 )
 
 def clean_titles(name):
-    """Removes leading list numbers/bullets, front and back titles/degrees from a name."""
+    """Removes leading list numbers/bullets, front and back titles/degrees, including Haji/Hajjah."""
     if not name:
         return ""
     s = name.strip()
+
+    # Strip parenthesized religious titles e.g. "(H.) " or "(Hj.) "
+    s = re.sub(r'^\s*\((?:H\.|Hj\.|Haji|Hajjah|Hajah|Hjh\.?)\)\s*', '', s, flags=re.IGNORECASE).strip()
 
     # 1. Strip leading numbering or bullet markers (e.g. "1. ", "2) ", "- ", "> ", "· ", "• ")
     prev = None
@@ -162,7 +167,7 @@ def clean_titles(name):
         prev = s
         s = LEADING_LIST_PREFIX_PATTERN.sub('', s).strip()
 
-    # 2. Strip front titles (e.g. "Prof. ", "Dr. ", "dr. ", "Ir. ", etc.)
+    # 2. Strip front titles & religious titles (e.g. "Prof. ", "Dr. ", "H. ", "Hj. ", "K.H. ", etc.)
     prev = None
     while prev != s:
         prev = s

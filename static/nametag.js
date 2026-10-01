@@ -630,7 +630,7 @@ function renderCard(name, position, options = {}) {
 // ---------------------------------------------------------------------------
 const LEADING_LIST_PREFIX_PATTERN = /^\s*(?:\(?\d+[\.\)\:\-\]]*|[-*•·–—>→+~▪▫◦■/\\|]+)\s*/;
 
-const FRONT_TITLES_PATTERN = /^\s*(?:Plt\.?|PLT\.?|Plh\.?|PLH\.?|Pj\.?|PJ\.?|Prof\.?\s+Dr\.?\s+Ir\.?|Prof\.?\s+Dr\.?|Prof\.?\s+Ir\.?|Prof\.?|Dr\.?\s+Ir\.?|Dr\.?\s+Dr\.?|Dr\.?\s+drg\.?|Dr\.?\s+dr\.?|Drs\.?|Dra\.?|Drg\.?|Drh\.?|Ir\.?|Ns\.?|Apt\.?|Dr\.?|dr\.?|drg\.?|drh\.?|apt\.?|H\.?|Hj\.?|Haji|Hajjah|Bpk\.?|Bapak|Ibu|Sdr\.?|Sdri\.?)\s+/i;
+const FRONT_TITLES_PATTERN = /^\s*(?:(?:Plt\.?|PLT\.?|Plh\.?|PLH\.?|Pj\.?|PJ\.?)\s+)?(?:Prof\.?\s+Dr\.?\s+Ir\.?|Prof\.?\s+Dr\.?|Prof\.?\s+Ir\.?|Prof\.?|Dr\.?\s+Ir\.?|Dr\.?\s+Dr\.?|Dr\.?\s+drg\.?|Dr\.?\s+dr\.?|Drs\.?|Dra\.?|Drg\.?|Drh\.?|Ir\.?|Ns\.?|Apt\.?|Dr\.?|dr\.?|drg\.?|drh\.?|apt\.?|Bpk\.?|Bapak|Ibu|Sdr\.?|Sdri\.?|K\.?\s*H\.?|Kiai\s+Haji|Kyai\s+Haji|Hajjah|Hajah|Haji|Hjh\.?|Hj\.?|H\.|(?:\bH\b\.?))(?:\.|\s+|$)/i;
 
 function isValidOfficialName(name) {
   if (!name) return false;
@@ -643,11 +643,14 @@ function isValidOfficialName(name) {
 
 const TITLE_TOKEN_PATTERN = /^(?:[SMDA]\.\s*[A-Za-z]+(?:\.\s*[A-Za-z]+)*\.?|Sp\.\s*[A-Za-z]+(?:\s*\([A-Za-z]+\)|-[A-Za-z0-9]+|(?:\.\s*[A-Za-z]+)*)\.?|Subsp\.\s*[A-Za-z]+(?:\.\s*[A-Za-z]+)*\.?|Ph\.?\s*D\.?|PhD|M\.?\s*B\.?\s*A\.?|MBA|M\.?\s*Bus\.?|B\.?\s*[A-Z]\.?\s*(?:Sc|A)?\.?|LL\.?\s*M\.?|LLM|Ed\.?\s*D\.?|D\.?\s*Sc\.?|D\.?\s*B\.?\s*A\.?|IP[UMP]\b\.?|(?:ASEAN|Asean)\s+Eng\.?|ACPE|CPE|(?:SE|SH|ST|SKom|SPd|SSos|SIP|SIKom|SKM|SPi|SPt|SHut|SAg|SFarm|SPsi|SSn|SKed)\b|(?:MM|MH|MT|ME|MSi|MPd|MKes|MKom|MA|MSc|MP|MKn|MAP|MAg|MFarm|MPsi|MSn|MEcon)\b|FINASIM|FACS|FICS|CMA|CPA|CIA|CHRP|CPHR|QIA|CBV|CPMA|CFA|CFP|QWP|FRM|PMP|CAPM|CISA|CISM|CISSP|CEH|CRA|CRP|CRGP|CSO|CGO|CGP|Ak\.?|Akt\.?|CA\b|BKP|CTA|ACPA|MM\.PD)$/i;
 
-const BACK_TITLES_PATTERN = /(?:,\s*|\s+)(?:[SMDA]\.\s*[A-Za-z]+(?:\.\s*[A-Za-z]+)*\.?|Sp\.\s*[A-Za-z]+(?:\s*\([A-Za-z]+\)|-[A-Za-z0-9]+|(?:\.\s*[A-Za-z]+)*)\.?|Subsp\.\s*[A-Za-z]+(?:\.\s*[A-Za-z]+)*\.?|Ph\.?\s*D\.?|PhD|M\.?\s*B\.?\s*A\.?|MBA|M\.?\s*Bus\.?|B\.?\s*[A-Z]\.?\s*(?:Sc|A)?\.?|LL\.?\s*M\.?|LLM|Ed\.?\s*D\.?|D\.?\s*Sc\.?|D\.?\s*B\.?\s*A\.?|IP[UMP]\b\.?|(?:ASEAN|Asean)\s+Eng\.?|ACPE|CPE|(?:SE|SH|ST|SKom|SPd|SSos|SIP|SIKom|SKM|SPi|SPt|SHut|SAg|SFarm|SPsi|SSn|SKed)\b|(?:MM|MH|MT|ME|MSi|MPd|MKes|MKom|MA|MSc|MP|MKn|MAP|MAg|MFarm|MPsi|MSn|MEcon)\b|FINASIM|FACS|FICS|CMA|CPA|CIA|CHRP|CPHR|QIA|CBV|CPMA|CFA|CFP|QWP|FRM|PMP|CAPM|CISA|CISM|CISSP|CEH|CRA|CRP|CRGP|CSO|CGO|CGP|Ak\.?|Akt\.?|CA\b|BKP|CTA|ACPA|MM\.PD)\b\.?/gi;
+const BACK_TITLES_PATTERN = /(?:,\s*|\s+)(?:[SMDA]\.\s*[A-Za-z]+(?:\.\s*[A-Za-z]+)*\.?|Sp\.\s*[A-Za-z]+(?:\s*\([A-Za-z]+\)|-[A-Za-z0-9]+|(?:\.\s*[A-Za-z]+)*)\.?|Subsp\.\s*[A-Za-z]+(?:\.\s*[A-Za-z]+)*\.?|Ph\.?\s*D\.?|PhD|M\.?\s*B\.?\s*A\.?|MBA|M\.?\s*Bus\.?|B\.?\s*[A-Z]\.?\s*(?:Sc|A)?\.?|LL\.?\s*M\.?|LLM|Ed\.?\s*D\.?|D\.?\s*Sc\.?|D\.?\s*B\.?\s*A\.?|IP[UMP]\b\.?|(?:ASEAN|Asean)\s+Eng\.?|ACPE|CPE|(?:SE|SH|ST|SKom|SPd|SSos|SIP|SIKom|SKM|SPi|SPt|SHut|SAg|SFarm|SPsi|SSn|SKed)\b|(?:MM|MH|MT|ME|MSi|MPd|MKes|MKom|MA|MSc|MP|MKn|MAP|MAg|MFarm|MPsi|MSn|MEcon)\b|FINASIM|FACS|FICS|CMA|CPA|CIA|CHRP|CPHR|QIA|CBV|CPMA|CFA|CFP|QWP|FRM|PMP|CAPM|CISA|CISM|CISSP|CEH|CRA|CRP|CRGP|CSO|CGO|CGP|Ak\.?|Akt\.?|CA\b|BKP|CTA|ACPA|MM\.PD|H\.|Hj\.|Haji|Hajjah|Hajah|Hjh\.?)\b\.?/gi;
 
 function cleanTitles(name) {
   if (!name) return "";
   let s = name.trim();
+
+  // Strip parenthesized religious titles e.g. "(H.) " or "(Hj.) "
+  s = s.replace(/^\s*\((?:H\.|Hj\.|Haji|Hajjah|Hajah|Hjh\.?)\)\s*/i, "").trim();
 
   // 1. Strip leading numbering or bullet markers (e.g. "1. ", "2) ", "- ", "> ", "· ", "• ")
   let prev = null;
@@ -656,7 +659,7 @@ function cleanTitles(name) {
     s = s.replace(LEADING_LIST_PREFIX_PATTERN, "").trim();
   }
 
-  // 2. Strip front titles (e.g. "Prof. ", "Dr. ", "dr. ", "Ir. ", etc.)
+  // 2. Strip front titles & religious titles (e.g. "Prof. ", "Dr. ", "H. ", "Hj. ", "K.H. ", etc.)
   prev = null;
   while (prev !== s) {
     prev = s;
@@ -671,7 +674,7 @@ function cleanTitles(name) {
   }
 
   // 4. Clean leftover punctuation at ends and normalize internal spacing
-  s = s.replace(/^[,\.\s\-–—>·•\:\=\|\/]+|[,\.\s\-–—>·•\:\=\|\/]+$/g, "").trim();
+  s = s.replace(/^[,\.\s\-–—>·•\:\=\|\/]+|[,\.\s\-–—>·•\:\=\|\/]+$/, "").trim();
 
   // 5. Clean any trailing comma or short unrecognized title abbreviations
   while (s.includes(",")) {
@@ -685,7 +688,7 @@ function cleanTitles(name) {
     }
   }
 
-  s = s.replace(/^[,\.\s\-–—>·•\:\=\|\/]+|[,\.\s\-–—>·•\:\=\|\/]+$/g, "").trim();
+  s = s.replace(/^[,\.\s\-–—>·•\:\=\|\/]+|[,\.\s\-–—>·•\:\=\|\/]+$/, "").trim();
   s = stripTrailingPunctuation(s);
   s = s.replace(/\s+/g, " ");
   return s;
