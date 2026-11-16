@@ -1239,36 +1239,64 @@
 
     /* Compact variation for Feature Card / Bubble (Font Select) */
     .custom-select-wrapper.compact {
-      flex: 1;
+      flex: 1.35;
       min-width: 0;
     }
 
     .custom-select-wrapper.compact .custom-select-trigger {
-      padding: 5px 10px;
-      min-height: 30px;
-      font-size: 11.5px;
-      font-weight: 700;
-      border-radius: 8px;
-      border-color: #cbd5e1;
+      padding: 0 10px;
+      height: 28px;
+      min-height: 28px;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 7px;
+      border: 1px solid #cbd5e1;
       background: #ffffff;
       color: #1e293b;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
     }
 
     .custom-select-wrapper.compact .custom-select-trigger:hover {
       border-color: #94a3b8;
+      background: #fbfcfe;
+    }
+
+    .custom-select-wrapper.compact.open .custom-select-trigger {
+      border-color: var(--kemnaker-blue);
+      box-shadow: 0 0 0 2px rgba(21, 64, 106, 0.15);
+      background: #ffffff;
     }
 
     .custom-select-wrapper.compact .custom-select-menu {
       border-radius: 12px;
-      padding: 4px;
-      min-width: 220px;
-      box-shadow: 0 14px 32px -4px rgba(15, 23, 42, 0.2);
+      padding: 5px;
+      min-width: 235px;
+      max-width: min(320px, calc(100vw - 36px));
+      box-shadow: 0 16px 36px -4px rgba(15, 23, 42, 0.22), 0 4px 14px rgba(21, 64, 106, 0.08);
+      border: 1.5px solid rgba(21, 64, 106, 0.15);
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 9999;
+    }
+
+    .custom-select-wrapper.compact .custom-select-options {
+      max-height: 220px;
+      overflow-y: auto;
+      overscroll-behavior: contain;
     }
 
     .custom-select-wrapper.compact .custom-select-option {
-      padding: 7px 10px;
-      font-size: 12px;
+      padding: 6px 9px;
+      font-size: 11.5px;
       border-radius: 7px;
+      min-height: 30px;
+    }
+
+    .custom-select-opt-content.custom-select-opt-upload {
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .custom-select-opt-badge {
@@ -2596,7 +2624,7 @@
     .sheet-section {
       min-width: 0;
       flex-shrink: 0;
-      overflow: hidden;
+      overflow: visible;
       background: #ffffff;
       border: 1px solid #e2e8f0;
       border-radius: 12px;
@@ -2604,6 +2632,20 @@
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
       box-sizing: border-box;
       width: 100%;
+    }
+
+    .sheet-section:has(.custom-select-wrapper.open),
+    .sheet-section.has-open-dropdown,
+    .sheet-section:has(.ps-size-combo.open) {
+      z-index: 100;
+      position: relative;
+    }
+
+    .sheet-grid-2:has(.custom-select-wrapper.open),
+    .sheet-grid-2.has-open-dropdown,
+    .sheet-grid-2:has(.ps-size-combo.open) {
+      z-index: 100;
+      position: relative;
     }
     .sheet-section-title {
       font-size: 11px;
@@ -2829,7 +2871,7 @@
       background: #ffffff;
       border: 1px solid #cbd5e1;
       border-radius: 7px;
-      overflow: hidden;
+      overflow: visible;
       height: 28px;
       transition: all 0.15s ease;
       box-sizing: border-box;
@@ -2837,7 +2879,8 @@
       min-width: 0;
     }
 
-    .ps-size-combo:focus-within {
+    .ps-size-combo:focus-within,
+    .ps-size-combo.open {
       border-color: #15406a;
       box-shadow: 0 0 0 2px rgba(21, 64, 106, 0.15);
     }
@@ -2854,6 +2897,7 @@
       background: transparent;
       outline: none;
       box-sizing: border-box;
+      border-radius: 7px 0 0 7px;
     }
 
     .ps-size-select-wrap {
@@ -2867,6 +2911,8 @@
       background: #f8fafc;
       flex-shrink: 0;
       cursor: pointer;
+      border-radius: 0 6px 6px 0;
+      transition: background 0.15s ease;
     }
 
     .ps-size-select-wrap:hover {
@@ -2882,16 +2928,79 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: transform 0.2s ease, color 0.15s ease;
+    }
+
+    .ps-size-combo.open .ps-size-arrow-btn {
+      transform: rotate(180deg);
+      color: var(--kemnaker-blue);
     }
 
     .ps-size-select {
+      display: none;
+    }
+
+    .ps-size-menu {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: calc(100% + 5px);
+      right: 0;
+      width: 135px;
+      max-height: 220px;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1.5px solid rgba(21, 64, 106, 0.15);
+      border-radius: 11px;
+      padding: 4px;
+      box-shadow: 0 16px 36px -4px rgba(15, 23, 42, 0.22), 0 4px 14px rgba(21, 64, 106, 0.08);
+      z-index: 9999;
       opacity: 0;
+      visibility: hidden;
+      transform: translateY(-4px) scale(0.97);
+      transform-origin: top right;
+      transition: opacity 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+        visibility 0.18s;
+      pointer-events: none;
+    }
+
+    .ps-size-combo.open .ps-size-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .ps-size-combo.drop-up .ps-size-menu {
+      top: auto;
+      bottom: calc(100% + 5px);
+      transform-origin: bottom right;
+    }
+
+    .ps-size-menu-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 9px;
+      font-size: 11px;
+      font-weight: 500;
+      color: #1e293b;
+      border-radius: 6px;
       cursor: pointer;
+      transition: all 0.12s ease;
+    }
+
+    .ps-size-menu-item:hover {
+      background: #f1f5f9;
+      color: #0f172a;
+    }
+
+    .ps-size-menu-item.selected {
+      background: #eef3f8;
+      color: var(--kemnaker-blue);
+      font-weight: 700;
     }
 
     /* Word-style Spacing Number Input Box */
@@ -4956,13 +5065,20 @@
           if (w !== this.wrapper) {
             w.classList.remove("open");
             w.querySelector(".custom-select-trigger")?.setAttribute("aria-expanded", "false");
+            w.closest(".sheet-section")?.classList.remove("has-open-dropdown");
+            w.closest(".sheet-grid-2")?.classList.remove("has-open-dropdown");
           }
+        });
+        document.querySelectorAll(".ps-size-combo.open").forEach(c => {
+          c.classList.remove("open");
+          c.closest(".sheet-section")?.classList.remove("has-open-dropdown");
+          c.closest(".sheet-grid-2")?.classList.remove("has-open-dropdown");
         });
 
         // Determine drop-up vs drop-down
         const rect = this.wrapper.getBoundingClientRect();
         const spaceBelow = window.innerHeight - rect.bottom;
-        const menuHeight = 260;
+        const menuHeight = 240;
         if (spaceBelow < menuHeight && rect.top > spaceBelow) {
           this.wrapper.classList.add("drop-up");
         } else {
@@ -4972,6 +5088,11 @@
         this.wrapper.classList.add("open");
         this.trigger.setAttribute("aria-expanded", "true");
         this.isOpen = true;
+
+        const sec = this.wrapper.closest(".sheet-section");
+        if (sec) sec.classList.add("has-open-dropdown");
+        const grd = this.wrapper.closest(".sheet-grid-2");
+        if (grd) grd.classList.add("has-open-dropdown");
 
         if (this.searchInput) {
           this.searchInput.value = "";
@@ -4990,6 +5111,10 @@
         this.wrapper.classList.remove("open");
         this.trigger.setAttribute("aria-expanded", "false");
         this.isOpen = false;
+        const sec = this.wrapper.closest(".sheet-section");
+        if (sec) sec.classList.remove("has-open-dropdown");
+        const grd = this.wrapper.closest(".sheet-grid-2");
+        if (grd) grd.classList.remove("has-open-dropdown");
       }
 
       sync() {
@@ -5074,25 +5199,51 @@
               fontStyle = 'style="font-family: \'Montserrat-Bold\', Montserrat, sans-serif; font-weight: 700;"';
             } else if (opt.value === "MyriadPro") {
               badgeHtml = `<span class="custom-select-opt-badge badge-neutral">Standar</span>`;
-              fontStyle = 'style="font-family: MyriadPro, Arial, sans-serif;"';
+              fontStyle = 'style="font-family: MyriadPro, Arial, sans-serif; font-weight: 600;"';
             } else if (opt.value === "Arial") {
               fontStyle = 'style="font-family: Arial, sans-serif;"';
             } else if (opt.value === "Times New Roman") {
               fontStyle = 'style="font-family: \'Times New Roman\', serif;"';
             } else if (opt.value === "Calibri") {
               fontStyle = 'style="font-family: Calibri, sans-serif;"';
+            } else if (opt.value === "Plus Jakarta Sans") {
+              badgeHtml = `<span class="custom-select-opt-badge badge-neutral">Modern</span>`;
+              fontStyle = 'style="font-family: \'Plus Jakarta Sans\', sans-serif; font-weight: 600;"';
+            } else if (opt.value === "Roboto") {
+              fontStyle = 'style="font-family: Roboto, sans-serif;"';
+            } else if (opt.value === "Open Sans") {
+              fontStyle = 'style="font-family: \'Open Sans\', sans-serif;"';
+            } else if (opt.value === "Georgia") {
+              fontStyle = 'style="font-family: Georgia, serif;"';
+            } else if (opt.value === "Garamond") {
+              fontStyle = 'style="font-family: \'EB Garamond\', Garamond, serif;"';
             } else if (opt.value === "__custom__") {
               badgeHtml = `<span class="custom-select-opt-badge badge-action">Upload</span>`;
-            } else if (opt.value.startsWith("CustomUserFont")) {
+            } else if (opt.value.startsWith("CustomUserFont") || opt.value.startsWith("CustomNameFont") || opt.value.startsWith("CustomPosFont")) {
               badgeHtml = `<span class="custom-select-opt-badge badge-action">Kustom</span>`;
+              fontStyle = `style="font-family: '${opt.value}', sans-serif; font-weight: 600;"`;
             }
 
-            contentHtml = `
-              <div class="custom-select-opt-content" ${fontStyle}>
-                <span class="custom-select-opt-title">${escapeHtml(opt.textContent)}</span>
-                ${badgeHtml}
-              </div>
-            `;
+            if (opt.value === "__custom__") {
+              contentHtml = `
+                <div class="custom-select-opt-content custom-select-opt-upload">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color: var(--kemnaker-blue); flex-shrink: 0;">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                  </svg>
+                  <span class="custom-select-opt-title" style="font-weight: 600; color: var(--kemnaker-blue);">${escapeHtml(opt.textContent)}</span>
+                  ${badgeHtml}
+                </div>
+              `;
+            } else {
+              contentHtml = `
+                <div class="custom-select-opt-content" ${fontStyle}>
+                  <span class="custom-select-opt-title">${escapeHtml(opt.textContent)}</span>
+                  ${badgeHtml}
+                </div>
+              `;
+            }
           } else {
             // Unit kerja or general
             let iconHtml = "";
@@ -5158,6 +5309,15 @@
         this.valueSpan.title = selectedText || "";
         this.valueSpan.classList.toggle("is-placeholder", isPlaceholder);
 
+        if (this.config.isFont && curVal && curVal !== "__custom__" && typeof getFontFamilyCss === "function") {
+          this.valueSpan.style.fontFamily = getFontFamilyCss(curVal);
+          if (curVal === "Montserrat") {
+            this.valueSpan.style.fontWeight = "700";
+          } else {
+            this.valueSpan.style.fontWeight = "600";
+          }
+        }
+
         // Update trigger icon with selected official photo if available
         if (this.config.isOfficial) {
           const iconDiv = this.trigger.querySelector(".custom-select-icon");
@@ -5222,6 +5382,8 @@
         document.querySelectorAll(".custom-select-wrapper.open").forEach(w => {
           w.classList.remove("open");
           w.querySelector(".custom-select-trigger")?.setAttribute("aria-expanded", "false");
+          w.closest(".sheet-section")?.classList.remove("has-open-dropdown");
+          w.closest(".sheet-grid-2")?.classList.remove("has-open-dropdown");
         });
       }
     });
@@ -5231,9 +5393,112 @@
         document.querySelectorAll(".custom-select-wrapper.open").forEach(w => {
           w.classList.remove("open");
           w.querySelector(".custom-select-trigger")?.setAttribute("aria-expanded", "false");
+          w.closest(".sheet-section")?.classList.remove("has-open-dropdown");
+          w.closest(".sheet-grid-2")?.classList.remove("has-open-dropdown");
         });
       }
     });
+
+    function initSizePresetDropdown(selectId, inputId) {
+      const sel = document.getElementById(selectId);
+      const inputEl = document.getElementById(inputId);
+      if (!sel || sel._sizePresetInited) return;
+      sel._sizePresetInited = true;
+
+      const combo = sel.closest(".ps-size-combo");
+      const arrowWrap = sel.closest(".ps-size-select-wrap");
+      if (!combo || !arrowWrap) return;
+
+      const menu = document.createElement("div");
+      menu.className = "ps-size-menu";
+      combo.appendChild(menu);
+
+      function rebuildMenu() {
+        menu.innerHTML = "";
+        const curVal = (inputEl ? inputEl.value : sel.value) || "auto";
+        Array.from(sel.options).forEach(opt => {
+          if (!opt.value) return;
+          const item = document.createElement("div");
+          const isSelected = (opt.value === curVal || (opt.value === "auto" && curVal === "auto"));
+          item.className = "ps-size-menu-item" + (isSelected ? " selected" : "");
+          item.dataset.value = opt.value;
+          item.innerHTML = `
+            <span>${escapeHtml(opt.textContent)}</span>
+            <svg class="size-menu-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: ${isSelected ? '1' : '0'}; color: var(--kemnaker-blue);">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          `;
+          item.addEventListener("click", (e) => {
+            e.stopPropagation();
+            sel.value = opt.value;
+            sel.dispatchEvent(new Event("change", { bubbles: true }));
+            closeMenu();
+          });
+          menu.appendChild(item);
+        });
+      }
+
+      function openMenu() {
+        document.querySelectorAll(".custom-select-wrapper.open").forEach(w => {
+          w.classList.remove("open");
+          w.querySelector(".custom-select-trigger")?.setAttribute("aria-expanded", "false");
+          w.closest(".sheet-section")?.classList.remove("has-open-dropdown");
+          w.closest(".sheet-grid-2")?.classList.remove("has-open-dropdown");
+        });
+        document.querySelectorAll(".ps-size-combo.open").forEach(c => {
+          if (c !== combo) {
+            c.classList.remove("open");
+            c.closest(".sheet-section")?.classList.remove("has-open-dropdown");
+            c.closest(".sheet-grid-2")?.classList.remove("has-open-dropdown");
+          }
+        });
+
+        rebuildMenu();
+
+        const rect = combo.getBoundingClientRect();
+        const spaceBelow = window.innerHeight - rect.bottom;
+        if (spaceBelow < 190 && rect.top > spaceBelow) {
+          combo.classList.add("drop-up");
+        } else {
+          combo.classList.remove("drop-up");
+        }
+
+        combo.classList.add("open");
+        const sec = combo.closest(".sheet-section");
+        if (sec) sec.classList.add("has-open-dropdown");
+        const grd = combo.closest(".sheet-grid-2");
+        if (grd) grd.classList.add("has-open-dropdown");
+      }
+
+      function closeMenu() {
+        combo.classList.remove("open");
+        const sec = combo.closest(".sheet-section");
+        if (sec) sec.classList.remove("has-open-dropdown");
+        const grd = combo.closest(".sheet-grid-2");
+        if (grd) grd.classList.remove("has-open-dropdown");
+      }
+
+      arrowWrap.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (combo.classList.contains("open")) {
+          closeMenu();
+        } else {
+          openMenu();
+        }
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest(".ps-size-combo")) {
+          closeMenu();
+        }
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          closeMenu();
+        }
+      });
+    }
 
     function initAllModernDropdowns() {
       const unitSingle = document.getElementById("kemnakerUnitSelect");
@@ -5268,18 +5533,30 @@
         });
       }
 
-      const fontSelect = document.getElementById("fontSelectInput");
-      if (fontSelect && !fontSelect._modernDropdown) {
-        new ModernDropdown(fontSelect, {
+      const fontName = document.getElementById("fontNameSelect");
+      if (fontName && !fontName._modernDropdown) {
+        new ModernDropdown(fontName, {
           compact: true,
           isFont: true,
-          defaultPlaceholder: "Pilih Font"
+          defaultPlaceholder: "Montserrat"
         });
       }
+
+      const fontPos = document.getElementById("fontPosSelect");
+      if (fontPos && !fontPos._modernDropdown) {
+        new ModernDropdown(fontPos, {
+          compact: true,
+          isFont: true,
+          defaultPlaceholder: "Montserrat"
+        });
+      }
+
+      initSizePresetDropdown("fontSizeNameSelect", "fontSizeNameInput");
+      initSizePresetDropdown("fontSizePosSelect", "fontSizePosInput");
     }
 
     function syncAllModernDropdowns() {
-      ["kemnakerUnitSelect", "kemnakerOfficialSelect", "kemnakerBatchUnitSelect"].forEach(id => {
+      ["kemnakerUnitSelect", "kemnakerOfficialSelect", "kemnakerBatchUnitSelect", "fontNameSelect", "fontPosSelect"].forEach(id => {
         const el = document.getElementById(id);
         if (el && el._modernDropdown) {
           el._modernDropdown.sync();
@@ -6218,13 +6495,19 @@
 
       // Sync modal controls UI
       const fnSelect = document.getElementById("fontNameSelect");
-      if (fnSelect) fnSelect.value = snap.fontNameChoice;
+      if (fnSelect) {
+        fnSelect.value = snap.fontNameChoice;
+        if (fnSelect._modernDropdown) fnSelect._modernDropdown.sync();
+      }
       const fszNameInput = document.getElementById("fontSizeNameInput");
       if (fszNameInput) fszNameInput.value = snap.fontSizeName === "auto" ? "auto" : snap.fontSizeName;
       if (typeof updateFontNameBadge === "function") updateFontNameBadge();
 
       const fpSelect = document.getElementById("fontPosSelect");
-      if (fpSelect) fpSelect.value = snap.fontPosChoice;
+      if (fpSelect) {
+        fpSelect.value = snap.fontPosChoice;
+        if (fpSelect._modernDropdown) fpSelect._modernDropdown.sync();
+      }
       const fszPosInput = document.getElementById("fontSizePosInput");
       if (fszPosInput) fszPosInput.value = snap.fontSizePos === "auto" ? "auto" : snap.fontSizePos;
       if (typeof updateFontPosBadge === "function") updateFontPosBadge();
@@ -6261,6 +6544,7 @@
       modalSnapshot = captureSettingsSnapshot();
       const backdrop = document.getElementById("opt2SheetBackdrop");
       if (backdrop) {
+        if (typeof syncAllModernDropdowns === "function") syncAllModernDropdowns();
         backdrop.classList.add("open");
         document.body.classList.add("modal-open");
         document.body.style.overflow = "hidden";
@@ -7338,6 +7622,8 @@
       fontNameSelect.addEventListener("change", (e) => {
         const val = e.target.value;
         if (val === "__custom__") {
+          fontNameSelect.value = currentFontNameChoice || "Montserrat";
+          if (fontNameSelect._modernDropdown) fontNameSelect._modernDropdown.sync();
           if (customFontNameFileInput) customFontNameFileInput.click();
         } else {
           currentFontNameChoice = val;
@@ -7388,6 +7674,7 @@
             opt.textContent = "Kustom: " + shortName;
             opt.selected = true;
             fontNameSelect.value = cleanFontName;
+            if (fontNameSelect._modernDropdown) fontNameSelect._modernDropdown.sync();
 
             if (typeof setNameFontFamily === "function") setNameFontFamily(currentFontNameFamily);
             updateFontNameBadge();
@@ -7484,6 +7771,8 @@
       fontPosSelect.addEventListener("change", (e) => {
         const val = e.target.value;
         if (val === "__custom__") {
+          fontPosSelect.value = currentFontPosChoice || "Montserrat";
+          if (fontPosSelect._modernDropdown) fontPosSelect._modernDropdown.sync();
           if (customFontPosFileInput) customFontPosFileInput.click();
         } else {
           currentFontPosChoice = val;
@@ -7533,6 +7822,7 @@
             opt.textContent = "Kustom: " + shortName;
             opt.selected = true;
             fontPosSelect.value = cleanFontName;
+            if (fontPosSelect._modernDropdown) fontPosSelect._modernDropdown.sync();
 
             if (typeof setPosFontFamily === "function") setPosFontFamily(currentFontPosFamily);
             updateFontPosBadge();
