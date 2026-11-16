@@ -2363,6 +2363,16 @@
         min-width: 0;
       }
 
+      .sheet-preview-header {
+        width: 100%;
+        max-width: 530px;
+        margin: 0 auto 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 4px;
+      }
+
       .sheet-scale-wrap {
         width: 100%;
         max-width: 530px;
@@ -2441,6 +2451,10 @@
         border-bottom: 1px solid #e2e8f0;
         padding: 8px 12px 10px;
         flex-shrink: 0;
+      }
+
+      .sheet-preview-header {
+        display: none !important;
       }
 
       .sheet-scale-wrap {
@@ -4336,7 +4350,7 @@
               <div class="sheet-body-layout">
                 <!-- Sisi Kiri (Desktop) / Atas (Mobile): Pratinjau Kartu Bersih + Galeri Slider untuk Mode Bulk -->
                 <div class="sheet-preview-box">
-                  <div class="sheet-preview-header" style="width: 100%; max-width: 530px; margin: 0 auto 10px; display: flex; align-items: center; justify-content: space-between; padding: 0 4px;">
+                  <div class="sheet-preview-header">
                     <div style="display: flex; align-items: center; gap: 7px;">
                       <span style="display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #0077b6; box-shadow: 0 0 6px rgba(0, 119, 182, 0.5);"></span>
                       <span id="modalActiveSheetPill" style="font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: #15406a;">Contoh Pratinjau</span>
