@@ -58,7 +58,7 @@
   {% endif %}
 
   @page {
-    size: {{ page_w_pt or 832.08 }}pt {{ page_h_pt or 372.72 }}pt;
+    size: {{ page_w_pt or 841.89 }}pt {{ page_h_pt or 372.72 }}pt;
     margin: 0;
   }
 
@@ -72,7 +72,7 @@
     margin: 0;
     padding: 0;
     background: #ffffff;
-    width: {{ page_w_pt or 832.08 }}pt;
+    width: {{ page_w_pt or 841.89 }}pt;
     line-height: 1;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
@@ -80,7 +80,7 @@
 
   .card-page {
     position: relative;
-    width: {{ page_w_pt or 832.08 }}pt;
+    width: {{ page_w_pt or 841.89 }}pt;
     height: {{ page_h_pt or 372.72 }}pt;
     max-height: {{ page_h_pt or 372.72 }}pt;
     overflow: hidden;
@@ -100,7 +100,7 @@
     position: absolute;
     left: 0;
     top: 0;
-    width: {{ page_w_pt or 832.08 }}pt;
+    width: {{ page_w_pt or 841.89 }}pt;
     height: {{ page_h_pt or 372.72 }}pt;
     display: block;
   }
@@ -109,13 +109,13 @@
     position: absolute;
     left: 0;
     top: 0;
-    width: {{ page_w_pt or 832.08 }}pt;
+    width: {{ page_w_pt or 841.89 }}pt;
     height: {{ page_h_pt or 372.72 }}pt;
   }
 
   .block-flip {
     transform: rotate(180deg);
-    transform-origin: {{ (page_w_pt or 832.08) / 2 }}pt {{ (page_h_pt or 372.72) / 2 }}pt;
+    transform-origin: {{ (page_w_pt or 841.89) / 2 }}pt {{ (page_h_pt or 372.72) / 2 }}pt;
   }
 </style>
 </head>

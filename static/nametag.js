@@ -11,15 +11,15 @@
  */
 
 const CARD = {
-  PAGE_W: 832.08,      // pt
+  PAGE_W: 841.89,      // pt (Standard A4 width: 297mm = 841.89pt)
   PAGE_H: 372.72,      // pt
-  CENTER_X: 416.04,     // pt - exact horizontal center (PAGE_W / 2)
+  CENTER_X: 420.95,    // pt - exact horizontal center (PAGE_W / 2 = 841.89 / 2)
   NAME_BASELINE_Y: 102.5,     // pt from bottom
   NAME_TO_POSITION_GAP: 40.0, // pt, baseline to baseline
   POSITION_LINE_GAP: 20.0,    // pt, baseline to baseline between wrapped lines
-  MAX_TEXT_WIDTH: 618.0,      // pt, wrap width for the position text (safe from logo)
-  NAME_BOX_WIDTH: 618.0,      // pt, centered name text box boundary
-  MAX_NAME_WIDTH: 618.0,      // pt, maximum text width before auto-abbreviation
+  MAX_TEXT_WIDTH: 625.0,      // pt, wrap width for the position text (safe from logo)
+  NAME_BOX_WIDTH: 625.0,      // pt, centered name text box boundary
+  MAX_NAME_WIDTH: 625.0,      // pt, maximum text width before auto-abbreviation
   NAME_FONT_SIZE: 45.86,      // pt
   POSITION_FONT_SIZE: 18.0,   // pt
   NAME_FONT_WEIGHT: 700,
@@ -1157,7 +1157,7 @@ function setTextCase(textCase) {
 }
 
 const PAPER_SIZE_DIMS = {
-  a4: { w: 832.08, h: 372.72 },
+  a4: { w: 841.89, h: 372.72 },
   f4: { w: 935.43, h: 419.0 },
   letter: { w: 792.0, h: 360.0 },
   a3: { w: 1190.55, h: 532.0 },
@@ -1167,13 +1167,13 @@ function setPaperSize(paperSize) {
   const ps = String(paperSize || "a4").toLowerCase();
   CARD.PAPER_SIZE = ps;
   const dims = PAPER_SIZE_DIMS[ps] || PAPER_SIZE_DIMS.a4;
-  const ratio = dims.w / 832.08;
+  const ratio = dims.w / 841.89;
   CARD.PAGE_W = dims.w;
   CARD.PAGE_H = dims.h;
-  CARD.CENTER_X = 416.04 * ratio;
-  CARD.NAME_BOX_WIDTH = 618.0 * ratio;
-  CARD.MAX_NAME_WIDTH = 618.0 * ratio;
-  CARD.MAX_TEXT_WIDTH = 618.0 * ratio;
+  CARD.CENTER_X = dims.w / 2;
+  CARD.NAME_BOX_WIDTH = 625.0 * ratio;
+  CARD.MAX_NAME_WIDTH = 625.0 * ratio;
+  CARD.MAX_TEXT_WIDTH = 625.0 * ratio;
 }
 
 function setCardSides(sides) {

@@ -30,18 +30,18 @@ if not os.path.exists(FONTS_DIR):
     FONTS_DIR = os.path.join(BASE_DIR, "static", "fonts")
 
 # ---------------------------------------------------------------------------
-# Page geometry -- measured from the reference PDF (832.08 x 372.72 pt),
+# Page geometry -- Standard A4 (297 x 210 mm landscape, 841.89 x 372.72 pt),
 # centered layout safe from Kemnaker & Indonesia Emas logos.
 # ---------------------------------------------------------------------------
-PAGE_W = 832.08
+PAGE_W = 841.89
 PAGE_H = 372.72
-CENTER_X = 416.04                 # exact horizontal center line (PAGE_W / 2)
+CENTER_X = 420.95                 # exact horizontal center line (PAGE_W / 2)
 NAME_BASELINE_Y = 102.5          # baseline of the name, bottom-up coords
 NAME_TO_POSITION_GAP = 40.0      # per spec: name -> position baseline gap
 POSITION_LINE_GAP = 20.0         # per spec: gap between wrapped position lines
-MAX_TEXT_WIDTH = 618.0           # available width before position text wraps (safe from logo)
-MAX_NAME_WIDTH = 618.0           # available width before name text must be abbreviated
-NAME_BOX_WIDTH = 618.0           # centered name text box boundary
+MAX_TEXT_WIDTH = 625.0           # available width before position text wraps (safe from logo)
+MAX_NAME_WIDTH = 625.0           # available width before name text must be abbreviated
+NAME_BOX_WIDTH = 625.0           # centered name text box boundary
 
 NAME_FONT_SIZE = 45.86
 POSITION_FONT_SIZE = 18.0
@@ -831,7 +831,7 @@ def layout_position_only(text, font=NAME_FONT, max_width=MAX_TEXT_WIDTH, max_cha
 
 
 PAGE_SIZES = {
-    "a4": (PAGE_W, PAGE_H),         # Standard Kemnaker (832.08 x 372.72 pt)
+    "a4": (PAGE_W, PAGE_H),         # Standard Kemnaker (841.89 x 372.72 pt)
     "f4": (935.43, 419.0),          # F4 / Folio (330 x 215 mm)
     "letter": (792.0, 360.0),       # Letter / Kuarto (279 x 216 mm)
     "a3": (1190.55, 532.0),         # A3 (420 x 297 mm)

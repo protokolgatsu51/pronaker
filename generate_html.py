@@ -44,14 +44,14 @@ STATIC_DIR = os.path.join(BASE_DIR, "static")
 # the bundled code.
 TEMP_DIR = tempfile.gettempdir()
 
-PAGE_W_PT = 832.08
+PAGE_W_PT = 841.89
 PAGE_H_PT = 372.72
 
 _env = Environment(loader=FileSystemLoader(TEMPLATES_DIR))
 
 
 PAPER_PAGE_SIZES = {
-    "a4": (832.08, 372.72),
+    "a4": (841.89, 372.72),
     "f4": (935.43, 419.0),
     "letter": (792.0, 360.0),
     "a3": (1190.55, 532.0),
