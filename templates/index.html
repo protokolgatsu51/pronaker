@@ -3791,365 +3791,7 @@
     }
 
     @keyframes spin { 100% { transform: rotate(360deg); } }
-    /* ==========================================================================
-       Print Settings Modal (Opsi Cetak Langsung)
-       ========================================================================== */
-    .print-modal-dialog {
-      background: #ffffff;
-      border-radius: 20px;
-      width: 780px;
-      max-width: 95vw;
-      max-height: 90vh;
-      box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.4);
-      border: 1px solid rgba(226, 232, 240, 0.95);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-      transform: scale(0.96) translateY(8px);
-    }
-    .sheet-backdrop.open .print-modal-dialog {
-      transform: scale(1) translateY(0);
-    }
 
-    .print-modal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 18px 24px 14px;
-      border-bottom: 1px solid #edf2f7;
-      background: #ffffff;
-      flex-shrink: 0;
-    }
-    .print-modal-header-info {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-    .print-modal-title {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 17px;
-      font-weight: 800;
-      color: #0f172a;
-    }
-    .print-modal-title svg {
-      color: #0077b6;
-    }
-    .print-modal-subtitle {
-      font-size: 12.5px;
-      color: #64748b;
-      margin: 0;
-    }
-
-    .print-modal-body {
-      padding: 20px 24px;
-      display: grid;
-      grid-template-columns: 290px minmax(0, 1fr);
-      gap: 24px;
-      overflow-y: auto;
-      max-height: calc(90vh - 145px);
-    }
-
-    /* Left side: Mini paper preview */
-    .print-preview-side {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .print-preview-label {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 12px;
-      font-weight: 700;
-      color: #334155;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    .print-mini-badge {
-      background: #e0f2fe;
-      color: #0369a1;
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 999px;
-      font-weight: 700;
-    }
-    .print-paper-canvas-wrap {
-      background: #f1f5f9;
-      border: 1px solid #e2e8f0;
-      border-radius: 14px;
-      padding: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 220px;
-      box-shadow: inset 0 2px 6px rgba(0,0,0,0.04);
-    }
-    .print-simulated-sheet {
-      background: #ffffff;
-      width: 236px;
-      height: 166px;
-      border-radius: 6px;
-      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(15, 23, 42, 0.05);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      padding: 6px;
-      box-sizing: border-box;
-    }
-    .print-simulated-sheet.paper-a4 {
-      width: 236px;
-      height: 166px;
-    }
-    .print-simulated-sheet.paper-f4 {
-      width: 248px;
-      height: 162px;
-    }
-    .print-simulated-sheet.paper-letter {
-      width: 228px;
-      height: 176px;
-    }
-
-    .print-simulated-sheet.pos-center {
-      align-items: center;
-      padding: 6px;
-    }
-    .print-simulated-sheet.pos-top {
-      align-items: flex-start;
-      padding-top: 10px;
-    }
-    .print-simulated-sheet.pos-bottom {
-      align-items: flex-end;
-      padding-bottom: 10px;
-    }
-
-    .print-simulated-card {
-      width: 90%;
-      height: 60%;
-      background: linear-gradient(180deg, #f8fafc 0%, #edf2f7 100%);
-      border: 1.5px dashed #0284c7;
-      border-radius: 4px;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      box-shadow: 0 2px 6px rgba(0, 119, 182, 0.15);
-      transition: all 0.25s ease;
-      overflow: hidden;
-      padding: 4px;
-      box-sizing: border-box;
-    }
-    .print-simulated-card.scale-actual {
-      width: 96%;
-      height: 64%;
-    }
-    .print-simulated-fold-line {
-      position: absolute;
-      top: 50%;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: #94a3b8;
-      opacity: 0.6;
-    }
-    .print-simulated-card-text {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      width: 100%;
-      gap: 2px;
-      z-index: 1;
-    }
-    .sim-brand {
-      font-size: 7.5px;
-      font-weight: 800;
-      color: #0369a1;
-      letter-spacing: 0.5px;
-    }
-    .sim-name {
-      font-size: 8.5px;
-      font-weight: 800;
-      color: #0f172a;
-      max-width: 90%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .sim-pos {
-      font-size: 7px;
-      font-weight: 700;
-      color: #475569;
-      max-width: 90%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .print-mini-hint {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 11.5px;
-      color: #059669;
-      background: #ecfdf5;
-      border: 1px solid #d1fae5;
-      padding: 7px 10px;
-      border-radius: 8px;
-      font-weight: 600;
-    }
-    .print-mini-hint svg {
-      flex-shrink: 0;
-    }
-
-    /* Right side: Controls */
-    .print-controls-side {
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-    .print-option-group {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .print-option-label {
-      font-size: 13px;
-      font-weight: 700;
-      color: #1e293b;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .print-pill-group {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-    }
-    .print-pos-group {
-      grid-template-columns: repeat(3, 1fr);
-    }
-    .print-scale-group {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    .print-pill-btn {
-      background: #f8fafc;
-      border: 1.5px solid #e2e8f0;
-      border-radius: 10px;
-      padding: 10px 8px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      text-align: center;
-      transition: all 0.18s ease;
-      font-family: inherit;
-    }
-    .print-pill-btn:hover {
-      background: #f1f5f9;
-      border-color: #cbd5e1;
-    }
-    .print-pill-btn.active {
-      background: #eff6ff;
-      border-color: #0284c7;
-      box-shadow: 0 0 0 1px #0284c7, 0 2px 8px rgba(2, 132, 199, 0.18);
-    }
-    .print-pill-btn .pill-name {
-      font-size: 13px;
-      font-weight: 700;
-      color: #1e293b;
-    }
-    .print-pill-btn.active .pill-name {
-      color: #0369a1;
-    }
-    .print-pill-btn .pill-dim,
-    .print-pill-btn .pill-desc {
-      font-size: 10.5px;
-      color: #64748b;
-      font-weight: 500;
-    }
-    .print-pill-btn.active .pill-dim,
-    .print-pill-btn.active .pill-desc {
-      color: #0284c7;
-    }
-
-    /* Footer buttons */
-    .print-modal-footer {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 12px;
-      padding: 14px 24px;
-      border-top: 1px solid #edf2f7;
-      background: #f8fafc;
-      flex-shrink: 0;
-    }
-    .btn-print-cancel {
-      padding: 10px 18px;
-      background: #ffffff;
-      border: 1px solid #cbd5e1;
-      border-radius: 10px;
-      color: #475569;
-      font-size: 13.5px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      font-family: inherit;
-    }
-    .btn-print-cancel:hover {
-      background: #f1f5f9;
-      color: #1e293b;
-    }
-    .btn-print-proceed {
-      padding: 10px 22px;
-      background: linear-gradient(135deg, #0077b6 0%, #023e8a 100%);
-      border: none;
-      border-radius: 10px;
-      color: #ffffff;
-      font-size: 13.5px;
-      font-weight: 700;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 14px rgba(0, 119, 182, 0.35);
-      font-family: inherit;
-    }
-    .btn-print-proceed:hover {
-      background: linear-gradient(135deg, #0284c7 0%, #005f9e 100%);
-      transform: translateY(-1px);
-      box-shadow: 0 6px 18px rgba(0, 119, 182, 0.45);
-    }
-
-    @media (max-width: 768px) {
-      .print-modal-body {
-        grid-template-columns: 1fr;
-        gap: 16px;
-        padding: 16px;
-      }
-      .print-paper-canvas-wrap {
-        min-height: 180px;
-        padding: 12px;
-      }
-      .print-simulated-sheet {
-        width: 200px;
-        height: 140px;
-      }
-      .print-modal-footer {
-        padding: 12px 16px;
-      }
-      .print-modal-dialog {
-        max-height: 94vh;
-      }
-    }
   </style>
 </head>
 
@@ -4931,132 +4573,7 @@
             </div>
           </div>
 
-          <!-- =================================================================
-               MODAL PENGATURAN CETAK LANGSUNG (PRINT SETTINGS)
-               ================================================================= -->
-          <div class="sheet-backdrop print-modal-backdrop" id="printSettingsModal" onclick="if(event.target === this) closePrintSettingsModal()">
-            <div class="print-modal-dialog">
-              <!-- Header -->
-              <div class="print-modal-header">
-                <div class="print-modal-header-info">
-                  <div class="print-modal-title">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                      <polyline points="6 9 6 2 18 2 18 9"></polyline>
-                      <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-                      <rect x="6" y="14" width="12" height="8"></rect>
-                    </svg>
-                    <span>Pengaturan Cetak Langsung</span>
-                  </div>
-                  <p class="print-modal-subtitle">Sesuaikan tata letak pada kertas fisik sebelum mencetak</p>
-                </div>
-                <button type="button" class="btn-close-sheet" onclick="closePrintSettingsModal()" title="Tutup">✕</button>
-              </div>
 
-              <!-- Body: 2 Kolom (Kiri: Pratinjau Kertas Mini, Kanan: Pilihan) -->
-              <div class="print-modal-body">
-                <!-- Sisi Kiri: Visual Pratinjau Kertas Fisik -->
-                <div class="print-preview-side">
-                  <div class="print-preview-label">
-                    <span>Tata Letak Kertas</span>
-                    <span id="printMiniPaperBadge" class="print-mini-badge">A4 • Tengah • Fit</span>
-                  </div>
-                  <div class="print-paper-canvas-wrap">
-                    <div class="print-simulated-sheet pos-center paper-a4" id="printSimulatedSheet">
-                      <div class="print-simulated-card" id="printSimulatedCard">
-                        <div class="print-simulated-fold-line"></div>
-                        <div class="print-simulated-card-text">
-                          <span class="sim-brand">KEMNAKER RI</span>
-                          <span class="sim-name" id="simCardName">NAMA PEJABAT</span>
-                          <span class="sim-pos" id="simCardPos">JABATAN</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="print-mini-hint">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                    <span>Background &amp; warna grafik otomatis aktif</span>
-                  </div>
-                </div>
-
-                <!-- Sisi Kanan: Kontrol Pilihan -->
-                <div class="print-controls-side">
-                  <!-- Pilihan 1: Ukuran Kertas Fisik -->
-                  <div class="print-option-group">
-                    <label class="print-option-label">
-                      <span>1. Ukuran Kertas Fisik Printer</span>
-                    </label>
-                    <div class="print-pill-group" id="printPaperPills">
-                      <button type="button" class="print-pill-btn active" data-paper="a4" onclick="setPrintPaper('a4')">
-                        <span class="pill-name">A4</span>
-                        <span class="pill-dim">210 × 297 mm</span>
-                      </button>
-                      <button type="button" class="print-pill-btn" data-paper="f4" onclick="setPrintPaper('f4')">
-                        <span class="pill-name">F4 / Folio</span>
-                        <span class="pill-dim">215 × 330 mm</span>
-                      </button>
-                      <button type="button" class="print-pill-btn" data-paper="letter" onclick="setPrintPaper('letter')">
-                        <span class="pill-name">Letter</span>
-                        <span class="pill-dim">216 × 279 mm</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  <!-- Pilihan 2: Posisi Cetak di Lembar Kertas -->
-                  <div class="print-option-group">
-                    <label class="print-option-label">
-                      <span>2. Posisi Cetak di Lembar Kertas</span>
-                    </label>
-                    <div class="print-pill-group print-pos-group" id="printPositionPills">
-                      <button type="button" class="print-pill-btn active" data-pos="center" onclick="setPrintPosition('center')">
-                        <span class="pill-name">Tengah (Center)</span>
-                        <span class="pill-desc">Default • Lipatan simetris</span>
-                      </button>
-                      <button type="button" class="print-pill-btn" data-pos="top" onclick="setPrintPosition('top')">
-                        <span class="pill-name">Atas (Top)</span>
-                        <span class="pill-desc">Hemat sisa kertas bawah</span>
-                      </button>
-                      <button type="button" class="print-pill-btn" data-pos="bottom" onclick="setPrintPosition('bottom')">
-                        <span class="pill-name">Bawah (Bottom)</span>
-                        <span class="pill-desc">Menempel di batas bawah</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  <!-- Pilihan 3: Skala / Penyesuaian Kertas -->
-                  <div class="print-option-group">
-                    <label class="print-option-label">
-                      <span>3. Skala / Penyesuaian Kertas</span>
-                    </label>
-                    <div class="print-pill-group print-scale-group" id="printScalePills">
-                      <button type="button" class="print-pill-btn active" data-scale="fit" onclick="setPrintScale('fit')">
-                        <span class="pill-name">Fit to Paper</span>
-                        <span class="pill-desc">Aman batas margin printer</span>
-                      </button>
-                      <button type="button" class="print-pill-btn" data-scale="actual" onclick="setPrintScale('actual')">
-                        <span class="pill-name">100% Ukuran Asli</span>
-                        <span class="pill-desc">Presisi standar Kemnaker</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Footer Aksi -->
-              <div class="print-modal-footer">
-                <button type="button" class="btn-print-cancel" onclick="closePrintSettingsModal()">
-                  Batal
-                </button>
-                <button type="button" class="btn-print-proceed" onclick="executeDirectPrint()">
-                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                    <polyline points="6 9 6 2 18 2 18 9"></polyline>
-                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-                    <rect x="6" y="14" width="12" height="8"></rect>
-                  </svg>
-                  <span>Buka Dialog Cetak</span>
-                </button>
-              </div>
-            </div>
-          </div>
 
         </div>
 
@@ -8249,147 +7766,9 @@
     window.setPaperSizeOption = setPaperSizeOption;
 
     // -------------------------------------------------------------------------
-    // Direct Print Settings & Execution (Cetak Langsung Tanpa Unduh)
+    // Direct Print (Cetak Langsung Tanpa Unduh)
     // -------------------------------------------------------------------------
-    let currentPrintPaper = "a4";
-    let currentPrintPosition = "center";
-    let currentPrintScale = "fit";
-
-    function updatePrintMiniBadge() {
-      const badge = document.getElementById("printMiniPaperBadge");
-      if (!badge) return;
-      const pName = (currentPrintPaper || "a4").toUpperCase();
-      const posName = currentPrintPosition === "center" ? "Tengah" : (currentPrintPosition === "top" ? "Atas" : "Bawah");
-      const scName = currentPrintScale === "fit" ? "Fit" : "100%";
-      badge.textContent = `${pName} • ${posName} • ${scName}`;
-    }
-
-    function setPrintPaper(paper) {
-      currentPrintPaper = paper || "a4";
-      document.querySelectorAll("#printPaperPills .print-pill-btn").forEach(btn => {
-        btn.classList.toggle("active", btn.dataset.paper === currentPrintPaper);
-      });
-      const sheet = document.getElementById("printSimulatedSheet");
-      if (sheet) {
-        sheet.className = `print-simulated-sheet pos-${currentPrintPosition} paper-${currentPrintPaper}`;
-      }
-      updatePrintMiniBadge();
-    }
-    window.setPrintPaper = setPrintPaper;
-
-    function setPrintPosition(pos) {
-      currentPrintPosition = pos || "center";
-      document.querySelectorAll("#printPositionPills .print-pill-btn").forEach(btn => {
-        btn.classList.toggle("active", btn.dataset.pos === currentPrintPosition);
-      });
-      const sheet = document.getElementById("printSimulatedSheet");
-      if (sheet) {
-        sheet.className = `print-simulated-sheet pos-${currentPrintPosition} paper-${currentPrintPaper}`;
-      }
-      updatePrintMiniBadge();
-    }
-    window.setPrintPosition = setPrintPosition;
-
-    function setPrintScale(scale) {
-      currentPrintScale = scale || "fit";
-      document.querySelectorAll("#printScalePills .print-pill-btn").forEach(btn => {
-        btn.classList.toggle("active", btn.dataset.scale === currentPrintScale);
-      });
-      const card = document.getElementById("printSimulatedCard");
-      if (card) {
-        card.classList.toggle("scale-actual", currentPrintScale === "actual");
-      }
-      updatePrintMiniBadge();
-    }
-    window.setPrintScale = setPrintScale;
-
-    function openPrintSettingsModal() {
-      // Validate inputs prior to opening
-      if (currentTab === "single") {
-        const n = (nameInput ? nameInput.value : "").trim();
-        const p = (positionInput ? positionInput.value : "").trim();
-        if (currentContentMode === "name_only") {
-          if (!n) {
-            alert("Silakan masukkan nama pada kolom input terlebih dahulu.");
-            if (nameInput) nameInput.focus();
-            return;
-          }
-        } else if (currentContentMode === "position_only") {
-          if (!p) {
-            alert("Silakan masukkan jabatan pada kolom input terlebih dahulu.");
-            if (positionInput) positionInput.focus();
-            return;
-          }
-        } else {
-          if (!n) {
-            alert("Silakan masukkan nama pada kolom input terlebih dahulu.");
-            if (nameInput) nameInput.focus();
-            return;
-          }
-        }
-
-        const simName = document.getElementById("simCardName");
-        const simPos = document.getElementById("simCardPos");
-        if (simName) simName.textContent = (n || "NAMA PEJABAT").toUpperCase();
-        if (simPos) simPos.textContent = (p || "JABATAN").toUpperCase();
-      } else {
-        const textarea = document.getElementById("bulk_data");
-        const rows = parseBulkData(textarea ? textarea.value : "");
-        if (!rows || rows.length === 0) {
-          alert("Silakan isi data bulk terlebih dahulu sebelum mencetak.");
-          if (textarea) textarea.focus();
-          return;
-        }
-        const firstRow = rows[0] || {};
-        const simName = document.getElementById("simCardName");
-        const simPos = document.getElementById("simCardPos");
-        if (simName) simName.textContent = (firstRow.name || firstRow.rawName || "DATA BULK").toUpperCase();
-        if (simPos) simPos.textContent = (firstRow.position || "JABATAN").toUpperCase();
-      }
-
-      // Default settings as requested: A4, Center, Fit to Paper
-      setPrintPaper("a4");
-      setPrintPosition("center");
-      setPrintScale("fit");
-
-      const modal = document.getElementById("printSettingsModal");
-      if (modal) {
-        modal.classList.add("open");
-        document.body.style.overflow = "hidden";
-      }
-    }
-    window.openPrintSettingsModal = openPrintSettingsModal;
-
-    function closePrintSettingsModal() {
-      const modal = document.getElementById("printSettingsModal");
-      if (modal) {
-        modal.classList.remove("open");
-        document.body.style.overflow = "";
-      }
-    }
-    window.closePrintSettingsModal = closePrintSettingsModal;
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        const modal = document.getElementById("printSettingsModal");
-        if (modal && modal.classList.contains("open")) {
-          closePrintSettingsModal();
-        }
-      }
-    });
-
     function printCurrentCards() {
-      openPrintSettingsModal();
-    }
-    window.printCurrentCards = printCurrentCards;
-
-    function executeDirectPrint() {
-      closePrintSettingsModal();
-      runPrintWithSettings(currentPrintPaper, currentPrintPosition, currentPrintScale);
-    }
-    window.executeDirectPrint = executeDirectPrint;
-
-    function runPrintWithSettings(paper, position, scale) {
       let cards = [];
       const cleanName = (n) => {
         let s = typeof sanitizeText === "function" ? sanitizeText(n) : (n || "");
@@ -8413,15 +7792,35 @@
         const n = (nameInput ? nameInput.value : "").trim();
         const p = (positionInput ? positionInput.value : "").trim();
         if (currentContentMode === "name_only") {
+          if (!n) {
+            alert("Silakan masukkan nama pada kolom input terlebih dahulu.");
+            if (nameInput) nameInput.focus();
+            return;
+          }
           cards = [{ name: cleanName(n), position: "" }];
         } else if (currentContentMode === "position_only") {
+          if (!p) {
+            alert("Silakan masukkan jabatan pada kolom input terlebih dahulu.");
+            if (positionInput) positionInput.focus();
+            return;
+          }
           cards = [{ name: "", position: cleanPos(p) }];
         } else {
+          if (!n) {
+            alert("Silakan masukkan nama pada kolom input terlebih dahulu.");
+            if (nameInput) nameInput.focus();
+            return;
+          }
           cards = [{ name: cleanName(n), position: cleanPos(p) }];
         }
       } else {
         const textarea = document.getElementById("bulk_data");
         const rows = parseBulkData(textarea ? textarea.value : "");
+        if (!rows || rows.length === 0) {
+          alert("Silakan isi data bulk terlebih dahulu sebelum mencetak.");
+          if (textarea) textarea.focus();
+          return;
+        }
         cards = rows.map(r => ({
           name: cleanName(r.name || r.rawName || ""),
           position: cleanPos(r.position || "")
@@ -8431,52 +7830,18 @@
       const activeBg = currentBgUrl || BG_TEMPLATE_URL;
       const isSingleSide = currentSides === 1;
 
-      // Physical paper sheets in Points (Landscape orientation)
-      const physicalSheetMap = {
-        "a4": { w: 841.89, h: 595.28 },
-        "f4": { w: 935.43, h: 609.45 },
-        "letter": { w: 792.00, h: 612.00 }
-      };
-
-      // Base card design sizes in Points
-      const cardDesignMap = {
+      // Paper dimensions map in points
+      const paperDimensions = {
         "a4": { w: 832.08, h: 372.72 },
         "f4": { w: 935.43, h: 372.72 },
-        "letter": { w: 792.00, h: 372.72 }
+        "letter": { w: 792.00, h: 372.72 },
+        "a3": { w: 1190.55, h: 372.72 }
       };
-
-      const selPaper = (paper || "a4").toLowerCase();
-      const sheetDims = physicalSheetMap[selPaper] || physicalSheetMap["a4"];
-      const cardDims = cardDesignMap[selPaper] || cardDesignMap["a4"];
-
-      const sheetWPt = sheetDims.w + "pt";
-      const sheetHPt = sheetDims.h + "pt";
-      const cardWPt = cardDims.w + "pt";
-      const cardHPt = cardDims.h + "pt";
-      const centerXPt = (cardDims.w / 2) + "pt";
-      const centerYPt = (cardDims.h / 2) + "pt";
-
-      // Placement & Vertical Alignment
-      let alignItems = "center";
-      let paddingStyle = "";
-      let transformOrigin = "center center";
-      if (position === "top") {
-        alignItems = "flex-start";
-        paddingStyle = "padding-top: 14pt;";
-        transformOrigin = "center top";
-      } else if (position === "bottom") {
-        alignItems = "flex-end";
-        paddingStyle = "padding-bottom: 14pt;";
-        transformOrigin = "center bottom";
-      }
-
-      // Scaling Calculation
-      let scaleFactor = 1.0;
-      if (scale === "fit") {
-        const safeW = sheetDims.w - 24; // safe 4-5mm printer hardware margins
-        const safeH = sheetDims.h - 24;
-        scaleFactor = Math.min(1.0, safeW / cardDims.w, safeH / cardDims.h);
-      }
+      const pageDims = paperDimensions[currentPaperSize] || paperDimensions["a4"];
+      const pageWPt = pageDims.w + "pt";
+      const pageHPt = pageDims.h + "pt";
+      const centerXPt = (pageDims.w / 2) + "pt";
+      const centerYPt = (pageDims.h / 2) + "pt";
 
       let fontFacesHtml = `
         @font-face {
@@ -8532,14 +7897,10 @@
       let cardsHtml = "";
       cards.forEach((c, idx) => {
         cardsHtml += `
-          <div class="print-sheet-page">
-            <div class="card-scaler">
-              <div class="card-page">
-                <img class="bg-img" src="${activeBg}" alt="Card Background">
-                <div id="print-normal-${idx}" class="block"></div>
-                ${isSingleSide ? '' : `<div id="print-flip-${idx}" class="block block-flip"></div>`}
-              </div>
-            </div>
+          <div class="card-page">
+            <img class="bg-img" src="${activeBg}" alt="Card Background">
+            <div id="print-normal-${idx}" class="block"></div>
+            ${isSingleSide ? '' : `<div id="print-flip-${idx}" class="block block-flip"></div>`}
           </div>
         `;
       });
@@ -8556,7 +7917,7 @@
           <style>
             ${fontFacesHtml}
             @page {
-              size: ${sheetWPt} ${sheetHPt};
+              size: ${pageWPt} ${pageHPt};
               margin: 0;
             }
             @media print {
@@ -8577,43 +7938,27 @@
             html, body {
               margin: 0 !important;
               padding: 0 !important;
-              width: ${sheetWPt} !important;
+              width: ${pageWPt} !important;
               background: #ffffff !important;
-            }
-            .print-sheet-page {
-              position: relative;
-              width: ${sheetWPt};
-              height: ${sheetHPt};
-              page-break-after: always;
-              break-after: page;
-              display: flex;
-              justify-content: center;
-              align-items: ${alignItems};
-              ${paddingStyle}
-              overflow: hidden;
-              background: #ffffff;
-              box-sizing: border-box;
-            }
-            .print-sheet-page:last-child {
-              page-break-after: auto;
-              break-after: auto;
-            }
-            .card-scaler {
-              transform: scale(${scaleFactor});
-              transform-origin: ${transformOrigin};
             }
             .card-page {
               position: relative;
-              width: ${cardWPt};
-              height: ${cardHPt};
+              width: ${pageWPt};
+              height: ${pageHPt};
               overflow: hidden;
               background: #ffffff;
+              page-break-after: always;
+              break-after: page;
+            }
+            .card-page:last-child {
+              page-break-after: auto;
+              break-after: auto;
             }
             .bg-img {
               position: absolute;
               left: 0; top: 0;
-              width: ${cardWPt};
-              height: ${cardHPt};
+              width: ${pageWPt};
+              height: ${pageHPt};
               display: block;
               -webkit-print-color-adjust: exact !important;
               print-color-adjust: exact !important;
@@ -8621,8 +7966,8 @@
             .block {
               position: absolute;
               left: 0; top: 0;
-              width: ${cardWPt};
-              height: ${cardHPt};
+              width: ${pageWPt};
+              height: ${pageHPt};
             }
             .block-flip {
               transform: rotate(180deg);
@@ -8691,7 +8036,7 @@
       printIframe.contentDocument.write(printHtml);
       printIframe.contentDocument.close();
     }
-    window.runPrintWithSettings = runPrintWithSettings;
+    window.printCurrentCards = printCurrentCards;
 
     // Font loading check on page init
     Promise.all([
