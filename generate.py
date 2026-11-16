@@ -51,7 +51,7 @@ POSITION_FONT_SIZE = 18.0
 # Myriad Pro and other fonts are registered if available, with Helvetica fallback.
 # ---------------------------------------------------------------------------
 NAME_FONT = "Helvetica-Bold"
-POSITION_FONT = "Helvetica"
+POSITION_FONT = "Helvetica-Bold"
 
 _montserrat_bold = os.path.join(FONTS_DIR, "Montserrat-Bold.ttf")
 if not os.path.exists(_montserrat_bold):
@@ -70,9 +70,9 @@ try:
     if os.path.exists(_montserrat_bold):
         pdfmetrics.registerFont(TTFont("Montserrat-Bold", _montserrat_bold))
         NAME_FONT = "Montserrat-Bold"
+        POSITION_FONT = "Montserrat-Bold"
     if os.path.exists(_montserrat_reg):
         pdfmetrics.registerFont(TTFont("Montserrat-Regular", _montserrat_reg))
-        POSITION_FONT = "Montserrat-Regular"
 except Exception:
     pass
 
@@ -842,7 +842,9 @@ def _resolve_reportlab_font(choice, is_bold=False):
         return NAME_FONT if is_bold else POSITION_FONT
     ch = str(choice).lower().strip()
     if "montserrat" in ch:
-        return "Montserrat-Bold" if is_bold else "Montserrat-Regular"
+        if "regular" in ch:
+            return "Montserrat-Regular"
+        return "Montserrat-Bold"
     if "myriad" in ch:
         try:
             target = "MyriadPro-Bold" if is_bold else "MyriadPro-Regular"

@@ -23,7 +23,7 @@ const CARD = {
   NAME_FONT_SIZE: 45.86,      // pt
   POSITION_FONT_SIZE: 18.0,   // pt
   NAME_FONT_WEIGHT: 700,
-  POSITION_FONT_WEIGHT: 400,
+  POSITION_FONT_WEIGHT: 700,
   FONT_FAMILY: "Montserrat, sans-serif",
   NAME_FONT_FAMILY: "Montserrat, sans-serif",
   POSITION_FONT_FAMILY: "Montserrat, sans-serif",
