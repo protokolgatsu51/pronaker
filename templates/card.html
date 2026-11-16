@@ -7,6 +7,18 @@
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:ital,wght@0,400;0,700;1,400;1,700&family=Open+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Plus+Jakarta+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 <style>
   @font-face {
+    font-family: "Montserrat-Bold";
+    src: url("{{ asset_prefix }}fonts/Montserrat-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "Montserrat-Bold";
+    src: url("{{ asset_prefix }}fonts/Montserrat-Bold.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+  }
+  @font-face {
     font-family: "Montserrat";
     src: url("{{ asset_prefix }}fonts/Montserrat-Regular.ttf") format("truetype");
     font-weight: 400;
@@ -109,7 +121,7 @@
     function resolveFontFamily(choice, customData, customName) {
       if (customData && customName) return `"${customName}", sans-serif`;
       switch (choice) {
-        case "Montserrat": return "'Montserrat', sans-serif";
+        case "Montserrat": return '"Montserrat-Bold", Montserrat, sans-serif';
         case "MyriadPro": return "MyriadPro, Arial, Helvetica, sans-serif";
         case "Arial": return "Arial, sans-serif";
         case "Times New Roman": return "'Times New Roman', Times, serif";
@@ -120,7 +132,7 @@
         case "Garamond": return "'EB Garamond', Garamond, serif";
         case "Plus Jakarta Sans": return "'Plus Jakarta Sans', sans-serif";
         default:
-          return "'Montserrat', sans-serif";
+          return '"Montserrat-Bold", Montserrat, sans-serif';
       }
     }
 

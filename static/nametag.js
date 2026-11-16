@@ -24,9 +24,9 @@ const CARD = {
   POSITION_FONT_SIZE: 18.0,   // pt
   NAME_FONT_WEIGHT: 700,
   POSITION_FONT_WEIGHT: 700,
-  FONT_FAMILY: "Montserrat, sans-serif",
-  NAME_FONT_FAMILY: "Montserrat, sans-serif",
-  POSITION_FONT_FAMILY: "Montserrat, sans-serif",
+  FONT_FAMILY: '"Montserrat-Bold", Montserrat, sans-serif',
+  NAME_FONT_FAMILY: '"Montserrat-Bold", Montserrat, sans-serif',
+  POSITION_FONT_FAMILY: '"Montserrat-Bold", Montserrat, sans-serif',
   CUSTOM_NAME_FONT_SIZE: null,
   CUSTOM_POS_FONT_SIZE: null,
   TEXT_CASE: "uppercase",      // "uppercase", "capitalize", "lowercase"

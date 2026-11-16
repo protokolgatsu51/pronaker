@@ -17,6 +17,20 @@
 
   <style>
     @font-face {
+      font-family: "Montserrat-Bold";
+      src: url("{{ url_for('static', filename='fonts/Montserrat-Bold.ttf') }}") format("truetype");
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: "Montserrat-Bold";
+      src: url("{{ url_for('static', filename='fonts/Montserrat-Bold.ttf') }}") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    @font-face {
       font-family: "Montserrat";
       src: url("{{ url_for('static', filename='fonts/Montserrat-Regular.ttf') }}") format("truetype");
       font-weight: 400;
@@ -5080,19 +5094,19 @@
     let currentSides = 2;
     let currentBgUrl = BG_TEMPLATE_URL;
     let currentFontChoice = "Montserrat";
-    let currentFontFamily = "Montserrat, sans-serif";
+    let currentFontFamily = '"Montserrat-Bold", Montserrat, sans-serif';
     let customFontData = "";
     let customFontName = "";
     let customBgData = "";
 
     // 8-Bubble Settings State (preserving all current defaults)
     let currentFontNameChoice = "Montserrat";
-    let currentFontNameFamily = "Montserrat, sans-serif";
+    let currentFontNameFamily = '"Montserrat-Bold", Montserrat, sans-serif';
     let customFontNameData = "";
     let customFontNameFilename = "";
 
     let currentFontPosChoice = "Montserrat";
-    let currentFontPosFamily = "Montserrat, sans-serif";
+    let currentFontPosFamily = '"Montserrat-Bold", Montserrat, sans-serif';
     let customFontPosData = "";
     let customFontPosFilename = "";
 
@@ -5526,7 +5540,7 @@
             let fontStyle = "";
             if (opt.value === "Montserrat") {
               badgeHtml = `<span class="custom-select-opt-badge badge-kemnaker">Default</span>`;
-              fontStyle = 'style="font-family: Montserrat, sans-serif;"';
+              fontStyle = 'style="font-family: \'Montserrat-Bold\', Montserrat, sans-serif; font-weight: 700;"';
             } else if (opt.value === "MyriadPro") {
               badgeHtml = `<span class="custom-select-opt-badge badge-neutral">Standar</span>`;
               fontStyle = 'style="font-family: MyriadPro, Arial, sans-serif;"';
@@ -7738,7 +7752,7 @@
     // Font CSS Family Helper
     // -------------------------------------------------------------------------
     function getFontFamilyCss(choice, customFamily) {
-      if (choice === "Montserrat") return "Montserrat, sans-serif";
+      if (choice === "Montserrat") return '"Montserrat-Bold", Montserrat, sans-serif';
       if (choice === "MyriadPro") return "MyriadPro, Arial, Helvetica, sans-serif";
       if (choice === "Arial") return "Arial, sans-serif";
       if (choice === "Times New Roman") return "'Times New Roman', Times, serif";
@@ -7749,7 +7763,7 @@
       if (choice === "Georgia") return "Georgia, serif";
       if (choice === "Garamond") return "'EB Garamond', Garamond, serif";
       if (customFamily) return `"${customFamily}", sans-serif`;
-      return "Montserrat, sans-serif";
+      return '"Montserrat-Bold", Montserrat, sans-serif';
     }
 
     // -------------------------------------------------------------------------
@@ -8466,6 +8480,18 @@
 
       let fontFacesHtml = `
         @font-face {
+          font-family: "Montserrat-Bold";
+          src: url("/static/fonts/Montserrat-Bold.ttf") format("truetype");
+          font-weight: 700;
+          font-style: normal;
+        }
+        @font-face {
+          font-family: "Montserrat-Bold";
+          src: url("/static/fonts/Montserrat-Bold.ttf") format("truetype");
+          font-weight: 400;
+          font-style: normal;
+        }
+        @font-face {
           font-family: "Montserrat";
           src: url("/static/fonts/Montserrat-Regular.ttf") format("truetype");
           font-weight: 400;
@@ -8669,6 +8695,10 @@
 
     // Font loading check on page init
     Promise.all([
+      document.fonts.load(`700 ${60 * 96 / 72}px "Montserrat-Bold"`),
+      document.fonts.load(`700 ${45.86 * 96 / 72}px "Montserrat-Bold"`),
+      document.fonts.load(`700 ${18 * 96 / 72}px "Montserrat-Bold"`),
+      document.fonts.load(`400 ${18 * 96 / 72}px "Montserrat-Bold"`),
       document.fonts.load(`700 ${60 * 96 / 72}px Montserrat`),
       document.fonts.load(`700 ${45.86 * 96 / 72}px Montserrat`),
       document.fonts.load(`700 ${18 * 96 / 72}px Montserrat`),
