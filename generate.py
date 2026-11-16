@@ -22,36 +22,44 @@ from reportlab.pdfbase.ttfonts import TTFont
 from paths import base_dir, output_dir as _output_dir, slugify
 
 BASE_DIR = base_dir()
-BG_IMAGE = os.path.join(BASE_DIR, "assets", "bg_template.png")
+BG_IMAGE = os.path.join(BASE_DIR, "static", "template_background_new.png")
+if not os.path.exists(BG_IMAGE):
+    BG_IMAGE = os.path.join(BASE_DIR, "assets", "template_background_new.png")
 FONTS_DIR = os.path.join(BASE_DIR, "fonts")
+if not os.path.exists(FONTS_DIR):
+    FONTS_DIR = os.path.join(BASE_DIR, "static", "fonts")
 
 # ---------------------------------------------------------------------------
 # Page geometry -- measured from the reference PDF (832.08 x 372.72 pt),
-# which corresponds exactly to the PSD canvas (3467 x 1553 px @ 0.24 pt/px).
+# centered layout safe from Kemnaker & Indonesia Emas logos.
 # ---------------------------------------------------------------------------
 PAGE_W = 832.08
 PAGE_H = 372.72
-CENTER_X = 482.6                 # horizontal center line both texts sit on
-NAME_BASELINE_Y = 104.9          # baseline of the name, bottom-up coords
-NAME_TO_POSITION_GAP = 45.0      # per spec: name -> position baseline gap
+CENTER_X = 416.04                 # exact horizontal center line (PAGE_W / 2)
+NAME_BASELINE_Y = 102.5          # baseline of the name, bottom-up coords
+NAME_TO_POSITION_GAP = 40.0      # per spec: name -> position baseline gap
 POSITION_LINE_GAP = 20.0         # per spec: gap between wrapped position lines
-MAX_TEXT_WIDTH = 625.0           # available width before position text wraps
-                                  # (calibrated so the reference example wraps
-                                  # exactly like your sample PDF; re-tune if
-                                  # you drop in a real Myriad Pro font file)
-MAX_NAME_WIDTH = 668.0           # available width before name text must be abbreviated
-NAME_BOX_WIDTH = 668.0           # centered name text box boundary
+MAX_TEXT_WIDTH = 618.0           # available width before position text wraps (safe from logo)
+MAX_NAME_WIDTH = 618.0           # available width before name text must be abbreviated
+NAME_BOX_WIDTH = 618.0           # centered name text box boundary
 
 NAME_FONT_SIZE = 45.86
 POSITION_FONT_SIZE = 18.0
 
 # ---------------------------------------------------------------------------
-# Fonts -- if you drop real Myriad Pro files into /fonts (see fonts/README.md)
-# they are used automatically. Otherwise falls back to Helvetica, which is
-# the closest built-in match and keeps every position/size/spacing exact.
+# Fonts -- Montserrat is the default font, loaded from fonts/Montserrat-*.ttf.
+# Myriad Pro and other fonts are registered if available, with Helvetica fallback.
 # ---------------------------------------------------------------------------
 NAME_FONT = "Helvetica-Bold"
 POSITION_FONT = "Helvetica"
+
+_montserrat_bold = os.path.join(FONTS_DIR, "Montserrat-Bold.ttf")
+if not os.path.exists(_montserrat_bold):
+    _montserrat_bold = os.path.join(BASE_DIR, "static", "fonts", "Montserrat-Bold.ttf")
+
+_montserrat_reg = os.path.join(FONTS_DIR, "Montserrat-Regular.ttf")
+if not os.path.exists(_montserrat_reg):
+    _montserrat_reg = os.path.join(BASE_DIR, "static", "fonts", "Montserrat-Regular.ttf")
 
 _bold_path = os.path.join(FONTS_DIR, "MyriadPro-Bold.ttf")
 _bold_path_otf = os.path.join(FONTS_DIR, "MyriadPro-Bold.otf")
@@ -59,14 +67,22 @@ _reg_path = os.path.join(FONTS_DIR, "MyriadPro-Regular.ttf")
 _reg_path_otf = os.path.join(FONTS_DIR, "MyriadPro-Regular.otf")
 
 try:
+    if os.path.exists(_montserrat_bold):
+        pdfmetrics.registerFont(TTFont("Montserrat-Bold", _montserrat_bold))
+        NAME_FONT = "Montserrat-Bold"
+    if os.path.exists(_montserrat_reg):
+        pdfmetrics.registerFont(TTFont("Montserrat-Regular", _montserrat_reg))
+        POSITION_FONT = "Montserrat-Regular"
+except Exception:
+    pass
+
+try:
     if os.path.exists(_bold_path) or os.path.exists(_bold_path_otf):
         p = _bold_path if os.path.exists(_bold_path) else _bold_path_otf
         pdfmetrics.registerFont(TTFont("MyriadPro-Bold", p))
-        NAME_FONT = "MyriadPro-Bold"
     if os.path.exists(_reg_path) or os.path.exists(_reg_path_otf):
         p = _reg_path if os.path.exists(_reg_path) else _reg_path_otf
         pdfmetrics.registerFont(TTFont("MyriadPro-Regular", p))
-        POSITION_FONT = "MyriadPro-Regular"
 except Exception:  # pragma: no cover - defensive, keeps fallback usable
     # CFF/PostScript outlines are rejected by reportlab TTFont; Helvetica fallback is expected
     pass
@@ -77,6 +93,34 @@ except Exception:  # pragma: no cover - defensive, keeps fallback usable
 # ---------------------------------------------------------------------------
 import re
 
+def sanitize_text(text, preserve_newlines=False):
+    """Replaces tabs, non-breaking spaces, zero-width spaces, and control chars with regular space."""
+    if not text:
+        return ""
+    if preserve_newlines:
+        lines = str(text).splitlines()
+        cleaned = []
+        for line in lines:
+            cl = re.sub(r'[\t\v\f\u00a0\u200b\u200e\u200f\ufeff]+', ' ', str(line)).strip()
+            cl = re.sub(r'[ ]+', ' ', cl)
+            cleaned.append(cl)
+        return "\n".join(cleaned)
+    s = re.sub(r'[\t\r\n\v\f\u00a0\u200b\u200e\u200f\ufeff]+', ' ', str(text)).strip()
+    return re.sub(r'\s+', ' ', s)
+
+def apply_text_case(text, text_case="uppercase"):
+    """Applies uppercase, capitalize (title case), or lowercase."""
+    if not text:
+        return ""
+    s = sanitize_text(text, preserve_newlines=True)
+    if text_case == "capitalize":
+        # Capitalize each word, preserving separators
+        return re.sub(r'(?:^|[\s/\-\(\)])[a-z]', lambda m: m.group(0).upper(), s.lower())
+    elif text_case == "lowercase":
+        return s.lower()
+    else:
+        return s.upper()
+
 LEADING_LIST_PREFIX_PATTERN = re.compile(
     r'^\s*(?:'
     r'\(?\d+[\.\)\:\-\]]*|'
@@ -86,16 +130,18 @@ LEADING_LIST_PREFIX_PATTERN = re.compile(
 )
 
 FRONT_TITLES_PATTERN = re.compile(
-    r'^\s*(?:(?:Plt\.?|PLT\.?|Plh\.?|PLH\.?|Pj\.?|PJ\.?)\s+)?'
-    r'(?:'
-    r'Prof\.?\s+Dr\.?\s+Ir\.?|Prof\.?\s+Dr\.?|Prof\.?\s+Ir\.?|Prof\.?|'
-    r'Dr\.?\s+Ir\.?|Dr\.?\s+Dr\.?|Dr\.?\s+drg\.?|Dr\.?\s+dr\.?|'
-    r'Drs\.?|Dra\.?|Drg\.?|Drh\.?|Ir\.?|Ns\.?|Apt\.?|'
-    r'Dr\.?|dr\.?|drg\.?|drh\.?|apt\.?|'
-    r'Bpk\.?|Bapak|Ibu|Sdr\.?|Sdri\.?|'
-    r'K\.?\s*H\.?|Kiai\s+Haji|Kyai\s+Haji|'
-    r'Hajjah|Hajah|Haji|Hjh\.?|Hj\.?|H\.|(?:\bH\b\.?)'
-    r')(?:\.|\s+|$)',
+    r'^\s*(?:'
+    r'Prof(?:esor)?\.?|'
+    r'Drs\.?|Dra\.?|Drg\.?|Drh\.?|Dr\.?|'
+    r'Ir\.?|Apt\.?|Ns\.?|'
+    r'K\.?\s*H\.?|KH\.?|Kiai\s+Haji|Kyai\s+Haji|'
+    r'Hjh\.?|Hj\.?|H\.|(?:\bH\b\.?)|Haji|Hajjah|Hajah|'
+    r'Ust(?:adz)?\.?|Habib|Sayyid|'
+    r'Bpk\.?|Bapak|Ibu|Sdri?\.?|Saudara|Saudari|'
+    r'Plt\.?|Plh\.?|Pj\.?|'
+    r'Jenderal|Letjen|Mayjen|Brigjen|Kolonel|Letkol|Mayor|Kapten|Lettu|Letda|'
+    r'Irjen(?:\s+Pol)?\.?|Brigjen(?:\s+Pol)?\.?|Kombes(?:\s+Pol)?\.?|AKBP|Kompol|AKP|Iptu|Ipda'
+    r')(?:[\.\s\:\-\/–—]+|$)',
     re.IGNORECASE
 )
 
@@ -128,9 +174,9 @@ TITLE_TOKEN_PATTERN = re.compile(
 
 BACK_TITLES_PATTERN = re.compile(
     r'(?:,\s*|\s+)(?:'
-    r'[SMDA]\.\s*[A-Za-z]+(?:\.\s*[A-Za-z]+)*\.?|'
-    r'Sp\.\s*[A-Za-z]+(?:\s*\([A-Za-z]+\)|-[A-Za-z0-9]+|(?:\.\s*[A-Za-z]+)*)\.?|'
-    r'Subsp\.\s*[A-Za-z]+(?:\.\s*[A-Za-z]+)*\.?|'
+    r'[SMDA]\.\s*[A-Za-z]+(?:\.\s*[A-Za-z]+)*(?:\s*\([A-Za-z0-9\s\.\-]+\))?\.?|'
+    r'Sp\.\s*[A-Za-z]+(?:\s*\([A-Za-z0-9\s\.\-]+\)|-[A-Za-z0-9]+|(?:\.\s*[A-Za-z]+)*)\.?|'
+    r'Subsp\.\s*[A-Za-z]+(?:\s*\([A-Za-z0-9\s\.\-]+\)|-[A-Za-z0-9]+|(?:\.\s*[A-Za-z]+)*)\.?|'
     r'Ph\.?\s*D\.?|PhD|'
     r'M\.?\s*B\.?\s*A\.?|MBA|'
     r'M\.?\s*Bus\.?|'
@@ -150,52 +196,62 @@ BACK_TITLES_PATTERN = re.compile(
     r'Ak\.?|Akt\.?|CA\b|BKP|CTA|ACPA|'
     r'MM\.PD|'
     r'H\.|Hj\.|Haji|Hajjah|Hajah|Hjh\.?'
-    r')\b\.?',
+    r')(?:\.+(?:\b|\)|$)?|\b|\)|$)',
     re.IGNORECASE
 )
 
 def clean_titles(name):
-    """Removes leading list numbers/bullets, front and back titles/degrees, including Haji/Hajjah."""
+    """Thoroughly removes leading tabs, bullets/numbering, front titles (Dr, Drs, Dra, H, Hj, etc.), and back degrees."""
     if not name:
         return ""
-    s = name.strip()
+    # 0. Sanitize tabs, NBSP, zero-width spaces, and control chars
+    s = sanitize_text(name)
 
-    # Strip parenthesized religious titles e.g. "(H.) " or "(Hj.) "
-    s = re.sub(r'^\s*\((?:H\.|Hj\.|Haji|Hajjah|Hajah|Hjh\.?)\)\s*', '', s, flags=re.IGNORECASE).strip()
+    # 1. Strip parenthesized religious/academic titles e.g. "(H.) " or "(Hj.) " or "(Dr.) "
+    s = re.sub(r'^\s*\((?:H\.|Hj\.|Haji|Hajjah|Hajah|Hjh\.?|Dr\.?|Drs\.?|Dra\.?)\)\s*', '', s, flags=re.IGNORECASE).strip()
 
-    # 1. Strip leading numbering or bullet markers (e.g. "1. ", "2) ", "- ", "> ", "· ", "• ")
+    # 2. Strip leading numbering or bullet markers (e.g. "1. ", "2) ", "- ", "> ", "· ", "• ")
     prev = None
     while prev != s:
         prev = s
         s = LEADING_LIST_PREFIX_PATTERN.sub('', s).strip()
 
-    # 2. Strip front titles & religious titles (e.g. "Prof. ", "Dr. ", "H. ", "Hj. ", "K.H. ", etc.)
+    # 3. Strip front titles & religious titles (e.g. "Prof. ", "Dr. ", "Drs. ", "H. ", "Hj. ", "K.H. ", etc.)
     prev = None
     while prev != s:
         prev = s
         s = FRONT_TITLES_PATTERN.sub('', s).strip()
 
-    # 3. Strip back titles / academic degrees
+    # 4. Strip back titles / academic degrees
     prev = None
     while prev != s:
         prev = s
         s = BACK_TITLES_PATTERN.sub('', s).strip()
 
-    # 4. Clean leftover punctuation at ends and normalize internal spacing
-    s = re.sub(r'^[,\.\s\-–—>·•\:\=\|\/]+|[,\.\s\-–—>·•\:\=\|\/]+$', '', s).strip()
+    # 4b. Strip parenthesized trailing titles/subspecialties e.g. "(K)", "(Konsultan)", "(Han)"
+    s = re.sub(r'\s*\((?:K|Konsultan|Sp\.[A-Za-z]+|[A-Za-z0-9\.\s\-]+)\)\s*$', '', s, flags=re.IGNORECASE).strip()
 
-    # 5. Clean any trailing comma or short unrecognized title abbreviations
+    # 5. Clean leftover punctuation at ends (preserving trailing period ONLY if part of a single initial e.g. 'R.', 'P.')
+    s = re.sub(r'^[,\.\s\-–—>·•\:\=\|\/]+', '', s).strip()
+    s = re.sub(r'[\s,;:!?\-–—_/\t|*•·+~="\'\\`^]+$', '', s).strip()
+    if not re.search(r'\b[A-Za-z]\.$', s):
+        s = re.sub(r'\.+$', '', s).strip()
+
+    # 6. Clean any trailing comma or short unrecognized title abbreviations
     while ',' in s:
         before, after = s.rsplit(',', 1)
         after_trim = after.strip()
-        if re.match(r'^(?:[A-Z0-9\.\s\-\(\)]+|\(K\)|Konsultan)$', after_trim, re.IGNORECASE) and len(after_trim) <= 12:
+        if re.match(r'^(?:[A-Za-z0-9\.\s\-\(\)]+|\(K\)|Konsultan)$', after_trim, re.IGNORECASE) and len(after_trim) <= 15:
             s = before.strip()
         else:
             break
 
-    s = re.sub(r'^[,\.\s\-–—>·•\:\=\|\/]+|[,\.\s\-–—>·•\:\=\|\/]+$', '', s).strip()
+    s = re.sub(r'^[,\.\s\-–—>·•\:\=\|\/]+', '', s).strip()
+    s = re.sub(r'[\s,;:!?\-–—_/\t|*•·+~="\'\\`^]+$', '', s).strip()
+    if not re.search(r'\b[A-Za-z]\.$', s):
+        s = re.sub(r'\.+$', '', s).strip()
     s = strip_trailing_punctuation(s)
-    s = re.sub(r'\s+', ' ', s)
+    s = re.sub(r'\s+', ' ', s).strip()
     return s
 
 def get_name_text_width_pt(text, font=None, font_size=None):
@@ -203,10 +259,11 @@ def get_name_text_width_pt(text, font=None, font_size=None):
         return 0.0
     upper = str(text).strip().upper()
     f = font or NAME_FONT
-    sz = font_size or NAME_FONT_SIZE
+    sz = float(font_size) if font_size and str(font_size).lower() != "auto" else NAME_FONT_SIZE
     try:
         return pdfmetrics.stringWidth(upper, f, sz)
     except Exception:
+        scale = sz / NAME_FONT_SIZE
         w = 0.0
         for ch in upper:
             if ch in "MW@#%":
@@ -221,85 +278,148 @@ def get_name_text_width_pt(text, font=None, font_size=None):
                 w += 15.0
             else:
                 w += 29.0
-        return w
+        return w * scale
 
-def fits_name(text, max_len=24, max_width=MAX_NAME_WIDTH):
+def fits_name(text, max_len=24, max_width=MAX_NAME_WIDTH, font=None, font_size=None):
     if not text:
         return True
     if len(text) > max_len:
         return False
-    if get_name_text_width_pt(text) > max_width:
+    if get_name_text_width_pt(text, font=font, font_size=font_size) > max_width:
         return False
     return True
 
-def format_bulk_name(raw_name, max_len=24, max_width=MAX_NAME_WIDTH):
+def format_bulk_name(raw_name, max_len=24, max_width=MAX_NAME_WIDTH, font=None, font_size=None):
     """
-    1. Removes all front and back titles.
-    2. If length > max_len or text width > max_width: abbreviates the last name (e.g. Firmansyah -> F.).
-    3. If still > max_len or > max_width: uses words from beginning as much as fits.
+    1. Removes all front and back academic titles.
+    2. Uses target font and font size (default NAME_FONT_SIZE = 45.86 pt) to check if the name
+       fits safely within max_width (CARD.NAME_BOX_WIDTH = 618.0 pt).
+    3. If full cleaned name fits within max_width and <= 24 chars, returns it.
+    4. If it exceeds max_width or 24 chars, abbreviates with AT MOST ONE initial ending with period '.'
+       (e.g. 'Muhammad Fauzan Ramadhan' -> 'Muhammad Fauzan R.', 'Arnando Jujur P.'),
+       so that the name fits comfortably at the locked font size without per-card font shrinking.
     """
     cleaned = strip_trailing_punctuation(clean_titles(raw_name))
     if not cleaned:
         return ""
-    if fits_name(cleaned, max_len=max_len, max_width=max_width):
+
+    sz = float(font_size) if font_size and str(font_size).lower() != "auto" else NAME_FONT_SIZE
+    f = _resolve_reportlab_font(font, is_bold=True) if font else NAME_FONT
+
+    def fits(cand):
+        if not cand:
+            return True
+        w = get_name_text_width_pt(cand.upper(), font=f, font_size=sz)
+        return w <= max_width
+
+    if fits(cleaned) and len(cleaned) <= max_len:
         return cleaned
 
     words = cleaned.split()
     if len(words) > 1:
-        # 1. Abbreviate last name
-        last_word = words[-1]
-        initial = last_word[0].upper() + "."
-        candidate = " ".join(words[:-1]) + " " + initial
-        if fits_name(candidate, max_len=max_len, max_width=max_width):
-            return candidate
+        # 1. Abbreviate last word if it fits (e.g. 'Muhammad Fauzan Ramadhan' -> 'Muhammad Fauzan R.')
+        last_cand = " ".join(words[:-1]) + " " + words[-1][0].upper() + "."
+        if fits(last_cand):
+            return last_cand
 
-        # 2. If still exceeds max_len or max_width: take words from beginning as much as fits
-        result = ""
-        for i in range(len(words) - 1):
-            next_cand = (result + " " + words[i]).strip()
-            if fits_name(next_cand + " " + initial, max_len=max_len, max_width=max_width):
-                result = next_cand
-            elif fits_name(next_cand, max_len=max_len, max_width=max_width):
-                result = next_cand
-            else:
-                init_cand = (result + " " + words[i][0].upper() + ".").strip()
-                if fits_name(init_cand, max_len=max_len, max_width=max_width):
-                    result = init_cand
-                break
-        if result:
-            if fits_name(result + " " + initial, max_len=max_len, max_width=max_width):
-                return result + " " + initial
-            if fits_name(result, max_len=max_len, max_width=max_width):
-                return result
+        # 2. Find longest prefix of full words + 1 initial, omitting all subsequent words (e.g. 'Arnando Jujur Pardamean Siregar' -> 'Arnando Jujur P.')
+        for i in range(len(words) - 2, 0, -1):
+            cand = " ".join(words[:i]) + " " + words[i][0].upper() + "."
+            if fits(cand):
+                return cand
 
-    return strip_trailing_punctuation(cleaned[:max_len].strip())
+            # If prefix has at least 2 full words and fits, prefer it over shrinking to words[0] + initial!
+            # (e.g. 'Faried Abdurrahman Nur Yuliono' -> 'Faried Abdurrahman' instead of 'Faried A.')
+            if i >= 2:
+                cand_full = " ".join(words[:i])
+                if fits(cand_full):
+                    return cand_full
+
+        # 3. Fallback for i=1 (e.g. 'First W.')
+        cand_one_init = words[0] + " " + words[1][0].upper() + "."
+        if fits(cand_one_init):
+            return cand_one_init
+        if fits(words[0]):
+            return words[0]
+        return words[0]
+
+    return strip_trailing_punctuation(cleaned[:25].strip())
+
 
 def strip_trailing_punctuation(text):
-    """Strips trailing punctuation (dots, commas, semicolons, colons, dashes, etc.)
-    except closing parentheses and brackets ), ], }."""
+    """Strips trailing punctuation (commas, semicolons, colons, dashes, etc.)
+    Preserves trailing period if part of an academic degree abbreviation (e.g. M.T., Ph.D.)."""
     if not text:
         return ""
     lines = str(text).splitlines()
     cleaned = []
     for l in lines:
-        c = re.sub(r'[\s.,;:!?\-–—_/\t|*•·+~="\'\\`^]+$', '', l).strip()
+        c = re.sub(r'[\s,;:!?\-–—_/\t|*•·+~="\'\\`^]+$', '', l).strip()
+        if not re.search(r'\b[A-Za-z]\.$', c):
+            c = re.sub(r'\.+$', '', c).strip()
         cleaned.append(c)
     return "\n".join(cleaned).strip()
 
 def clean_position_text(pos):
     if not pos:
         return ""
-    s = re.sub(r'^[\s\-–—>·•\:\=\|\/]+', '', str(pos)).strip()
-    return strip_trailing_punctuation(s)
+    lines = str(pos).splitlines()
+    cleaned_lines = []
+    for line in lines:
+        s = sanitize_text(line, preserve_newlines=False)
+        s = re.sub(r'^[\s\-–—>·•\:\=\|\/]+', '', s).strip()
+        prev = None
+        while prev != s:
+            prev = s
+            s = re.sub(r'^\s*(?:[SMDA]\.[A-Za-z]+(?:\.[A-Za-z]+)*\.?|Ph\.?D\.?|PhD|M\.?B\.?A\.?|MBA|Sp\.[A-Za-z]+|Subsp\.[A-Za-z]+|M\.?M\.?|M\.?Si\.?|S\.?E\.?|S\.?H\.?|S\.?T\.?|S\.?Kom\.?|S\.?Pd\.?|S\.?Sos\.?|M\.?Kom\.?|M\.?H\.?|M\.?T\.?|M\.?Pd\.?|FINASIM|Ak\.?|Akt\.?|CA\b|MM\.PD)(?:[,\s\:\-\/–—]+|$)', '', s, flags=re.IGNORECASE).strip()
+        s = re.sub(r'^[\s\-–—>·•\:\=\|\/]+', '', s).strip()
+        s = strip_trailing_punctuation(s)
+        if s:
+            cleaned_lines.append(s)
+    return "\n".join(cleaned_lines)
 
 def split_name_and_position(line):
     """
     Parses a single line into (name, position) using any punctuation
     including parentheses, tabs, colons, dashes, etc.
+    Intelligently handles copy-pasted multi-column rows from Excel/Sheets.
     """
-    line = line.strip()
     if not line:
         return "", ""
+    line = str(line).strip()
+    if not line:
+        return "", ""
+
+    # Check TSV (Excel copy-paste with tabs)
+    if '\t' in line:
+        parts = [p.strip() for p in line.split('\t') if p.strip()]
+        if len(parts) >= 3:
+            if re.match(r'^\(?\d+[\.\)\:\-\]]*$', parts[0]) or parts[0].lower() in ('no', 'nomor'):
+                return strip_trailing_punctuation(parts[1]), ' - '.join(parts[2:])
+            else:
+                return strip_trailing_punctuation(parts[0]), ' - '.join(parts[1:])
+        elif len(parts) == 2:
+            if re.match(r'^\(?\d+[\.\)\:\-\]]*$', parts[0]) or parts[0].lower() in ('no', 'nomor'):
+                return strip_trailing_punctuation(parts[1]), ""
+            else:
+                return strip_trailing_punctuation(parts[0]), parts[1]
+        elif len(parts) == 1:
+            return strip_trailing_punctuation(parts[0]), ""
+
+    # Strip leading numbering: e.g. "1. ", "1, ", "1) ", "1 - ", "1; "
+    num_match = re.match(r'^\(?\d+[\.\)\:\-\]\,\;]\s+(.*)$', line)
+    if num_match:
+        line = num_match.group(1).strip()
+
+    # Check Semicolon delimiter (Standard Indonesian Excel CSV)
+    if ';' in line:
+        parts = [p.strip().strip('"\'') for p in line.split(';') if p.strip()]
+        if len(parts) >= 2:
+            return strip_trailing_punctuation(parts[0]), ' - '.join(parts[1:])
+        elif len(parts) == 1:
+            return strip_trailing_punctuation(parts[0]), ""
+
+    line = sanitize_text(line)
 
     # 1. Check parentheses / brackets: e.g. "Nama Pejabat (Jabatan Lengkap)"
     # or "Nama - Jabatan (Keterangan)"
@@ -307,7 +427,7 @@ def split_name_and_position(line):
     if m:
         before_paren = m.group(1).strip()
         inside_paren = m.group(2).strip()
-        delims = ['\t', '|', ';', ':', ' - ', ' – ', ' — ', '=']
+        delims = ['|', ';', ':', ' - ', ' – ', ' — ', '=']
         found_delim = None
         for d in delims:
             if d in before_paren:
@@ -316,21 +436,21 @@ def split_name_and_position(line):
         if found_delim:
             parts = before_paren.split(found_delim, 1)
             name_part = strip_trailing_punctuation(parts[0].strip())
-            pos_part = clean_position_text(parts[1].strip() + " (" + inside_paren + ")")
+            pos_part = parts[1].strip() + " (" + inside_paren + ")"
             if name_part and pos_part:
                 return name_part, pos_part
         else:
             name_part = strip_trailing_punctuation(before_paren)
-            pos_part = clean_position_text(inside_paren)
+            pos_part = inside_paren
             if name_part and pos_part:
                 return name_part, pos_part
 
     # 2. Check explicit strong delimiters
-    delims = ['\t', '|', ';', ':', ' - ', ' – ', ' — ', ' / ', '=']
+    delims = ['|', ';', ':', ' - ', ' – ', ' — ', ' / ', '=']
     for d in delims:
         if d in line:
             parts = line.split(d, 1)
-            return strip_trailing_punctuation(parts[0].strip()), clean_position_text(parts[1])
+            return strip_trailing_punctuation(parts[0].strip()), parts[1].strip()
 
     # 3. Check for comma: could separate degrees or name/position
     if ',' in line:
@@ -339,14 +459,14 @@ def split_name_and_position(line):
             last_part = parts[-1]
             is_title = bool(TITLE_TOKEN_PATTERN.match(last_part))
             if not is_title:
-                return strip_trailing_punctuation(", ".join(parts[:-1])), clean_position_text(last_part)
+                return strip_trailing_punctuation(", ".join(parts[:-1])), last_part
 
     # 4. Check for single dash or slash between words
     for d in ['-', '/']:
         if d in line:
             parts = line.split(d, 1)
             if parts[0].strip() and parts[1].strip():
-                return strip_trailing_punctuation(parts[0].strip()), clean_position_text(parts[1])
+                return strip_trailing_punctuation(parts[0].strip()), parts[1].strip()
 
     # 5. Check if line contains position indicators starting with PLT / Plt / Plh / Pj separated by space
     pos_match = re.search(r'\s+(?:PLT\.?|Plt\.?|PLH\.?|Plh\.?|Pj\.?|PJ\.?)\s+', line)
@@ -354,7 +474,7 @@ def split_name_and_position(line):
         name_part = line[:pos_match.start()].strip()
         pos_part = line[pos_match.start():].strip()
         if name_part and pos_part:
-            return strip_trailing_punctuation(name_part), clean_position_text(pos_part)
+            return strip_trailing_punctuation(name_part), pos_part
 
     return strip_trailing_punctuation(line), ""
 
@@ -710,68 +830,172 @@ def layout_position_only(text, font=NAME_FONT, max_width=MAX_TEXT_WIDTH, max_cha
     return [upper], 16.0, [86.0]
 
 
-def _draw_block(c, name, position_lines, content_mode="both"):
+PAGE_SIZES = {
+    "a4": (PAGE_W, PAGE_H),         # Standard Kemnaker (832.08 x 372.72 pt)
+    "f4": (935.43, 419.0),          # F4 / Folio (330 x 215 mm)
+    "letter": (792.0, 360.0),       # Letter / Kuarto (279 x 216 mm)
+    "a3": (1190.55, 532.0),         # A3 (420 x 297 mm)
+}
+
+def _resolve_reportlab_font(choice, is_bold=False):
+    if not choice:
+        return NAME_FONT if is_bold else POSITION_FONT
+    ch = str(choice).lower().strip()
+    if "montserrat" in ch:
+        return "Montserrat-Bold" if is_bold else "Montserrat-Regular"
+    if "myriad" in ch:
+        try:
+            target = "MyriadPro-Bold" if is_bold else "MyriadPro-Regular"
+            pdfmetrics.getFont(target)
+            return target
+        except Exception:
+            return "Helvetica-Bold" if is_bold else "Helvetica"
+    if any(k in ch for k in ("times", "garamond", "georgia", "serif")):
+        return "Times-Bold" if is_bold else "Times-Roman"
+    if "courier" in ch or "mono" in ch:
+        return "Courier-Bold" if is_bold else "Courier"
+    try:
+        pdfmetrics.getFont(choice)
+        return choice
+    except Exception:
+        pass
+    return NAME_FONT if is_bold else POSITION_FONT
+
+def _draw_block(c, name, position_lines, content_mode="both",
+                name_font=None, pos_font=None,
+                name_size=None, pos_size=None,
+                spacing_gap=None, text_case="uppercase",
+                center_x=None, max_name_width=None, max_text_width=None,
+                clean_titles_flag=False, horizontal_offset=0.0):
     """Draws the text block using local coords where (0,0)
     behaves like the normal (bottom, right-side-up) orientation."""
+    n_font = _resolve_reportlab_font(name_font, is_bold=True)
+    p_font = _resolve_reportlab_font(pos_font, is_bold=False)
+    n_size = float(name_size) if name_size and str(name_size).lower() != "auto" else NAME_FONT_SIZE
+    p_size = float(pos_size) if pos_size and str(pos_size).lower() != "auto" else POSITION_FONT_SIZE
+    gap = float(spacing_gap) if spacing_gap else NAME_TO_POSITION_GAP
+    cx = (center_x if center_x is not None else CENTER_X) + float(horizontal_offset or 0.0)
+    mw = max_name_width if max_name_width is not None else MAX_NAME_WIDTH
+    tw = max_text_width if max_text_width is not None else MAX_TEXT_WIDTH
+
+    # Only clean academic/religious titles if clean_titles_flag is True (bulk/kemnaker mode)
+    if clean_titles_flag and name:
+        clean_n = clean_titles(name)
+    else:
+        clean_n = sanitize_text(name) if name else ""
+    safe_name = apply_text_case(clean_n, text_case)
+
     if content_mode == "name_only":
-        safe_name = (name or "").strip().upper()
         if safe_name:
-            lines = wrap_60pt(safe_name, 36, font=NAME_FONT)
-            c.setFont(NAME_FONT, 60.0)
+            sz = 60.0 if not name_size or str(name_size).lower() == "auto" else n_size
+            lines = wrap_60pt(safe_name, 36, font=n_font)
+            for l in lines:
+                w_l = get_name_text_width_pt(l, n_font, sz)
+                if w_l > tw and tw > 0:
+                    sz = sz * (tw / w_l)
+            c.setFont(n_font, sz)
             if len(lines) == 1:
-                c.drawCentredString(CENTER_X, 86.0, lines[0])
+                c.drawCentredString(cx, 86.0, lines[0])
             elif len(lines) >= 2:
-                c.drawCentredString(CENTER_X, 115.0, lines[0])
-                c.drawCentredString(CENTER_X, 57.0, lines[1])
+                c.drawCentredString(cx, 115.0, lines[0])
+                c.drawCentredString(cx, 57.0, lines[1])
         return
 
     if content_mode == "position_only":
         pos_text = position_lines if isinstance(position_lines, str) else "\n".join(position_lines)
-        safe_pos = (pos_text or name or "").strip()
+        safe_pos = sanitize_text(pos_text or name or "")
+        safe_pos = apply_text_case(safe_pos, text_case)
         if safe_pos:
-            lines, font_sz, baselines = layout_position_only(safe_pos, font=NAME_FONT, max_width=MAX_TEXT_WIDTH, max_chars=128)
-            c.setFont(NAME_FONT, font_sz)
+            lines, font_sz, baselines = layout_position_only(safe_pos, font=p_font, max_width=tw, max_chars=128)
+            sz = p_size if pos_size and str(pos_size).lower() != "auto" else font_sz
+            c.setFont(p_font, sz)
             for line, y in zip(lines, baselines):
-                c.drawCentredString(CENTER_X, y, line)
+                c.drawCentredString(cx, y, line)
         return
 
     # Default 'both' mode
-    safe_name = name.upper()
-    font_sz = NAME_FONT_SIZE
-    w = get_name_text_width_pt(safe_name, NAME_FONT, font_sz)
-    if w > MAX_NAME_WIDTH and w > 0:
-        font_sz = font_sz * (MAX_NAME_WIDTH / w)
-    c.setFont(NAME_FONT, font_sz)
-    c.drawCentredString(CENTER_X, NAME_BASELINE_Y, safe_name)
+    safe_lines = [apply_text_case(sanitize_text(l), text_case) for l in (position_lines or []) if sanitize_text(l)]
+    safe_lines = safe_lines[:2]
+    num_pos_lines = len(safe_lines)
 
-    c.setFont(POSITION_FONT, POSITION_FONT_SIZE)
-    baseline = NAME_BASELINE_Y - NAME_TO_POSITION_GAP
-    for line in position_lines[:2]:
-        c.drawCentredString(CENTER_X, baseline, line.upper())
-        baseline -= POSITION_LINE_GAP
+    # Penyesuaian batas atas dan bawah dinamis:
+    # - Jabatan 1 baris: batas atas dan bawah seimbang terhadap garis gelap (base_name_y = 102.5 pt).
+    # - Jabatan 2 baris: batas atas dan bawah menyesuaikan, naik sedikit (+10.0 pt -> 112.5 pt) agar seimbang.
+    # - Jabatan kosong (0 baris): tepat di tengah vertikal (86.0 pt).
+    if num_pos_lines == 2:
+        base_name_y = 112.5
+    elif num_pos_lines == 1:
+        base_name_y = 102.5
+    else:
+        base_name_y = 86.0
+
+    gap_adjustment = (gap - 40.0) / 2.0 if gap else 0.0
+    dynamic_name_baseline_y = (base_name_y + gap_adjustment) if num_pos_lines > 0 else base_name_y
+
+    if safe_name:
+        font_sz = n_size
+        w = get_name_text_width_pt(safe_name, n_font, font_sz)
+        # Always enforce safe margin mw (618 pt) so text never touches Kemnaker or Indonesia Emas logos
+        if w > mw and mw > 0:
+            font_sz = font_sz * (mw / w)
+        c.setFont(n_font, font_sz)
+        c.drawCentredString(cx, dynamic_name_baseline_y, safe_name)
+
+    if num_pos_lines > 0:
+        actual_p_size = p_size
+        for c_line in safe_lines:
+            w_p = get_name_text_width_pt(c_line, p_font, actual_p_size)
+            if w_p > tw and tw > 0:
+                actual_p_size = actual_p_size * (tw / w_p)
+
+        c.setFont(p_font, actual_p_size)
+        baseline = dynamic_name_baseline_y - gap
+        for c_line in safe_lines:
+            c.drawCentredString(cx, baseline, c_line)
+            baseline -= POSITION_LINE_GAP
 
 
-def build_pdf(name, position, output_path, sides="2", content_mode="both", **kwargs):
+def build_pdf(name, position, output_path, sides="2", content_mode="both",
+              name_font=None, pos_font=None, name_size=None, pos_size=None,
+              spacing_gap=None, text_case="uppercase", paper_size="a4",
+              custom_bg_data="", clean_titles_flag=False, horizontal_offset=0.0, **kwargs):
     """Renders one name-table PDF (one page, one card) to output_path."""
-    c = canvas.Canvas(output_path, pagesize=(PAGE_W, PAGE_H))
+    page_w, page_h = PAGE_SIZES.get(str(paper_size).lower(), (PAGE_W, PAGE_H))
+    c = canvas.Canvas(output_path, pagesize=(page_w, page_h))
 
     bg = ImageReader(BG_IMAGE)
-    c.drawImage(bg, 0, 0, width=PAGE_W, height=PAGE_H,
+    c.drawImage(bg, 0, 0, width=page_w, height=page_h,
                 preserveAspectRatio=False, mask="auto")
 
     position_lines = wrap_position(position)
 
+    scale_ratio = page_w / PAGE_W
+    draw_kwargs = {
+        "content_mode": content_mode,
+        "name_font": name_font,
+        "pos_font": pos_font,
+        "name_size": name_size,
+        "pos_size": pos_size,
+        "spacing_gap": spacing_gap,
+        "text_case": text_case,
+        "center_x": CENTER_X * scale_ratio,
+        "max_name_width": MAX_NAME_WIDTH * scale_ratio,
+        "max_text_width": MAX_TEXT_WIDTH * scale_ratio,
+        "clean_titles_flag": clean_titles_flag,
+        "horizontal_offset": float(kwargs.get("horizontal_offset", horizontal_offset) or 0.0) * scale_ratio,
+    }
+
     # Normal orientation (bottom half, right-side-up)
     c.saveState()
-    _draw_block(c, name, position_lines, content_mode=content_mode)
+    _draw_block(c, name, position_lines, **draw_kwargs)
     c.restoreState()
 
     # Flipped orientation (top half, rotated 180 degrees about page center)
     if str(sides) != "1":
         c.saveState()
-        c.translate(PAGE_W, PAGE_H)
+        c.translate(page_w, page_h)
         c.rotate(180)
-        _draw_block(c, name, position_lines, content_mode=content_mode)
+        _draw_block(c, name, position_lines, **draw_kwargs)
         c.restoreState()
 
     c.showPage()
@@ -779,32 +1003,54 @@ def build_pdf(name, position, output_path, sides="2", content_mode="both", **kwa
     return output_path
 
 
-def build_pdf_multipage(rows, output_path, sides="2", content_mode="both", **kwargs):
+def build_pdf_multipage(rows, output_path, sides="2", content_mode="both",
+                        name_font=None, pos_font=None, name_size=None, pos_size=None,
+                        spacing_gap=None, text_case="uppercase", paper_size="a4",
+                        custom_bg_data="", **kwargs):
     """Renders multiple cards into a single multi-page PDF (one card per page)."""
-    out_dir = os.path.dirname(output_path)
-    if out_dir:
-        os.makedirs(out_dir, exist_ok=True)
-    c = canvas.Canvas(output_path, pagesize=(PAGE_W, PAGE_H))
+    if isinstance(output_path, (str, bytes, os.PathLike)):
+        out_dir = os.path.dirname(output_path)
+        if out_dir:
+            os.makedirs(out_dir, exist_ok=True)
+    page_w, page_h = PAGE_SIZES.get(str(paper_size).lower(), (PAGE_W, PAGE_H))
+    c = canvas.Canvas(output_path, pagesize=(page_w, page_h))
     bg = ImageReader(BG_IMAGE)
+
+    scale_ratio = page_w / PAGE_W
+    draw_kwargs = {
+        "content_mode": content_mode,
+        "name_font": name_font,
+        "pos_font": pos_font,
+        "name_size": name_size,
+        "pos_size": pos_size,
+        "spacing_gap": spacing_gap,
+        "text_case": text_case,
+        "center_x": CENTER_X * scale_ratio,
+        "max_name_width": MAX_NAME_WIDTH * scale_ratio,
+        "max_text_width": MAX_TEXT_WIDTH * scale_ratio,
+        "clean_titles_flag": kwargs.get("clean_titles_flag", False),
+        "horizontal_offset": float(kwargs.get("horizontal_offset", 0.0) or 0.0) * scale_ratio,
+    }
+
     for row in rows:
         if isinstance(row, dict):
             name = row.get("name", "")
             position = row.get("position", "")
         else:
             name, position = row[0], row[1]
-        c.drawImage(bg, 0, 0, width=PAGE_W, height=PAGE_H,
+        c.drawImage(bg, 0, 0, width=page_w, height=page_h,
                     preserveAspectRatio=False, mask="auto")
         position_lines = wrap_position(position)
         # Normal orientation (bottom half, right-side-up)
         c.saveState()
-        _draw_block(c, name, position_lines, content_mode=content_mode)
+        _draw_block(c, name, position_lines, **draw_kwargs)
         c.restoreState()
         # Flipped orientation (top half, rotated 180 degrees about page center)
         if str(sides) != "1":
             c.saveState()
-            c.translate(PAGE_W, PAGE_H)
+            c.translate(page_w, page_h)
             c.rotate(180)
-            _draw_block(c, name, position_lines, content_mode=content_mode)
+            _draw_block(c, name, position_lines, **draw_kwargs)
             c.restoreState()
         c.showPage()
     c.save()

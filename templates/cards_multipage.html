@@ -2,13 +2,22 @@
 <html>
 <head>
 <meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:ital,wght@0,400;0,700;1,400;1,700&family=Open+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Plus+Jakarta+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 <style>
-  {% if custom_font_data %}
   @font-face {
-    font-family: "{{ custom_font_name or 'CustomFont' }}";
-    src: url("{{ custom_font_data }}");
+    font-family: "Montserrat";
+    src: url("{{ asset_prefix }}fonts/Montserrat-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
   }
-  {% else %}
+  @font-face {
+    font-family: "Montserrat";
+    src: url("{{ asset_prefix }}fonts/Montserrat-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+  }
   @font-face {
     font-family: "MyriadPro";
     src: url("{{ asset_prefix }}fonts/MYRIADPRO-REGULAR.woff") format("woff");
@@ -21,10 +30,23 @@
     font-weight: 700;
     font-style: normal;
   }
+
+  {% if custom_font_name_data %}
+  @font-face {
+    font-family: "{{ custom_font_name_filename or 'CustomNameFont' }}";
+    src: url("{{ custom_font_name_data }}");
+  }
+  {% endif %}
+
+  {% if custom_font_pos_data %}
+  @font-face {
+    font-family: "{{ custom_font_pos_filename or 'CustomPosFont' }}";
+    src: url("{{ custom_font_pos_data }}");
+  }
   {% endif %}
 
   @page {
-    size: 832.08pt 372.72pt;
+    size: {{ page_w_pt or 832.08 }}pt {{ page_h_pt or 372.72 }}pt;
     margin: 0;
   }
 
@@ -38,7 +60,7 @@
     margin: 0;
     padding: 0;
     background: #ffffff;
-    width: 832.08pt;
+    width: {{ page_w_pt or 832.08 }}pt;
     line-height: 1;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
@@ -46,9 +68,9 @@
 
   .card-page {
     position: relative;
-    width: 832.08pt;
-    height: 372.72pt;
-    max-height: 372.72pt;
+    width: {{ page_w_pt or 832.08 }}pt;
+    height: {{ page_h_pt or 372.72 }}pt;
+    max-height: {{ page_h_pt or 372.72 }}pt;
     overflow: hidden;
     background: #ffffff;
     page-break-inside: avoid;
@@ -66,8 +88,8 @@
     position: absolute;
     left: 0;
     top: 0;
-    width: 832.08pt;
-    height: 372.72pt;
+    width: {{ page_w_pt or 832.08 }}pt;
+    height: {{ page_h_pt or 372.72 }}pt;
     display: block;
   }
 
@@ -75,13 +97,13 @@
     position: absolute;
     left: 0;
     top: 0;
-    width: 832.08pt;
-    height: 372.72pt;
+    width: {{ page_w_pt or 832.08 }}pt;
+    height: {{ page_h_pt or 372.72 }}pt;
   }
 
   .block-flip {
     transform: rotate(180deg);
-    transform-origin: 416.04pt 186.36pt;
+    transform-origin: {{ (page_w_pt or 832.08) / 2 }}pt {{ (page_h_pt or 372.72) / 2 }}pt;
   }
 </style>
 </head>
@@ -91,7 +113,7 @@
     {% if custom_bg_data %}
     <img class="bg-img" src="{{ custom_bg_data }}" alt="Card Background">
     {% else %}
-    <img class="bg-img" src="{{ asset_prefix }}bg_template.png" alt="Card Background">
+    <img class="bg-img" src="{{ asset_prefix }}template_background_new.png" alt="Card Background">
     {% endif %}
     <div id="block-normal-{{ loop.index0 }}" class="block"></div>
     {% if sides != '1' %}
@@ -100,29 +122,48 @@
   </div>
   {% endfor %}
 
-  <script src="{{ asset_prefix }}nametag.js?v=20261001c"></script>
+  <script src="{{ asset_prefix }}nametag.js?v=20261028a"></script>
   <script>
     const CARDS = {{ cards|tojson }};
     const CONTENT_MODE = {{ (content_mode or 'both')|tojson }};
 
-    {% if custom_font_data %}
-    const targetFontName = "{{ custom_font_name or 'CustomFont' }}";
-    const targetFontFamily = `"${targetFontName}", sans-serif`;
-    {% elif font_choice == 'Arial' %}
-    const targetFontName = "Arial";
-    const targetFontFamily = "Arial, sans-serif";
-    {% elif font_choice == 'Times New Roman' %}
-    const targetFontName = "Times New Roman";
-    const targetFontFamily = "'Times New Roman', Times, serif";
-    {% elif font_choice == 'Calibri' %}
-    const targetFontName = "Calibri";
-    const targetFontFamily = "Calibri, Candara, sans-serif";
-    {% else %}
-    const targetFontName = "MyriadPro";
-    const targetFontFamily = "MyriadPro, Arial, Helvetica, sans-serif";
-    {% endif %}
+    function resolveFontFamily(choice, customData, customName) {
+      if (customData && customName) return `"${customName}", sans-serif`;
+      switch (choice) {
+        case "Montserrat": return "'Montserrat', sans-serif";
+        case "MyriadPro": return "MyriadPro, Arial, Helvetica, sans-serif";
+        case "Arial": return "Arial, sans-serif";
+        case "Times New Roman": return "'Times New Roman', Times, serif";
+        case "Calibri": return "Calibri, Candara, sans-serif";
+        case "Roboto": return "'Roboto', sans-serif";
+        case "Open Sans": return "'Open Sans', sans-serif";
+        case "Georgia": return "Georgia, serif";
+        case "Garamond": return "'EB Garamond', Garamond, serif";
+        case "Plus Jakarta Sans": return "'Plus Jakarta Sans', sans-serif";
+        default:
+          return "'Montserrat', sans-serif";
+      }
+    }
 
-    if (window.setFontFamily) window.setFontFamily(targetFontFamily);
+    const nameFontFamily = resolveFontFamily(
+      {{ (font_name_choice or 'Montserrat')|tojson }},
+      {{ (custom_font_name_data or '')|tojson }},
+      {{ (custom_font_name_filename or '')|tojson }}
+    );
+
+    const posFontFamily = resolveFontFamily(
+      {{ (font_pos_choice or 'Montserrat')|tojson }},
+      {{ (custom_font_pos_data or '')|tojson }},
+      {{ (custom_font_pos_filename or '')|tojson }}
+    );
+
+    if (window.setNameFontFamily) window.setNameFontFamily(nameFontFamily);
+    if (window.setPosFontFamily) window.setPosFontFamily(posFontFamily);
+    if (window.setNameFontSize) window.setNameFontSize({{ font_size_name|tojson }});
+    if (window.setPosFontSize) window.setPosFontSize({{ font_size_pos|tojson }});
+    if (window.setSpacingGap) window.setSpacingGap({{ spacing_gap|tojson }});
+    if (window.setTextCase) window.setTextCase({{ (text_case or 'uppercase')|tojson }});
+    if (window.setPaperSize) window.setPaperSize({{ (paper_size or 'a4')|tojson }});
     if (window.setCardSides) window.setCardSides({{ 1 if sides == '1' else 2 }});
     if (window.setContentMode) window.setContentMode(CONTENT_MODE);
 
@@ -133,7 +174,16 @@
         const safeName = (card.name || "").toString();
         const safePos = (card.position || "").toString();
         const lines = wrapPosition(safePos);
-        const blockOpts = { mode: CONTENT_MODE, rawPosition: safePos };
+        const blockOpts = {
+          mode: CONTENT_MODE,
+          rawPosition: safePos,
+          textCase: {{ (text_case or 'uppercase')|tojson }},
+          nameFontFamily: nameFontFamily,
+          posFontFamily: posFontFamily,
+          nameFontSize: {{ font_size_name|tojson }},
+          posFontSize: {{ font_size_pos|tojson }},
+          spacingGap: parseFloat({{ spacing_gap|tojson }}) || 40.0,
+        };
         if (normal) layoutBlock(normal, safeName, lines, blockOpts);
         if (flip && {{ 'false' if sides == '1' else 'true' }}) layoutBlock(flip, safeName, lines, blockOpts);
       });
@@ -142,9 +192,6 @@
     async function init() {
       try {
         await Promise.all([
-          document.fonts.load(`700 ${60 * 96 / 72}px "${targetFontName}"`),
-          document.fonts.load(`700 ${45.86 * 96 / 72}px "${targetFontName}"`),
-          document.fonts.load(`400 ${18 * 96 / 72}px "${targetFontName}"`),
           document.fonts.ready,
         ]);
       } catch (err) {

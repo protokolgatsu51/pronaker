@@ -5,17 +5,31 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="referrer" content="no-referrer">
-  <title>Name Table Kemnaker RI</title>
+  <title>Protokol Kemnaker RI</title>
   <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo_kemnaker.png') }}">
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
   <link rel="apple-touch-icon" href="{{ url_for('static', filename='logo_kemnaker.png') }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600;1,700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,700&family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;1,600;1,700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600;1,700&family=Roboto:ital,wght@0,400;0,500;0,700;1,400;1,700&display=swap"
     rel="stylesheet">
 
   <style>
+    @font-face {
+      font-family: "Montserrat";
+      src: url("{{ url_for('static', filename='fonts/Montserrat-Regular.ttf') }}") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: "Montserrat";
+      src: url("{{ url_for('static', filename='fonts/Montserrat-Bold.ttf') }}") format("truetype");
+      font-weight: 700;
+      font-style: normal;
+    }
+
     @font-face {
       font-family: "MyriadPro";
       src: url("{{ url_for('static', filename='fonts/MYRIADPRO-REGULAR.woff') }}") format("woff");
@@ -91,13 +105,19 @@
       align-items: center;
       gap: 12px;
       text-decoration: none;
+      flex-shrink: 0;
     }
 
-    .kemnaker-brand-icon {
+    .kemnaker-brand-icon.logo-full {
+      display: block;
       height: 38px;
       width: auto;
       object-fit: contain;
       transition: transform 0.2s ease;
+    }
+
+    .kemnaker-brand-icon.logo-symbol {
+      display: none;
     }
 
     .brand-divider {
@@ -112,13 +132,323 @@
     }
 
     .brand-title {
-      display: inline-flex;
-      gap: 5px;
-      font-size: 19px;
+      display: inline-block;
+      font-size: 20px;
       font-weight: 800;
       color: #15406a;
-      letter-spacing: -0.3px;
+      letter-spacing: 0.5px;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    /* --- Center Desktop Page Switcher (Underline Nav Tabs - Distinct from Pill Switcher) --- */
+    .nav-page-switcher {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      background: transparent;
+      padding: 0;
+      border: none;
+      box-shadow: none;
+      height: 100%;
+    }
+
+    @media (min-width: 769px) {
+      .nav-container {
+        position: relative;
+      }
+      .nav-page-switcher {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        bottom: 0;
+        transform: translateX(-50%);
+        display: flex !important;
+        align-items: center;
+        z-index: 10;
+      }
+    }
+
+    .nav-page-tab {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      height: 100%;
+      padding: 0 4px;
+      font-size: 14.5px;
+      font-weight: 600;
+      color: #64748b;
+      text-decoration: none;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: color 0.2s ease, transform 0.15s ease;
+      font-family: inherit;
+    }
+
+    .nav-page-tab svg {
+      color: #94a3b8;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .nav-page-tab:hover:not(.disabled) {
+      color: #15406a;
+    }
+    .nav-page-tab:hover:not(.disabled) svg {
+      color: #15406a;
+      transform: translateY(-1px);
+    }
+
+    .nav-page-tab.active {
+      color: #15406a;
+      font-weight: 700;
+      background: transparent;
+      box-shadow: none;
+    }
+    .nav-page-tab.active svg {
+      color: #15406a;
+    }
+
+    /* Active Underline Indicator Bar directly on navbar bottom */
+    .nav-page-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: #15406a;
+      border-radius: 9999px 9999px 0 0;
+      box-shadow: 0 -1px 6px rgba(21, 64, 106, 0.2);
+    }
+
+    .nav-page-tab.disabled {
+      opacity: 0.8;
+      cursor: pointer;
+    }
+    .nav-page-tab.disabled:hover {
+      opacity: 1;
+      color: #1e293b;
+    }
+    .nav-page-tab.disabled:hover svg {
+      color: #64748b;
+      transform: translateY(-1px);
+    }
+
+    .nav-page-badge {
+      font-size: 9.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      padding: 2.5px 7px;
+      border-radius: 6px;
+      background: #fffbeb;
+      color: #b45309;
+      border: 1px solid #fde68a;
+      display: inline-block;
+      line-height: 1.1;
+      box-shadow: none;
+      transition: all 0.15s ease;
+    }
+
+    .nav-page-tab.disabled:hover .nav-page-badge {
+      background: #fde68a;
+      color: #92400e;
+    }
+
+    /* --- Mobile Menu Button & Dropdown --- */
+    .mobile-menu-wrapper {
+      position: relative;
+      display: none;
+    }
+
+    .btn-mobile-menu {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      border: 1.5px solid #e2e8f0;
+      background: #ffffff;
+      color: #15406a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      padding: 0;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+    }
+
+    .btn-mobile-menu svg {
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-mobile-menu:hover {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+      color: #0d2843;
+    }
+
+    .btn-mobile-menu.active {
+      background: #eef3f8;
+      border-color: #15406a;
+      color: #15406a;
+      box-shadow: 0 0 0 3px rgba(21, 64, 106, 0.12);
+    }
+
+    .btn-mobile-menu.active svg {
+      transform: rotate(45deg);
+    }
+
+    .btn-mobile-menu:active {
+      transform: scale(0.94);
+    }
+
+    .mobile-menu-dropdown {
+      position: absolute;
+      top: calc(100% + 10px);
+      left: 50%;
+      transform: translateX(-50%) translateY(-10px);
+      min-width: 195px;
+      width: max-content;
+      max-width: 240px;
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 14px 35px -5px rgba(15, 23, 42, 0.18), 0 6px 12px -3px rgba(15, 23, 42, 0.08);
+      padding: 6px;
+      z-index: 1002;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .mobile-menu-dropdown.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .mobile-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      text-decoration: none;
+      text-align: left;
+      cursor: pointer;
+      transition: background 0.15s ease;
+      font-family: inherit;
+      box-sizing: border-box;
+    }
+
+    .mobile-menu-item:hover {
+      background: #f1f5f9;
+    }
+
+    .mobile-menu-item.active {
+      background: #eef3f8;
+    }
+
+    .menu-item-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 7px;
+      background: #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #475569;
+      flex-shrink: 0;
+    }
+
+    .mobile-menu-item.active .menu-item-icon {
+      background: #15406a;
+      color: #ffffff;
+    }
+
+    .mobile-menu-item .menu-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #1e293b;
       line-height: 1.2;
+      flex: 1;
+      white-space: nowrap;
+    }
+
+    .mobile-menu-item.active .menu-title {
+      color: #15406a;
+    }
+
+    .menu-check {
+      font-weight: 800;
+      color: #15406a;
+      font-size: 13px;
+      margin-left: 6px;
+    }
+
+    /* --- Pronaker Toast Notification --- */
+    .pronaker-toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #0f172a;
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 9999px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.35);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      z-index: 99999;
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+      white-space: nowrap;
+      box-sizing: border-box;
+      max-width: 94vw;
+    }
+
+    .pronaker-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .pronaker-toast-icon {
+      font-size: 14px;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .pronaker-toast-text {
+      line-height: 1.2;
+      text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    @media (max-width: 480px) {
+      .pronaker-toast {
+        bottom: 18px;
+        padding: 8px 12px;
+        font-size: 11px;
+        gap: 6px;
+        max-width: 94vw;
+      }
+      .pronaker-toast-icon {
+        font-size: 11px;
+      }
     }
 
     .nav-menu {
@@ -1394,9 +1724,12 @@
       gap: 16px;
       max-height: 640px;
       overflow-y: auto;
-      padding-right: 6px;
+      overflow-x: hidden;
+      padding-right: 0px;
       scrollbar-width: thin;
       scrollbar-color: #cbd5e1 #f1f5f9;
+      box-sizing: border-box;
+      width: 100%;
     }
 
     .bulk-cards-list::-webkit-scrollbar {
@@ -1425,6 +1758,8 @@
       overflow: hidden;
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
       transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.2s ease;
+      box-sizing: border-box;
+      width: 100%;
     }
 
     .bulk-card-item:hover {
@@ -1483,6 +1818,7 @@
       width: 100%;
       overflow: hidden;
       background: #ffffff;
+      box-sizing: border-box;
     }
 
     .bulk-card-canvas {
@@ -1545,7 +1881,9 @@
       max-width: 100%;
     }
 
-    #card {
+    #card,
+    #card-sheet,
+    #card-bulk {
       position: absolute;
       left: 0;
       top: 0;
@@ -1555,7 +1893,9 @@
       transform-origin: top left;
     }
 
-    #bg {
+    #bg,
+    #bg-sheet,
+    #bg-bulk {
       position: absolute;
       left: 0;
       top: 0;
@@ -1570,35 +1910,719 @@
       top: 0;
       width: 832.08pt;
       height: 372.72pt;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: geometricPrecision;
     }
 
     #block-flip,
+    #block-flip-sheet,
+    #block-flip-bulk,
     .block-flip {
       transform: rotate(180deg);
-      transform-origin: 416.04pt 186.36pt;
+      transform-origin: 50% 50%;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: geometricPrecision;
+      image-rendering: -webkit-optimize-contrast;
     }
 
-    .preview-bottom-info {
+    /* iOS Photos Style Filmstrip Scrubber Gallery (Modal Pengaturan) */
+    .bulk-gallery-bar {
+      margin-top: 14px;
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+      width: 100%;
+      max-width: 530px;
+      box-sizing: border-box;
+      user-select: none;
+    }
+
+    .bulk-gallery-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-top: 14px;
+      gap: 8px;
+      padding: 0 2px;
+    }
+
+    .bulk-gallery-sheet-info {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      min-width: 0;
+      overflow: hidden;
+      flex: 1;
+    }
+
+    .gallery-sheet-pill {
+      background: #15406a;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2.5px 9px;
+      border-radius: 9999px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      box-shadow: 0 1px 3px rgba(21, 64, 106, 0.2);
+    }
+
+    .gallery-sheet-name {
       font-size: 12px;
-      color: #64748b;
+      font-weight: 600;
+      color: #1e293b;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    /* Floating badge pills - Now Interactive Controls (2x2 Grid) */
-    .floating-badges-row {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
+    .bulk-stack-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #f1f5f9;
+      color: #475569;
+      border-radius: 7px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    /* iOS Filmstrip Scrubber Row */
+    .ios-filmstrip-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .btn-gallery-nav {
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 50%;
+      color: #1e293b;
+      cursor: pointer;
+      transition: all 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
+      flex-shrink: 0;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .btn-gallery-nav:hover:not(:disabled) {
+      background: #15406a;
+      color: #ffffff;
+      border-color: #15406a;
+      transform: scale(1.08);
+      box-shadow: 0 2px 8px rgba(21, 64, 106, 0.3);
+    }
+
+    .btn-gallery-nav:active:not(:disabled) {
+      transform: scale(0.95);
+    }
+
+    .btn-gallery-nav:disabled {
+      opacity: 0.25;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    /* Filmstrip Viewport & Track */
+    .ios-filmstrip-viewport {
+      flex: 1;
+      min-width: 0;
+      overflow-x: auto;
+      overflow-y: hidden;
+      position: relative;
+      cursor: grab;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      border-radius: 12px;
+      background: #f8fafc;
+      padding: 6px 10px;
+      border: 1px solid #e2e8f0;
+      -webkit-mask-image: linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent);
+      mask-image: linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent);
+    }
+
+    .ios-filmstrip-viewport::-webkit-scrollbar {
+      display: none;
+    }
+
+    .ios-filmstrip-viewport.is-dragging {
+      cursor: grabbing;
+      scroll-behavior: auto !important;
+    }
+
+    .bulk-pills-strip.ios-filmstrip-track {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: max-content;
+      padding: 4px 6px;
+      box-sizing: border-box;
+      transition: scroll 0.2s ease;
+    }
+
+    /* iOS Thumbnail Item */
+    .bulk-pill-item.ios-thumb-item {
+      width: 106px;
+      height: 48px;
+      padding: 0;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      flex-shrink: 0;
+      position: relative;
+      border-radius: 8px;
+      opacity: 0.65;
+      transform: scale(0.95);
+      transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.2s ease, box-shadow 0.2s ease;
+      outline: none;
+      overflow: visible;
+    }
+
+    .bulk-pill-item.ios-thumb-item:hover {
+      opacity: 0.92;
+      transform: scale(1.0);
+    }
+
+    .bulk-pill-item.ios-thumb-item.active {
+      opacity: 1;
+      transform: scale(1.05);
+      z-index: 2;
+    }
+
+    /* Mini Card Inside Thumbnail */
+    .ios-thumb-card {
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      background: #ffffff;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ios-thumb-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+      opacity: 0.8;
+    }
+
+    .ios-thumb-badge {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      background: rgba(15, 23, 42, 0.82);
+      color: #ffffff;
+      font-size: 8px;
+      font-weight: 700;
+      padding: 1.5px 5px;
+      border-radius: 4px;
+      z-index: 3;
+      line-height: 1.15;
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+    }
+
+    .bulk-pill-item.ios-thumb-item.active .ios-thumb-badge {
+      background: #003366;
+      box-shadow: 0 1px 4px rgba(0, 51, 102, 0.45);
+    }
+
+    .ios-thumb-content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2px 6px 2px 20px;
+      text-align: center;
+      z-index: 2;
+      pointer-events: none;
+      box-sizing: border-box;
+    }
+
+    .ios-thumb-name {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 8.5px;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.15;
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-transform: uppercase;
+      letter-spacing: 0.2px;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      padding: 2.5px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(226, 232, 240, 0.95);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    .bulk-pill-item.ios-thumb-item.active .ios-thumb-name {
+      background: #ffffff;
+      color: #003366;
+      border-color: rgba(0, 51, 102, 0.3);
+      box-shadow: 0 2px 6px rgba(0, 51, 102, 0.15);
+    }
+
+    .ios-thumb-pos {
+      display: none;
+    }
+
+    /* Active Highlight Ring (Authentic iPhone Photos Frame) */
+    .ios-thumb-active-ring {
+      position: absolute;
+      inset: -2px;
+      border: 2.5px solid #003366;
+      border-radius: 10px;
+      pointer-events: none;
+      opacity: 0;
+      transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+      box-shadow: 0 0 0 1.5px rgba(0, 51, 102, 0.2), 0 4px 12px rgba(0, 51, 102, 0.25);
+    }
+
+    .bulk-pill-item.ios-thumb-item.active .ios-thumb-active-ring {
+      opacity: 1;
+      inset: -2.5px;
+    }
+
+    /* Header Settings Button (Inline with PREVIEW LANGSUNG) */
+    .preview-top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       gap: 12px;
-      margin-top: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
     }
 
-    @media (max-width: 768px) {
-      .floating-badges-row {
-        grid-template-columns: 1fr;
+    .btn-top-settings {
+      background: #003366;
+      color: #ffffff;
+      border: 1px solid rgba(0, 51, 102, 0.2);
+      border-radius: 9999px;
+      padding: 7px 15px;
+      font-size: 12.5px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 2px 6px rgba(0, 51, 102, 0.25);
+      white-space: nowrap;
+      outline: none;
+    }
+    .btn-top-settings:hover {
+      background: #002244;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 51, 102, 0.35);
+    }
+    .btn-top-settings:active {
+      transform: translateY(0);
+    }
+    .btn-top-settings-compact {
+      display: none;
+    }
+    @media (max-width: 640px) {
+      .preview-top-bar {
+        flex-wrap: nowrap;
+        gap: 8px;
       }
+      .btn-top-settings {
+        padding: 6px 12px;
+        font-size: 12px;
+        gap: 5px;
+        flex-shrink: 0;
+      }
+      .btn-top-settings-full {
+        display: none;
+      }
+      .btn-top-settings-compact {
+        display: inline;
+      }
+    }
+
+    /* Body scroll lock when modal open */
+    body.modal-open {
+      overflow: hidden !important;
+      overscroll-behavior: none !important;
+      touch-action: none !important;
+    }
+
+    /* Bottom Sheet / Modal Backdrop */
+    .sheet-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.68);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 99999;
+      opacity: 0;
+      pointer-events: none;
+      visibility: hidden;
+      transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overscroll-behavior: contain;
+      touch-action: none;
+    }
+    .sheet-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+      visibility: visible;
+    }
+
+    /* Drawer / Sheet Window */
+    .sheet-drawer {
+      background: #ffffff;
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.38);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+
+    @media (min-width: 901px) {
+      .sheet-drawer {
+        width: 1060px;
+        max-width: 95vw;
+        max-height: 88vh;
+        border-radius: 20px;
+        transform: scale(0.95) translateY(10px);
+      }
+      .sheet-backdrop.open .sheet-drawer {
+        transform: scale(1) translateY(0);
+      }
+
+      .sheet-body-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+        flex: 1;
+        min-height: 0;
+        min-width: 0;
+        overflow: hidden;
+      }
+
+      .sheet-preview-box {
+        background: #f8fafc;
+        border-right: 1px solid #e2e8f0;
+        border-bottom: none;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        min-width: 0;
+      }
+
+      .sheet-scale-wrap {
+        width: 100%;
+        max-width: 530px;
+        background: #ffffff;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+        box-sizing: border-box;
+      }
+
+      .sheet-controls-column {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        min-width: 0;
+        height: 100%;
+        overflow: hidden;
+        background: #ffffff;
+      }
+
+      .sheet-content {
+        padding: 18px 22px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        background: #ffffff;
+        min-width: 0;
+      }
+
+      .sheet-footer {
+        padding: 13px 22px;
+        border-top: 1px solid #e2e8f0;
+        background: #ffffff;
+        flex-shrink: 0;
+        display: flex;
+        gap: 10px;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .sheet-backdrop {
+        align-items: flex-end;
+        overscroll-behavior: contain;
+        touch-action: none;
+      }
+      .sheet-drawer {
+        width: 100%;
+        max-height: 94vh;
+        height: 92vh;
+        border-radius: 24px 24px 0 0;
+        transform: translateY(100%);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        overscroll-behavior: contain;
+      }
+      .sheet-backdrop.open .sheet-drawer {
+        transform: translateY(0);
+      }
+
+      .sheet-body-layout {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-height: 0;
+        overflow: hidden;
+      }
+
+      .sheet-preview-box {
+        background: #ffffff;
+        border-right: none;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 8px 12px 10px;
+        flex-shrink: 0;
+      }
+
+      .sheet-scale-wrap {
+        width: 100%;
+        max-width: 440px;
+        margin: 0 auto;
+        background: #ffffff;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+        box-sizing: border-box;
+      }
+
+      .modal-bulk-gallery-bar {
+        margin-top: 8px !important;
+        padding: 6px 8px !important;
+        max-width: 440px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .sheet-controls-column {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-height: 0;
+        min-width: 0;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .sheet-content {
+        padding: 12px 14px 48px;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        touch-action: pan-y;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 11px;
+        background: #f8fafc;
+        min-width: 0;
+      }
+
+      .sheet-content > * {
+        flex-shrink: 0 !important;
+      }
+
+      .sheet-footer {
+        padding: 10px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+        border-top: 1px solid #e2e8f0;
+        background: #ffffff;
+        flex-shrink: 0;
+        display: flex;
+        gap: 10px;
+        box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.06);
+        z-index: 10;
+      }
+    }
+
+    /* Header */
+    .sheet-handle-bar {
+      display: none;
+    }
+    @media (max-width: 900px) {
+      .sheet-handle-bar {
+        display: block;
+        width: 44px;
+        height: 4px;
+        background: #cbd5e1;
+        border-radius: 999px;
+        margin: 10px auto 2px;
+        cursor: grab;
+        flex-shrink: 0;
+      }
+    }
+    .sheet-header {
+      padding: 14px 22px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #ffffff;
+      flex-shrink: 0;
+    }
+    .sheet-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.3px;
+    }
+    .btn-close-sheet {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-close-sheet:hover {
+      background: #fee2e2;
+      color: #ef4444;
+      border-color: #fca5a5;
+    }
+
+    .sheet-preview-inner {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+    }
+    #card-sheet {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform-origin: top left;
+    }
+
+    .sheet-grid-2 {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 10px;
+      min-width: 0;
+      width: 100%;
+    }
+    @media (max-width: 600px) {
+      .sheet-grid-2 {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 8px;
+      }
+    }
+    .sheet-section {
+      min-width: 0;
+      flex-shrink: 0;
+      overflow: hidden;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 10px 12px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+      box-sizing: border-box;
+      width: 100%;
+    }
+    .sheet-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #0f172a;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      min-width: 0;
+      width: 100%;
+    }
+    .sheet-section-title > span:first-child {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+      flex: 1;
+    }
+
+    /* Footer */
+    .sheet-footer {
+      padding: 11px 18px;
+      border-top: 1px solid #f1f5f9;
+      background: #ffffff;
+      flex-shrink: 0;
+      display: flex;
+      gap: 10px;
+    }
+    .btn-apply-sheet {
+      flex: 1;
+      padding: 10px 16px;
+      background: #003366;
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 700;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      box-shadow: 0 4px 12px rgba(0, 51, 102, 0.2);
+    }
+    .btn-apply-sheet:hover {
+      background: #002244;
     }
 
     .feature-pill-card {
@@ -1674,6 +2698,13 @@
       border: 1px solid #a7f3d0;
       white-space: nowrap;
       flex-shrink: 0;
+      max-width: 105px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: inline-block;
+      text-align: center;
+      line-height: 1.3;
+      box-sizing: border-box;
     }
 
     .pill-status-badge.badge-neutral {
@@ -1739,21 +2770,304 @@
 
     .bubble-select-input {
       width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
       font-size: 11px;
       font-weight: 600;
       color: #1e293b;
-      padding: 4px 8px;
+      padding: 4px 6px;
       border-radius: 7px;
       border: 1px solid #cbd5e1;
       background: #ffffff;
       outline: none;
       cursor: pointer;
       transition: border-color 0.15s ease;
+      box-sizing: border-box;
     }
 
     .bubble-select-input:focus {
       border-color: #15406a;
       box-shadow: 0 0 0 2px rgba(21, 64, 106, 0.15);
+    }
+
+    /* Photoshop-style Font Size Combobox */
+    .ps-size-combo {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 7px;
+      overflow: hidden;
+      height: 28px;
+      transition: all 0.15s ease;
+      box-sizing: border-box;
+      flex: 0.95;
+      min-width: 0;
+    }
+
+    .ps-size-combo:focus-within {
+      border-color: #15406a;
+      box-shadow: 0 0 0 2px rgba(21, 64, 106, 0.15);
+    }
+
+    .ps-size-input {
+      width: 100%;
+      min-width: 0;
+      height: 100%;
+      border: none;
+      padding: 0 4px 0 8px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #1e293b;
+      background: transparent;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    .ps-size-select-wrap {
+      position: relative;
+      width: 22px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-left: 1px solid #e2e8f0;
+      background: #f8fafc;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .ps-size-select-wrap:hover {
+      background: #eef3f8;
+    }
+
+    .ps-size-arrow-btn {
+      pointer-events: none;
+      background: none;
+      border: none;
+      padding: 0;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ps-size-select {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    /* Word-style Spacing Number Input Box */
+    .word-spacing-box {
+      display: inline-flex;
+      align-items: center;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 7px;
+      height: 26px;
+      padding: 0 6px 0 4px;
+      gap: 2px;
+      transition: all 0.15s ease;
+      flex-shrink: 0;
+      box-sizing: border-box;
+    }
+
+    .word-spacing-box:focus-within {
+      border-color: #15406a;
+      box-shadow: 0 0 0 2px rgba(21, 64, 106, 0.15);
+    }
+
+    .word-spacing-input {
+      width: 36px;
+      height: 100%;
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 11px;
+      font-weight: 700;
+      color: #1e293b;
+      text-align: center;
+      padding: 0;
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
+
+    .word-spacing-input::-webkit-outer-spin-button,
+    .word-spacing-input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .word-spacing-unit {
+      font-size: 10px;
+      font-weight: 600;
+      color: #64748b;
+      user-select: none;
+    }
+
+    /* Clean Minimal Spacing Slider & Default Marker */
+    .spacing-slider-container {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+
+    .spacing-slider-track-wrap {
+      position: relative;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      height: 28px;
+      padding: 0 10px;
+      min-width: 0;
+      box-sizing: border-box;
+      transition: all 0.15s ease;
+    }
+
+    .spacing-slider-track-wrap:hover,
+    .spacing-slider-track-wrap:focus-within {
+      border-color: #cbd5e1;
+      background: #f1f5f9;
+    }
+
+    .slider-default-pip {
+      position: absolute;
+      left: calc(10px + (100% - 20px) * 0.3125);
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 3px;
+      height: 10px;
+      background: #94a3b8;
+      border-radius: 2px;
+      pointer-events: none;
+      z-index: 1;
+      transition: all 0.15s ease;
+    }
+
+    .slider-center-pip {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 3px;
+      height: 10px;
+      background: #94a3b8;
+      border-radius: 2px;
+      pointer-events: none;
+      z-index: 1;
+      transition: all 0.15s ease;
+    }
+
+    .spacing-slider-track-wrap:hover .slider-default-pip,
+    .spacing-slider-track-wrap:hover .slider-center-pip {
+      background: #0d2b45;
+      height: 12px;
+    }
+
+    .spacing-volume-slider {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      border-radius: 3px;
+      outline: none;
+      background: linear-gradient(to right, #0d2b45 0%, #0d2b45 var(--slider-pct, 31.25%), #cbd5e1 var(--slider-pct, 31.25%), #cbd5e1 100%);
+      cursor: pointer;
+      min-width: 0;
+      transition: background 0.05s ease;
+    }
+
+    .spacing-volume-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 2.5px solid #0d2b45;
+      box-shadow: 0 1px 3px rgba(13, 43, 69, 0.25);
+      cursor: pointer;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .spacing-volume-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+      box-shadow: 0 2px 5px rgba(13, 43, 69, 0.35);
+    }
+
+    .spacing-volume-slider::-webkit-slider-thumb:active {
+      transform: scale(1.22);
+      background: #0d2b45;
+      border-color: #ffffff;
+    }
+
+    .spacing-volume-slider::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 2.5px solid #0d2b45;
+      box-shadow: 0 1px 3px rgba(13, 43, 69, 0.25);
+      cursor: pointer;
+    }
+
+    .spacing-volume-slider::-moz-range-track {
+      height: 6px;
+      border-radius: 3px;
+      background: #cbd5e1;
+    }
+
+    .spacing-volume-slider::-moz-range-progress {
+      height: 6px;
+      border-radius: 3px;
+      background: #0d2b45;
+    }
+
+    .btn-spacing-reset {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 7px;
+      color: #64748b;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      flex-shrink: 0;
+      padding: 0;
+    }
+
+    .btn-spacing-reset:hover {
+      background: #f1f5f9;
+      color: #0d2b45;
+      border-color: #94a3b8;
+      transform: rotate(-30deg);
+    }
+
+    /* 7-Bubble layout adjustments */
+    @media (min-width: 769px) {
+      #bubbleContentMode {
+        grid-column: span 2;
+      }
     }
 
     .bubble-segmented-group {
@@ -1805,15 +3119,19 @@
       border: none;
       background: transparent !important;
       box-shadow: none !important;
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 700;
-      padding: 3px 8px;
+      padding: 4px 6px;
       border-radius: 6px;
       color: #64748b;
       cursor: pointer;
       line-height: 1.2;
       transition: color 0.2s ease;
       -webkit-tap-highlight-color: transparent;
+      white-space: nowrap;
+      min-width: 0;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
 
     .bubble-segment-btn.active {
@@ -1881,6 +3199,11 @@
       font-size: 13.5px;
       font-weight: 700;
       color: #ffffff;
+      min-width: 0;
+    }
+    .footer-brand span {
+      white-space: nowrap !important;
+      min-width: 0;
     }
 
     .footer-kemnaker-logo {
@@ -1920,10 +3243,13 @@
       }
 
       .nav-container {
-        padding: 0 10px;
+        padding: 0 12px;
         gap: 6px;
         width: 100%;
         max-width: 100vw;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
       }
 
       .brand-logo {
@@ -1932,25 +3258,45 @@
         flex-shrink: 0;
       }
 
-      .kemnaker-brand-icon {
+      .kemnaker-brand-icon.logo-full {
+        display: none !important;
+      }
+
+      .kemnaker-brand-icon.logo-symbol {
+        display: block !important;
         height: 28px;
+        width: 28px;
+        object-fit: contain;
       }
 
       .brand-divider {
-        height: 20px;
-        margin: 0 1px;
+        height: 18px;
+        margin: 0 2px;
       }
 
-      /* Tulisan Name Table Generator dibuat kebawah (stacked) */
       .brand-title {
-        display: flex;
-        flex-direction: column;
-        gap: 0;
-        font-size: 10px;
+        display: inline-block !important;
+        font-size: 15px;
         font-weight: 800;
-        line-height: 1.1;
-        letter-spacing: -0.2px;
+        color: #15406a;
+        letter-spacing: 0.5px;
+        line-height: 1;
         white-space: nowrap;
+      }
+
+      .nav-page-switcher {
+        display: none !important;
+      }
+
+      .mobile-menu-wrapper {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10;
       }
 
       .nav-source-switcher {
@@ -2262,6 +3608,9 @@
         justify-content: flex-start;
         gap: 10px;
         text-align: left;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
       }
 
       .footer-kemnaker-logo {
@@ -2272,11 +3621,14 @@
       }
 
       .footer-brand span {
-        font-size: 12.5px;
+        font-size: clamp(9px, 3.2vw, 13.5px);
         font-weight: 700;
         color: #ffffff;
         text-align: left;
-        line-height: 1.35;
+        line-height: 1.25;
+        white-space: nowrap !important;
+        flex-shrink: 1;
+        min-width: 0;
       }
 
       .footer-copy {
@@ -2317,18 +3669,29 @@
         gap: 4px;
       }
 
-      .kemnaker-brand-icon {
+      .kemnaker-brand-icon.logo-symbol {
         height: 26px;
+        width: 26px;
       }
 
       .brand-divider {
-        height: 18px;
+        height: 16px;
         margin: 0 1px;
       }
 
       .brand-title {
-        font-size: 9.5px;
-        line-height: 1.08;
+        font-size: 14px;
+        letter-spacing: 0.3px;
+      }
+
+      .btn-mobile-menu {
+        width: 32px;
+        height: 32px;
+      }
+
+      .btn-mobile-menu svg {
+        width: 16px;
+        height: 16px;
       }
 
       .nav-source-switcher {
@@ -2372,12 +3735,29 @@
         gap: 3px;
       }
 
-      .kemnaker-brand-icon {
-        height: 23px;
+      .kemnaker-brand-icon.logo-symbol {
+        height: 24px;
+        width: 24px;
+      }
+
+      .brand-divider {
+        height: 14px;
+        margin: 0 1px;
       }
 
       .brand-title {
-        font-size: 8.5px;
+        font-size: 13px;
+        letter-spacing: 0.2px;
+      }
+
+      .btn-mobile-menu {
+        width: 28px;
+        height: 28px;
+      }
+
+      .btn-mobile-menu svg {
+        width: 14px;
+        height: 14px;
       }
 
       .nav-source-btn {
@@ -2406,16 +3786,73 @@
   <!-- Top Navbar -->
   <header class="navbar">
     <div class="nav-container">
-      <a href="/" class="brand-logo" id="navBrandLogo">
+      <a href="/nametable" class="brand-logo" id="navBrandLogo">
         <img src="{{ url_for('static', filename='LogoKemnakerRI.png') }}" alt="Logo Kementerian Ketenagakerjaan RI"
-          class="kemnaker-brand-icon">
+          class="kemnaker-brand-icon logo-full">
+        <img src="{{ url_for('static', filename='logo_kemnaker.png') }}" alt="Logo Kemnaker"
+          class="kemnaker-brand-icon logo-symbol">
         <div class="brand-divider"></div>
-        <span class="brand-title">
-          <span>Name</span>
-          <span>Table</span>
-          <span>Generator</span>
-        </span>
+        <span class="brand-title">PRONAKER</span>
       </a>
+
+      <!-- Pilihan Page Desktop (Tengah Atas) -->
+      <nav class="nav-page-switcher" id="desktopNavPageSwitcher" aria-label="Menu Halaman">
+        <a href="/nametable" class="nav-page-tab active" title="Generator Name Table Kemnaker RI">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+            <line x1="7" y1="8" x2="17" y2="8"></line>
+            <line x1="7" y1="12" x2="13" y2="12"></line>
+          </svg>
+          <span>Name Table</span>
+        </a>
+        <a href="/notepad" class="nav-page-tab disabled" onclick="showComingSoonToast('Note Pad Generator'); return false;" title="Note Pad Generator (Segera Hadir)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
+          <span>Note Pad</span>
+          <span class="nav-page-badge">Coming Soon</span>
+        </a>
+      </nav>
+
+      <!-- Pilihan Menu Subpage Mobile (Tombol Bento App Grid di tengah antara PRONAKER dan switch tamu/kemnaker) -->
+      <div class="mobile-menu-wrapper" id="mobileMenuWrapper">
+        <button type="button" class="btn-mobile-menu" id="btnMobileAppMenu" onclick="toggleMobileMenu(event)" aria-label="Pilih Generator" aria-expanded="false" title="Pilih Generator">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+          </svg>
+        </button>
+        <div class="mobile-menu-dropdown" id="mobileMenuDropdown">
+          <a href="/nametable" class="mobile-menu-item active">
+            <div class="menu-item-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+                <line x1="7" y1="8" x2="17" y2="8"></line>
+                <line x1="7" y1="12" x2="13" y2="12"></line>
+              </svg>
+            </div>
+            <span class="menu-title">Name Table</span>
+            <span class="menu-check">✓</span>
+          </a>
+          <a href="/notepad" class="mobile-menu-item disabled" onclick="showComingSoonToast('Note Pad Generator'); closeMobileMenu(); return false;">
+            <div class="menu-item-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+              </svg>
+            </div>
+            <span class="menu-title">Note Pad</span>
+            <span class="nav-page-badge">Coming Soon</span>
+          </a>
+        </div>
+      </div>
 
       <div class="nav-actions">
         <div class="nav-source-switcher" role="group" aria-label="Pilihan Sumber Data">
@@ -2561,15 +3998,27 @@
               <input type="hidden" name="input_source" id="inputSourceHidden" value="tamu">
               <input type="hidden" name="content_mode" class="sync-mode-val" value="both">
               <input type="hidden" name="sides" class="sync-sides-val" value="2">
-              <input type="hidden" name="font_choice" class="sync-font-val" value="MyriadPro">
+              <input type="hidden" name="font_choice" class="sync-font-val" value="Montserrat">
+              <input type="hidden" name="font_name_choice" class="sync-font-name-choice-val" value="Montserrat">
+              <input type="hidden" name="font_pos_choice" class="sync-font-pos-choice-val" value="Montserrat">
+              <input type="hidden" name="font_size_name" class="sync-font-size-name-val" value="auto">
+              <input type="hidden" name="font_size_pos" class="sync-font-size-pos-val" value="auto">
+              <input type="hidden" name="spacing_gap" class="sync-spacing-val" value="40">
+              <input type="hidden" name="horizontal_offset" class="sync-offset-x-val" value="0">
+              <input type="hidden" name="text_case" class="sync-case-val" value="uppercase">
+              <input type="hidden" name="paper_size" class="sync-paper-val" value="a4">
               <input type="hidden" name="custom_bg_data" class="sync-bg-val" value="">
               <input type="hidden" name="custom_font_data" class="sync-font-data-val" value="">
               <input type="hidden" name="custom_font_name" class="sync-font-name-val" value="">
+              <input type="hidden" name="custom_font_name_data" class="sync-font-name-data-val" value="">
+              <input type="hidden" name="custom_font_name_filename" class="sync-font-name-filename-val" value="">
+              <input type="hidden" name="custom_font_pos_data" class="sync-font-pos-data-val" value="">
+              <input type="hidden" name="custom_font_pos_filename" class="sync-font-pos-filename-val" value="">
 
               <div class="form-group" id="nameGroup">
                 <label for="name" class="form-label">
                   <span id="nameLabelText">Nama</span>
-                  <span class="label-tag" id="nameCharCounter">0/24 karakter</span>
+                  <span class="label-tag" id="nameCharCounter">0 karakter</span>
                 </label>
                 <div class="input-wrapper input-wrapper-textarea">
                   <div class="input-icon">
@@ -2578,7 +4027,7 @@
                       <circle cx="12" cy="7" r="4"></circle>
                     </svg>
                   </div>
-                  <textarea id="name" name="name" class="form-input" maxlength="24" placeholder="Masukkan Nama Lengkap"
+                  <textarea id="name" name="name" class="form-input" placeholder="Masukkan Nama Lengkap"
                     required rows="1" style="min-height: 48px; height: 48px; resize: none;"></textarea>
                 </div>
                 <div class="input-hint" id="nameInputHint">
@@ -2587,14 +4036,14 @@
                     <line x1="12" y1="16" x2="12" y2="12"></line>
                     <line x1="12" y1="8" x2="12.01" y2="8"></line>
                   </svg>
-                  <span id="nameHintText">Maksimal 24 karakter (ukuran font tetap 45.86 pt, tidak diperkecil).</span>
+                  <span id="nameHintText">Panjang nama bebas. Font otomatis menyesuaikan ke batas aman kartu atau dapat diatur manual.</span>
                 </div>
               </div>
 
               <div class="form-group" id="posGroup">
                 <label for="position" class="form-label">
                   <span id="posLabelText">Jabatan / Posisi</span>
-                  <span class="label-tag" id="posCharCounter">0/128 karakter</span>
+                  <span class="label-tag" id="posCharCounter">0 karakter</span>
                 </label>
                 <div class="input-wrapper input-wrapper-textarea">
                   <div class="input-icon">
@@ -2604,7 +4053,7 @@
                       <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
                     </svg>
                   </div>
-                  <textarea id="position" name="position" class="form-input" maxlength="128"
+                  <textarea id="position" name="position" class="form-input"
                     placeholder="Masukkan Jabatan atau Posisi Lengkap" required></textarea>
                 </div>
                 <div class="input-hint" id="posInputHint">
@@ -2613,8 +4062,7 @@
                     <line x1="12" y1="16" x2="12" y2="12"></line>
                     <line x1="12" y1="8" x2="12.01" y2="8"></line>
                   </svg>
-                  <span id="posHintText">Tekan <strong>Enter</strong> untuk membagi baris 1 &amp; 2 sesuai keinginan
-                    (maks. 128 karakter, maks. 2 baris).</span>
+                  <span id="posHintText">Tekan <strong>Enter</strong> untuk membagi baris 1 &amp; 2 sesuai keinginan (font otomatis menyesuaikan batas aman kartu).</span>
                 </div>
               </div>
 
@@ -2645,10 +4093,22 @@
               <input type="hidden" name="input_source" id="inputSourceHiddenBatch" value="tamu">
               <input type="hidden" name="content_mode" class="sync-mode-val" value="both">
               <input type="hidden" name="sides" class="sync-sides-val" value="2">
-              <input type="hidden" name="font_choice" class="sync-font-val" value="MyriadPro">
+              <input type="hidden" name="font_choice" class="sync-font-val" value="Montserrat">
+              <input type="hidden" name="font_name_choice" class="sync-font-name-choice-val" value="Montserrat">
+              <input type="hidden" name="font_pos_choice" class="sync-font-pos-choice-val" value="Montserrat">
+              <input type="hidden" name="font_size_name" class="sync-font-size-name-val" value="auto">
+              <input type="hidden" name="font_size_pos" class="sync-font-size-pos-val" value="auto">
+              <input type="hidden" name="spacing_gap" class="sync-spacing-val" value="40">
+              <input type="hidden" name="horizontal_offset" class="sync-offset-x-val" value="0">
+              <input type="hidden" name="text_case" class="sync-case-val" value="uppercase">
+              <input type="hidden" name="paper_size" class="sync-paper-val" value="a4">
               <input type="hidden" name="custom_bg_data" class="sync-bg-val" value="">
               <input type="hidden" name="custom_font_data" class="sync-font-data-val" value="">
               <input type="hidden" name="custom_font_name" class="sync-font-name-val" value="">
+              <input type="hidden" name="custom_font_name_data" class="sync-font-name-data-val" value="">
+              <input type="hidden" name="custom_font_name_filename" class="sync-font-name-filename-val" value="">
+              <input type="hidden" name="custom_font_pos_data" class="sync-font-pos-data-val" value="">
+              <input type="hidden" name="custom_font_pos_filename" class="sync-font-pos-filename-val" value="">
 
               <!-- Kemnaker Batch Selectors (Auto-filled structure from kemnaker.go.id) -->
               <div id="kemnakerBatchSelectorsContainer" class="kemnaker-selectors-box"
@@ -2802,6 +4262,11 @@
                 <span class="status-circle"></span>
                 <span id="fontStatus">Myriad Pro Memuat…</span>
               </div>
+              <button type="button" class="btn-top-settings" onclick="openOpt2Sheet()" id="btnTopSettings" title="Sesuaikan Desain &amp; Format">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                <span class="btn-top-settings-full">Sesuaikan Desain &amp; Format</span>
+                <span class="btn-top-settings-compact">Pengaturan</span>
+              </button>
             </div>
 
             <!-- Single Mode Viewport -->
@@ -2809,20 +4274,15 @@
               <div class="preview-scale-wrap">
                 <div class="preview-inner" id="previewInner">
                   <div id="card">
-                    <img id="bg" src="{{ url_for('static', filename='bg_template.png') }}" alt="Background Template">
+                    <img id="bg" src="{{ url_for('static', filename='template_background_new.png') }}" alt="Background Template">
                     <div id="block-normal" class="block"></div>
                     <div id="block-flip" class="block"></div>
                   </div>
                 </div>
               </div>
-
-              <div class="preview-bottom-info">
-                <span>Resolusi Asli: <strong>832.08 × 372.72 pt</strong> (~11.6 × 5.2 in)</span>
-                <span>Rasio Cetak: <strong>1:1 Vektor Presisi</strong></span>
-              </div>
             </div>
 
-            <!-- Bulk Mode Viewport (Berderet ke Bawah) -->
+            <!-- Bulk Mode Viewport (Berderet ke Bawah seperti Awal) -->
             <div id="bulkPreviewContainer" style="display: none;">
               <div class="bulk-stack-header">
                 <span class="bulk-stack-badge" id="bulkStackBadge">
@@ -2837,7 +4297,7 @@
                 <span class="bulk-stack-hint">Semua lembar digabung dalam 1 file PDF</span>
               </div>
 
-              <!-- Vertical Scrollable Stack of Cards -->
+              <!-- Vertical Scrollable Stack of Cards (Rata Flush Kanan & Kiri) -->
               <div id="bulkCardsList" class="bulk-cards-list"></div>
 
               <div class="preview-bottom-info" style="margin-top: 12px;">
@@ -2847,131 +4307,255 @@
             </div>
           </div>
 
-          <!-- Floating Feature Badges (Matching Maganghub style) -->
-          <!-- Interactive Feature Controls (4 Bubbles) -->
-          <div class="floating-badges-row">
-            <!-- Bubble 1: Template Background -->
-            <div class="feature-pill-card" id="bubbleBg">
-              <div class="pill-card-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                  <polyline points="21 15 16 10 5 21"></polyline>
-                </svg>
+          <!-- BOTTOM SHEET / DRAWER MODAL DENGAN EMBEDDED LIVE PREVIEW -->
+          <div class="sheet-backdrop" id="opt2SheetBackdrop" onclick="if(event.target === this) cancelOpt2Sheet()">
+            <div class="sheet-drawer">
+              <div class="sheet-handle-bar"></div>
+              
+              <!-- Sheet Header -->
+              <div class="sheet-header">
+                <div class="sheet-title">Pengaturan Format &amp; Desain</div>
+                <button type="button" class="btn-close-sheet" id="btnCloseSheet" onclick="cancelOpt2Sheet()" title="Batal (Kembalikan Pengaturan)">✕</button>
               </div>
-              <div class="pill-card-text">
-                <div class="pill-card-header">
-                  <span class="pill-card-title">Template Background</span>
-                  <span class="pill-status-badge badge-neutral" id="bgBadgeStatus">Default</span>
-                </div>
-                <div class="bubble-actions-row">
-                  <input type="file" id="customBgFileInput" accept="image/png, image/jpeg, image/jpg, image/webp"
-                    style="display: none;">
-                  <button type="button" class="btn-bubble-action" id="btnTriggerBgUpload">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                      <polyline points="17 8 12 3 7 8"></polyline>
-                      <line x1="12" y1="3" x2="12" y2="15"></line>
-                    </svg>
-                    Ganti Gambar
-                  </button>
-                  <button type="button" class="btn-bubble-reset" id="btnResetCustomBg" style="display: none;"
-                    title="Kembalikan ke template awal">
-                    ↺ Reset Default
-                  </button>
-                </div>
-              </div>
-            </div>
 
-            <!-- Bubble 2: Jenis & Upload Font -->
-            <div class="feature-pill-card" id="bubbleFont">
-              <div class="pill-card-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M4 7V4h16v3M9 20h6M12 4v16"></path>
-                </svg>
-              </div>
-              <div class="pill-card-text">
-                <div class="pill-card-header">
-                  <span class="pill-card-title">Jenis Font</span>
-                  <span class="pill-status-badge" id="fontBadgeStatus">Default</span>
-                </div>
-                <div class="bubble-actions-row">
-                  <select id="fontSelectInput" class="bubble-select-input">
-                    <option value="MyriadPro" selected>Myriad Pro</option>
-                    <option value="Arial">Arial</option>
-                    <option value="Times New Roman">Times New Roman</option>
-                    <option value="Calibri">Calibri</option>
-                    <option value="__custom__">+ Upload Font Kustom (.ttf/.otf)...</option>
-                  </select>
-                  <input type="file" id="customFontFileInput" accept=".ttf,.otf,.woff,.woff2" style="display: none;">
-                </div>
-              </div>
-            </div>
+              <!-- Modal Body Layout: Desktop 2 Kolom (Kiri: Preview, Kanan: Pengaturan), Mobile Vertikal -->
+              <div class="sheet-body-layout">
+                <!-- Sisi Kiri (Desktop) / Atas (Mobile): Pratinjau Kartu Bersih + Galeri Slider untuk Mode Bulk -->
+                <div class="sheet-preview-box">
+                  <div class="sheet-preview-header" style="width: 100%; max-width: 530px; margin: 0 auto 10px; display: flex; align-items: center; justify-content: space-between; padding: 0 4px;">
+                    <div style="display: flex; align-items: center; gap: 7px;">
+                      <span style="display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #0077b6; box-shadow: 0 0 6px rgba(0, 119, 182, 0.5);"></span>
+                      <span id="modalActiveSheetPill" style="font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: #15406a;">Contoh Pratinjau</span>
+                    </div>
+                    <span id="modalActiveSheetTitle" style="font-size: 11px; font-weight: 500; color: #64748b; max-width: 280px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Contoh Tampilan Nama &amp; Jabatan</span>
+                  </div>
+                  <div class="sheet-scale-wrap">
+                    <div class="sheet-preview-inner" id="sheetPreviewInner">
+                      <div id="card-sheet" class="card-element">
+                        <img id="bg-sheet" src="{{ url_for('static', filename='template_background_new.png') }}" alt="Background Template">
+                        <div id="block-normal-sheet" class="block"></div>
+                        <div id="block-flip-sheet" class="block"></div>
+                      </div>
+                    </div>
+                  </div>
 
-            <!-- Bubble 3: Tampilan Sisi Kartu -->
-            <div class="feature-pill-card" id="bubbleSides">
-              <div class="pill-card-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="23 4 23 10 17 10"></polyline>
-                  <polyline points="1 20 1 14 7 14"></polyline>
-                  <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-                </svg>
-              </div>
-              <div class="pill-card-text">
-                <div class="pill-card-header">
-                  <span class="pill-card-title">Tampilan Sisi</span>
-                  <span class="pill-status-badge badge-neutral" id="sidesBadgeStatus">2 Sisi</span>
+                  <!-- iOS-Style Gallery Scrubber inside the Modal (Displayed when in Bulk Mode) -->
+                  <div class="bulk-gallery-bar modal-bulk-gallery-bar" id="modalBulkGalleryBar" style="display: none;">
+                    <!-- iOS Photos Style Filmstrip Scrubber Gallery -->
+                    <div class="ios-filmstrip-row">
+                      <button type="button" class="btn-gallery-nav btn-ios-film-nav" id="btnModalBulkPrev" onclick="navigateModalBulkSheet(-1)" title="Lembar Sebelumnya">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                      </button>
+
+                      <div class="ios-filmstrip-viewport" id="modalFilmstripViewport">
+                        <div class="bulk-pills-strip ios-filmstrip-track" id="modalBulkPillsStrip"></div>
+                      </div>
+
+                      <button type="button" class="btn-gallery-nav btn-ios-film-nav" id="btnModalBulkNext" onclick="navigateModalBulkSheet(1)" title="Lembar Berikutnya">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                      </button>
+
+                      <!-- Hidden input for backward compatibility with programmatic events -->
+                      <input type="range" class="bulk-gallery-slider" id="modalBulkGallerySlider" min="1" max="1" value="1" style="display: none;" oninput="onModalBulkSliderInput(this.value)">
+                    </div>
+                  </div>
                 </div>
-                <div class="bubble-actions-row">
-                  <div class="bubble-segmented-group" id="sidesSegmentedGroup">
-                    <div class="bubble-glider" id="sidesGlider" aria-hidden="true"></div>
-                    <button type="button" class="bubble-segment-btn active" id="btnSides2" onclick="setSidesOption(2)">
-                      2 Sisi (180°)
+
+                <!-- Sisi Kanan (Desktop) / Bawah (Mobile): Kolom Kontrol Pengaturan & Tombol Selesai -->
+                <div class="sheet-controls-column">
+                  <!-- Scrollable Controls Content -->
+                  <div class="sheet-content">
+                <!-- Row 1: Font Nama & Jabatan -->
+                <div class="sheet-grid-2">
+                  <div class="sheet-section">
+                    <div class="sheet-section-title">
+                      <span>Font &amp; Ukuran Nama</span>
+                      <span class="pill-status-badge" id="fontNameBadgeStatus">Default</span>
+                    </div>
+                    <div style="display: flex; gap: 6px; width: 100%;">
+                      <select id="fontNameSelect" class="bubble-select-input" style="flex: 1.35; min-width: 0;" title="Pilih Jenis Font Nama">
+                        <option value="Montserrat" selected>Montserrat</option>
+                        <option value="MyriadPro">Myriad Pro</option>
+                        <option value="Arial">Arial</option>
+                        <option value="Times New Roman">Times New Roman</option>
+                        <option value="Calibri">Calibri</option>
+                        <option value="Plus Jakarta Sans">Plus Jakarta Sans</option>
+                        <option value="Roboto">Roboto</option>
+                        <option value="Open Sans">Open Sans</option>
+                        <option value="Georgia">Georgia</option>
+                        <option value="Garamond">Garamond</option>
+                        <option value="__custom__">+ Upload Font (.ttf/.otf)...</option>
+                      </select>
+                      <div class="ps-size-combo" title="Ketik ukuran font nama">
+                        <input type="text" id="fontSizeNameInput" class="ps-size-input" value="auto" placeholder="auto">
+                        <div class="ps-size-select-wrap">
+                          <button type="button" class="ps-size-arrow-btn" tabindex="-1">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                          </button>
+                          <select id="fontSizeNameSelect" class="ps-size-select" title="Pilih preset">
+                            <option value="" disabled selected hidden></option>
+                            <option value="auto">Auto (46pt)</option>
+                            <option value="24">24 pt</option>
+                            <option value="30">30 pt</option>
+                            <option value="36">36 pt</option>
+                            <option value="38">38 pt</option>
+                            <option value="40">40 pt</option>
+                            <option value="42">42 pt</option>
+                            <option value="46">46 pt</option>
+                            <option value="52">52 pt</option>
+                            <option value="60">60 pt</option>
+                            <option value="72">72 pt</option>
+                          </select>
+                        </div>
+                      </div>
+                      <input type="file" id="customFontNameFileInput" accept=".ttf,.otf,.woff,.woff2" style="display: none;">
+                    </div>
+                  </div>
+
+                  <div class="sheet-section">
+                    <div class="sheet-section-title">
+                      <span>Font &amp; Ukuran Jabatan</span>
+                      <span class="pill-status-badge" id="fontPosBadgeStatus">Default</span>
+                    </div>
+                    <div style="display: flex; gap: 6px; width: 100%;">
+                      <select id="fontPosSelect" class="bubble-select-input" style="flex: 1.35; min-width: 0;" title="Pilih Jenis Font Jabatan">
+                        <option value="Montserrat" selected>Montserrat</option>
+                        <option value="MyriadPro">Myriad Pro</option>
+                        <option value="Arial">Arial</option>
+                        <option value="Times New Roman">Times New Roman</option>
+                        <option value="Calibri">Calibri</option>
+                        <option value="Plus Jakarta Sans">Plus Jakarta Sans</option>
+                        <option value="Roboto">Roboto</option>
+                        <option value="Open Sans">Open Sans</option>
+                        <option value="Georgia">Georgia</option>
+                        <option value="Garamond">Garamond</option>
+                        <option value="__custom__">+ Upload Font (.ttf/.otf)...</option>
+                      </select>
+                      <div class="ps-size-combo" title="Ketik ukuran font jabatan">
+                        <input type="text" id="fontSizePosInput" class="ps-size-input" value="auto" placeholder="auto">
+                        <div class="ps-size-select-wrap">
+                          <button type="button" class="ps-size-arrow-btn" tabindex="-1">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                          </button>
+                          <select id="fontSizePosSelect" class="ps-size-select" title="Pilih preset">
+                            <option value="" disabled selected hidden></option>
+                            <option value="auto">Auto (18pt)</option>
+                            <option value="12">12 pt</option>
+                            <option value="14">14 pt</option>
+                            <option value="16">16 pt</option>
+                            <option value="18">18 pt</option>
+                            <option value="20">20 pt</option>
+                            <option value="22">22 pt</option>
+                            <option value="24">24 pt</option>
+                            <option value="28">28 pt</option>
+                            <option value="32">32 pt</option>
+                          </select>
+                        </div>
+                      </div>
+                      <input type="file" id="customFontPosFileInput" accept=".ttf,.otf,.woff,.woff2" style="display: none;">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Row 2: Format Huruf & Opsi Tampilan -->
+                <div class="sheet-grid-2">
+                  <div class="sheet-section">
+                    <div class="sheet-section-title">
+                      <span>Format Huruf</span>
+                      <span class="pill-status-badge badge-neutral" id="caseBadgeStatus">KAPITAL</span>
+                    </div>
+                    <div class="bubble-segmented-group" id="caseSegmentedGroup" style="width: 100%; display: flex; gap: 2px;">
+                      <div class="bubble-glider" id="caseGlider" aria-hidden="true"></div>
+                      <button type="button" class="bubble-segment-btn active" id="btnCaseUpper" onclick="setTextCaseOption('uppercase')" style="flex: 1; padding: 4px 2px; font-size: 10px;">KAPITAL</button>
+                      <button type="button" class="bubble-segment-btn" id="btnCaseCap" onclick="setTextCaseOption('capitalize')" style="flex: 1; padding: 4px 2px; font-size: 10px;">Awal Kata</button>
+                      <button type="button" class="bubble-segment-btn" id="btnCaseLower" onclick="setTextCaseOption('lowercase')" style="flex: 1; padding: 4px 2px; font-size: 10px;">kecil</button>
+                    </div>
+                  </div>
+
+                  <div class="sheet-section">
+                    <div class="sheet-section-title">
+                      <span>Opsi Tampilan</span>
+                      <span class="pill-status-badge badge-neutral" id="modeBadgeStatus">Nama &amp; Jabatan</span>
+                    </div>
+                    <div class="bubble-segmented-group" id="modeSegmentedGroup" style="width: 100%; display: flex; gap: 2px;">
+                      <div class="bubble-glider" id="modeGlider" aria-hidden="true"></div>
+                      <button type="button" class="bubble-segment-btn active" id="btnModeBoth" onclick="setContentModeOption('both')" style="flex: 1.1; padding: 4px 2px; font-size: 9.5px; white-space: nowrap;">Nama &amp; Jabatan</button>
+                      <button type="button" class="bubble-segment-btn" id="btnModeName" onclick="setContentModeOption('name_only')" style="flex: 1; padding: 4px 2px; font-size: 9.5px; white-space: nowrap;">Nama Saja</button>
+                      <button type="button" class="bubble-segment-btn" id="btnModePos" onclick="setContentModeOption('position_only')" style="flex: 1; padding: 4px 2px; font-size: 9.5px; white-space: nowrap;">Jabatan Saja</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Row 3: Jarak Spasi Baris & Posisi Geser Teks -->
+                <div class="sheet-grid-2">
+                  <div class="sheet-section">
+                    <div class="sheet-section-title">
+                      <span>Jarak Spasi Baris</span>
+                      <span class="pill-status-badge badge-neutral" id="spacingBadgeStatus" style="cursor: pointer;" title="Klik untuk reset ke Standar (40 pt)" onclick="setSpacingOption(40)">Standar (40)</span>
+                    </div>
+                    <div class="spacing-slider-container">
+                      <div class="spacing-slider-track-wrap" title="Geser untuk mengatur spasi (15 - 95 pt). Titik indikator = Standar (40 pt)">
+                        <div class="slider-default-pip" title="Standar: 40 pt"></div>
+                        <input type="range" id="spacingRangeInput" class="spacing-volume-slider" min="15" max="95" value="40" step="1" oninput="setSpacingOption(this.value, true, false)">
+                      </div>
+                      <div class="word-spacing-box" title="Ketik jarak spasi manual (pt)">
+                        <input type="number" id="spacingNumberInput" class="word-spacing-input" min="10" max="150" value="40" step="1" oninput="setSpacingOption(this.value, false, true)">
+                        <span class="word-spacing-unit">pt</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="sheet-section">
+                    <div class="sheet-section-title">
+                      <span>Posisi Geser Teks</span>
+                      <span class="pill-status-badge badge-neutral" id="offsetBadgeStatus" style="cursor: pointer;" title="Klik untuk reset ke Rata Tengah (0 pt)" onclick="setOffsetOption(0)">Tengah (0)</span>
+                    </div>
+                    <div class="spacing-slider-container">
+                      <div class="spacing-slider-track-wrap" title="Geser untuk menggeser posisi tulisan ke kiri atau kanan (-60 s/d +60 pt). Titik tengah = Rata Tengah (0 pt)">
+                        <div class="slider-center-pip" title="Tengah: 0 pt"></div>
+                        <input type="range" id="offsetRangeInput" class="spacing-volume-slider offset-volume-slider" min="-60" max="60" value="0" step="1" oninput="setOffsetOption(this.value, true, false)">
+                      </div>
+                      <div class="word-spacing-box" title="Ketik pergeseran posisi manual (pt). Negatif = Kiri, Positif = Kanan">
+                        <input type="number" id="offsetXNumberInput" class="word-spacing-input" min="-100" max="100" value="0" step="1" oninput="setOffsetOption(this.value, false, true)">
+                        <span class="word-spacing-unit">pt</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Row 4: Background Template -->
+                <div class="sheet-section">
+                  <div class="sheet-section-title">
+                    <span>Background Template</span>
+                    <span class="pill-status-badge badge-neutral" id="bgBadgeStatus">Default</span>
+                  </div>
+                  <div style="display: flex; gap: 8px; align-items: center; width: 100%; min-width: 0;">
+                    <input type="file" id="customBgFileInput" accept="image/png, image/jpeg, image/jpg, image/webp" style="display: none;">
+                    <button type="button" class="btn-bubble-action" id="btnTriggerBgUpload" style="flex: 1; min-width: 0; justify-content: center; padding: 6px 10px; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                      </svg>
+                      <span>Ganti Background Template</span>
                     </button>
-                    <button type="button" class="bubble-segment-btn" id="btnSides1" onclick="setSidesOption(1)">
-                      1 Sisi Saja
+                    <button type="button" class="btn-bubble-reset" id="btnResetCustomBg" style="display: none; padding: 6px 10px; font-size: 11px; white-space: nowrap; flex-shrink: 0;" title="Kembalikan ke template awal">
+                      ↺ Reset Default
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+
+                  <!-- Sheet Footer -->
+                  <div class="sheet-footer">
+                    <button type="button" class="btn-apply-sheet" onclick="applyOpt2Sheet()">
+                      ✓ Selesai &amp; Terapkan
                     </button>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <!-- Bubble 4: Opsi Tambahan (Tampilan Konten) -->
-            <div class="feature-pill-card" id="bubbleContentMode">
-              <div class="pill-card-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="21" y1="10" x2="3" y2="10"></line>
-                  <line x1="21" y1="6" x2="3" y2="6"></line>
-                  <line x1="21" y1="14" x2="3" y2="14"></line>
-                  <line x1="21" y1="18" x2="3" y2="18"></line>
-                </svg>
-              </div>
-              <div class="pill-card-text">
-                <div class="pill-card-header">
-                  <span class="pill-card-title">Opsi Tampilan</span>
-                  <span class="pill-status-badge badge-neutral" id="modeBadgeStatus">Nama &amp; Jabatan</span>
-                </div>
-                <div class="bubble-actions-row">
-                  <div class="bubble-segmented-group" id="modeSegmentedGroup" style="width: 100%; display: flex; gap: 2px;">
-                    <div class="bubble-glider" id="modeGlider" aria-hidden="true"></div>
-                    <button type="button" class="bubble-segment-btn active" id="btnModeBoth"
-                      onclick="setContentModeOption('both')"
-                      style="flex: 1; text-align: center; padding: 4px 4px; font-size: 10px;">
-                      Nama &amp; Jabatan
-                    </button>
-                    <button type="button" class="bubble-segment-btn" id="btnModeName"
-                      onclick="setContentModeOption('name_only')"
-                      style="flex: 1; text-align: center; padding: 4px 4px; font-size: 10px;">
-                      Nama Saja
-                    </button>
-                    <button type="button" class="bubble-segment-btn" id="btnModePos"
-                      onclick="setContentModeOption('position_only')"
-                      style="flex: 1; text-align: center; padding: 4px 4px; font-size: 10px;">
-                      Jabatan Saja
-                    </button>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
 
@@ -2999,22 +4583,40 @@
   </section>
 
   <!-- Scripts -->
-  <script src="{{ url_for('static', filename='nametag.js') }}?v=20261001c"></script>
+  <script src="{{ url_for('static', filename='nametag.js') }}?v=20261104b"></script>
   <script>
     let currentTab = "single";
     let currentBulkIndex = 0;
 
-    const BG_TEMPLATE_URL = "{{ url_for('static', filename='bg_template.png') }}";
+    const BG_TEMPLATE_URL = "{{ url_for('static', filename='template_background_new.png') }}";
 
     // Global settings state
     let currentContentMode = "both";
     let currentSides = 2;
     let currentBgUrl = BG_TEMPLATE_URL;
-    let currentFontChoice = "MyriadPro";
-    let currentFontFamily = "MyriadPro, Arial, Helvetica, sans-serif";
+    let currentFontChoice = "Montserrat";
+    let currentFontFamily = "Montserrat, sans-serif";
     let customFontData = "";
     let customFontName = "";
     let customBgData = "";
+
+    // 8-Bubble Settings State (preserving all current defaults)
+    let currentFontNameChoice = "Montserrat";
+    let currentFontNameFamily = "Montserrat, sans-serif";
+    let customFontNameData = "";
+    let customFontNameFilename = "";
+
+    let currentFontPosChoice = "Montserrat";
+    let currentFontPosFamily = "Montserrat, sans-serif";
+    let customFontPosData = "";
+    let customFontPosFilename = "";
+
+    let currentFontSizeName = "auto";
+    let currentFontSizePos = "auto";
+    let currentSpacingGap = 40;
+    let currentHorizontalOffset = 0;
+    let currentTextCase = "uppercase";
+    let currentPaperSize = "a4";
 
     // Global Source State: "tamu" (default) or "kemnaker"
     let currentGlobalSource = "tamu";
@@ -3106,13 +4708,52 @@
         animate
       );
     }
-    window.updateModeGlider = updateModeGlider;
+    function updateCaseGlider(animate = true) {
+      updateElementGlider(
+        document.getElementById("caseSegmentedGroup"),
+        document.getElementById("caseGlider"),
+        document.querySelector("#caseSegmentedGroup .bubble-segment-btn.active"),
+        animate
+      );
+    }
+    window.updateCaseGlider = updateCaseGlider;
+
+    function updateSpacingGlider(animate = true) {
+      const slider = document.getElementById("spacingRangeInput");
+      if (slider) {
+        const min = parseFloat(slider.min) || 15;
+        const max = parseFloat(slider.max) || 95;
+        const val = parseFloat(slider.value) || 40;
+        const pct = Math.max(0, Math.min(100, ((val - min) / (max - min)) * 100));
+        slider.style.setProperty("--slider-pct", pct + "%");
+      }
+    }
+    window.updateSpacingGlider = updateSpacingGlider;
+
+    function updateOffsetGlider(animate = true) {
+      const slider = document.getElementById("offsetRangeInput");
+      if (slider) {
+        const val = parseFloat(slider.value) || 0;
+        const pct = Math.max(0, Math.min(100, ((val + 60) / 120) * 100));
+        if (val === 0) {
+          slider.style.background = "#cbd5e1";
+        } else if (val > 0) {
+          slider.style.background = `linear-gradient(to right, #cbd5e1 0%, #cbd5e1 50%, #0d2b45 50%, #0d2b45 ${pct}%, #cbd5e1 ${pct}%, #cbd5e1 100%)`;
+        } else {
+          slider.style.background = `linear-gradient(to right, #cbd5e1 0%, #cbd5e1 ${pct}%, #0d2b45 ${pct}%, #0d2b45 50%, #cbd5e1 50%, #cbd5e1 100%)`;
+        }
+      }
+    }
+    window.updateOffsetGlider = updateOffsetGlider;
 
     function updateAllGliders(animate = true) {
       updateNavGlider(animate);
       updateTabGlider(animate);
       updateSidesGlider(animate);
       updateModeGlider(animate);
+      updateCaseGlider(animate);
+      updateSpacingGlider(animate);
+      updateOffsetGlider(animate);
     }
     window.updateAllGliders = updateAllGliders;
 
@@ -3398,8 +5039,11 @@
           } else if (this.config.isFont) {
             let badgeHtml = "";
             let fontStyle = "";
-            if (opt.value === "MyriadPro") {
-              badgeHtml = `<span class="custom-select-opt-badge badge-kemnaker">Standar Kemnaker</span>`;
+            if (opt.value === "Montserrat") {
+              badgeHtml = `<span class="custom-select-opt-badge badge-kemnaker">Default</span>`;
+              fontStyle = 'style="font-family: Montserrat, sans-serif;"';
+            } else if (opt.value === "MyriadPro") {
+              badgeHtml = `<span class="custom-select-opt-badge badge-neutral">Standar</span>`;
               fontStyle = 'style="font-family: MyriadPro, Arial, sans-serif;"';
             } else if (opt.value === "Arial") {
               fontStyle = 'style="font-family: Arial, sans-serif;"';
@@ -3565,7 +5209,6 @@
       const unitSingle = document.getElementById("kemnakerUnitSelect");
       const offSingle = document.getElementById("kemnakerOfficialSelect");
       const unitBatch = document.getElementById("kemnakerBatchUnitSelect");
-      const fontSelect = document.getElementById("fontSelectInput");
 
       if (unitSingle && !unitSingle._modernDropdown) {
         new ModernDropdown(unitSingle, {
@@ -3595,6 +5238,7 @@
         });
       }
 
+      const fontSelect = document.getElementById("fontSelectInput");
       if (fontSelect && !fontSelect._modernDropdown) {
         new ModernDropdown(fontSelect, {
           compact: true,
@@ -3605,7 +5249,7 @@
     }
 
     function syncAllModernDropdowns() {
-      ["kemnakerUnitSelect", "kemnakerOfficialSelect", "kemnakerBatchUnitSelect", "fontSelectInput"].forEach(id => {
+      ["kemnakerUnitSelect", "kemnakerOfficialSelect", "kemnakerBatchUnitSelect"].forEach(id => {
         const el = document.getElementById(id);
         if (el && el._modernDropdown) {
           el._modernDropdown.sync();
@@ -3729,7 +5373,7 @@
         if (nameEl) {
           nameEl.removeAttribute("readonly");
           nameEl.classList.remove("input-readonly-kemnaker");
-          nameEl.maxLength = currentContentMode === "name_only" ? 36 : 24;
+          nameEl.removeAttribute("maxlength");
           nameEl.value = tamuDraftName || "";
           nameEl.placeholder = currentContentMode === "position_only"
             ? "Tidak digunakan dalam mode Jabatan Saja"
@@ -3738,6 +5382,7 @@
         if (posEl) {
           posEl.removeAttribute("readonly");
           posEl.classList.remove("input-readonly-kemnaker");
+          posEl.removeAttribute("maxlength");
           posEl.value = tamuDraftPos || "";
           posEl.placeholder = currentContentMode === "name_only"
             ? "Tidak digunakan dalam mode Nama Saja"
@@ -3745,11 +5390,11 @@
         }
         if (nameHint) {
           nameHint.textContent = currentContentMode === "name_only"
-            ? "Maksimal 36 karakter (font 60 pt). Tekan Enter untuk membagi 2 baris."
-            : "Maksimal 24 karakter (ukuran font tetap 45.86 pt, tidak diperkecil).";
+            ? "Panjang nama bebas (bisa 1 atau 2 baris). Font otomatis menyesuaikan batas kartu."
+            : "Panjang nama bebas. Font otomatis menyesuaikan ke batas aman kartu atau dapat diatur manual.";
         }
         if (posHint) {
-          posHint.innerHTML = "Tekan <strong>Enter</strong> untuk membagi baris 1 &amp; 2 sesuai keinginan (maks. 128 karakter, maks. 2 baris).";
+          posHint.innerHTML = "Tekan <strong>Enter</strong> untuk membagi baris 1 &amp; 2 sesuai keinginan (font otomatis menyesuaikan batas aman kartu).";
         }
 
         const singleUnitSelect = document.getElementById("kemnakerUnitSelect");
@@ -4173,15 +5818,13 @@
       const posVal = positionInput ? positionInput.value : "";
       const nameCounter = document.getElementById("nameCharCounter");
       const posCounter = document.getElementById("posCharCounter");
-      const maxName = currentContentMode === "name_only" ? 36 : 24;
-      const maxPos = 128;
       if (nameCounter) {
         if (currentGlobalSource === "kemnaker" && nameVal) {
           nameCounter.textContent = `Auto Kemnaker (${nameVal.length} karakter)`;
           nameCounter.style.color = "";
         } else {
-          nameCounter.textContent = `${nameVal.length}/${maxName} karakter`;
-          nameCounter.style.color = nameVal.length >= maxName ? "#b91c1c" : "";
+          nameCounter.textContent = `${nameVal.length} karakter`;
+          nameCounter.style.color = "";
         }
       }
       if (posCounter) {
@@ -4189,56 +5832,135 @@
           posCounter.textContent = `Auto Kemnaker (${posVal.length} karakter)`;
           posCounter.style.color = "";
         } else {
-          posCounter.textContent = `${posVal.length}/${maxPos} karakter`;
-          posCounter.style.color = posVal.length >= maxPos ? "#b91c1c" : "";
+          posCounter.textContent = `${posVal.length} karakter`;
+          posCounter.style.color = "";
         }
       }
     }
 
     function update() {
       updateCharCounters();
-      if (typeof setFontFamily === "function") setFontFamily(currentFontFamily);
+      if (typeof setNameFontFamily === "function") setNameFontFamily(currentFontNameFamily);
+      if (typeof setPosFontFamily === "function") setPosFontFamily(currentFontPosFamily);
+      if (typeof setNameFontSize === "function") setNameFontSize(currentFontSizeName);
+      if (typeof setPosFontSize === "function") setPosFontSize(currentFontSizePos);
+      if (typeof setSpacingGap === "function") setSpacingGap(currentSpacingGap);
+      if (typeof setHorizontalOffset === "function") setHorizontalOffset(currentHorizontalOffset);
+      if (typeof setTextCase === "function") setTextCase(currentTextCase);
+      if (typeof setPaperSize === "function") setPaperSize(currentPaperSize);
+      if (typeof setFontFamily === "function") setFontFamily(currentFontNameFamily);
       if (typeof setCardSides === "function") setCardSides(currentSides);
       if (typeof setBackgroundUrl === "function") setBackgroundUrl(currentBgUrl);
       if (typeof setContentMode === "function") setContentMode(currentContentMode);
 
       if (currentTab === "single") {
+        const modalGalleryBar = document.getElementById("modalBulkGalleryBar");
+        if (modalGalleryBar) modalGalleryBar.style.display = "none";
+
         if (typeof renderCard === "function") {
           let renderName = nameInput ? nameInput.value : "";
           let renderPos = positionInput ? positionInput.value : "";
+
+          // Strip tabs and control characters
+          if (typeof sanitizeText === "function") {
+            renderName = sanitizeText(renderName);
+            renderPos = sanitizeText(renderPos, true); // preserve explicit newlines!
+          }
 
           if (typeof stripTrailingPunctuation === "function") {
             renderName = stripTrailingPunctuation(renderName);
             renderPos = stripTrailingPunctuation(renderPos);
           }
 
-          if (currentGlobalSource === "kemnaker" && renderName) {
-            if (currentContentMode === "name_only") {
-              const cleaned = typeof cleanTitles === "function" ? cleanTitles(renderName) : renderName;
-              renderName = (cleaned || renderName).substring(0, 36).trim();
-            } else if (currentContentMode === "position_only") {
+          // In single mode: Kemnaker uses official rules (clean titles + auto-abbreviate if > 24 chars), Tamu is manual & verbatim
+          if (renderName) {
+            if (currentContentMode === "position_only") {
               renderName = "";
-            } else {
-              // 'both'
+            } else if (currentGlobalSource === "kemnaker") {
               if (typeof formatBulkName === "function") {
-                renderName = formatBulkName(renderName, 24);
+                renderName = formatBulkName(renderName, { fontSize: currentFontSizeName, fontFamily: currentFontNameFamily, textCase: currentTextCase });
               } else if (typeof cleanTitles === "function") {
-                renderName = cleanTitles(renderName).substring(0, 24).trim();
+                renderName = cleanTitles(renderName);
               }
             }
           }
 
-          if (currentGlobalSource === "kemnaker" && renderPos && currentContentMode === "position_only") {
-            renderPos = renderPos.substring(0, 128).trim();
+          if (renderPos) {
+            if (currentContentMode === "name_only") {
+              renderPos = "";
+            } else if (currentGlobalSource === "kemnaker" && typeof cleanPositionText === "function") {
+              renderPos = cleanPositionText(renderPos);
+            }
           }
 
-          renderCard(renderName, renderPos, { mode: currentContentMode });
+          renderCard(renderName, renderPos, {
+            mode: currentContentMode,
+            rawPosition: renderPos,
+            textCase: currentTextCase,
+            nameFontFamily: currentFontNameFamily,
+            posFontFamily: currentFontPosFamily,
+            nameFontSize: currentFontSizeName,
+            posFontSize: currentFontSizePos,
+            spacingGap: currentSpacingGap,
+            horizontalOffset: currentHorizontalOffset,
+            sides: currentSides,
+            bgUrl: currentBgUrl,
+            cleanTitles: false
+          });
         }
         if (typeof fitPreview === "function") fitPreview();
+        if (typeof fitSheetPreview === "function") fitSheetPreview();
       } else {
         renderBulkPreview();
+        if (typeof fitBulkPreview === "function") fitBulkPreview();
+        if (typeof fitSheetPreview === "function") fitSheetPreview();
+      }
+
+      // Real-time live sync for modal card preview if modal is open
+      const sheetBackdrop = document.getElementById("opt2SheetBackdrop");
+      if (sheetBackdrop && sheetBackdrop.classList.contains("open")) {
+        if (currentTab === "batch") {
+          const textarea = document.getElementById("bulk_data");
+          const rows = textarea ? parseBulkData(textarea.value) : [];
+          if (rows && rows.length > 0) {
+            const idx = Math.min(currentModalBulkIndex, rows.length - 1);
+            if (typeof renderModalSheetCard === "function") renderModalSheetCard(rows[idx]);
+          } else {
+            if (typeof renderModalSheetCard === "function") renderModalSheetCard(null);
+          }
+        } else {
+          let renderName = nameInput ? nameInput.value : "";
+          let renderPos = positionInput ? positionInput.value : "";
+          if (typeof sanitizeText === "function") {
+            renderName = sanitizeText(renderName);
+            renderPos = sanitizeText(renderPos, true);
+          }
+          if (typeof stripTrailingPunctuation === "function") {
+            renderName = stripTrailingPunctuation(renderName);
+            renderPos = stripTrailingPunctuation(renderPos);
+          }
+          if (renderName && currentGlobalSource === "kemnaker" && currentContentMode !== "position_only") {
+            if (typeof formatBulkName === "function") {
+              renderName = formatBulkName(renderName, { fontSize: currentFontSizeName, fontFamily: currentFontNameFamily, textCase: currentTextCase });
+            } else if (typeof cleanTitles === "function") {
+              renderName = cleanTitles(renderName);
+            }
+          }
+          if (renderPos && currentGlobalSource === "kemnaker" && currentContentMode !== "name_only" && typeof cleanPositionText === "function") {
+            renderPos = cleanPositionText(renderPos);
+          }
+          if (typeof renderModalSheetCard === "function") {
+            renderModalSheetCard({ name: renderName, position: renderPos });
+          }
+        }
+        if (typeof fitSheetPreview === "function") fitSheetPreview();
+      }
+
+      if (typeof updateSummaryChips === "function") {
+        updateSummaryChips();
       }
     }
+    window.update = update;
 
     function setContentModeOption(mode) {
       currentContentMode = mode || "both";
@@ -4270,11 +5992,7 @@
         if (posGroup) posGroup.style.display = "none";
         if (nameInputEl) {
           nameInputEl.required = true;
-          if (currentGlobalSource === "kemnaker") {
-            nameInputEl.removeAttribute("maxlength");
-          } else {
-            nameInputEl.maxLength = 36;
-          }
+          nameInputEl.removeAttribute("maxlength");
           nameInputEl.placeholder = "Masukkan Nama (bisa 1 atau 2 baris)";
           nameInputEl.style.minHeight = "68px";
           nameInputEl.style.height = "68px";
@@ -4286,7 +6004,7 @@
         if (nameHint) {
           nameHint.innerHTML = currentGlobalSource === "kemnaker"
             ? "Nama terisi lengkap dari Kemnaker. <strong>Gelar otomatis dibersihkan pada pratinjau &amp; cetak PDF</strong>."
-            : "Maksimal 36 karakter (font 60 pt). Tekan Enter untuk membagi 2 baris.";
+            : "Panjang nama bebas (font 60 pt atau disesuaikan). Tekan Enter untuk membagi 2 baris.";
         }
       } else if (currentContentMode === "position_only") {
         if (modeBadge) {
@@ -4300,7 +6018,7 @@
         }
         if (posInputEl) {
           posInputEl.required = true;
-          posInputEl.maxLength = 128;
+          posInputEl.removeAttribute("maxlength");
           posInputEl.placeholder = "Masukkan Jabatan (bisa 1 s/d 3 baris)";
           posInputEl.style.minHeight = "68px";
           posInputEl.style.height = "68px";
@@ -4309,7 +6027,7 @@
         if (posHint) {
           posHint.textContent = currentGlobalSource === "kemnaker"
             ? "Jabatan terisi otomatis dari struktur bagan resmi Kemnaker RI (maks. 3 baris)."
-            : "Maksimal hingga 3 baris teks terisi penuh (ukuran teks otomatis menyesuaikan). Tekan Enter untuk membagi baris.";
+            : "Panjang jabatan bebas hingga 3 baris (ukuran teks otomatis menyesuaikan). Tekan Enter untuk membagi baris.";
         }
       } else {
         // 'both' (default)
@@ -4321,11 +6039,7 @@
         if (posGroup) posGroup.style.display = "block";
         if (nameInputEl) {
           nameInputEl.required = true;
-          if (currentGlobalSource === "kemnaker") {
-            nameInputEl.removeAttribute("maxlength");
-          } else {
-            nameInputEl.maxLength = 24;
-          }
+          nameInputEl.removeAttribute("maxlength");
           nameInputEl.placeholder = "Masukkan Nama Lengkap";
           nameInputEl.style.minHeight = "48px";
           nameInputEl.style.height = "48px";
@@ -4333,7 +6047,7 @@
         }
         if (posInputEl) {
           posInputEl.required = true;
-          posInputEl.maxLength = 128;
+          posInputEl.removeAttribute("maxlength");
           posInputEl.placeholder = "Masukkan Jabatan atau Posisi Lengkap";
           posInputEl.style.minHeight = "80px";
           posInputEl.style.height = "";
@@ -4342,12 +6056,12 @@
         if (nameHint) {
           nameHint.innerHTML = currentGlobalSource === "kemnaker"
             ? "Nama terisi lengkap dari Kemnaker. <strong>Gelar otomatis dibersihkan pada pratinjau &amp; cetak PDF</strong>."
-            : "Maksimal 24 karakter (ukuran font tetap 45.86 pt, tidak diperkecil).";
+            : "Panjang nama bebas. Font otomatis menyesuaikan ke batas aman kartu atau dapat diatur manual.";
         }
         if (posHint) {
           posHint.innerHTML = currentGlobalSource === "kemnaker"
             ? "Jabatan terisi otomatis dari struktur bagan resmi Kemnaker RI."
-            : "Tekan <strong>Enter</strong> untuk membagi baris 1 &amp; 2 sesuai keinginan (maks. 128 karakter, maks. 2 baris).";
+            : "Tekan <strong>Enter</strong> untuk membagi baris 1 &amp; 2 sesuai keinginan (font otomatis menyesuaikan batas aman kartu).";
         }
       }
 
@@ -4366,8 +6080,15 @@
         const scale = wrap.clientWidth / cardWidthPx;
         const cardElem = document.getElementById("card");
         const previewInner = document.getElementById("previewInner");
-        if (cardElem) cardElem.style.transform = `scale(${scale})`;
+        if (cardElem) {
+          cardElem.style.transform = "none";
+          cardElem.style.zoom = scale;
+        }
         if (previewInner) previewInner.style.height = (cardHeightPx * scale) + "px";
+      }
+
+      if (typeof fitSheetPreview === "function") {
+        fitSheetPreview();
       }
 
       if (currentTab === "batch") {
@@ -4375,6 +6096,227 @@
       }
     }
     window.fitPreview = fitPreview;
+
+    function fitSheetPreview() {
+      const wrap = document.querySelector(".sheet-scale-wrap");
+      if (wrap && wrap.clientWidth > 0 && typeof CARD !== "undefined") {
+        const ptToPx = 96 / 72;
+        const cardWidthPx = CARD.PAGE_W * ptToPx;
+        const cardHeightPx = CARD.PAGE_H * ptToPx;
+        const scale = wrap.clientWidth / cardWidthPx;
+        const cardSheetElem = document.getElementById("card-sheet");
+        const previewSheetInner = document.getElementById("sheetPreviewInner");
+        if (cardSheetElem) {
+          cardSheetElem.style.width = cardWidthPx + "px";
+          cardSheetElem.style.height = cardHeightPx + "px";
+          cardSheetElem.style.transformOrigin = "top left";
+          cardSheetElem.style.transform = `scale(${scale})`;
+          cardSheetElem.style.zoom = "1";
+        }
+        if (previewSheetInner) {
+          previewSheetInner.style.height = (cardHeightPx * scale) + "px";
+        }
+      }
+    }
+    window.fitSheetPreview = fitSheetPreview;
+
+    // -------------------------------------------------------------------------
+    // Transactional Modal State Management (Save vs Cancel Snapshot)
+    // -------------------------------------------------------------------------
+    let modalSnapshot = null;
+
+    function captureSettingsSnapshot() {
+      return {
+        fontNameChoice: currentFontNameChoice,
+        fontNameFamily: currentFontNameFamily,
+        fontSizeName: currentFontSizeName,
+        fontPosChoice: currentFontPosChoice,
+        fontPosFamily: currentFontPosFamily,
+        fontSizePos: currentFontSizePos,
+        spacingGap: currentSpacingGap,
+        horizontalOffset: currentHorizontalOffset,
+        textCase: currentTextCase,
+        sides: currentSides,
+        contentMode: currentContentMode,
+        bgUrl: currentBgUrl,
+        customBgData: customBgData,
+        customFontNameData: customFontNameData,
+        customFontNameFilename: customFontNameFilename,
+        customFontPosData: customFontPosData,
+        customFontPosFilename: customFontPosFilename
+      };
+    }
+
+    function syncHiddenInputs() {
+      document.querySelectorAll(".sync-font-choice-val").forEach(el => el.value = currentFontNameChoice || "MyriadPro");
+      document.querySelectorAll(".sync-font-val").forEach(el => el.value = currentFontNameFamily || "");
+      document.querySelectorAll(".sync-font-size-name-val").forEach(el => el.value = currentFontSizeName || "auto");
+      document.querySelectorAll(".sync-font-pos-choice-val").forEach(el => el.value = currentFontPosChoice || "MyriadPro");
+      document.querySelectorAll(".sync-font-pos-val").forEach(el => el.value = currentFontPosFamily || "");
+      document.querySelectorAll(".sync-font-size-pos-val").forEach(el => el.value = currentFontSizePos || "auto");
+      document.querySelectorAll(".sync-spacing-val").forEach(el => el.value = (currentSpacingGap || 40).toString());
+      document.querySelectorAll(".sync-offset-x-val").forEach(el => el.value = (currentHorizontalOffset || 0).toString());
+      document.querySelectorAll(".sync-case-val").forEach(el => el.value = currentTextCase || "uppercase");
+      document.querySelectorAll(".sync-sides-val").forEach(el => el.value = (currentSides || 2).toString());
+      document.querySelectorAll(".sync-mode-val").forEach(el => el.value = currentContentMode || "both");
+      document.querySelectorAll(".sync-bg-val").forEach(el => el.value = customBgData || "");
+      document.querySelectorAll(".sync-font-name-data-val").forEach(el => el.value = customFontNameData || "");
+      document.querySelectorAll(".sync-font-name-filename-val").forEach(el => el.value = customFontNameFilename || "");
+      document.querySelectorAll(".sync-font-pos-data-val").forEach(el => el.value = customFontPosData || "");
+      document.querySelectorAll(".sync-font-pos-filename-val").forEach(el => el.value = customFontPosFilename || "");
+    }
+
+    function restoreSettingsFromSnapshot(snap) {
+      if (!snap) return;
+      currentFontNameChoice = snap.fontNameChoice;
+      currentFontNameFamily = snap.fontNameFamily;
+      currentFontSizeName = snap.fontSizeName;
+      currentFontPosChoice = snap.fontPosChoice;
+      currentFontPosFamily = snap.fontPosFamily;
+      currentFontSizePos = snap.fontSizePos;
+      currentSpacingGap = snap.spacingGap;
+      currentHorizontalOffset = snap.horizontalOffset !== undefined ? snap.horizontalOffset : 0;
+      currentTextCase = snap.textCase;
+      currentSides = snap.sides;
+      currentContentMode = snap.contentMode;
+      currentBgUrl = snap.bgUrl;
+      customBgData = snap.customBgData;
+      customFontNameData = snap.customFontNameData;
+      customFontNameFilename = snap.customFontNameFilename;
+      customFontPosData = snap.customFontPosData;
+      customFontPosFilename = snap.customFontPosFilename;
+
+      // Sync modal controls UI
+      const fnSelect = document.getElementById("fontNameSelect");
+      if (fnSelect) fnSelect.value = snap.fontNameChoice;
+      const fszNameInput = document.getElementById("fontSizeNameInput");
+      if (fszNameInput) fszNameInput.value = snap.fontSizeName === "auto" ? "auto" : snap.fontSizeName;
+      if (typeof updateFontNameBadge === "function") updateFontNameBadge();
+
+      const fpSelect = document.getElementById("fontPosSelect");
+      if (fpSelect) fpSelect.value = snap.fontPosChoice;
+      const fszPosInput = document.getElementById("fontSizePosInput");
+      if (fszPosInput) fszPosInput.value = snap.fontSizePos === "auto" ? "auto" : snap.fontSizePos;
+      if (typeof updateFontPosBadge === "function") updateFontPosBadge();
+
+      if (typeof setSpacingOption === "function") setSpacingOption(snap.spacingGap, false, false);
+      if (typeof setOffsetOption === "function") setOffsetOption(snap.horizontalOffset !== undefined ? snap.horizontalOffset : 0, false, false);
+      if (typeof setTextCaseOption === "function") setTextCaseOption(snap.textCase);
+      if (typeof setSidesOption === "function") setSidesOption(snap.sides);
+      if (typeof setContentModeOption === "function") setContentModeOption(snap.contentMode);
+
+      // Restore Background
+      if (typeof setBackgroundUrl === "function") setBackgroundUrl(snap.bgUrl);
+      const singleBg = document.getElementById("bg");
+      if (singleBg) singleBg.src = snap.bgUrl;
+      const sheetBg = document.getElementById("bg-sheet");
+      if (sheetBg) sheetBg.src = snap.bgUrl;
+      const bgBadge = document.getElementById("bgBadgeStatus");
+      if (bgBadge) {
+        bgBadge.textContent = snap.customBgData ? "Kustom Aktif" : "Default";
+        bgBadge.className = snap.customBgData ? "pill-status-badge badge-custom" : "pill-status-badge badge-neutral";
+      }
+      const resetBgBtn = document.getElementById("btnResetCustomBg");
+      if (resetBgBtn) resetBgBtn.style.display = snap.customBgData ? "inline-flex" : "none";
+
+      syncHiddenInputs();
+
+      if (typeof updateAllGliders === "function") updateAllGliders(false);
+      update();
+      if (typeof fitPreview === "function") fitPreview();
+      if (typeof fitSheetPreview === "function") fitSheetPreview();
+    }
+
+    function openOpt2Sheet() {
+      modalSnapshot = captureSettingsSnapshot();
+      const backdrop = document.getElementById("opt2SheetBackdrop");
+      if (backdrop) {
+        backdrop.classList.add("open");
+        document.body.classList.add("modal-open");
+        document.body.style.overflow = "hidden";
+        if (typeof update === "function") update();
+        if (currentTab === "batch" && typeof updateModalBulkPreview === "function") {
+          updateModalBulkPreview();
+        } else {
+          const modalGalleryBar = document.getElementById("modalBulkGalleryBar");
+          if (modalGalleryBar) modalGalleryBar.style.display = "none";
+        }
+        setTimeout(() => {
+          if (typeof fitSheetPreview === "function") fitSheetPreview();
+          if (typeof updateAllGliders === "function") updateAllGliders(false);
+        }, 40);
+        setTimeout(() => {
+          if (typeof fitSheetPreview === "function") fitSheetPreview();
+          if (typeof updateAllGliders === "function") updateAllGliders(false);
+        }, 200);
+      }
+    }
+    window.openOpt2Sheet = openOpt2Sheet;
+
+    function cancelOpt2Sheet() {
+      if (modalSnapshot) {
+        restoreSettingsFromSnapshot(modalSnapshot);
+        modalSnapshot = null;
+      }
+      const backdrop = document.getElementById("opt2SheetBackdrop");
+      if (backdrop) {
+        backdrop.classList.remove("open");
+        document.body.classList.remove("modal-open");
+        document.body.style.overflow = "";
+      }
+      updateSummaryChips();
+    }
+    window.cancelOpt2Sheet = cancelOpt2Sheet;
+    window.closeOpt2Sheet = cancelOpt2Sheet;
+
+    function applyOpt2Sheet() {
+      modalSnapshot = null; // Changes accepted!
+      syncHiddenInputs();
+      updateSummaryChips();
+      const backdrop = document.getElementById("opt2SheetBackdrop");
+      if (backdrop) {
+        backdrop.classList.remove("open");
+        document.body.classList.remove("modal-open");
+        document.body.style.overflow = "";
+      }
+      update();
+      if (typeof fitPreview === "function") fitPreview();
+    }
+    window.applyOpt2Sheet = applyOpt2Sheet;
+
+    function updateSummaryChips() {
+      const chipSides = document.getElementById("summaryChipSides");
+      const chipFont = document.getElementById("summaryChipFont");
+      const chipSpacing = document.getElementById("summaryChipSpacing");
+      const chipCase = document.getElementById("summaryChipCase");
+
+      const spacingVal = typeof currentSpacingGap !== "undefined" ? currentSpacingGap : (typeof CARD !== "undefined" ? (CARD.NAME_TO_POSITION_GAP || 40) : 40);
+      
+      let fontVal = "Montserrat";
+      const fontSelect = document.getElementById("fontNameSelect");
+      if (fontSelect && fontSelect.selectedIndex >= 0 && fontSelect.value !== "__custom__") {
+        fontVal = fontSelect.options[fontSelect.selectedIndex].text;
+      } else if (typeof currentFontNameChoice !== "undefined") {
+        fontVal = currentFontNameChoice === "MyriadPro" ? "Myriad Pro" : currentFontNameChoice;
+      } else if (typeof CARD !== "undefined" && CARD.FONT_NAME) {
+        fontVal = CARD.FONT_NAME;
+      }
+
+      const sidesVal = typeof currentSides !== "undefined" ? currentSides : (typeof CARD !== "undefined" ? CARD.SIDES : 2);
+      const caseVal = typeof currentTextCase !== "undefined" ? currentTextCase : (typeof CARD !== "undefined" ? CARD.TEXT_CASE : "uppercase");
+
+      if (chipSides) chipSides.textContent = sidesVal === 1 ? "1 Sisi" : "2 Sisi";
+      if (chipFont) chipFont.textContent = fontVal || "Myriad Pro";
+      if (chipSpacing) chipSpacing.textContent = "Spasi " + spacingVal + "pt";
+      if (chipCase) chipCase.textContent = caseVal === "capitalize" ? "Awal Kata" : (caseVal === "lowercase" ? "kecil" : "KAPITAL");
+    }
+    window.updateSummaryChips = updateSummaryChips;
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        cancelOpt2Sheet();
+      }
+    });
 
     nameInput.addEventListener("input", update);
     positionInput.addEventListener("input", update);
@@ -4395,17 +6337,54 @@
         e.preventDefault();
       }
     });
-    window.addEventListener("resize", fitPreview);
-    window.addEventListener("orientationchange", () => setTimeout(fitPreview, 100));
+
+    const bulkDataTextarea = document.getElementById("bulk_data");
+    if (bulkDataTextarea) {
+      bulkDataTextarea.addEventListener("input", updateBulkData);
+    }
+
+    function fitFooterBrandText() {
+      const brandSpan = document.querySelector(".footer-brand span");
+      const brandContainer = document.querySelector(".footer-brand");
+      const logo = document.querySelector(".footer-kemnaker-logo");
+      if (!brandSpan || !brandContainer) return;
+
+      brandSpan.style.fontSize = "";
+      brandSpan.style.whiteSpace = "nowrap";
+
+      const containerWidth = brandContainer.clientWidth;
+      const logoWidth = logo ? logo.offsetWidth : 28;
+      const gap = 10;
+      const availableWidth = containerWidth - logoWidth - gap - 4;
+
+      if (availableWidth > 0 && brandSpan.scrollWidth > availableWidth) {
+        const computedSize = parseFloat(window.getComputedStyle(brandSpan).fontSize) || 12.5;
+        const scale = availableWidth / brandSpan.scrollWidth;
+        const newSize = Math.max(7.5, Math.floor(computedSize * scale * 10) / 10);
+        brandSpan.style.fontSize = newSize + "px";
+      }
+    }
+    window.fitFooterBrandText = fitFooterBrandText;
+
+    window.addEventListener("resize", () => {
+      fitPreview();
+      fitBulkPreview();
+      fitFooterBrandText();
+    });
+    window.addEventListener("orientationchange", () => setTimeout(() => {
+      fitPreview();
+      fitBulkPreview();
+      fitFooterBrandText();
+    }, 100));
 
     // Observe container width changes (e.g. mobile orientation change, layout reflow)
     if (window.ResizeObserver) {
-      const scaleWrap = document.querySelector(".preview-scale-wrap");
-      if (scaleWrap) {
+      document.querySelectorAll(".preview-scale-wrap").forEach(scaleWrap => {
         new ResizeObserver(() => {
           fitPreview();
+          fitBulkPreview();
         }).observe(scaleWrap);
-      }
+      });
     }
 
     function escapeHtml(text) {
@@ -4472,6 +6451,7 @@
         }
 
         updateBulkData();
+        if (typeof fitBulkPreview === "function") fitBulkPreview();
       }
 
       updateTabGlider(true);
@@ -4483,7 +6463,7 @@
       const lines = text.split(/\r?\n/);
       const rows = [];
       lines.forEach((rawLine, lineIdx) => {
-        const line = rawLine.trim();
+        let line = (rawLine || "").trim();
         if (!line) return;
 
         if (currentContentMode === "name_only") {
@@ -4493,7 +6473,9 @@
           let rawName = (split.name || line).trim();
           if (rawName.toLowerCase() in { "name": 1, "nama": 1, "nama lengkap": 1, "nama pegawai": 1, "nama pejabat": 1 }) return;
           const cleaned = typeof cleanTitles === "function" ? cleanTitles(rawName) : rawName;
-          const fmtName = (typeof stripTrailingPunctuation === "function" ? stripTrailingPunctuation(cleaned || rawName) : (cleaned || rawName)).substring(0, 36).trim();
+          const fmtName = typeof formatBulkName === "function"
+            ? formatBulkName(rawName, { fontSize: currentFontSizeName, fontFamily: currentFontNameFamily, textCase: currentTextCase })
+            : (typeof stripTrailingPunctuation === "function" ? stripTrailingPunctuation(cleaned || rawName) : (cleaned || rawName)).substring(0, 40).trim();
           if (fmtName) {
             rows.push({
               name: fmtName,
@@ -4511,7 +6493,8 @@
             : { name: "", position: line };
           let rawPos = (split.position || line).trim();
           if (rawPos.toLowerCase() in { "position": 1, "jabatan": 1, "posisi": 1 }) return;
-          const fmtPos = (typeof stripTrailingPunctuation === "function" ? stripTrailingPunctuation(rawPos) : rawPos).substring(0, 128).trim();
+          const cleaned = typeof cleanPositionText === "function" ? cleanPositionText(rawPos) : rawPos;
+          const fmtPos = (typeof stripTrailingPunctuation === "function" ? stripTrailingPunctuation(cleaned) : cleaned).substring(0, 128).trim();
           if (fmtPos) {
             rows.push({
               name: "",
@@ -4524,24 +6507,23 @@
         }
 
         // Mode 'both' (default)
-        // Split using punctuation or parentheses
         const split = typeof splitNameAndPosition === "function"
           ? splitNameAndPosition(line)
           : { name: line, position: "" };
         let rawName = (split.name || "").trim();
         let rawPos = (split.position || "").trim();
 
-        // Filter header row if accidentally included
         if (rawName.toLowerCase() in { "name": 1, "nama": 1, "nama lengkap": 1, "nama pegawai": 1, "nama pejabat": 1 }) {
           if (!rawPos || rawPos.toLowerCase() in { "jabatan": 1, "position": 1, "posisi": 1 }) return;
         }
 
         if (rawName) {
-          // Auto remove titles & abbreviate if > 24 chars
           const formattedName = typeof formatBulkName === "function"
-            ? formatBulkName(rawName, 24)
-            : (typeof stripTrailingPunctuation === "function" ? stripTrailingPunctuation(rawName) : rawName).substring(0, 24);
-          const clampedPos = (typeof stripTrailingPunctuation === "function" ? stripTrailingPunctuation(rawPos) : rawPos).substring(0, 128);
+            ? formatBulkName(rawName, { fontSize: currentFontSizeName, fontFamily: currentFontNameFamily, textCase: currentTextCase })
+            : (typeof stripTrailingPunctuation === "function" ? stripTrailingPunctuation(rawName) : rawName);
+          const clampedPos = typeof cleanPositionText === "function"
+            ? cleanPositionText(rawPos)
+            : (typeof stripTrailingPunctuation === "function" ? stripTrailingPunctuation(rawPos) : rawPos);
 
           rows.push({
             name: formattedName,
@@ -4552,8 +6534,8 @@
         }
       });
 
-      // Deduplicate rows: hanya berlaku untuk Kemnaker! Untuk Tamu biarkan sesuai input yang dimasukkan.
-      if (currentGlobalSource === "kemnaker" && typeof deduplicateBulkRows === "function") {
+      // Deduplicate rows across all bulk inputs
+      if (typeof deduplicateBulkRows === "function") {
         return deduplicateBulkRows(rows, currentContentMode, "kemnaker");
       }
       return rows;
@@ -4575,6 +6557,32 @@
       }
     }
 
+    let currentModalBulkIndex = 0;
+    let currentBulkRows = [];
+
+    function fitBulkPreview() {
+      const container = document.getElementById("bulkCardsList");
+      if (!container || typeof CARD === "undefined") return;
+      const cardWidthPx = CARD.PAGE_W * PT_TO_PX;
+      const cardHeightPx = CARD.PAGE_H * PT_TO_PX;
+      const borderOffset = 3;
+      const itemW = Math.max(280, (container.clientWidth || 540) - borderOffset);
+      if (itemW <= 0) return;
+      const scale = itemW / cardWidthPx;
+      const itemH = Math.round(cardHeightPx * scale);
+      container.querySelectorAll(".bulk-card-viewport").forEach(vp => {
+        vp.style.height = itemH + "px";
+      });
+      container.querySelectorAll(".bulk-card-canvas").forEach(cv => {
+        cv.style.zoom = "1";
+        cv.style.width = cardWidthPx + "px";
+        cv.style.height = cardHeightPx + "px";
+        cv.style.transformOrigin = "top left";
+        cv.style.transform = `scale(${scale})`;
+      });
+    }
+    window.fitBulkPreview = fitBulkPreview;
+
     function renderBulkPreview() {
       const textarea = document.getElementById("bulk_data");
       const container = document.getElementById("bulkCardsList");
@@ -4582,9 +6590,9 @@
       const bottomStatus = document.getElementById("bulkBottomStatus");
 
       if (!textarea || !container) return;
-      const rows = parseBulkData(textarea.value);
+      currentBulkRows = parseBulkData(textarea.value);
 
-      if (rows.length === 0) {
+      if (!currentBulkRows || currentBulkRows.length === 0) {
         if (totalSheetsText) totalSheetsText.textContent = "0 Lembar PDF";
         if (bottomStatus) bottomStatus.innerHTML = "Total: <strong>0 Halaman PDF</strong>";
         container.innerHTML = `
@@ -4596,17 +6604,18 @@
             <div style="font-size: 12px;">Ketik atau tempel data nama dan jabatan di kolom kiri untuk melihat pratinjau semua lembar di sini.</div>
           </div>
         `;
+        updateModalBulkPreview();
         return;
       }
 
-      if (totalSheetsText) totalSheetsText.textContent = rows.length + " Lembar PDF";
-      if (bottomStatus) bottomStatus.innerHTML = `Total: <strong>${rows.length} Halaman PDF</strong> (Siap Cetak)`;
+      if (totalSheetsText) totalSheetsText.textContent = currentBulkRows.length + " Lembar PDF";
+      if (bottomStatus) bottomStatus.innerHTML = `Total: <strong>${currentBulkRows.length} Halaman PDF</strong> (Siap Cetak)`;
 
-      // Calculate responsive scale for each card
+      // Calculate responsive scale for each card (100% flush, 0px margin kanan/kiri)
       const cardWidthPx = CARD.PAGE_W * PT_TO_PX;
       const cardHeightPx = CARD.PAGE_H * PT_TO_PX;
-      const containerW = container.clientWidth || 540;
-      const itemW = Math.max(280, containerW - 14);
+      const borderOffset = 3;
+      const itemW = Math.max(280, (container.clientWidth || 540) - borderOffset);
       const scale = itemW / cardWidthPx;
       const itemH = Math.round(cardHeightPx * scale);
 
@@ -4614,7 +6623,7 @@
       const isSingleSide = currentSides === 1;
 
       let html = "";
-      rows.forEach((r, idx) => {
+      currentBulkRows.forEach((r, idx) => {
         const titleText = currentContentMode === "position_only" ? (r.position || '-') : (r.name || '-');
         const subText = currentContentMode === "both" ? (r.position || '-') : '';
         html += `
@@ -4627,7 +6636,7 @@
               ${subText ? `<span class="sheet-person-position" title="${escapeHtml(subText)}">${escapeHtml(subText)}</span>` : ''}
             </div>
             <div class="bulk-card-viewport" style="height: ${itemH}px;">
-              <div class="bulk-card-canvas" style="transform: scale(${scale});">
+              <div class="bulk-card-canvas" style="width: ${cardWidthPx}px; height: ${cardHeightPx}px; transform-origin: top left; transform: scale(${scale});">
                 <img class="bulk-bg" src="${activeBg}" alt="Card Background">
                 <div id="bulk-normal-${idx}" class="block"></div>
                 <div id="bulk-flip-${idx}" class="block block-flip" style="${isSingleSide ? 'display: none;' : ''}"></div>
@@ -4639,14 +6648,27 @@
 
       container.innerHTML = html;
 
-      // Draw text inside each canvas with exact layout engine
-      rows.forEach((r, idx) => {
+      // Draw text inside each canvas with exact layout engine and current settings
+      currentBulkRows.forEach((r, idx) => {
         const normal = document.getElementById("bulk-normal-" + idx);
         const flip = document.getElementById("bulk-flip-" + idx);
         const safeName = (r.name || "").toString();
         const safePos = (r.position || "").toString();
-        const lines = typeof wrapPosition === "function" ? wrapPosition(safePos) : [safePos];
-        const blockOpts = { mode: currentContentMode, rawPosition: safePos };
+        const lines = typeof wrapPosition === "function" ? wrapPosition(safePos, { textCase: currentTextCase }) : [safePos];
+        const blockOpts = {
+          mode: currentContentMode,
+          rawPosition: safePos,
+          textCase: currentTextCase,
+          nameFontFamily: currentFontNameFamily,
+          posFontFamily: currentFontPosFamily,
+          nameFontSize: currentFontSizeName,
+          posFontSize: currentFontSizePos,
+          spacingGap: currentSpacingGap,
+          horizontalOffset: currentHorizontalOffset,
+          sides: currentSides,
+          bgUrl: activeBg,
+          cleanTitles: false
+        };
         if (typeof layoutBlock === "function") {
           if (normal) layoutBlock(normal, safeName, lines, blockOpts);
           if (flip) {
@@ -4659,7 +6681,340 @@
           }
         }
       });
+
+      updateModalBulkPreview();
     }
+    window.renderBulkPreview = renderBulkPreview;
+
+    // -------------------------------------------------------------------------
+    // Modal Settings Sheet Preview & Gallery Scrubber Logic (Sesi Pengaturan Tampilan)
+    // -------------------------------------------------------------------------
+    function updateModalBulkPreview() {
+      const modalGalleryBar = document.getElementById("modalBulkGalleryBar");
+      const textarea = document.getElementById("bulk_data");
+      if (!modalGalleryBar) return;
+
+      if (currentTab !== "batch" || !textarea) {
+        modalGalleryBar.style.display = "none";
+        return;
+      }
+
+      const rows = parseBulkData(textarea.value);
+      if (!rows || rows.length === 0) {
+        modalGalleryBar.style.display = "none";
+        renderModalSheetCard(null);
+        return;
+      }
+
+      if (rows.length === 1) {
+        modalGalleryBar.style.display = "none";
+        renderModalSheetCard(rows[0]);
+        return;
+      }
+
+      modalGalleryBar.style.display = "flex";
+      const totalSheetsText = document.getElementById("modalTotalSheetsText");
+      const slider = document.getElementById("modalBulkGallerySlider");
+
+      if (totalSheetsText) totalSheetsText.textContent = rows.length + " Lembar PDF";
+      if (slider) {
+        slider.min = 1;
+        slider.max = rows.length;
+      }
+
+      if (currentModalBulkIndex >= rows.length) {
+        currentModalBulkIndex = rows.length - 1;
+      }
+      if (currentModalBulkIndex < 0) currentModalBulkIndex = 0;
+
+      if (slider) slider.value = currentModalBulkIndex + 1;
+
+      renderModalBulkPills(rows);
+      renderModalSheetCard(rows[currentModalBulkIndex]);
+    }
+    window.updateModalBulkPreview = updateModalBulkPreview;
+
+    function renderModalSheetCard(row) {
+      const normalSheet = document.getElementById("block-normal-sheet");
+      const flipSheet = document.getElementById("block-flip-sheet");
+      const bgSheet = document.getElementById("bg-sheet");
+      const activeBg = currentBgUrl || BG_TEMPLATE_URL;
+      if (bgSheet && activeBg) bgSheet.src = activeBg;
+
+      const isSingleSide = currentSides === 1;
+      const sheetPill = document.getElementById("modalActiveSheetPill");
+      const sheetTitle = document.getElementById("modalActiveSheetTitle");
+      const btnPrev = document.getElementById("btnModalBulkPrev");
+      const btnNext = document.getElementById("btnModalBulkNext");
+
+      const textarea = document.getElementById("bulk_data");
+      const rows = textarea ? parseBulkData(textarea.value) : [];
+      const total = rows.length;
+
+      if (btnPrev) btnPrev.disabled = (currentModalBulkIndex <= 0);
+      if (btnNext) btnNext.disabled = (currentModalBulkIndex >= total - 1);
+
+      // Extract raw inputs with punctuation cleanup
+      let rawName = (row && row.name) ? row.name.toString().trim() : "";
+      let rawPos = (row && row.position) ? row.position.toString().trim() : "";
+
+      if (typeof stripTrailingPunctuation === "function") {
+        rawName = stripTrailingPunctuation(rawName);
+        rawPos = stripTrailingPunctuation(rawPos);
+      }
+
+      const isNameEmpty = !rawName;
+      const isPosEmpty = !rawPos;
+      const isBothEmpty = isNameEmpty && isPosEmpty;
+
+      // Placeholder defaults matching main preview
+      const placeholderName = (typeof DEFAULT_PREVIEW_NAME !== "undefined") ? DEFAULT_PREVIEW_NAME : "TAMPILAN NAMA LENGKAP";
+      const placeholderPos = (typeof DEFAULT_PREVIEW_POSITION !== "undefined") ? DEFAULT_PREVIEW_POSITION : "TAMPILAN JABATAN ATAU POSISI";
+
+      let displayName = rawName;
+      let displayPos = rawPos;
+      let nameOpacity = 1.0;
+      let positionOpacity = 1.0;
+
+      if (currentContentMode === "name_only") {
+        displayName = isNameEmpty ? placeholderName : rawName;
+        nameOpacity = isNameEmpty ? 0.6 : 1.0;
+        displayPos = "";
+      } else if (currentContentMode === "position_only") {
+        displayPos = isPosEmpty ? placeholderPos : rawPos;
+        positionOpacity = isPosEmpty ? 0.6 : 1.0;
+        displayName = "";
+      } else {
+        displayName = isNameEmpty ? placeholderName : rawName;
+        displayPos = isPosEmpty ? placeholderPos : rawPos;
+        nameOpacity = isNameEmpty ? 0.6 : 1.0;
+        positionOpacity = isPosEmpty ? 0.6 : 1.0;
+      }
+
+      if (currentTab === "batch" && total > 0) {
+        if (sheetPill) sheetPill.textContent = `Lembar ${currentModalBulkIndex + 1} dari ${total}`;
+        const titleSnippet = rawName ? (rawName + (rawPos ? ` - ${rawPos}` : "")) : (rawPos || (isBothEmpty ? "Contoh Pratinjau (Placeholder)" : "-"));
+        if (sheetTitle) sheetTitle.textContent = titleSnippet;
+      } else {
+        if (sheetPill) sheetPill.textContent = isBothEmpty ? "Contoh Pratinjau" : "Pratinjau Langsung";
+        const titleSnippet = isBothEmpty ? "Contoh Tampilan Nama & Jabatan" : (rawName ? (rawName + (rawPos ? ` - ${rawPos}` : "")) : rawPos);
+        if (sheetTitle) sheetTitle.textContent = titleSnippet;
+      }
+
+      const lines = displayPos ? (typeof wrapPosition === "function" ? wrapPosition(displayPos, { textCase: currentTextCase }) : [displayPos]) : [];
+      const blockOpts = {
+        mode: currentContentMode,
+        rawPosition: displayPos,
+        textCase: currentTextCase,
+        nameFontFamily: currentFontNameFamily,
+        posFontFamily: currentFontPosFamily,
+        nameFontSize: currentFontSizeName,
+        posFontSize: currentFontSizePos,
+        nameOpacity: nameOpacity,
+        positionOpacity: positionOpacity,
+        spacingGap: currentSpacingGap,
+        horizontalOffset: currentHorizontalOffset,
+        sides: currentSides,
+        bgUrl: activeBg,
+        cleanTitles: false
+      };
+
+      if (typeof layoutBlock === "function") {
+        if (normalSheet) layoutBlock(normalSheet, displayName, lines, blockOpts);
+        if (flipSheet) {
+          if (isSingleSide) {
+            flipSheet.style.display = "none";
+          } else {
+            flipSheet.style.display = "block";
+            layoutBlock(flipSheet, displayName, lines, blockOpts);
+          }
+        }
+      }
+    }
+    window.renderModalSheetCard = renderModalSheetCard;
+
+    function onModalBulkSliderInput(val) {
+      const idx = parseInt(val, 10) - 1;
+      const textarea = document.getElementById("bulk_data");
+      const rows = textarea ? parseBulkData(textarea.value) : [];
+      if (!isNaN(idx) && idx >= 0 && idx < rows.length) {
+        currentModalBulkIndex = idx;
+        renderModalSheetCard(rows[currentModalBulkIndex]);
+        updateActiveModalPill();
+      }
+    }
+    window.onModalBulkSliderInput = onModalBulkSliderInput;
+
+    function navigateModalBulkSheet(direction) {
+      const textarea = document.getElementById("bulk_data");
+      const rows = textarea ? parseBulkData(textarea.value) : [];
+      const nextIdx = currentModalBulkIndex + direction;
+      if (nextIdx >= 0 && nextIdx < rows.length) {
+        currentModalBulkIndex = nextIdx;
+        const slider = document.getElementById("modalBulkGallerySlider");
+        if (slider) slider.value = currentModalBulkIndex + 1;
+        renderModalSheetCard(rows[currentModalBulkIndex]);
+        updateActiveModalPill();
+      }
+    }
+    window.navigateModalBulkSheet = navigateModalBulkSheet;
+
+    function renderModalBulkPills(rows) {
+      const strip = document.getElementById("modalBulkPillsStrip");
+      if (!strip) return;
+      if (!rows || rows.length === 0) {
+        strip.innerHTML = "";
+        return;
+      }
+      const activeBg = currentBgUrl || BG_TEMPLATE_URL;
+      let html = "";
+      rows.forEach((r, idx) => {
+        const activeClass = (idx === currentModalBulkIndex) ? "active" : "";
+        const nameLabel = r.name ? r.name : `Lembar ${idx + 1}`;
+        const posLabel = r.position ? r.position : "";
+        html += `<button type="button" class="bulk-pill-item ios-thumb-item ${activeClass}" id="modalBulkPill-${idx}" onclick="selectModalBulkSheet(${idx})" data-index="${idx}" title="${escapeHtml(nameLabel)}${posLabel ? ' - ' + escapeHtml(posLabel) : ''}">
+          <div class="ios-thumb-card">
+            <img class="ios-thumb-bg" src="${activeBg}" alt="">
+            <span class="ios-thumb-badge">${idx + 1}</span>
+            <div class="ios-thumb-content">
+              <div class="ios-thumb-name">${escapeHtml(nameLabel)}</div>
+              ${posLabel ? `<div class="ios-thumb-pos">${escapeHtml(posLabel)}</div>` : ''}
+            </div>
+          </div>
+          <div class="ios-thumb-active-ring"></div>
+        </button>`;
+      });
+      strip.innerHTML = html;
+      initIosFilmstripScrubber();
+      scrollActiveModalPillIntoView();
+    }
+    window.renderModalBulkPills = renderModalBulkPills;
+
+    function selectModalBulkSheet(idx) {
+      const textarea = document.getElementById("bulk_data");
+      const rows = textarea ? parseBulkData(textarea.value) : [];
+      if (idx >= 0 && idx < rows.length) {
+        currentModalBulkIndex = idx;
+        const slider = document.getElementById("modalBulkGallerySlider");
+        if (slider) slider.value = currentModalBulkIndex + 1;
+        renderModalSheetCard(rows[currentModalBulkIndex]);
+        updateActiveModalPill();
+      }
+    }
+    window.selectModalBulkSheet = selectModalBulkSheet;
+
+    function updateActiveModalPill() {
+      const strip = document.getElementById("modalBulkPillsStrip");
+      if (!strip) return;
+      strip.querySelectorAll(".bulk-pill-item").forEach((btn, idx) => {
+        btn.classList.toggle("active", idx === currentModalBulkIndex);
+      });
+      const slider = document.getElementById("modalBulkGallerySlider");
+      if (slider) slider.value = currentModalBulkIndex + 1;
+      const btnPrev = document.getElementById("btnModalBulkPrev");
+      const btnNext = document.getElementById("btnModalBulkNext");
+      const textarea = document.getElementById("bulk_data");
+      const rows = textarea ? parseBulkData(textarea.value) : [];
+      if (btnPrev) btnPrev.disabled = (currentModalBulkIndex <= 0);
+      if (btnNext) btnNext.disabled = (currentModalBulkIndex >= rows.length - 1);
+      scrollActiveModalPillIntoView();
+    }
+    window.updateActiveModalPill = updateActiveModalPill;
+
+    function scrollActiveModalPillIntoView() {
+      const active = document.getElementById("modalBulkPill-" + currentModalBulkIndex);
+      const viewport = document.getElementById("modalFilmstripViewport");
+      if (active && viewport) {
+        const activeLeft = active.offsetLeft;
+        const activeWidth = active.offsetWidth;
+        const vpWidth = viewport.offsetWidth;
+        const targetScroll = activeLeft - (vpWidth / 2) + (activeWidth / 2);
+        viewport.scrollTo({ left: targetScroll, behavior: "smooth" });
+      }
+    }
+    window.scrollActiveModalPillIntoView = scrollActiveModalPillIntoView;
+
+    function initIosFilmstripScrubber() {
+      const viewport = document.getElementById("modalFilmstripViewport");
+      if (!viewport || viewport._iosScrubberInit) return;
+      viewport._iosScrubberInit = true;
+
+      let isDown = false;
+      let startX = 0;
+      let scrollLeft = 0;
+
+      // Mouse Wheel: Horizontal scroll
+      viewport.addEventListener("wheel", (e) => {
+        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+          e.preventDefault();
+          viewport.scrollLeft += e.deltaY * 0.7;
+        }
+      }, { passive: false });
+
+      // Mouse Dragging / Scrubbing
+      viewport.addEventListener("mousedown", (e) => {
+        isDown = true;
+        viewport.classList.add("is-dragging");
+        startX = e.pageX - viewport.offsetLeft;
+        scrollLeft = viewport.scrollLeft;
+      });
+
+      window.addEventListener("mousemove", (e) => {
+        if (!isDown) return;
+        const x = e.pageX - viewport.offsetLeft;
+        const walk = (x - startX) * 1.1;
+        viewport.scrollLeft = scrollLeft - walk;
+
+        const targetElem = document.elementFromPoint(e.clientX, e.clientY);
+        const item = targetElem ? targetElem.closest(".ios-thumb-item") : null;
+        if (item && item.dataset && item.dataset.index !== undefined) {
+          const idx = parseInt(item.dataset.index, 10);
+          if (!isNaN(idx) && idx !== currentModalBulkIndex) {
+            selectModalBulkSheet(idx);
+          }
+        }
+      });
+
+      window.addEventListener("mouseup", () => {
+        if (isDown) {
+          isDown = false;
+          viewport.classList.remove("is-dragging");
+          scrollActiveModalPillIntoView();
+        }
+      });
+
+      // Touch Dragging / Scrubbing (Mobile)
+      let touchStartX = 0;
+      let touchScrollLeft = 0;
+      viewport.addEventListener("touchstart", (e) => {
+        if (e.touches.length === 1) {
+          touchStartX = e.touches[0].pageX - viewport.offsetLeft;
+          touchScrollLeft = viewport.scrollLeft;
+        }
+      }, { passive: true });
+
+      viewport.addEventListener("touchmove", (e) => {
+        if (e.touches.length === 1) {
+          const x = e.touches[0].pageX - viewport.offsetLeft;
+          const walk = (x - touchStartX) * 1.1;
+          viewport.scrollLeft = touchScrollLeft - walk;
+
+          const targetElem = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
+          const item = targetElem ? targetElem.closest(".ios-thumb-item") : null;
+          if (item && item.dataset && item.dataset.index !== undefined) {
+            const idx = parseInt(item.dataset.index, 10);
+            if (!isNaN(idx) && idx !== currentModalBulkIndex) {
+              selectModalBulkSheet(idx);
+            }
+          }
+        }
+      }, { passive: true });
+
+      viewport.addEventListener("touchend", () => {
+        scrollActiveModalPillIntoView();
+      });
+    }
+    window.initIosFilmstripScrubber = initIosFilmstripScrubber;
 
     function handleBulkCursor() {
       if (currentTab !== "batch") return;
@@ -4714,6 +7069,108 @@
       }
     }
 
+    function parseCsvOrTableText(rawText) {
+      if (!rawText) return [];
+      const lines = rawText.split(/\r?\n/).filter(l => l.trim());
+      if (lines.length === 0) return [];
+
+      // Detect delimiter from first few lines: tabs vs semicolons vs commas
+      const sample = lines.slice(0, 5);
+      let semiCount = 0, commaCount = 0, tabCount = 0;
+      for (const line of sample) {
+        semiCount += (line.match(/;/g) || []).length;
+        commaCount += (line.match(/,/g) || []).length;
+        tabCount += (line.match(/\t/g) || []).length;
+      }
+      let delimiter = ",";
+      if (tabCount > commaCount && tabCount > semiCount) {
+        delimiter = "\t";
+      } else if (semiCount > commaCount) {
+        delimiter = ";";
+      }
+
+      // Parse rows handling quotes
+      const parsedRows = [];
+      for (const line of lines) {
+        let cells = [];
+        if (delimiter === "\t") {
+          cells = line.split("\t").map(s => s.trim().replace(/^["']|["']$/g, ""));
+        } else {
+          // Standard CSV parser regex supporting quotes
+          const sep = delimiter === ";" ? ";" : ",";
+          const re = new RegExp("(?:^|" + sep + ')(?:"([^"]*(?:""[^"]*)*)"|([^"' + sep + ']*))', "g");
+          let match;
+          while ((match = re.exec(line)) !== null) {
+            let val = match[1] !== undefined ? match[1].replace(/""/g, '"') : match[2];
+            cells.push((val || "").trim());
+          }
+        }
+        if (cells.length > 0 && cells.some(c => c !== "")) {
+          parsedRows.push(cells);
+        }
+      }
+
+      if (parsedRows.length === 0) return [];
+
+      // Detect headers
+      const h0 = parsedRows[0].map(c => c.toLowerCase().trim());
+      let nameCol = -1;
+      let posCol = -1;
+      let hasHeader = false;
+
+      for (let c = 0; c < h0.length; c++) {
+        const val = h0[c];
+        if (["nama", "name", "nama lengkap", "nama pegawai", "nama pejabat"].includes(val)) {
+          nameCol = c;
+          hasHeader = true;
+        } else if (["jabatan", "position", "posisi"].includes(val)) {
+          posCol = c;
+          hasHeader = true;
+        }
+      }
+
+      const dataRows = hasHeader ? parsedRows.slice(1) : parsedRows;
+      const result = [];
+
+      for (const r of dataRows) {
+        if (!r || r.length === 0) continue;
+        let name = "";
+        let pos = "";
+        if (nameCol !== -1 && posCol !== -1) {
+          name = r[nameCol] || "";
+          pos = r[posCol] || "";
+        } else if (nameCol !== -1) {
+          name = r[nameCol] || "";
+          pos = r.filter((_, idx) => idx !== nameCol).join(" - ");
+        } else if (r.length === 1) {
+          name = r[0];
+          pos = "";
+        } else if (r.length === 2) {
+          if (/^\(?\d+[\.\)\:\-\]]*$/.test(r[0]) || /^(?:no|nomor)$/i.test(r[0])) {
+            name = r[1];
+            pos = "";
+          } else {
+            name = r[0];
+            pos = r[1];
+          }
+        } else if (r.length >= 3) {
+          if (/^\(?\d+[\.\)\:\-\]]*$/.test(r[0]) || /^(?:no|nomor)$/i.test(r[0])) {
+            name = r[1];
+            pos = r.slice(2).filter(Boolean).join(" - ");
+          } else {
+            name = r[0];
+            pos = r.slice(1).filter(Boolean).join(" - ");
+          }
+        }
+        name = (name || "").trim();
+        pos = (pos || "").trim();
+        if (name || pos) {
+          result.push({ name, position: pos });
+        }
+      }
+      return result;
+    }
+
     function handleCsvFile(input) {
       if (input.files && input.files[0]) {
         const file = input.files[0];
@@ -4722,9 +7179,15 @@
           const content = e.target.result;
           const textarea = document.getElementById("bulk_data");
           if (textarea) {
-            textarea.value = content;
+            const parsed = parseCsvOrTableText(content);
+            if (parsed.length > 0) {
+              textarea.value = parsed.map(item => item.position ? `${item.name} - ${item.position}` : item.name).join("\n");
+            } else {
+              textarea.value = content;
+            }
             updateBulkData();
           }
+          input.value = "";
         };
         reader.readAsText(file);
       }
@@ -4751,6 +7214,8 @@
             if (typeof setBackgroundUrl === "function") setBackgroundUrl(dataUrl);
             const singleBg = document.getElementById("bg");
             if (singleBg) singleBg.src = dataUrl;
+            const sheetBg = document.getElementById("bg-sheet");
+            if (sheetBg) sheetBg.src = dataUrl;
             if (bgBadgeStatus) {
               bgBadgeStatus.textContent = "Kustom Aktif";
               bgBadgeStatus.className = "pill-status-badge badge-custom";
@@ -4772,6 +7237,8 @@
         if (typeof setBackgroundUrl === "function") setBackgroundUrl(BG_TEMPLATE_URL);
         const singleBg = document.getElementById("bg");
         if (singleBg) singleBg.src = BG_TEMPLATE_URL;
+        const sheetBg = document.getElementById("bg-sheet");
+        if (sheetBg) sheetBg.src = BG_TEMPLATE_URL;
         if (bgBadgeStatus) {
           bgBadgeStatus.textContent = "Default";
           bgBadgeStatus.className = "pill-status-badge badge-neutral";
@@ -4783,92 +7250,454 @@
     }
 
     // -------------------------------------------------------------------------
-    // Interactive Feature 2: Font Choice & Custom Font Upload
+    // Font CSS Family Helper
     // -------------------------------------------------------------------------
-    const fontSelectInput = document.getElementById("fontSelectInput");
-    const customFontFileInput = document.getElementById("customFontFileInput");
-    const fontBadgeStatus = document.getElementById("fontBadgeStatus");
-
-    function applyFontChoice(choice, familyName, dataUrl, displayName) {
-      currentFontChoice = choice;
-      currentFontFamily = familyName;
-      if (typeof setFontFamily === "function") setFontFamily(familyName);
-
-      if (fontBadgeStatus) {
-        fontBadgeStatus.textContent = displayName || choice;
-        if (choice === "MyriadPro") {
-          fontBadgeStatus.className = "pill-status-badge";
-        } else if (dataUrl) {
-          fontBadgeStatus.className = "pill-status-badge badge-custom";
-        } else {
-          fontBadgeStatus.className = "pill-status-badge badge-neutral";
-        }
-      }
-
-      if (fontStatus) fontStatus.textContent = (displayName || choice) + " Siap";
-
-      document.querySelectorAll(".sync-font-val").forEach(el => el.value = choice);
-      document.querySelectorAll(".sync-font-data-val").forEach(el => el.value = dataUrl || "");
-      document.querySelectorAll(".sync-font-name-val").forEach(el => el.value = choice);
-
-      update();
-      fitPreview();
+    function getFontFamilyCss(choice, customFamily) {
+      if (choice === "Montserrat") return "Montserrat, sans-serif";
+      if (choice === "MyriadPro") return "MyriadPro, Arial, Helvetica, sans-serif";
+      if (choice === "Arial") return "Arial, sans-serif";
+      if (choice === "Times New Roman") return "'Times New Roman', Times, serif";
+      if (choice === "Calibri") return "Calibri, Candara, sans-serif";
+      if (choice === "Plus Jakarta Sans") return "'Plus Jakarta Sans', sans-serif";
+      if (choice === "Roboto") return "Roboto, sans-serif";
+      if (choice === "Open Sans") return "'Open Sans', sans-serif";
+      if (choice === "Georgia") return "Georgia, serif";
+      if (choice === "Garamond") return "'EB Garamond', Garamond, serif";
+      if (customFamily) return `"${customFamily}", sans-serif`;
+      return "Montserrat, sans-serif";
     }
 
-    if (fontSelectInput) {
-      fontSelectInput.addEventListener("change", (e) => {
+    // -------------------------------------------------------------------------
+    // Interactive Feature 2: Font & Ukuran Nama
+    // -------------------------------------------------------------------------
+    const fontNameSelect = document.getElementById("fontNameSelect");
+    const fontSizeNameSelect = document.getElementById("fontSizeNameSelect");
+    const customFontNameFileInput = document.getElementById("customFontNameFileInput");
+    const fontNameBadgeStatus = document.getElementById("fontNameBadgeStatus");
+
+    function updateFontNameBadge() {
+      if (!fontNameBadgeStatus) return;
+      const isCustom = Boolean(customFontNameData && currentFontNameChoice && currentFontNameChoice.startsWith("CustomNameFont"));
+      const isDefault = !isCustom && currentFontNameChoice === "Montserrat" && currentFontSizeName === "auto";
+
+      if (isDefault) {
+        fontNameBadgeStatus.textContent = "Default";
+        fontNameBadgeStatus.className = "pill-status-badge";
+        return;
+      }
+
+      let fontLabel = "Montserrat";
+      if (isCustom) {
+        fontLabel = "Kustom";
+      } else if (currentFontNameChoice === "MyriadPro") {
+        fontLabel = "Myriad Pro";
+      } else if (currentFontNameChoice === "Plus Jakarta Sans") {
+        fontLabel = "Jakarta Sans";
+      } else if (currentFontNameChoice === "Times New Roman") {
+        fontLabel = "Times";
+      } else if (currentFontNameChoice) {
+        fontLabel = currentFontNameChoice;
+      }
+
+      const sizeLabel = currentFontSizeName === "auto" ? "Auto" : currentFontSizeName + "pt";
+      fontNameBadgeStatus.textContent = `${fontLabel} · ${sizeLabel}`;
+      fontNameBadgeStatus.className = isCustom ? "pill-status-badge badge-custom" : "pill-status-badge badge-neutral";
+    }
+
+    if (fontNameSelect) {
+      fontNameSelect.addEventListener("change", (e) => {
         const val = e.target.value;
         if (val === "__custom__") {
-          if (customFontFileInput) customFontFileInput.click();
-        } else if (val === "Arial") {
-          applyFontChoice("Arial", "Arial, sans-serif", "", "Arial");
-        } else if (val === "Times New Roman") {
-          applyFontChoice("Times New Roman", "'Times New Roman', Times, serif", "", "Times New Roman");
-        } else if (val === "Calibri") {
-          applyFontChoice("Calibri", "Calibri, Candara, sans-serif", "", "Calibri");
-        } else if (val === "MyriadPro") {
-          applyFontChoice("MyriadPro", "MyriadPro, Arial, Helvetica, sans-serif", "", "Myriad Pro");
+          if (customFontNameFileInput) customFontNameFileInput.click();
+        } else {
+          currentFontNameChoice = val;
+          const isUploaded = val && val.startsWith("CustomNameFont_");
+          if (!isUploaded) {
+            customFontNameData = "";
+            customFontNameFilename = "";
+            document.querySelectorAll(".sync-font-name-data-val").forEach(el => el.value = "");
+            document.querySelectorAll(".sync-font-name-filename-val").forEach(el => el.value = "");
+          }
+          currentFontNameFamily = getFontFamilyCss(val);
+          if (typeof setNameFontFamily === "function") setNameFontFamily(currentFontNameFamily);
+          updateFontNameBadge();
+          document.querySelectorAll(".sync-font-name-choice-val").forEach(el => el.value = val);
+          document.querySelectorAll(".sync-font-val").forEach(el => el.value = val);
+          update();
+          fitPreview();
         }
       });
     }
 
-    if (customFontFileInput) {
-      customFontFileInput.addEventListener("change", (e) => {
+    if (customFontNameFileInput) {
+      customFontNameFileInput.addEventListener("change", (e) => {
         if (e.target.files && e.target.files[0]) {
           const file = e.target.files[0];
           const reader = new FileReader();
           reader.onload = function (evt) {
             const dataUrl = evt.target.result;
-            const cleanFontName = "CustomUserFont";
+            const cleanFontName = "CustomNameFont_" + Date.now();
             const fontStyle = document.createElement("style");
             fontStyle.textContent = `@font-face { font-family: "${cleanFontName}"; src: url("${dataUrl}"); }`;
             document.head.appendChild(fontStyle);
 
-            customFontData = dataUrl;
-            customFontName = cleanFontName;
+            customFontNameData = dataUrl;
+            customFontNameFilename = file.name;
+            currentFontNameChoice = cleanFontName;
+            currentFontNameFamily = `"${cleanFontName}", sans-serif`;
 
-            let opt = document.getElementById("optCustomUploaded");
+            let opt = document.getElementById("optCustomNameUploaded");
             if (!opt) {
               opt = document.createElement("option");
-              opt.id = "optCustomUploaded";
-              fontSelectInput.insertBefore(opt, fontSelectInput.lastElementChild);
+              opt.id = "optCustomNameUploaded";
+              fontNameSelect.insertBefore(opt, fontNameSelect.lastElementChild);
             }
             opt.value = cleanFontName;
-            const shortName = file.name.length > 18 ? file.name.substring(0, 15) + "..." : file.name;
+            const baseName = file.name.replace(/\.[^/.]+$/, "");
+            const shortName = baseName.length > 14 ? baseName.substring(0, 12) + "..." : baseName;
             opt.textContent = "Kustom: " + shortName;
             opt.selected = true;
-            fontSelectInput.value = cleanFontName;
+            fontNameSelect.value = cleanFontName;
 
-            applyFontChoice(cleanFontName, `"${cleanFontName}", sans-serif`, dataUrl, "Kustom: " + file.name.split(".")[0]);
-            if (typeof syncAllModernDropdowns === "function") syncAllModernDropdowns();
+            if (typeof setNameFontFamily === "function") setNameFontFamily(currentFontNameFamily);
+            updateFontNameBadge();
+            document.querySelectorAll(".sync-font-name-choice-val").forEach(el => el.value = cleanFontName);
+            document.querySelectorAll(".sync-font-name-data-val").forEach(el => el.value = dataUrl);
+            document.querySelectorAll(".sync-font-name-filename-val").forEach(el => el.value = file.name);
+            update();
+            fitPreview();
           };
           reader.readAsDataURL(file);
         }
       });
     }
 
+    const fontSizeNameInput = document.getElementById("fontSizeNameInput");
+    if (fontSizeNameSelect) {
+      fontSizeNameSelect.addEventListener("change", (e) => {
+        const val = e.target.value;
+        if (!val) return;
+        currentFontSizeName = val;
+        if (fontSizeNameInput) {
+          fontSizeNameInput.value = val === "auto" ? "auto" : val;
+        }
+        if (typeof setNameFontSize === "function") setNameFontSize(val);
+        updateFontNameBadge();
+        document.querySelectorAll(".sync-font-size-name-val").forEach(el => el.value = val);
+        update();
+        fitPreview();
+      });
+    }
+
+    if (fontSizeNameInput) {
+      const handleNameInput = () => {
+        let raw = fontSizeNameInput.value.trim().toLowerCase();
+        let val = "auto";
+        if (raw === "" || raw === "auto" || raw === "otomatis") {
+          val = "auto";
+        } else {
+          const num = parseFloat(raw);
+          if (!isNaN(num) && num > 0) {
+            val = num.toString();
+          }
+        }
+        currentFontSizeName = val;
+        if (typeof setNameFontSize === "function") setNameFontSize(val);
+        updateFontNameBadge();
+        document.querySelectorAll(".sync-font-size-name-val").forEach(el => el.value = val);
+        update();
+        fitPreview();
+      };
+      fontSizeNameInput.addEventListener("input", handleNameInput);
+      fontSizeNameInput.addEventListener("change", handleNameInput);
+    }
+
     // -------------------------------------------------------------------------
-    // Interactive Feature 3: Sides Mode Selection (2 Sisi vs 1 Sisi)
+    // Interactive Feature 3: Font & Ukuran Jabatan
+    // -------------------------------------------------------------------------
+    const fontPosSelect = document.getElementById("fontPosSelect");
+    const fontSizePosSelect = document.getElementById("fontSizePosSelect");
+    const fontSizePosInput = document.getElementById("fontSizePosInput");
+    const customFontPosFileInput = document.getElementById("customFontPosFileInput");
+    const fontPosBadgeStatus = document.getElementById("fontPosBadgeStatus");
+
+    function updateFontPosBadge() {
+      if (!fontPosBadgeStatus) return;
+      const isCustom = Boolean(customFontPosData && currentFontPosChoice && currentFontPosChoice.startsWith("CustomPosFont"));
+      const isDefault = !isCustom && currentFontPosChoice === "Montserrat" && currentFontSizePos === "auto";
+
+      if (isDefault) {
+        fontPosBadgeStatus.textContent = "Default";
+        fontPosBadgeStatus.className = "pill-status-badge";
+        return;
+      }
+
+      let fontLabel = "Montserrat";
+      if (isCustom) {
+        fontLabel = "Kustom";
+      } else if (currentFontPosChoice === "MyriadPro") {
+        fontLabel = "Myriad Pro";
+      } else if (currentFontPosChoice === "Plus Jakarta Sans") {
+        fontLabel = "Jakarta Sans";
+      } else if (currentFontPosChoice === "Times New Roman") {
+        fontLabel = "Times";
+      } else if (currentFontPosChoice) {
+        fontLabel = currentFontPosChoice;
+      }
+
+      const sizeLabel = currentFontSizePos === "auto" ? "Auto" : currentFontSizePos + "pt";
+      fontPosBadgeStatus.textContent = `${fontLabel} · ${sizeLabel}`;
+      fontPosBadgeStatus.className = isCustom ? "pill-status-badge badge-custom" : "pill-status-badge badge-neutral";
+    }
+
+    if (fontPosSelect) {
+      fontPosSelect.addEventListener("change", (e) => {
+        const val = e.target.value;
+        if (val === "__custom__") {
+          if (customFontPosFileInput) customFontPosFileInput.click();
+        } else {
+          currentFontPosChoice = val;
+          const isUploaded = val && val.startsWith("CustomPosFont_");
+          if (!isUploaded) {
+            customFontPosData = "";
+            customFontPosFilename = "";
+            document.querySelectorAll(".sync-font-pos-data-val").forEach(el => el.value = "");
+            document.querySelectorAll(".sync-font-pos-filename-val").forEach(el => el.value = "");
+          }
+          currentFontPosFamily = getFontFamilyCss(val);
+          if (typeof setPosFontFamily === "function") setPosFontFamily(currentFontPosFamily);
+          updateFontPosBadge();
+          document.querySelectorAll(".sync-font-pos-choice-val").forEach(el => el.value = val);
+          update();
+          fitPreview();
+        }
+      });
+    }
+
+    if (customFontPosFileInput) {
+      customFontPosFileInput.addEventListener("change", (e) => {
+        if (e.target.files && e.target.files[0]) {
+          const file = e.target.files[0];
+          const reader = new FileReader();
+          reader.onload = function (evt) {
+            const dataUrl = evt.target.result;
+            const cleanFontName = "CustomPosFont_" + Date.now();
+            const fontStyle = document.createElement("style");
+            fontStyle.textContent = `@font-face { font-family: "${cleanFontName}"; src: url("${dataUrl}"); }`;
+            document.head.appendChild(fontStyle);
+
+            customFontPosData = dataUrl;
+            customFontPosFilename = file.name;
+            currentFontPosChoice = cleanFontName;
+            currentFontPosFamily = `"${cleanFontName}", sans-serif`;
+
+            let opt = document.getElementById("optCustomPosUploaded");
+            if (!opt) {
+              opt = document.createElement("option");
+              opt.id = "optCustomPosUploaded";
+              fontPosSelect.insertBefore(opt, fontPosSelect.lastElementChild);
+            }
+            opt.value = cleanFontName;
+            const baseName = file.name.replace(/\.[^/.]+$/, "");
+            const shortName = baseName.length > 14 ? baseName.substring(0, 12) + "..." : baseName;
+            opt.textContent = "Kustom: " + shortName;
+            opt.selected = true;
+            fontPosSelect.value = cleanFontName;
+
+            if (typeof setPosFontFamily === "function") setPosFontFamily(currentFontPosFamily);
+            updateFontPosBadge();
+            document.querySelectorAll(".sync-font-pos-choice-val").forEach(el => el.value = cleanFontName);
+            document.querySelectorAll(".sync-font-pos-data-val").forEach(el => el.value = dataUrl);
+            document.querySelectorAll(".sync-font-pos-filename-val").forEach(el => el.value = file.name);
+            update();
+            fitPreview();
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+
+    if (fontSizePosSelect) {
+      fontSizePosSelect.addEventListener("change", (e) => {
+        const val = e.target.value;
+        if (!val) return;
+        currentFontSizePos = val;
+        if (fontSizePosInput) {
+          fontSizePosInput.value = val === "auto" ? "auto" : val;
+        }
+        if (typeof setPosFontSize === "function") setPosFontSize(val);
+        updateFontPosBadge();
+        document.querySelectorAll(".sync-font-size-pos-val").forEach(el => el.value = val);
+        update();
+        fitPreview();
+      });
+    }
+
+    if (fontSizePosInput) {
+      const handlePosInput = () => {
+        let raw = fontSizePosInput.value.trim().toLowerCase();
+        let val = "auto";
+        if (raw === "" || raw === "auto" || raw === "otomatis") {
+          val = "auto";
+        } else {
+          const num = parseFloat(raw);
+          if (!isNaN(num) && num > 0) {
+            val = num.toString();
+          }
+        }
+        currentFontSizePos = val;
+        if (typeof setPosFontSize === "function") setPosFontSize(val);
+        updateFontPosBadge();
+        document.querySelectorAll(".sync-font-size-pos-val").forEach(el => el.value = val);
+        update();
+        fitPreview();
+      };
+      fontSizePosInput.addEventListener("input", handlePosInput);
+      fontSizePosInput.addEventListener("change", handlePosInput);
+    }
+
+    // -------------------------------------------------------------------------
+    // Interactive Feature 4: Format Huruf (Kapitalisasi)
+    // -------------------------------------------------------------------------
+    function setTextCaseOption(textCase) {
+      currentTextCase = textCase || "uppercase";
+      if (typeof setTextCase === "function") setTextCase(currentTextCase);
+
+      const btnUpper = document.getElementById("btnCaseUpper");
+      const btnCap = document.getElementById("btnCaseCap");
+      const btnLower = document.getElementById("btnCaseLower");
+      const badge = document.getElementById("caseBadgeStatus");
+
+      if (btnUpper) btnUpper.classList.toggle("active", currentTextCase === "uppercase");
+      if (btnCap) btnCap.classList.toggle("active", currentTextCase === "capitalize");
+      if (btnLower) btnLower.classList.toggle("active", currentTextCase === "lowercase");
+
+      if (badge) {
+        if (currentTextCase === "uppercase") {
+          badge.textContent = "KAPITAL";
+          badge.className = "pill-status-badge badge-neutral";
+        } else if (currentTextCase === "capitalize") {
+          badge.textContent = "Awal Kata";
+          badge.className = "pill-status-badge badge-custom";
+        } else {
+          badge.textContent = "kecil";
+          badge.className = "pill-status-badge badge-custom";
+        }
+      }
+
+      updateCaseGlider(true);
+      document.querySelectorAll(".sync-case-val").forEach(el => el.value = currentTextCase);
+      update();
+    }
+    window.setTextCaseOption = setTextCaseOption;
+
+    // -------------------------------------------------------------------------
+    // Interactive Feature 5: Jarak Spasi Antara Nama & Jabatan (Slider & Manual Input)
+    // -------------------------------------------------------------------------
+    function setSpacingOption(gap, fromSlider = false, fromInput = false) {
+      let parsed = parseInt(gap, 10);
+      if (isNaN(parsed) || parsed < 1) parsed = 40;
+
+      // When dragging slider, magnetic snap ("ketarik") to default 40 within 38..42
+      if (fromSlider && parsed >= 38 && parsed <= 42) {
+        parsed = 40;
+        const slider = document.getElementById("spacingRangeInput");
+        if (slider) slider.value = 40;
+      }
+      currentSpacingGap = parsed;
+      if (typeof setSpacingGap === "function") setSpacingGap(currentSpacingGap);
+
+      const slider = document.getElementById("spacingRangeInput");
+      const inputEl = document.getElementById("spacingNumberInput");
+      const badge = document.getElementById("spacingBadgeStatus");
+
+      if (slider && !fromSlider) {
+        slider.value = Math.max(15, Math.min(95, currentSpacingGap));
+      }
+      if (inputEl && !fromInput) {
+        inputEl.value = currentSpacingGap;
+      }
+      if (slider) {
+        const min = parseFloat(slider.min) || 15;
+        const max = parseFloat(slider.max) || 95;
+        const sVal = parseFloat(slider.value) || 40;
+        const pct = Math.max(0, Math.min(100, ((sVal - min) / (max - min)) * 100));
+        slider.style.setProperty("--slider-pct", pct + "%");
+      }
+
+      if (badge) {
+        if (currentSpacingGap === 40) {
+          badge.textContent = "Standar (40)";
+          badge.className = "pill-status-badge badge-neutral";
+        } else {
+          badge.textContent = `${currentSpacingGap} pt`;
+          badge.className = "pill-status-badge badge-custom";
+        }
+      }
+
+      document.querySelectorAll(".sync-spacing-val").forEach(el => el.value = currentSpacingGap.toString());
+      update();
+    }
+    window.setSpacingOption = setSpacingOption;
+
+    // -------------------------------------------------------------------------
+    // Interactive Feature: Posisi Geser Teks Horizontal (Kiri/Kanan)
+    // -------------------------------------------------------------------------
+    function setOffsetOption(offset, fromSlider = false, fromInput = false) {
+      let parsed = parseInt(offset, 10);
+      if (isNaN(parsed)) parsed = 0;
+
+      // When dragging slider, magnetic snap ("ketarik") to center 0 within -4..+4
+      if (fromSlider && parsed >= -4 && parsed <= 4) {
+        parsed = 0;
+        const slider = document.getElementById("offsetRangeInput");
+        if (slider) slider.value = 0;
+      }
+      currentHorizontalOffset = parsed;
+      if (typeof setHorizontalOffset === "function") setHorizontalOffset(currentHorizontalOffset);
+
+      const slider = document.getElementById("offsetRangeInput");
+      const inputEl = document.getElementById("offsetXNumberInput");
+      const badge = document.getElementById("offsetBadgeStatus");
+
+      if (slider && !fromSlider) {
+        slider.value = Math.max(-60, Math.min(60, currentHorizontalOffset));
+      }
+      if (inputEl && !fromInput) {
+        inputEl.value = currentHorizontalOffset;
+      }
+      if (slider) {
+        const val = parseFloat(slider.value) || 0;
+        const pct = Math.max(0, Math.min(100, ((val + 60) / 120) * 100));
+        if (val === 0) {
+          slider.style.background = "#cbd5e1";
+        } else if (val > 0) {
+          slider.style.background = `linear-gradient(to right, #cbd5e1 0%, #cbd5e1 50%, #0d2b45 50%, #0d2b45 ${pct}%, #cbd5e1 ${pct}%, #cbd5e1 100%)`;
+        } else {
+          slider.style.background = `linear-gradient(to right, #cbd5e1 0%, #cbd5e1 ${pct}%, #0d2b45 ${pct}%, #0d2b45 50%, #cbd5e1 50%, #cbd5e1 100%)`;
+        }
+      }
+
+      if (badge) {
+        if (currentHorizontalOffset === 0) {
+          badge.textContent = "Tengah (0)";
+          badge.className = "pill-status-badge badge-neutral";
+        } else if (currentHorizontalOffset < 0) {
+          badge.textContent = `Kiri ${Math.abs(currentHorizontalOffset)} pt`;
+          badge.className = "pill-status-badge badge-custom";
+        } else {
+          badge.textContent = `Kanan ${currentHorizontalOffset} pt`;
+          badge.className = "pill-status-badge badge-custom";
+        }
+      }
+
+      document.querySelectorAll(".sync-offset-x-val").forEach(el => el.value = currentHorizontalOffset.toString());
+      update();
+    }
+    window.setOffsetOption = setOffsetOption;
+
+    // -------------------------------------------------------------------------
+    // Interactive Feature 6: Sides Mode Selection (2 Sisi vs 1 Sisi)
     // -------------------------------------------------------------------------
     function setSidesOption(sides) {
       currentSides = parseInt(sides, 10) || 2;
@@ -4887,6 +7716,8 @@
         }
         const flip = document.getElementById("block-flip");
         if (flip) flip.style.display = "block";
+        const flipSheet = document.getElementById("block-flip-sheet");
+        if (flipSheet) flipSheet.style.display = "block";
       } else {
         if (btn1) btn1.classList.add("active");
         if (btn2) btn2.classList.remove("active");
@@ -4896,20 +7727,51 @@
         }
         const flip = document.getElementById("block-flip");
         if (flip) flip.style.display = "none";
+        const flipSheet = document.getElementById("block-flip-sheet");
+        if (flipSheet) flipSheet.style.display = "none";
       }
 
       updateSidesGlider(true);
-
       document.querySelectorAll(".sync-sides-val").forEach(el => el.value = currentSides.toString());
       update();
     }
     window.setSidesOption = setSidesOption;
 
     // -------------------------------------------------------------------------
-    // Interactive Feature 4: Direct Print (Cetak Langsung Tanpa Unduh)
+    // Paper Size (Kemnaker Standard A4: 832.08 x 372.72 pt)
+    // -------------------------------------------------------------------------
+    function setPaperSizeOption(paperSize) {
+      currentPaperSize = paperSize || "a4";
+      if (typeof setPaperSize === "function") setPaperSize(currentPaperSize);
+      document.querySelectorAll(".sync-paper-val").forEach(el => el.value = currentPaperSize);
+      update();
+      fitPreview();
+    }
+    window.setPaperSizeOption = setPaperSizeOption;
+
+    // -------------------------------------------------------------------------
+    // Direct Print (Cetak Langsung Tanpa Unduh)
     // -------------------------------------------------------------------------
     function printCurrentCards() {
       let cards = [];
+      const cleanName = (n) => {
+        let s = typeof sanitizeText === "function" ? sanitizeText(n) : (n || "");
+        if (currentTab === "batch" || (currentTab === "single" && currentGlobalSource === "kemnaker")) {
+          if (typeof formatBulkName === "function") {
+            s = formatBulkName(s, { fontSize: currentFontSizeName, fontFamily: currentFontNameFamily, textCase: currentTextCase });
+          } else if (typeof cleanTitles === "function") {
+            s = cleanTitles(s);
+          }
+        }
+        return typeof stripTrailingPunctuation === "function" ? stripTrailingPunctuation(s) : s;
+      };
+      const cleanPos = (p) => {
+        let s = ((currentTab === "batch") || (currentTab === "single" && currentGlobalSource === "kemnaker")) && typeof cleanPositionText === "function"
+          ? cleanPositionText(p)
+          : (typeof sanitizeText === "function" ? sanitizeText(p, true) : (p || ""));
+        return typeof stripTrailingPunctuation === "function" ? stripTrailingPunctuation(s) : s;
+      };
+
       if (currentTab === "single") {
         const n = (nameInput ? nameInput.value : "").trim();
         const p = (positionInput ? positionInput.value : "").trim();
@@ -4919,21 +7781,21 @@
             if (nameInput) nameInput.focus();
             return;
           }
-          cards = [{ name: n, position: "" }];
+          cards = [{ name: cleanName(n), position: "" }];
         } else if (currentContentMode === "position_only") {
           if (!p) {
             alert("Silakan masukkan jabatan pada kolom input terlebih dahulu.");
             if (positionInput) positionInput.focus();
             return;
           }
-          cards = [{ name: "", position: p }];
+          cards = [{ name: "", position: cleanPos(p) }];
         } else {
           if (!n) {
             alert("Silakan masukkan nama pada kolom input terlebih dahulu.");
             if (nameInput) nameInput.focus();
             return;
           }
-          cards = [{ name: n, position: p }];
+          cards = [{ name: cleanName(n), position: cleanPos(p) }];
         }
       } else {
         const textarea = document.getElementById("bulk_data");
@@ -4943,32 +7805,63 @@
           if (textarea) textarea.focus();
           return;
         }
-        cards = rows;
+        cards = rows.map(r => ({
+          name: cleanName(r.name || r.rawName || ""),
+          position: cleanPos(r.position || "")
+        }));
       }
 
       const activeBg = currentBgUrl || BG_TEMPLATE_URL;
       const isSingleSide = currentSides === 1;
-      const activeFontFamily = currentFontFamily;
 
-      let fontFacesHtml = "";
-      if (customFontData && customFontName) {
-        fontFacesHtml = `
+      // Paper dimensions map in points
+      const paperDimensions = {
+        "a4": { w: 832.08, h: 372.72 },
+        "f4": { w: 935.43, h: 372.72 },
+        "letter": { w: 792.00, h: 372.72 },
+        "a3": { w: 1190.55, h: 372.72 }
+      };
+      const pageDims = paperDimensions[currentPaperSize] || paperDimensions["a4"];
+      const pageWPt = pageDims.w + "pt";
+      const pageHPt = pageDims.h + "pt";
+      const centerXPt = (pageDims.w / 2) + "pt";
+      const centerYPt = (pageDims.h / 2) + "pt";
+
+      let fontFacesHtml = `
+        @font-face {
+          font-family: "Montserrat";
+          src: url("/static/fonts/Montserrat-Regular.ttf") format("truetype");
+          font-weight: 400;
+        }
+        @font-face {
+          font-family: "Montserrat";
+          src: url("/static/fonts/Montserrat-Bold.ttf") format("truetype");
+          font-weight: 700;
+        }
+        @font-face {
+          font-family: "MyriadPro";
+          src: url("/static/fonts/MYRIADPRO-REGULAR.woff") format("woff");
+          font-weight: 400;
+        }
+        @font-face {
+          font-family: "MyriadPro";
+          src: url("/static/fonts/MYRIADPRO-BOLD.woff") format("woff");
+          font-weight: 700;
+        }
+      `;
+      if (customFontNameData && customFontNameFilename) {
+        fontFacesHtml += `
           @font-face {
-            font-family: "${customFontName}";
-            src: url("${customFontData}");
+            font-family: "${currentFontNameChoice}";
+            src: url("${customFontNameData}");
           }
         `;
-      } else {
-        fontFacesHtml = `
+      }
+      if (customFontPosData && customFontPosFilename) {
+        fontFacesHtml += `
           @font-face {
-            font-family: "MyriadPro";
-            src: url("/static/fonts/MYRIADPRO-REGULAR.woff") format("woff");
-            font-weight: 400;
-          }
-          @font-face {
-            font-family: "MyriadPro";
-            src: url("/static/fonts/MYRIADPRO-BOLD.woff") format("woff");
-            font-weight: 700;
+            font-family: "${currentFontPosChoice}";
+            src: url("${customFontPosData}");
           }
         `;
       }
@@ -4990,18 +7883,21 @@
         <head>
           <meta charset="utf-8">
           <title>Cetak Name Table - Kemnaker RI</title>
+          <link rel="preconnect" href="https://fonts.googleapis.com">
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+          <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,700&family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;1,600;1,700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600;1,700&family=Roboto:ital,wght@0,400;0,500;0,700;1,400;1,700&display=swap" rel="stylesheet">
           <style>
             ${fontFacesHtml}
             @page {
-              size: 832.08pt 372.72pt;
+              size: ${pageWPt} ${pageHPt};
               margin: 0;
             }
             * { margin: 0; padding: 0; box-sizing: border-box; }
-            html, body { margin: 0; padding: 0; width: 832.08pt; background: #ffffff; }
+            html, body { margin: 0; padding: 0; width: ${pageWPt}; background: #ffffff; }
             .card-page {
               position: relative;
-              width: 832.08pt;
-              height: 372.72pt;
+              width: ${pageWPt};
+              height: ${pageHPt};
               overflow: hidden;
               background: #ffffff;
               page-break-after: always;
@@ -5014,37 +7910,39 @@
             .bg-img {
               position: absolute;
               left: 0; top: 0;
-              width: 832.08pt;
-              height: 372.72pt;
+              width: ${pageWPt};
+              height: ${pageHPt};
               display: block;
             }
             .block {
               position: absolute;
               left: 0; top: 0;
-              width: 832.08pt;
-              height: 372.72pt;
+              width: ${pageWPt};
+              height: ${pageHPt};
             }
             .block-flip {
               transform: rotate(180deg);
-              transform-origin: 416.04pt 186.36pt;
+              transform-origin: ${centerXPt} ${centerYPt};
             }
           </style>
         </head>
         <body>
           ${cardsHtml}
-          <script src="/static/nametag.js?v=20261001c"><\/script>
+          <script src="/static/nametag.js?v=20261102b"><\/script>
           <script>
             async function doPrint() {
-              if (window.setFontFamily) window.setFontFamily('${activeFontFamily}');
+              if (window.setNameFontFamily) window.setNameFontFamily('${currentFontNameFamily}');
+              if (window.setPosFontFamily) window.setPosFontFamily('${currentFontPosFamily}');
+              if (window.setNameFontSize) window.setNameFontSize('${currentFontSizeName}');
+              if (window.setPosFontSize) window.setPosFontSize('${currentFontSizePos}');
+              if (window.setSpacingGap) window.setSpacingGap(${currentSpacingGap});
+              if (window.setHorizontalOffset) window.setHorizontalOffset(${currentHorizontalOffset});
+              if (window.setTextCase) window.setTextCase('${currentTextCase}');
+              if (window.setPaperSize) window.setPaperSize('${currentPaperSize}');
               if (window.setCardSides) window.setCardSides(${currentSides});
               if (window.setContentMode) window.setContentMode('${currentContentMode}');
               try {
-                await Promise.all([
-                  document.fonts.load('700 ${60 * 96 / 72}px "${customFontName || currentFontChoice}"'),
-                  document.fonts.load('700 ${45.86 * 96 / 72}px "${customFontName || currentFontChoice}"'),
-                  document.fonts.load('400 ${18 * 96 / 72}px "${customFontName || currentFontChoice}"'),
-                  document.fonts.ready,
-                ]);
+                await document.fonts.ready;
               } catch (e) {}
               const CARDS_DATA = ${JSON.stringify(cards)};
               CARDS_DATA.forEach((card, idx) => {
@@ -5060,9 +7958,13 @@
               setTimeout(() => {
                 window.focus();
                 window.print();
-              }, 350);
+              }, 400);
             }
-            doPrint();
+            if (document.readyState === 'complete') {
+              doPrint();
+            } else {
+              window.addEventListener('load', doPrint);
+            }
           <\/script>
         </body>
         </html>
@@ -5089,12 +7991,14 @@
 
     // Font loading check on page init
     Promise.all([
-      document.fonts.load(`700 ${60 * 96 / 72}px MyriadPro`),
+      document.fonts.load(`700 ${60 * 96 / 72}px Montserrat`),
+      document.fonts.load(`700 ${45.86 * 96 / 72}px Montserrat`),
+      document.fonts.load(`400 ${18 * 96 / 72}px Montserrat`),
       document.fonts.load(`700 ${45.86 * 96 / 72}px MyriadPro`),
       document.fonts.load(`400 ${18 * 96 / 72}px MyriadPro`),
       document.fonts.ready,
     ]).then(() => {
-      fontStatus.textContent = "Myriad Pro Siap";
+      fontStatus.textContent = "Montserrat Siap";
       fontStatusPill.style.background = "#ecfdf5";
       fontStatusPill.style.color = "#059669";
       fontStatusPill.style.borderColor = "#a7f3d0";
@@ -5102,10 +8006,57 @@
       update();
       fitPreview();
     }).catch(() => {
-      fontStatus.textContent = "Font Fallback";
+      fontStatus.textContent = "Montserrat Siap";
       updateAllGliders(false);
       update();
       fitPreview();
+    });
+
+    // --- Pronaker Mobile Menu & Coming Soon Toast ---
+    let pronakerToastTimer = null;
+    function showComingSoonToast(featureName) {
+      const toast = document.getElementById("pronakerToast");
+      const text = document.getElementById("pronakerToastText");
+      if (!toast || !text) return;
+      text.textContent = featureName ? `Segera Hadir: ${featureName} sedang disiapkan!` : "Fitur ini sedang disiapkan (Segera Hadir)!";
+      toast.classList.add("show");
+      if (pronakerToastTimer) clearTimeout(pronakerToastTimer);
+      pronakerToastTimer = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3200);
+    }
+    window.showComingSoonToast = showComingSoonToast;
+
+    function toggleMobileMenu(e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      const dropdown = document.getElementById("mobileMenuDropdown");
+      const btn = document.getElementById("btnMobileAppMenu");
+      if (!dropdown || !btn) return;
+      const isOpen = dropdown.classList.toggle("show");
+      btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      btn.classList.toggle("active", isOpen);
+    }
+    window.toggleMobileMenu = toggleMobileMenu;
+
+    function closeMobileMenu() {
+      const dropdown = document.getElementById("mobileMenuDropdown");
+      const btn = document.getElementById("btnMobileAppMenu");
+      if (dropdown) dropdown.classList.remove("show");
+      if (btn) {
+        btn.setAttribute("aria-expanded", "false");
+        btn.classList.remove("active");
+      }
+    }
+    window.closeMobileMenu = closeMobileMenu;
+
+    document.addEventListener("click", function (e) {
+      const wrapper = document.getElementById("mobileMenuWrapper");
+      if (wrapper && !wrapper.contains(e.target)) {
+        closeMobileMenu();
+      }
     });
 
     // Initial render
@@ -5115,10 +8066,25 @@
       updateAllGliders(false);
       update();
       fitPreview();
+      fitFooterBrandText();
+
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get("coming_soon") === "notepad" || urlParams.get("tab") === "notepad") {
+        setTimeout(() => {
+          showComingSoonToast("Note Pad Generator");
+        }, 500);
+      }
     });
-    setTimeout(() => { updateAllGliders(false); syncAllModernDropdowns(); update(); fitPreview(); }, 400);
-    setTimeout(() => { updateAllGliders(false); syncAllModernDropdowns(); update(); fitPreview(); }, 1000);
+    setTimeout(() => { updateAllGliders(false); syncAllModernDropdowns(); update(); fitPreview(); fitFooterBrandText(); }, 400);
+    setTimeout(() => { updateAllGliders(false); syncAllModernDropdowns(); update(); fitPreview(); fitFooterBrandText(); }, 1000);
   </script>
+
+  <!-- Pronaker Toast Notification -->
+  <div id="pronakerToast" class="pronaker-toast" role="status" aria-live="polite">
+    <span class="pronaker-toast-icon">📌</span>
+    <span class="pronaker-toast-text" id="pronakerToastText">Segera Hadir: Note Pad Generator sedang disiapkan!</span>
+    <span class="pronaker-toast-icon">📌</span>
+  </div>
 </body>
 
 </html>

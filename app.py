@@ -8,10 +8,11 @@ Then open http://localhost:5000
 import csv
 import io
 import os
+import re
 import zipfile
 from urllib.parse import parse_qs
 
-from flask import Flask, render_template, request, send_file, flash, redirect, url_for, jsonify
+from flask import Flask, render_template, request, send_file, flash, redirect, url_for, jsonify, send_from_directory
 
 import kemnaker_data
 from generate_html import build_pdf_with_fallback as build_pdf
@@ -53,7 +54,19 @@ OUTPUT_DIR = output_dir()
 
 @app.route("/", methods=["GET"])
 def index():
+    return redirect("/nametable")
+
+
+@app.route("/nametable", methods=["GET"])
+def nametable():
     return render_template("index.html")
+
+
+@app.route("/notepad", methods=["GET"])
+def notepad():
+    return redirect("/nametable?coming_soon=notepad")
+
+
 
 
 @app.route("/favicon.ico", methods=["GET"])
@@ -134,8 +147,45 @@ def proxy_kemnaker_photo():
 
 from generate import (
     split_name_and_position, format_bulk_name, clean_titles,
-    clean_position_text, strip_trailing_punctuation, deduplicate_bulk_rows
+    clean_position_text, strip_trailing_punctuation, deduplicate_bulk_rows,
+    sanitize_text, apply_text_case
 )
+
+def _extract_card_options(form):
+    """Extracts font, sizing, spacing, case, paper size, and custom asset options from request.form."""
+    sides = form.get("sides", "2").strip()
+    font_name_choice = form.get("font_name_choice", form.get("font_choice", "Montserrat")).strip()
+    font_pos_choice = form.get("font_pos_choice", form.get("font_choice", "Montserrat")).strip()
+    font_size_name = form.get("font_size_name", "auto").strip()
+    font_size_pos = form.get("font_size_pos", "auto").strip()
+    spacing_gap = form.get("spacing_gap", "40").strip()
+    horizontal_offset = form.get("horizontal_offset", "0").strip()
+    text_case = form.get("text_case", "uppercase").strip()
+    paper_size = form.get("paper_size", "a4").strip()
+
+    custom_bg_data = form.get("custom_bg_data", "").strip()
+    custom_font_name_data = form.get("custom_font_name_data", form.get("custom_font_data", "")).strip()
+    custom_font_name_filename = form.get("custom_font_name_filename", form.get("custom_font_name", "")).strip()
+    custom_font_pos_data = form.get("custom_font_pos_data", "").strip()
+    custom_font_pos_filename = form.get("custom_font_pos_filename", "").strip()
+
+    return {
+        "sides": sides,
+        "font_name_choice": font_name_choice,
+        "font_pos_choice": font_pos_choice,
+        "font_size_name": font_size_name,
+        "font_size_pos": font_size_pos,
+        "spacing_gap": spacing_gap,
+        "horizontal_offset": horizontal_offset,
+        "text_case": text_case,
+        "paper_size": paper_size,
+        "custom_bg_data": custom_bg_data,
+        "custom_font_name_data": custom_font_name_data,
+        "custom_font_name_filename": custom_font_name_filename,
+        "custom_font_pos_data": custom_font_pos_data,
+        "custom_font_pos_filename": custom_font_pos_filename,
+    }
+
 
 @app.route("/generate", methods=["POST"])
 def generate_single():
@@ -144,65 +194,46 @@ def generate_single():
         content_mode = "both"
 
     input_source = request.form.get("input_source", "tamu").strip().lower()
-    raw_name = strip_trailing_punctuation(request.form.get("name", "").strip())
-    raw_position = strip_trailing_punctuation(request.form.get("position", "").strip())
+    raw_name = sanitize_text(request.form.get("name", ""))
+    raw_position = sanitize_text(request.form.get("position", ""), preserve_newlines=True)
+
+    opts = _extract_card_options(request.form)
 
     if input_source == "kemnaker":
         raw_position = kemnaker_data.expand_kemnaker_position(raw_position)
-        if content_mode == "name_only":
-            name = strip_trailing_punctuation(clean_titles(raw_name)[:36].strip())
-            if not kemnaker_data.is_valid_official_name(name):
-                flash("Silakan pilih pejabat Kemnaker yang aktif.")
-                return redirect(url_for("index"))
-            position = ""
-        elif content_mode == "position_only":
-            name = ""
-            position = strip_trailing_punctuation(clean_position_text(raw_position)[:128].strip())
-            if not position:
-                flash("Silakan pilih jabatan Kemnaker terlebih dahulu.")
-                return redirect(url_for("index"))
-        else:
-            name = strip_trailing_punctuation(format_bulk_name(raw_name, 24))
-            position = strip_trailing_punctuation(clean_position_text(raw_position)[:128])
-            if not kemnaker_data.is_valid_official_name(name) or not position:
-                flash("Silakan pilih jabatan dan pejabat Kemnaker yang aktif.")
-                return redirect(url_for("index"))
+        cleaned_position = clean_position_text(raw_position)
+        cleaned_name = format_bulk_name(raw_name, max_len=24, font=opts.get("font_name_choice"), font_size=opts.get("font_size_name"))
     else:
-        if content_mode == "name_only":
-            name = strip_trailing_punctuation(raw_name[:36])
-            position = ""
-            if not name:
-                flash("Silakan isi nama terlebih dahulu.")
-                return redirect(url_for("index"))
-        elif content_mode == "position_only":
-            name = ""
-            position = strip_trailing_punctuation(raw_position[:128])
-            if not position:
-                flash("Silakan isi jabatan terlebih dahulu.")
-                return redirect(url_for("index"))
-        else:
-            name = strip_trailing_punctuation(raw_name[:24])
-            position = strip_trailing_punctuation(raw_position[:128])
-            if not name or not position:
-                flash("Silakan isi nama dan jabatan.")
-                return redirect(url_for("index"))
+        # Manual Single Input (Tamu / Manual): preserve user's full name, titles, and position text verbatim
+        cleaned_name = raw_name
+        cleaned_position = raw_position
 
-    sides = request.form.get("sides", "2").strip()
-    font_choice = request.form.get("font_choice", "MyriadPro").strip()
-    custom_bg_data = request.form.get("custom_bg_data", "").strip()
-    custom_font_data = request.form.get("custom_font_data", "").strip()
-    custom_font_name = request.form.get("custom_font_name", "").strip()
+    if content_mode == "name_only":
+        name = strip_trailing_punctuation(cleaned_name.strip())
+        position = ""
+        if not name:
+            flash("Silakan isi nama terlebih dahulu.")
+            return redirect(url_for("index"))
+    elif content_mode == "position_only":
+        name = ""
+        position = strip_trailing_punctuation(cleaned_position.strip())
+        if not position:
+            flash("Silakan isi jabatan terlebih dahulu.")
+            return redirect(url_for("index"))
+    else:
+        name = strip_trailing_punctuation(cleaned_name.strip())
+        position = strip_trailing_punctuation(cleaned_position.strip())
+        if not name or not position:
+            flash("Silakan isi nama dan jabatan.")
+            return redirect(url_for("index"))
 
     slug_base = name or position or "nametag"
     out_path = os.path.join(OUTPUT_DIR, f"{slugify(slug_base)}.pdf")
     build_pdf(
         name, position, out_path,
-        sides=sides,
-        font_choice=font_choice,
-        custom_bg_data=custom_bg_data,
-        custom_font_data=custom_font_data,
-        custom_font_name=custom_font_name,
         content_mode=content_mode,
+        clean_titles_flag=(input_source == "kemnaker"),
+        **opts
     )
 
     return send_file(out_path, as_attachment=True,
@@ -210,23 +241,23 @@ def generate_single():
 
 
 @app.route("/batch", methods=["POST"])
+@app.route("/generate_batch", methods=["POST"])
 def generate_batch():
     content_mode = request.form.get("content_mode", "both").strip()
     if content_mode not in ("both", "name_only", "position_only"):
         content_mode = "both"
 
+    input_source = request.form.get("input_source", "tamu").strip().lower()
     bulk_text = request.form.get("bulk_data", "").strip()
     file = request.files.get("csv_file")
 
-    sides = request.form.get("sides", "2").strip()
-    font_choice = request.form.get("font_choice", "MyriadPro").strip()
-    custom_bg_data = request.form.get("custom_bg_data", "").strip()
-    custom_font_data = request.form.get("custom_font_data", "").strip()
-    custom_font_name = request.form.get("custom_font_name", "").strip()
+    opts = _extract_card_options(request.form)
+    n_font = opts.get("font_name_choice")
+    n_size = opts.get("font_size_name")
 
     rows = []
 
-    # 1. Direct bulk textarea input (supports any delimiter, parentheses, tabs, colons, etc.)
+    # 1. Direct bulk textarea input (supports any delimiter, tabs, parentheses, etc.)
     if bulk_text:
         lines = [l for l in bulk_text.splitlines() if l.strip()]
         for line in lines:
@@ -236,14 +267,15 @@ def generate_batch():
             if content_mode == "name_only":
                 name_raw, _ = split_name_and_position(line_str)
                 cand = (name_raw or line_str).strip()
-                fmt = clean_titles(cand) if cand else ""
-                fmt = strip_trailing_punctuation(fmt[:36].strip())
-                if fmt and kemnaker_data.is_valid_official_name(fmt):
+                fmt = format_bulk_name(cand, max_len=24, font=n_font, font_size=n_size) if cand else ""
+                fmt = strip_trailing_punctuation(fmt[:40].strip())
+                if fmt:
                     rows.append({"name": fmt, "position": ""})
             elif content_mode == "position_only":
                 _, pos_raw = split_name_and_position(line_str)
                 cand = (pos_raw or line_str).strip()
-                fmt = strip_trailing_punctuation(clean_position_text(cand)[:128].strip())
+                fmt = clean_position_text(cand)
+                fmt = strip_trailing_punctuation(fmt[:128].strip())
                 if fmt:
                     rows.append({"name": "", "position": fmt})
             else:
@@ -253,50 +285,82 @@ def generate_batch():
                 if name_raw.lower() in ("name", "nama", "nama lengkap", "nama pegawai", "nama pejabat") and pos_raw.lower() in ("position", "jabatan", "posisi", ""):
                     continue
 
-                if not kemnaker_data.is_valid_official_name(name_raw):
-                    continue
-
-                # Auto remove titles & abbreviate if > 24 chars
-                fmt_name = strip_trailing_punctuation(format_bulk_name(name_raw, max_len=24))
+                fmt_name = strip_trailing_punctuation(format_bulk_name(name_raw, max_len=24, font=n_font, font_size=n_size))
                 pos_clean = strip_trailing_punctuation(clean_position_text(pos_raw)[:128])
-
-                if fmt_name and kemnaker_data.is_valid_official_name(fmt_name):
+                if fmt_name:
                     rows.append({"name": fmt_name, "position": pos_clean})
 
     # 2. Uploaded CSV / text file fallback
     elif file and file.filename != "":
-        stream = io.StringIO(file.stream.read().decode("utf-8-sig", errors="ignore"))
-        reader = csv.reader(stream)
-        for i, row in enumerate(reader):
-            if not row or len(row) < 1:
-                continue
-            # Skip header row if it contains 'name' or 'nama'
-            if i == 0 and any(h.lower().strip() in ("name", "nama") for h in row):
-                continue
-            if content_mode == "name_only":
-                name_raw = row[0].strip() if len(row) > 0 else ""
-                fmt = strip_trailing_punctuation(clean_titles(name_raw)[:36].strip()) if name_raw else ""
-                if fmt and kemnaker_data.is_valid_official_name(fmt):
-                    rows.append({"name": fmt, "position": ""})
-            elif content_mode == "position_only":
-                pos_raw = row[1].strip() if len(row) > 1 and row[1].strip() else (row[0].strip() if len(row) > 0 else "")
-                fmt = strip_trailing_punctuation(clean_position_text(pos_raw)[:128].strip()) if pos_raw else ""
-                if fmt:
-                    rows.append({"name": "", "position": fmt})
-            else:
-                name_raw = row[0].strip() if len(row) > 0 else ""
-                pos_raw = row[1].strip() if len(row) > 1 else ""
-                if not kemnaker_data.is_valid_official_name(name_raw):
-                    continue
-                fmt_name = strip_trailing_punctuation(format_bulk_name(name_raw, max_len=24))
-                pos_clean = strip_trailing_punctuation(clean_position_text(pos_raw)[:128])
-                if fmt_name and kemnaker_data.is_valid_official_name(fmt_name):
-                    rows.append({"name": fmt_name, "position": pos_clean})
+        raw_text = file.stream.read().decode("utf-8-sig", errors="ignore")
+        if not raw_text.strip():
+            pass
+        else:
+            first_lines = [l for l in raw_text.splitlines() if l.strip()][:5]
+            delim = ","
+            semi_cnt = sum(l.count(";") for l in first_lines)
+            comma_cnt = sum(l.count(",") for l in first_lines)
+            tab_cnt = sum(l.count("\t") for l in first_lines)
+            if tab_cnt > comma_cnt and tab_cnt > semi_cnt:
+                delim = "\t"
+            elif semi_cnt > comma_cnt:
+                delim = ";"
 
-    # Deduplicate rows: hanya berlaku untuk Kemnaker! Untuk tamu biarkan sesuai input yang dimasukkan
-    input_source = request.form.get("input_source", "tamu").strip().lower()
-    if input_source == "kemnaker":
-        rows = deduplicate_bulk_rows(rows, content_mode=content_mode, source="kemnaker")
+            reader = csv.reader(io.StringIO(raw_text), delimiter=delim)
+            all_rows = [r for r in reader if any(c.strip() for c in r)]
+            
+            if all_rows:
+                h0 = [c.lower().strip() for c in all_rows[0]]
+                name_idx = -1
+                pos_idx = -1
+                has_header = False
+                for c_idx, h in enumerate(h0):
+                    if h in ("nama", "name", "nama lengkap", "nama pegawai", "nama pejabat"):
+                        name_idx = c_idx
+                        has_header = True
+                    elif h in ("jabatan", "position", "posisi"):
+                        pos_idx = c_idx
+                        has_header = True
+
+                data_rows = all_rows[1:] if has_header else all_rows
+                for row in data_rows:
+                    if not row:
+                        continue
+                    if name_idx != -1 and pos_idx != -1:
+                        name_raw = row[name_idx].strip() if name_idx < len(row) else ""
+                        pos_raw = row[pos_idx].strip() if pos_idx < len(row) else ""
+                    elif len(row) >= 3 and (re.match(r'^\(?\d+[\.\)\:\-\]]*$', row[0].strip()) or row[0].strip().lower() in ('no', 'nomor')):
+                        name_raw = row[1].strip()
+                        pos_raw = " - ".join(c.strip() for c in row[2:] if c.strip())
+                    elif len(row) >= 2:
+                        name_raw = row[0].strip()
+                        pos_raw = " - ".join(c.strip() for c in row[1:] if c.strip())
+                    elif len(row) == 1:
+                        # Single column: use split_name_and_position
+                        name_raw, pos_raw = split_name_and_position(row[0].strip())
+                    else:
+                        continue
+
+                    name_raw = sanitize_text(name_raw)
+                    pos_raw = sanitize_text(pos_raw)
+
+                    if content_mode == "name_only":
+                        fmt = strip_trailing_punctuation(format_bulk_name(name_raw, max_len=24, font=n_font, font_size=n_size)[:40].strip()) if name_raw else ""
+                        if fmt:
+                            rows.append({"name": fmt, "position": ""})
+                    elif content_mode == "position_only":
+                        cand = pos_raw or name_raw
+                        fmt = strip_trailing_punctuation(clean_position_text(cand)[:128].strip()) if cand else ""
+                        if fmt:
+                            rows.append({"name": "", "position": fmt})
+                    else:
+                        fmt_name = strip_trailing_punctuation(format_bulk_name(name_raw, max_len=24, font=n_font, font_size=n_size))
+                        pos_clean = strip_trailing_punctuation(clean_position_text(pos_raw)[:128])
+                        if fmt_name:
+                            rows.append({"name": fmt_name, "position": pos_clean})
+
+    # Deduplicate rows across all bulk inputs
+    rows = deduplicate_bulk_rows(rows, content_mode=content_mode, source="kemnaker")
 
     if not rows:
         flash("Tidak ada data yang valid.")
@@ -305,12 +369,8 @@ def generate_batch():
     out_path = os.path.join(OUTPUT_DIR, "nametags_bulk.pdf")
     build_pdf_multipage(
         rows, out_path,
-        sides=sides,
-        font_choice=font_choice,
-        custom_bg_data=custom_bg_data,
-        custom_font_data=custom_font_data,
-        custom_font_name=custom_font_name,
         content_mode=content_mode,
+        **opts
     )
 
     return send_file(out_path, as_attachment=True,

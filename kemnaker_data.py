@@ -50,7 +50,9 @@ def strip_trailing_punctuation(text):
     lines = str(text).splitlines()
     cleaned = []
     for l in lines:
-        c = re.sub(r'[\s.,;:!?\-–—_/\t|*•·+~="\'\\`^]+$', '', l).strip()
+        c = re.sub(r'[\s,;:!?\-–—_/\t|*•·+~="\'\\`^]+$', '', l).strip()
+        if not re.search(r'\b[A-Za-z]{1,4}\.$', c):
+            c = re.sub(r'\.+$', '', c).strip()
         cleaned.append(c)
     return "\n".join(cleaned).strip()
 

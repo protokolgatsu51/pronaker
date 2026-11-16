@@ -1,82 +1,70 @@
-# Name Table Generator (KEMNAKER)
+# PRONAKER - Protokol Kemnaker RI
 
-Turns a name + position into a print-ready PDF name table, matching your
-reference design exactly: real Myriad Pro font, both orientations (normal +
-180°-flipped for two-sided table cards), automatic line wrap for long
-position titles.
+Aplikasi web resmi untuk Protokol Kementerian Ketenagakerjaan Republik Indonesia: **PRONAKER (Name Table & Note Pad Generator)**.
 
-## What's inside
+- **URL Utama**: [https://pronaker.vercel.app](https://pronaker.vercel.app) *(otomatis redirect ke `/nametable`)*
+- **Name Table**: [https://pronaker.vercel.app/nametable](https://pronaker.vercel.app/nametable)
+- **Note Pad**: [https://pronaker.vercel.app/notepad](https://pronaker.vercel.app/notepad) *(Segera Hadir)*
 
-- **Live web preview** (`templates/index.html`) — type a name/position, see
-  the exact card render instantly in your browser using the real Myriad Pro
-  webfont.
-- **PDF export** (`generate_html.py`) — renders the *same* markup through
-  headless Chromium (Playwright) to produce a pixel-accurate PDF. This is the
-  primary engine, used by the web app.
-- **CLI fallback engine** (`generate.py`) — a reportlab/Helvetica version
-  that needs no browser at all. Used automatically if Playwright/Chromium
-  isn't available in your environment.
-- **Flask app** (`app.py`) — the web server: single-entry form + CSV batch
-  upload → zip.
+---
 
-## Setup
+## Fitur Utama
+
+1. **Live Preview Interaktif**:
+   - Canvas HTML5 real-time dengan background resmi Kemnaker RI.
+   - Pilihan font fleksibel (default: **Montserrat**, dengan opsi Myriad Pro, Roboto, EB Garamond, Open Sans, Plus Jakarta Sans).
+   - Pengaturan ukuran font otomatis (*auto-fit*) atau manual dengan slider instan.
+   - Jarak spasi baris presisi default 40 pt.
+
+2. **Database Organisasi Kemnaker Terintegrasi**:
+   - Mode beralih cepat antara **Tamu Eksternal** dan **Kemnaker RI**.
+   - Autocomplete otomatis untuk Unit Utama (Sekretariat Jenderal, Ditjen Binwasnaker & K3, Ditjen Binalavotas, dll.) dan Pejabat/Jabatan.
+
+3. **Cetak & Export Fleksibel**:
+   - Single Card export langsung ke PDF print-ready (2 sisi: 1 tegak, 1 rotasi 180° untuk kartu meja).
+   - Batch Generation via upload CSV dengan output ZIP siap unduh.
+   - Multi-page PDF generation.
+
+4. **Navigasi Responsif & Modern**:
+   - Desktop: Top nav dengan active indicator underline bar presisi di tengah layar.
+   - Mobile: Bento App Grid icon (⊞) dengan dropdown menu responsif dan notifikasi toast simetris.
+
+---
+
+## Persiapan & Menjalankan Lokal
 
 ```bash
-cd nametag_generator
+# 1. Clone repository
+git clone https://github.com/<username>/nametable-kemnaker.git
+cd nametable-kemnaker
+
+# 2. Setup Virtual Environment (opsional namun disarankan)
+python -m venv venv
+venv\Scripts\activate      # Windows
+# source venv/bin/activate # Linux/macOS
+
+# 3. Install Dependencies
 pip install -r requirements.txt
-playwright install chromium   # one-time, downloads the browser binary
+
+# 4. Jalankan Server
+python app.py
 ```
 
-## Run the web app
+Buka peramban di [http://localhost:5000](http://localhost:5000) (akan langsung diarahkan ke `/nametable`).
+Atau di Windows, cukup klik ganda `start_nametag.bat`.
 
-```bash
-python3 app.py
-```
+---
 
-Open **http://localhost:5000** — type a name and position, watch the live
-preview, click **Generate PDF**. For bulk, upload a CSV with `name,position`
-columns under **Batch (CSV)** to get a zip of one PDF per row.
+## Deployment ke Vercel
 
-## Run from the command line
+Proyek ini sudah dikonfigurasi secara optimal untuk serverless Python di Vercel:
 
-```bash
-# single card, real Myriad Pro (Playwright)
-python3 generate_html.py "Ismail Pakaya" "Direktur Jenderal Pembinaan Pengawasan Ketenagakerjaan Keselamatan dan Kesehatan Kerja"
+- `vercel.json` mengarahkan semua rute dinamis ke `api/index.py`.
+- `paths.output_dir()` otomatis mendeteksi environment `VERCEL` dan menggunakan direktori writable `/tmp/output`.
+- Background template dan aset font dimuat langsung dari `static/`.
+- Dependensi ringan tanpa headless browser yang berat, sehingga build dan deploy di Vercel selesai dalam hitungan detik.
 
-# single card, no-browser fallback (Helvetica)
-python3 generate.py "Ismail Pakaya" "Direktur Jenderal..."
-
-# batch from CSV (fallback engine; wire generate_html in similarly if wanted)
-python3 generate.py --csv sample_names.csv --outdir output/
-```
-
-## How it's built
-
-- `assets/bg_template.png` / `static/bg_template.png` — the card background
-  (logos, bars, decorative pattern), extracted from your PSD with every
-  name/position placeholder layer excluded, so it's a clean blank template.
-- `static/nametag.js` — the single source of truth for layout: page size,
-  center line, name/position baselines, line-wrap width. Used by **both**
-  the live preview and the PDF-print target (`templates/card.html`), so
-  what you see in the browser is exactly what prints.
-- All geometry (page size 832.08 × 372.72pt, name baseline, the 45pt
-  name→position gap, the 20pt between wrapped position lines, center line)
-  was measured directly from your reference PDF with `pdfplumber` — not
-  eyeballed — then verified by re-rendering and diffing against your
-  original.
-- `fonts/MyriadPro-*.ttf` — converted from your uploaded webfont zip for the
-  reportlab fallback engine. `static/fonts/*.woff` — the originals, used
-  directly by the browser/Playwright engine (no conversion needed there,
-  which is also why it's the more accurate of the two engines).
-
-## Extending it
-
-1. **Auto-shrink name font size** for very long names that would overflow
-   the card width (currently fixed at 45.86pt per spec).
-2. **Batch mode on the Playwright engine** — right now batch CSV uses
-   `build_pdf_with_fallback`, which already prefers Playwright per-row; for
-   very large batches, reuse a single browser instance across rows instead
-   of launching one per card (change loop in `app.py`/`generate_html.py`
-   to launch Chromium once, open one page per row).
-3. **Multi-up print layout** — combine several cards into one sheet for
-   printing/cutting.
+### Langkah Deploy:
+1. Hubungkan repository GitHub ke dashboard [Vercel](https://vercel.com).
+2. Framework Preset: **Other** (Root directory: `./`).
+3. Deploy! Vercel akan otomatis membaca `vercel.json` dan `requirements.txt`.
