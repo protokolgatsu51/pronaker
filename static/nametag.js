@@ -14,6 +14,7 @@ const CARD = {
   PAGE_W: 841.89,      // pt (Standard A4 width: 297mm = 841.89pt)
   PAGE_H: 372.72,      // pt
   CENTER_X: 420.95,    // pt - exact horizontal center (PAGE_W / 2 = 841.89 / 2)
+  OPTICAL_CENTER_Y: 97.45,    // pt - exact optical vertical center of card content
   NAME_BASELINE_Y: 102.5,     // pt from bottom
   NAME_TO_POSITION_GAP: 40.0, // pt, baseline to baseline
   POSITION_LINE_GAP: 20.0,    // pt, baseline to baseline between wrapped lines
@@ -490,11 +491,41 @@ function layoutPositionOnly(text, maxChars = 128) {
   return { lines: [continuousText], fontSize: 16, baselines: [86.0] };
 }
 
+// Font metrics helper to support dynamic optical centering across various typography
+function getFontMetrics(fontFamily) {
+  const f = (fontFamily || "").toLowerCase();
+  if (f.includes("times") || f.includes("garamond") || f.includes("georgia")) {
+    return { ascentRatio: 0.69, descentRatio: 0.22 };
+  }
+  if (f.includes("myriad") || f.includes("arial") || f.includes("calibri")) {
+    return { ascentRatio: 0.72, descentRatio: 0.24 };
+  }
+  if (f.includes("roboto") || f.includes("open sans")) {
+    return { ascentRatio: 0.73, descentRatio: 0.23 };
+  }
+  if (f.includes("jakarta")) {
+    return { ascentRatio: 0.74, descentRatio: 0.24 };
+  }
+  // Default (Montserrat & custom)
+  return { ascentRatio: 0.75, descentRatio: 0.25 };
+}
+
+// Calculates aesthetically proportional spacing gap based on font sizes and font metrics.
+// Calibrated to yield exactly 40.0 pt for standard Kemnaker fonts (45.86 pt and 18.0 pt Montserrat).
+function calculateAutoSpacingGap(nameFontSize, posFontSize, nameFontFamily, posFontFamily) {
+  const nMetrics = getFontMetrics(nameFontFamily);
+  const pMetrics = getFontMetrics(posFontFamily);
+  const nDescent = nMetrics.descentRatio * nameFontSize;
+  const pAscent = pMetrics.ascentRatio * posFontSize;
+  const visualGap = (nameFontSize + posFontSize) * 0.2354;
+  return Math.round((nDescent + pAscent + visualGap) * 10) / 10;
+}
+
 // top offset (pt, from the top of the page) for a text box whose baseline
-// should land at `baselineFromBottomPt`, given line-height:1 (box height ==
-// font-size exactly, since this font's ascent+|descent| == 1em with no gap).
-function boxTopForBaseline(baselineFromBottomPt, fontSizePt) {
-  return CARD.PAGE_H - baselineFromBottomPt - CARD.ASCENT_RATIO * fontSizePt;
+// should land at `baselineFromBottomPt`, given line-height:1.
+function boxTopForBaseline(baselineFromBottomPt, fontSizePt, ascentRatio = null) {
+  const ratio = (ascentRatio !== null && ascentRatio !== undefined) ? ascentRatio : CARD.ASCENT_RATIO;
+  return CARD.PAGE_H - baselineFromBottomPt - ratio * fontSizePt;
 }
 
 const DEFAULT_PREVIEW_NAME = "TAMPILAN NAMA LENGKAP";
@@ -539,11 +570,13 @@ function layoutBlock(container, name, positionLines, options = {}) {
   const posFontFamily = options.posFontFamily || CARD.POSITION_FONT_FAMILY || CARD.FONT_FAMILY;
   const customNameSize = options.nameFontSize || CARD.CUSTOM_NAME_FONT_SIZE;
   const customPosSize = options.posFontSize || CARD.CUSTOM_POS_FONT_SIZE;
-  const spacingGap = options.spacingGap || CARD.NAME_TO_POSITION_GAP || 40.0;
   const horizontalOffset = options.horizontalOffset !== undefined
     ? parseFloat(options.horizontalOffset)
     : (CARD.HORIZONTAL_OFFSET || 0.0);
   const cx = CARD.CENTER_X + horizontalOffset;
+  const opticalCenterY = CARD.OPTICAL_CENTER_Y || 97.45;
+  const nameMetrics = getFontMetrics(nameFontFamily);
+  const posMetrics = getFontMetrics(posFontFamily);
 
   // Only clean titles if explicitly requested (e.g. bulk import or official kemnaker dropdown)
   const cleanN = (options.cleanTitles && typeof cleanTitles === "function")
@@ -551,7 +584,7 @@ function layoutBlock(container, name, positionLines, options = {}) {
     : (typeof sanitizeText === "function" ? sanitizeText(name) : (name || ""));
   const safeName = applyTextCase(cleanN, textCase);
 
-  // Mode: Nama Saja (Font 60 pt / custom, centered, with safe boundary protection)
+  // Mode: Nama Saja (Dynamic optical vertical centering)
   if (mode === "name_only") {
     if (!safeName) return;
     let fontSize = customNameSize && customNameSize !== "auto" ? parseFloat(customNameSize) : CARD.MODE_60PT_FONT_SIZE;
@@ -563,8 +596,13 @@ function layoutBlock(container, name, positionLines, options = {}) {
         fontSize = Math.floor(fontSize * (CARD.MAX_TEXT_WIDTH / w) * 10) / 10;
       }
     });
+
+    const nameAscent = nameMetrics.ascentRatio * fontSize;
+    const nameDescent = nameMetrics.descentRatio * fontSize;
+
     if (lines.length === 1) {
-      const top = boxTopForBaseline(CARD.MODE_60PT_SINGLE_BASELINE_Y, fontSize);
+      const dynamicBaseline = opticalCenterY - (nameAscent - nameDescent) / 2.0;
+      const top = boxTopForBaseline(dynamicBaseline, fontSize, nameMetrics.ascentRatio);
       container.appendChild(makeLine(lines[0], {
         top: top,
         left: cx - CARD.MAX_TEXT_WIDTH / 2,
@@ -576,8 +614,11 @@ function layoutBlock(container, name, positionLines, options = {}) {
         fontFamily: nameFontFamily,
       }));
     } else if (lines.length >= 2) {
-      const top1 = boxTopForBaseline(CARD.MODE_60PT_LINE1_BASELINE_Y, fontSize);
-      const top2 = boxTopForBaseline(CARD.MODE_60PT_LINE2_BASELINE_Y, fontSize);
+      const lineGap = Math.max(fontSize * 1.15, fontSize + 6.0);
+      const topBaseline = opticalCenterY + (lineGap + nameDescent - nameAscent) / 2.0;
+      const bottomBaseline = topBaseline - lineGap;
+      const top1 = boxTopForBaseline(topBaseline, fontSize, nameMetrics.ascentRatio);
+      const top2 = boxTopForBaseline(bottomBaseline, fontSize, nameMetrics.ascentRatio);
       container.appendChild(makeLine(lines[0], {
         top: top1,
         left: cx - CARD.MAX_TEXT_WIDTH / 2,
@@ -602,14 +643,14 @@ function layoutBlock(container, name, positionLines, options = {}) {
     return;
   }
 
-  // Mode: Jabatan Saja (Auto-scaled 1-3 lines up to 128 chars)
+  // Mode: Jabatan Saja (Dynamic optical vertical centering)
   if (mode === "position_only") {
     const rawPosText = options.rawPosition !== undefined
       ? options.rawPosition
       : (Array.isArray(positionLines) ? positionLines.join("\n") : (positionLines || name || ""));
     const safePos = applyTextCase(sanitizeText(rawPosText || ""), textCase);
     if (!safePos) return;
-    const { lines, fontSize, baselines } = layoutPositionOnly(safePos, 128);
+    const { lines, fontSize } = layoutPositionOnly(safePos, 128);
     let finalSize = customPosSize && customPosSize !== "auto" ? parseFloat(customPosSize) : fontSize;
     // Boundary protection: enforce safe margin (CARD.MAX_TEXT_WIDTH = 625 pt)
     lines.forEach(line => {
@@ -618,15 +659,23 @@ function layoutBlock(container, name, positionLines, options = {}) {
         finalSize = Math.floor(finalSize * (CARD.MAX_TEXT_WIDTH / w) * 10) / 10;
       }
     });
+
+    const posAscent = posMetrics.ascentRatio * finalSize;
+    const posDescent = posMetrics.descentRatio * finalSize;
+    const lineGap = Math.max(finalSize * 1.25, finalSize + 4.0);
+    const n = lines.length;
+    const topBaseline = opticalCenterY + ((n - 1) * lineGap + posDescent - posAscent) / 2.0;
+
     for (let i = 0; i < lines.length; i++) {
-      const top = boxTopForBaseline(baselines[i], finalSize);
+      const baseline = topBaseline - i * lineGap;
+      const top = boxTopForBaseline(baseline, finalSize, posMetrics.ascentRatio);
       container.appendChild(makeLine(lines[i], {
         top: top,
         left: cx - CARD.MAX_TEXT_WIDTH / 2,
         width: CARD.MAX_TEXT_WIDTH,
         centerX: cx,
         size: finalSize,
-        weight: CARD.NAME_FONT_WEIGHT,
+        weight: CARD.POSITION_FONT_WEIGHT,
         opacity: positionOpacity,
         fontFamily: posFontFamily,
       }));
@@ -634,44 +683,68 @@ function layoutBlock(container, name, positionLines, options = {}) {
     return;
   }
 
-  // Mode: Nama & Jabatan (Default standard layout)
+  // Mode: Nama & Jabatan (Default standard layout with Dynamic Optical Centering)
   const safeLines = (Array.isArray(positionLines) ? positionLines : (positionLines ? [positionLines] : []))
     .map(l => applyTextCase(sanitizeText(l), textCase))
     .filter(Boolean)
     .slice(0, 2);
   const numPosLines = safeLines.length;
 
-  // Penyesuaian batas atas dan bawah dinamis:
-  // - Jabatan 1 baris: batas atas dan bawah seimbang terhadap garis gelap (baseNameBaselineY = 101.0 pt).
-  // - Jabatan 2 baris: batas atas dan bawah menyesuaikan, naik sedikit (+10.0 pt -> 111.0 pt) agar seimbang.
-  // - Jabatan kosong (0 baris): tepat di tengah vertikal (86.0 pt).
-  let baseNameBaselineY = 102.5;
-  if (numPosLines === 2) {
-    baseNameBaselineY = 112.5;
-  } else if (numPosLines === 1) {
-    baseNameBaselineY = 102.5;
-  } else {
-    baseNameBaselineY = 86.0;
-  }
-
-  // Penyesuaian simetris jika spacingGap diatur manual berbeda dari default 40.0
-  const gapAdjustment = (spacingGap - 40.0) / 2.0;
-  const dynamicNameBaselineY = numPosLines > 0 ? (baseNameBaselineY + gapAdjustment) : baseNameBaselineY;
-
+  // 1. Calculate actual font sizes (handling custom sizes and auto-fit boundary constraints)
+  let nameFontSize = customNameSize && customNameSize !== "auto" ? parseFloat(customNameSize) : CARD.NAME_FONT_SIZE;
   if (safeName) {
-    let fontSize = customNameSize && customNameSize !== "auto" ? parseFloat(customNameSize) : CARD.NAME_FONT_SIZE;
-    const measuredW = measureTextWidthPt(safeName, CARD.NAME_FONT_WEIGHT, fontSize, nameFontFamily);
+    const measuredW = measureTextWidthPt(safeName, CARD.NAME_FONT_WEIGHT, nameFontSize, nameFontFamily);
     // Boundary protection: enforce safe margin (CARD.NAME_BOX_WIDTH = 625 pt) so text never touches Kemnaker/Indonesia Emas logos
     if (measuredW > CARD.NAME_BOX_WIDTH && CARD.NAME_BOX_WIDTH > 0) {
-      fontSize = Math.floor(fontSize * (CARD.NAME_BOX_WIDTH / measuredW) * 10) / 10;
+      nameFontSize = Math.floor(nameFontSize * (CARD.NAME_BOX_WIDTH / measuredW) * 10) / 10;
     }
-    const nameTop = boxTopForBaseline(dynamicNameBaselineY, fontSize);
+  }
+
+  let posFontSize = customPosSize && customPosSize !== "auto" ? parseFloat(customPosSize) : CARD.POSITION_FONT_SIZE;
+  if (numPosLines > 0) {
+    safeLines.forEach(line => {
+      const measuredLineW = measureTextWidthPt(line, CARD.POSITION_FONT_WEIGHT, posFontSize, posFontFamily);
+      if (measuredLineW > CARD.MAX_TEXT_WIDTH && CARD.MAX_TEXT_WIDTH > 0) {
+        posFontSize = Math.floor(posFontSize * (CARD.MAX_TEXT_WIDTH / measuredLineW) * 10) / 10;
+      }
+    });
+  }
+
+  // 2. Determine effective spacing gap:
+  // Proportional spacing calculated from actual font sizes and metrics unless manually overridden
+  const autoGap = calculateAutoSpacingGap(nameFontSize, posFontSize, nameFontFamily, posFontFamily);
+  let effectiveSpacingGap;
+  if (options.isAutoSpacing || options.spacingGap === "auto") {
+    effectiveSpacingGap = autoGap;
+  } else if (options.spacingGap !== undefined && options.spacingGap !== null) {
+    effectiveSpacingGap = parseFloat(options.spacingGap);
+  } else {
+    effectiveSpacingGap = autoGap;
+  }
+
+  // 3. Mathematical Dynamic Optical Vertical Centering:
+  // Optical vertical center: OPTICAL_CENTER_Y = 97.45 pt
+  // Ensures distance from top fold stripe to top of text equals distance from bottom stripe to bottom of text
+  const posLineGap = CARD.POSITION_LINE_GAP || 20.0;
+  const nameAscent = nameMetrics.ascentRatio * nameFontSize;
+  const nameDescent = nameMetrics.descentRatio * nameFontSize;
+  const posDescent = posMetrics.descentRatio * posFontSize;
+
+  let dynamicNameBaselineY;
+  if (numPosLines > 0) {
+    dynamicNameBaselineY = opticalCenterY + (effectiveSpacingGap + ((numPosLines - 1) * posLineGap) + posDescent - nameAscent) / 2.0;
+  } else {
+    dynamicNameBaselineY = opticalCenterY - (nameAscent - nameDescent) / 2.0;
+  }
+
+  if (safeName) {
+    const nameTop = boxTopForBaseline(dynamicNameBaselineY, nameFontSize, nameMetrics.ascentRatio);
     container.appendChild(makeLine(safeName, {
       top: nameTop,
       left: cx - CARD.NAME_BOX_WIDTH / 2,
       width: CARD.NAME_BOX_WIDTH,
       centerX: cx,
-      size: fontSize,
+      size: nameFontSize,
       weight: CARD.NAME_FONT_WEIGHT,
       opacity: nameOpacity,
       fontFamily: nameFontFamily,
@@ -679,18 +752,10 @@ function layoutBlock(container, name, positionLines, options = {}) {
   }
 
   if (numPosLines > 0) {
-    let posFontSize = customPosSize && customPosSize !== "auto" ? parseFloat(customPosSize) : CARD.POSITION_FONT_SIZE;
-    // Boundary protection: auto-fit position lines so they never exceed CARD.MAX_TEXT_WIDTH (625 pt)
-    safeLines.forEach(line => {
-      const measuredLineW = measureTextWidthPt(line, CARD.POSITION_FONT_WEIGHT, posFontSize, posFontFamily);
-      if (measuredLineW > CARD.MAX_TEXT_WIDTH && CARD.MAX_TEXT_WIDTH > 0) {
-        posFontSize = Math.floor(posFontSize * (CARD.MAX_TEXT_WIDTH / measuredLineW) * 10) / 10;
-      }
-    });
     safeLines.forEach((formattedLine, i) => {
-      const baseline = dynamicNameBaselineY - spacingGap - i * CARD.POSITION_LINE_GAP;
+      const baseline = dynamicNameBaselineY - effectiveSpacingGap - i * posLineGap;
       container.appendChild(makeLine(formattedLine, {
-        top: boxTopForBaseline(baseline, posFontSize),
+        top: boxTopForBaseline(baseline, posFontSize, posMetrics.ascentRatio),
         left: cx - CARD.MAX_TEXT_WIDTH / 2,
         width: CARD.MAX_TEXT_WIDTH,
         centerX: cx,
@@ -1287,5 +1352,7 @@ window.setBackgroundUrl = setBackgroundUrl;
 window.setContentMode = setContentMode;
 window.DEFAULT_PREVIEW_NAME = DEFAULT_PREVIEW_NAME;
 window.DEFAULT_PREVIEW_POSITION = DEFAULT_PREVIEW_POSITION;
+window.getFontMetrics = getFontMetrics;
+window.calculateAutoSpacingGap = calculateAutoSpacingGap;
 
 

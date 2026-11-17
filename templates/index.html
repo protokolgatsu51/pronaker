@@ -4786,15 +4786,15 @@
                   <div class="sheet-section">
                     <div class="sheet-section-title">
                       <span>Jarak Spasi Baris</span>
-                      <span class="pill-status-badge badge-neutral" id="spacingBadgeStatus" style="cursor: pointer;" title="Klik untuk reset ke Standar (40 pt)" onclick="setSpacingOption(40)">Standar (40)</span>
+                      <span class="pill-status-badge badge-neutral" id="spacingBadgeStatus" style="cursor: pointer;" title="Klik untuk kembali ke Otomatis" onclick="resetSpacingToAuto()">Standar (40)</span>
                     </div>
                     <div class="spacing-slider-container">
-                      <div class="spacing-slider-track-wrap" title="Geser untuk mengatur spasi (15 - 95 pt). Titik indikator = Standar (40 pt)">
-                        <div class="slider-default-pip" title="Standar: 40 pt"></div>
-                        <input type="range" id="spacingRangeInput" class="spacing-volume-slider" min="15" max="95" value="40" step="1" oninput="setSpacingOption(this.value, true, false)">
+                      <div class="spacing-slider-track-wrap" title="Geser untuk mengatur spasi (15 - 95 pt). Titik indikator = Posisi Otomatis">
+                        <div class="slider-default-pip" id="spacingDefaultPip" title="Posisi Otomatis: 40 pt"></div>
+                        <input type="range" id="spacingRangeInput" class="spacing-volume-slider" min="15" max="95" value="40" step="1" oninput="setSpacingOption(this.value, true, false, true)">
                       </div>
                       <div class="word-spacing-box" title="Ketik jarak spasi manual (pt)">
-                        <input type="number" id="spacingNumberInput" class="word-spacing-input" min="10" max="150" value="40" step="1" oninput="setSpacingOption(this.value, false, true)">
+                        <input type="number" id="spacingNumberInput" class="word-spacing-input" min="10" max="150" value="40" step="1" oninput="setSpacingOption(this.value, false, true, true)">
                         <span class="word-spacing-unit">pt</span>
                       </div>
                     </div>
@@ -4907,6 +4907,7 @@
     let currentFontSizeName = "auto";
     let currentFontSizePos = "auto";
     let currentSpacingGap = 40;
+    let isSpacingManual = false;
     let currentHorizontalOffset = 0;
     let currentTextCase = "uppercase";
     let currentPaperSize = "a4";
@@ -6355,6 +6356,7 @@
             nameFontSize: currentFontSizeName,
             posFontSize: currentFontSizePos,
             spacingGap: currentSpacingGap,
+            isAutoSpacing: !isSpacingManual,
             horizontalOffset: currentHorizontalOffset,
             sides: currentSides,
             bgUrl: currentBgUrl,
@@ -6628,6 +6630,7 @@
         fontPosFamily: currentFontPosFamily,
         fontSizePos: currentFontSizePos,
         spacingGap: currentSpacingGap,
+        isSpacingManual: isSpacingManual,
         horizontalOffset: currentHorizontalOffset,
         textCase: currentTextCase,
         sides: currentSides,
@@ -6669,6 +6672,7 @@
       currentFontPosFamily = snap.fontPosFamily;
       currentFontSizePos = snap.fontSizePos;
       currentSpacingGap = snap.spacingGap;
+      isSpacingManual = snap.isSpacingManual !== undefined ? snap.isSpacingManual : false;
       currentHorizontalOffset = snap.horizontalOffset !== undefined ? snap.horizontalOffset : 0;
       currentTextCase = snap.textCase;
       currentSides = snap.sides;
@@ -7194,6 +7198,7 @@
           nameFontSize: currentFontSizeName,
           posFontSize: currentFontSizePos,
           spacingGap: currentSpacingGap,
+          isAutoSpacing: !isSpacingManual,
           horizontalOffset: currentHorizontalOffset,
           sides: currentSides,
           bgUrl: activeBg,
@@ -7302,6 +7307,7 @@
         nameOpacity: nameOpacity,
         positionOpacity: positionOpacity,
         spacingGap: currentSpacingGap,
+        isAutoSpacing: !isSpacingManual,
         horizontalOffset: currentHorizontalOffset,
         sides: currentSides,
         bgUrl: activeBg,
@@ -7637,6 +7643,7 @@
         nameOpacity: nameOpacity,
         positionOpacity: positionOpacity,
         spacingGap: currentSpacingGap,
+        isAutoSpacing: !isSpacingManual,
         horizontalOffset: currentHorizontalOffset,
         sides: currentSides,
         bgUrl: activeBg,
@@ -8116,6 +8123,15 @@
     const customFontNameFileInput = document.getElementById("customFontNameFileInput");
     const fontNameBadgeStatus = document.getElementById("fontNameBadgeStatus");
 
+    function onFontOrSizeChange() {
+      if (!isSpacingManual) {
+        const autoVal = Math.round(getEffectiveAutoSpacing());
+        setSpacingOption(autoVal, false, false, false);
+      } else {
+        updateSpacingPip();
+      }
+    }
+
     function updateFontNameBadge() {
       if (!fontNameBadgeStatus) return;
       const isCustom = Boolean(customFontNameData && currentFontNameChoice && currentFontNameChoice.startsWith("CustomNameFont"));
@@ -8166,6 +8182,7 @@
           updateFontNameBadge();
           document.querySelectorAll(".sync-font-name-choice-val").forEach(el => el.value = val);
           document.querySelectorAll(".sync-font-val").forEach(el => el.value = val);
+          onFontOrSizeChange();
           update();
           fitPreview();
         }
@@ -8208,6 +8225,7 @@
             document.querySelectorAll(".sync-font-name-choice-val").forEach(el => el.value = cleanFontName);
             document.querySelectorAll(".sync-font-name-data-val").forEach(el => el.value = dataUrl);
             document.querySelectorAll(".sync-font-name-filename-val").forEach(el => el.value = file.name);
+            onFontOrSizeChange();
             update();
             fitPreview();
           };
@@ -8228,6 +8246,7 @@
         if (typeof setNameFontSize === "function") setNameFontSize(val);
         updateFontNameBadge();
         document.querySelectorAll(".sync-font-size-name-val").forEach(el => el.value = val);
+        onFontOrSizeChange();
         update();
         fitPreview();
       });
@@ -8249,6 +8268,7 @@
         if (typeof setNameFontSize === "function") setNameFontSize(val);
         updateFontNameBadge();
         document.querySelectorAll(".sync-font-size-name-val").forEach(el => el.value = val);
+        onFontOrSizeChange();
         update();
         fitPreview();
       };
@@ -8314,6 +8334,7 @@
           if (typeof setPosFontFamily === "function") setPosFontFamily(currentFontPosFamily);
           updateFontPosBadge();
           document.querySelectorAll(".sync-font-pos-choice-val").forEach(el => el.value = val);
+          onFontOrSizeChange();
           update();
           fitPreview();
         }
@@ -8356,6 +8377,7 @@
             document.querySelectorAll(".sync-font-pos-choice-val").forEach(el => el.value = cleanFontName);
             document.querySelectorAll(".sync-font-pos-data-val").forEach(el => el.value = dataUrl);
             document.querySelectorAll(".sync-font-pos-filename-val").forEach(el => el.value = file.name);
+            onFontOrSizeChange();
             update();
             fitPreview();
           };
@@ -8375,6 +8397,7 @@
         if (typeof setPosFontSize === "function") setPosFontSize(val);
         updateFontPosBadge();
         document.querySelectorAll(".sync-font-size-pos-val").forEach(el => el.value = val);
+        onFontOrSizeChange();
         update();
         fitPreview();
       });
@@ -8396,6 +8419,7 @@
         if (typeof setPosFontSize === "function") setPosFontSize(val);
         updateFontPosBadge();
         document.querySelectorAll(".sync-font-size-pos-val").forEach(el => el.value = val);
+        onFontOrSizeChange();
         update();
         fitPreview();
       };
@@ -8441,15 +8465,41 @@
     // -------------------------------------------------------------------------
     // Interactive Feature 5: Jarak Spasi Antara Nama & Jabatan (Slider & Manual Input)
     // -------------------------------------------------------------------------
-    function setSpacingOption(gap, fromSlider = false, fromInput = false) {
+    function getEffectiveAutoSpacing() {
+      const nSize = (currentFontSizeName && currentFontSizeName !== "auto") ? parseFloat(currentFontSizeName) : 45.86;
+      const pSize = (currentFontSizePos && currentFontSizePos !== "auto") ? parseFloat(currentFontSizePos) : 18.0;
+      if (typeof calculateAutoSpacingGap === "function") {
+        return calculateAutoSpacingGap(nSize, pSize, currentFontNameFamily, currentFontPosFamily);
+      }
+      return 40;
+    }
+
+    function updateSpacingPip() {
+      const autoVal = Math.round(getEffectiveAutoSpacing());
+      const pip = document.getElementById("spacingDefaultPip");
+      const slider = document.getElementById("spacingRangeInput");
+      if (pip && slider) {
+        const min = parseFloat(slider.min) || 15;
+        const max = parseFloat(slider.max) || 95;
+        const pct = Math.max(0, Math.min(100, ((autoVal - min) / (max - min)) * 100));
+        pip.style.left = `calc(10px + (100% - 20px) * ${pct / 100})`;
+        pip.title = `Posisi Otomatis: ${autoVal} pt`;
+      }
+    }
+
+    function setSpacingOption(gap, fromSlider = false, fromInput = false, manualUserAction = false) {
+      if (fromSlider || fromInput || manualUserAction) {
+        isSpacingManual = true;
+      }
       let parsed = parseInt(gap, 10);
       if (isNaN(parsed) || parsed < 1) parsed = 40;
 
-      // When dragging slider, magnetic snap ("ketarik") to default 40 within 38..42
-      if (fromSlider && parsed >= 38 && parsed <= 42) {
-        parsed = 40;
+      const autoVal = Math.round(getEffectiveAutoSpacing());
+      // When dragging slider, magnetic snap ("ketarik") to autoVal within 2 pt
+      if (fromSlider && Math.abs(parsed - autoVal) <= 2) {
+        parsed = autoVal;
         const slider = document.getElementById("spacingRangeInput");
-        if (slider) slider.value = 40;
+        if (slider) slider.value = autoVal;
       }
       currentSpacingGap = parsed;
       if (typeof setSpacingGap === "function") setSpacingGap(currentSpacingGap);
@@ -8472,13 +8522,21 @@
         slider.style.setProperty("--slider-pct", pct + "%");
       }
 
+      updateSpacingPip();
+
       if (badge) {
-        if (currentSpacingGap === 40) {
-          badge.textContent = "Standar (40)";
+        if (!isSpacingManual) {
+          if (currentSpacingGap === 40) {
+            badge.textContent = "Standar (40)";
+          } else {
+            badge.textContent = `Otomatis (${currentSpacingGap} pt)`;
+          }
           badge.className = "pill-status-badge badge-neutral";
+          badge.title = "Spasi disesuaikan otomatis dengan font. Klik untuk ubah";
         } else {
-          badge.textContent = `${currentSpacingGap} pt`;
+          badge.textContent = `${currentSpacingGap} pt (Kustom)`;
           badge.className = "pill-status-badge badge-custom";
+          badge.title = "Jarak manual aktif. Klik untuk kembali ke Otomatis";
         }
       }
 
@@ -8486,6 +8544,13 @@
       update();
     }
     window.setSpacingOption = setSpacingOption;
+
+    function resetSpacingToAuto() {
+      isSpacingManual = false;
+      const autoVal = Math.round(getEffectiveAutoSpacing());
+      setSpacingOption(autoVal, false, false, false);
+    }
+    window.resetSpacingToAuto = resetSpacingToAuto;
 
     // -------------------------------------------------------------------------
     // Interactive Feature: Posisi Geser Teks Horizontal (Kiri/Kanan)

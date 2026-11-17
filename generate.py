@@ -920,36 +920,35 @@ def _draw_block(c, name, position_lines, content_mode="both",
     safe_lines = safe_lines[:2]
     num_pos_lines = len(safe_lines)
 
-    # Penyesuaian batas atas dan bawah dinamis:
-    # - Jabatan 1 baris: batas atas dan bawah seimbang terhadap garis gelap (base_name_y = 102.5 pt).
-    # - Jabatan 2 baris: batas atas dan bawah menyesuaikan, naik sedikit (+10.0 pt -> 112.5 pt) agar seimbang.
-    # - Jabatan kosong (0 baris): tepat di tengah vertikal (86.0 pt).
-    if num_pos_lines == 2:
-        base_name_y = 112.5
-    elif num_pos_lines == 1:
-        base_name_y = 102.5
-    else:
-        base_name_y = 86.0
-
-    gap_adjustment = (gap - 40.0) / 2.0 if gap else 0.0
-    dynamic_name_baseline_y = (base_name_y + gap_adjustment) if num_pos_lines > 0 else base_name_y
-
+    # Dynamic optical centering calculation
+    font_sz = n_size
     if safe_name:
-        font_sz = n_size
         w = get_name_text_width_pt(safe_name, n_font, font_sz)
-        # Always enforce safe margin mw (618 pt) so text never touches Kemnaker or Indonesia Emas logos
         if w > mw and mw > 0:
             font_sz = font_sz * (mw / w)
-        c.setFont(n_font, font_sz)
-        c.drawCentredString(cx, dynamic_name_baseline_y, safe_name)
 
+    actual_p_size = p_size
     if num_pos_lines > 0:
-        actual_p_size = p_size
         for c_line in safe_lines:
             w_p = get_name_text_width_pt(c_line, p_font, actual_p_size)
             if w_p > tw and tw > 0:
                 actual_p_size = actual_p_size * (tw / w_p)
 
+    optical_center_y = 97.45
+    name_ascent = 0.75 * font_sz
+    name_descent = 0.25 * font_sz
+    pos_descent = 0.25 * actual_p_size
+
+    if num_pos_lines > 0:
+        dynamic_name_baseline_y = optical_center_y + (gap + ((num_pos_lines - 1) * POSITION_LINE_GAP) + pos_descent - name_ascent) / 2.0
+    else:
+        dynamic_name_baseline_y = optical_center_y - (name_ascent - name_descent) / 2.0
+
+    if safe_name:
+        c.setFont(n_font, font_sz)
+        c.drawCentredString(cx, dynamic_name_baseline_y, safe_name)
+
+    if num_pos_lines > 0:
         c.setFont(p_font, actual_p_size)
         baseline = dynamic_name_baseline_y - gap
         for c_line in safe_lines:
