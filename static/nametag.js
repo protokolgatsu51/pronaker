@@ -500,13 +500,18 @@ function boxTopForBaseline(baselineFromBottomPt, fontSizePt) {
 const DEFAULT_PREVIEW_NAME = "TAMPILAN NAMA LENGKAP";
 const DEFAULT_PREVIEW_POSITION = "TAMPILAN JABATAN ATAU POSISI";
 
-function makeLine(text, {top, left, width, size, weight, opacity, fontFamily}) {
+function makeLine(text, {top, left, width, size, weight, opacity, fontFamily, centerX = null}) {
   const div = document.createElement("div");
   div.textContent = text;
   div.style.position = "absolute";
-  div.style.left = left + "pt";
+  if (centerX !== null && centerX !== undefined) {
+    div.style.left = centerX + "pt";
+    div.style.transform = "translateX(-50%)";
+  } else {
+    div.style.left = left + "pt";
+    div.style.width = width + "pt";
+  }
   div.style.top = top + "pt";
-  div.style.width = width + "pt";
   div.style.fontFamily = fontFamily || CARD.FONT_FAMILY;
   div.style.fontWeight = weight;
   div.style.fontSize = size + "pt";
@@ -551,7 +556,7 @@ function layoutBlock(container, name, positionLines, options = {}) {
     if (!safeName) return;
     let fontSize = customNameSize && customNameSize !== "auto" ? parseFloat(customNameSize) : CARD.MODE_60PT_FONT_SIZE;
     const lines = wrap60pt(safeName, CARD.MODE_60PT_MAX_CHARS);
-    // Boundary protection: enforce safe margin (CARD.MAX_TEXT_WIDTH = 618 pt)
+    // Boundary protection: enforce safe margin (CARD.MAX_TEXT_WIDTH = 625 pt)
     lines.forEach(line => {
       const w = measureTextWidthPt(line, CARD.NAME_FONT_WEIGHT, fontSize, nameFontFamily);
       if (w > CARD.MAX_TEXT_WIDTH && CARD.MAX_TEXT_WIDTH > 0) {
@@ -564,6 +569,7 @@ function layoutBlock(container, name, positionLines, options = {}) {
         top: top,
         left: cx - CARD.MAX_TEXT_WIDTH / 2,
         width: CARD.MAX_TEXT_WIDTH,
+        centerX: cx,
         size: fontSize,
         weight: CARD.NAME_FONT_WEIGHT,
         opacity: nameOpacity,
@@ -576,6 +582,7 @@ function layoutBlock(container, name, positionLines, options = {}) {
         top: top1,
         left: cx - CARD.MAX_TEXT_WIDTH / 2,
         width: CARD.MAX_TEXT_WIDTH,
+        centerX: cx,
         size: fontSize,
         weight: CARD.NAME_FONT_WEIGHT,
         opacity: nameOpacity,
@@ -585,6 +592,7 @@ function layoutBlock(container, name, positionLines, options = {}) {
         top: top2,
         left: cx - CARD.MAX_TEXT_WIDTH / 2,
         width: CARD.MAX_TEXT_WIDTH,
+        centerX: cx,
         size: fontSize,
         weight: CARD.NAME_FONT_WEIGHT,
         opacity: nameOpacity,
@@ -603,7 +611,7 @@ function layoutBlock(container, name, positionLines, options = {}) {
     if (!safePos) return;
     const { lines, fontSize, baselines } = layoutPositionOnly(safePos, 128);
     let finalSize = customPosSize && customPosSize !== "auto" ? parseFloat(customPosSize) : fontSize;
-    // Boundary protection: enforce safe margin (CARD.MAX_TEXT_WIDTH = 618 pt)
+    // Boundary protection: enforce safe margin (CARD.MAX_TEXT_WIDTH = 625 pt)
     lines.forEach(line => {
       const w = measureTextWidthPt(line, CARD.NAME_FONT_WEIGHT, finalSize, posFontFamily);
       if (w > CARD.MAX_TEXT_WIDTH && CARD.MAX_TEXT_WIDTH > 0) {
@@ -616,6 +624,7 @@ function layoutBlock(container, name, positionLines, options = {}) {
         top: top,
         left: cx - CARD.MAX_TEXT_WIDTH / 2,
         width: CARD.MAX_TEXT_WIDTH,
+        centerX: cx,
         size: finalSize,
         weight: CARD.NAME_FONT_WEIGHT,
         opacity: positionOpacity,
@@ -652,7 +661,7 @@ function layoutBlock(container, name, positionLines, options = {}) {
   if (safeName) {
     let fontSize = customNameSize && customNameSize !== "auto" ? parseFloat(customNameSize) : CARD.NAME_FONT_SIZE;
     const measuredW = measureTextWidthPt(safeName, CARD.NAME_FONT_WEIGHT, fontSize, nameFontFamily);
-    // Boundary protection: enforce safe margin (CARD.NAME_BOX_WIDTH = 618 pt) so text never touches Kemnaker/Indonesia Emas logos
+    // Boundary protection: enforce safe margin (CARD.NAME_BOX_WIDTH = 625 pt) so text never touches Kemnaker/Indonesia Emas logos
     if (measuredW > CARD.NAME_BOX_WIDTH && CARD.NAME_BOX_WIDTH > 0) {
       fontSize = Math.floor(fontSize * (CARD.NAME_BOX_WIDTH / measuredW) * 10) / 10;
     }
@@ -661,6 +670,7 @@ function layoutBlock(container, name, positionLines, options = {}) {
       top: nameTop,
       left: cx - CARD.NAME_BOX_WIDTH / 2,
       width: CARD.NAME_BOX_WIDTH,
+      centerX: cx,
       size: fontSize,
       weight: CARD.NAME_FONT_WEIGHT,
       opacity: nameOpacity,
@@ -670,7 +680,7 @@ function layoutBlock(container, name, positionLines, options = {}) {
 
   if (numPosLines > 0) {
     let posFontSize = customPosSize && customPosSize !== "auto" ? parseFloat(customPosSize) : CARD.POSITION_FONT_SIZE;
-    // Boundary protection: auto-fit position lines so they never exceed CARD.MAX_TEXT_WIDTH (618 pt)
+    // Boundary protection: auto-fit position lines so they never exceed CARD.MAX_TEXT_WIDTH (625 pt)
     safeLines.forEach(line => {
       const measuredLineW = measureTextWidthPt(line, CARD.POSITION_FONT_WEIGHT, posFontSize, posFontFamily);
       if (measuredLineW > CARD.MAX_TEXT_WIDTH && CARD.MAX_TEXT_WIDTH > 0) {
@@ -683,6 +693,7 @@ function layoutBlock(container, name, positionLines, options = {}) {
         top: boxTopForBaseline(baseline, posFontSize),
         left: cx - CARD.MAX_TEXT_WIDTH / 2,
         width: CARD.MAX_TEXT_WIDTH,
+        centerX: cx,
         size: posFontSize,
         weight: CARD.POSITION_FONT_WEIGHT,
         opacity: positionOpacity,

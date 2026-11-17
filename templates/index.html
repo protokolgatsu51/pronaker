@@ -1933,6 +1933,8 @@
       height: 372.72pt;
       background: #ffffff;
       transform-origin: top left;
+      -webkit-text-size-adjust: 100% !important;
+      text-size-adjust: 100% !important;
     }
 
     #bg,
@@ -1941,8 +1943,8 @@
       position: absolute;
       left: 0;
       top: 0;
-      width: 841.89pt;
-      height: 372.72pt;
+      width: 100%;
+      height: 100%;
       display: block;
     }
 
@@ -1950,11 +1952,13 @@
       position: absolute;
       left: 0;
       top: 0;
-      width: 841.89pt;
-      height: 372.72pt;
+      width: 100%;
+      height: 100%;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       text-rendering: geometricPrecision;
+      -webkit-text-size-adjust: 100% !important;
+      text-size-adjust: 100% !important;
     }
 
     #block-flip,
@@ -6381,17 +6385,22 @@
 
     function fitPreview() {
       const wrap = document.querySelector(".preview-scale-wrap");
-      if (wrap && wrap.clientWidth > 0) {
+      if (wrap && wrap.clientWidth > 0 && typeof CARD !== "undefined") {
         const cardWidthPx = CARD.PAGE_W * PT_TO_PX;
         const cardHeightPx = CARD.PAGE_H * PT_TO_PX;
         const scale = wrap.clientWidth / cardWidthPx;
         const cardElem = document.getElementById("card");
         const previewInner = document.getElementById("previewInner");
         if (cardElem) {
-          cardElem.style.transform = "none";
-          cardElem.style.zoom = scale;
+          cardElem.style.width = cardWidthPx + "px";
+          cardElem.style.height = cardHeightPx + "px";
+          cardElem.style.transformOrigin = "top left";
+          cardElem.style.transform = `scale(${scale})`;
+          cardElem.style.zoom = "1";
         }
-        if (previewInner) previewInner.style.height = (cardHeightPx * scale) + "px";
+        if (previewInner) {
+          previewInner.style.height = (cardHeightPx * scale) + "px";
+        }
       }
 
       if (typeof fitSheetPreview === "function") {
