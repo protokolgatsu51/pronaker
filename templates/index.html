@@ -570,7 +570,7 @@
 
     .hero-header {
       max-width: 820px;
-      margin-bottom: 28px;
+      margin-bottom: 20px;
     }
 
     .hero-title {
@@ -578,7 +578,7 @@
       font-weight: 800;
       line-height: 1.2;
       letter-spacing: -0.8px;
-      margin-bottom: 12px;
+      margin-bottom: 0;
     }
 
     .highlight-silver {
@@ -592,13 +592,12 @@
       position: relative;
     }
 
-    .hero-desc {
-      font-size: 11.5px;
-      color: #e2e8f0;
-      line-height: 1.6;
-      max-width: 680px;
-      font-weight: 400;
-      opacity: 0.95;
+    /* Elements removed by request for all screen sizes (desktop and mobile) */
+    .hero-desc,
+    .input-hint,
+    .bulk-info-banner,
+    .bulk-pdf-notice {
+      display: none !important;
     }
 
     /* --- Dashboard Layout --- */
@@ -1925,7 +1924,8 @@
 
     #card,
     #card-sheet,
-    #card-bulk {
+    #card-bulk,
+    #card-bulk-active {
       position: absolute;
       left: 0;
       top: 0;
@@ -1939,7 +1939,8 @@
 
     #bg,
     #bg-sheet,
-    #bg-bulk {
+    #bg-bulk,
+    #bg-bulk-active {
       position: absolute;
       left: 0;
       top: 0;
@@ -1964,6 +1965,7 @@
     #block-flip,
     #block-flip-sheet,
     #block-flip-bulk,
+    #block-flip-bulk-active,
     .block-flip {
       transform: rotate(180deg);
       transform-origin: 50% 50%;
@@ -2260,6 +2262,23 @@
     .bulk-pill-item.ios-thumb-item.active .ios-thumb-active-ring {
       opacity: 1;
       inset: -2.5px;
+    }
+
+    /* Responsive Preview Slots & Mobile Bulk View */
+    .mobile-preview-slot {
+      display: none;
+    }
+
+    .desktop-preview-slot {
+      display: block;
+    }
+
+    .bulk-mobile-gallery-view {
+      display: none;
+    }
+
+    .bulk-desktop-list-view {
+      display: block;
     }
 
     /* Header Settings Button (Inline with PREVIEW LANGSUNG) */
@@ -3516,6 +3535,88 @@
         margin-bottom: 16px;
       }
 
+      /* Hide smart format banner and pdf output notices on mobile per user request */
+      .bulk-info-banner,
+      .bulk-pdf-notice {
+        display: none !important;
+      }
+
+      /* Mobile Unified Preview Slot (situated between tabs and inputs) */
+      .mobile-preview-slot {
+        display: block !important;
+        width: 100%;
+        margin-bottom: 14px;
+      }
+
+      .desktop-preview-slot {
+        display: none !important;
+      }
+
+      .mobile-preview-slot .preview-card-frame {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+      }
+
+      .mobile-preview-slot .preview-top-bar {
+        margin-bottom: 8px;
+        padding: 0 2px;
+      }
+
+      .mobile-preview-slot .preview-scale-wrap {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(0, 0, 0, 0.07);
+        background: #ffffff;
+      }
+
+      /* Bulk Mobile Filmstrip Scrubber Gallery View */
+      .bulk-mobile-gallery-view {
+        display: block !important;
+        width: 100%;
+      }
+
+      .bulk-desktop-list-view,
+      .bulk-stack-header,
+      .bulk-cards-list,
+      .preview-bottom-info {
+        display: none !important;
+      }
+
+      .bulk-mobile-sheet-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        padding: 0 2px;
+      }
+
+      .bulk-active-sheet-pill {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        color: #15406a;
+      }
+
+      .bulk-active-sheet-title {
+        font-size: 11px;
+        font-weight: 600;
+        color: #64748b;
+        max-width: 180px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .ios-filmstrip-track {
+        padding: 4px calc(50% - 53px) !important;
+      }
+
       .tab-btn {
         padding: 8px 10px;
         font-size: 12.5px;
@@ -4030,7 +4131,7 @@
         <h1 class="hero-title">
           Name Table <span class="highlight-silver">Standar</span> Kemnaker RI
         </h1>
-        <p class="hero-desc">
+        <p class="hero-desc" style="display: none !important;">
           Pilih metode input, masukkan nama dan jabatan, cek hasilnya, lalu download/cetak PDF
         </p>
       </div>
@@ -4076,6 +4177,9 @@
               Input Banyak
             </button>
           </div>
+
+          <!-- Mobile Unified Live Preview Slot (situated between tabs and inputs) -->
+          <div id="mobilePreviewSlot" class="mobile-preview-slot"></div>
 
           <!-- Tab 1: Single Generator Form -->
           <div id="tabSingleContent">
@@ -4171,7 +4275,7 @@
                   <textarea id="name" name="name" class="form-input" placeholder="Masukkan Nama Lengkap"
                     required rows="1" style="min-height: 48px; height: 48px; resize: none;"></textarea>
                 </div>
-                <div class="input-hint" id="nameInputHint">
+                <div class="input-hint" id="nameInputHint" style="display: none !important;">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="10"></circle>
                     <line x1="12" y1="16" x2="12" y2="12"></line>
@@ -4197,7 +4301,7 @@
                   <textarea id="position" name="position" class="form-input"
                     placeholder="Masukkan Jabatan atau Posisi Lengkap" required></textarea>
                 </div>
-                <div class="input-hint" id="posInputHint">
+                <div class="input-hint" id="posInputHint" style="display: none !important;">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="10"></circle>
                     <line x1="12" y1="16" x2="12" y2="12"></line>
@@ -4290,7 +4394,7 @@
                 </div>
               </div>
 
-              <div class="bulk-info-banner" id="bulkInfoBanner">
+              <div class="bulk-info-banner" id="bulkInfoBanner" style="display: none !important;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                   style="flex-shrink: 0; margin-top: 1px;">
                   <circle cx="12" cy="12" r="10"></circle>
@@ -4341,7 +4445,7 @@
               </div>
 
               <!-- Output Note -->
-              <div class="bulk-pdf-notice">
+              <div class="bulk-pdf-notice" style="display: none !important;">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                   style="flex-shrink: 0;">
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -4392,8 +4496,8 @@
         </div>
 
         <!-- Right: Real-time Live Preview & Feature Badges -->
-        <div class="preview-showcase">
-          <div class="preview-card-frame">
+        <div class="preview-showcase desktop-preview-slot" id="desktopPreviewSlot">
+          <div class="preview-card-frame" id="previewCardFrame">
             <div class="preview-top-bar">
               <div class="preview-headline">
                 <span class="badge-live"></span>
@@ -4423,30 +4527,80 @@
               </div>
             </div>
 
-            <!-- Bulk Mode Viewport (Berderet ke Bawah seperti Awal) -->
+            <!-- Bulk Mode Viewport -->
             <div id="bulkPreviewContainer" style="display: none;">
-              <div class="bulk-stack-header">
-                <span class="bulk-stack-badge" id="bulkStackBadge">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                    <line x1="16" y1="17" x2="8" y2="17"></line>
-                  </svg>
-                  <span id="bulkTotalSheetsText">0 Lembar PDF</span>
-                </span>
-                <span class="bulk-stack-hint">Semua lembar digabung dalam 1 file PDF</span>
+              <!-- Mobile View: Filmstrip Scrubber Gallery with Active Preview Card -->
+              <div class="bulk-mobile-gallery-view" id="bulkMobileGalleryView">
+                <div class="bulk-mobile-sheet-header">
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    <span class="badge-live" style="width: 7px; height: 7px;"></span>
+                    <span class="bulk-active-sheet-pill" id="bulkActiveSheetPill">Lembar 1 dari 1</span>
+                  </div>
+                  <span class="bulk-active-sheet-title" id="bulkActiveSheetTitle">-</span>
+                </div>
+
+                <div class="preview-scale-wrap bulk-active-scale-wrap">
+                  <div class="preview-inner" id="bulkActivePreviewInner">
+                    <div id="card-bulk-active" class="card-element">
+                      <img id="bg-bulk-active" src="{{ url_for('static', filename='template_background_new.png') }}" alt="Card Background">
+                      <div id="block-normal-bulk-active" class="block"></div>
+                      <div id="block-flip-bulk-active" class="block"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- iOS Photos Style Filmstrip Scrubber Gallery (Main Page) -->
+                <div class="bulk-gallery-bar" id="mainBulkGalleryBar">
+                  <div class="ios-filmstrip-row">
+                    <button type="button" class="btn-gallery-nav btn-ios-film-nav" id="btnMainBulkPrev" onclick="navigateMainBulkSheet(-1)" title="Lembar Sebelumnya">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    </button>
+
+                    <div class="ios-filmstrip-viewport" id="mainFilmstripViewport">
+                      <div class="bulk-pills-strip ios-filmstrip-track" id="mainBulkPillsStrip"></div>
+                    </div>
+
+                    <button type="button" class="btn-gallery-nav btn-ios-film-nav" id="btnMainBulkNext" onclick="navigateMainBulkSheet(1)" title="Lembar Berikutnya">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </button>
+                  </div>
+                </div>
               </div>
 
-              <!-- Vertical Scrollable Stack of Cards (Rata Flush Kanan & Kiri) -->
-              <div id="bulkCardsList" class="bulk-cards-list"></div>
+              <!-- Desktop View: Vertical Stack of Cards -->
+              <div class="bulk-desktop-list-view" id="bulkDesktopListView">
+                <div class="bulk-stack-header">
+                  <span class="bulk-stack-badge" id="bulkStackBadge">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                      <polyline points="14 2 14 8 20 8"></polyline>
+                      <line x1="16" y1="13" x2="8" y2="13"></line>
+                      <line x1="16" y1="17" x2="8" y2="17"></line>
+                    </svg>
+                    <span id="bulkTotalSheetsText">0 Lembar PDF</span>
+                  </span>
+                  <span class="bulk-stack-hint">Semua lembar digabung dalam 1 file PDF</span>
+                </div>
 
-              <div class="preview-bottom-info" style="margin-top: 12px;">
-                <span>Setiap nama dicetak pada lembar terpisah</span>
-                <span id="bulkBottomStatus">Total: <strong>0 Halaman PDF</strong></span>
+                <div id="bulkCardsList" class="bulk-cards-list"></div>
+
+                <div class="preview-bottom-info" style="margin-top: 12px;">
+                  <span>Setiap nama dicetak pada lembar terpisah</span>
+                  <span id="bulkBottomStatus">Total: <strong>0 Halaman PDF</strong></span>
+                </div>
               </div>
             </div>
           </div>
+        </div>
+        <script>
+          (function() {
+            if (window.innerWidth <= 1060) {
+              var f = document.getElementById("previewCardFrame");
+              var s = document.getElementById("mobilePreviewSlot");
+              if (f && s && f.parentNode !== s) s.appendChild(f);
+            }
+          })();
+        </script>
 
           <!-- BOTTOM SHEET / DRAWER MODAL DENGAN EMBEDDED LIVE PREVIEW -->
           <div class="sheet-backdrop" id="opt2SheetBackdrop" onclick="if(event.target === this) cancelOpt2Sheet()">
@@ -4700,13 +4854,9 @@
             </div>
           </div>
 
-
-
         </div>
 
       </div>
-
-    </div>
 
     <!-- Footer seamlessly inside the blue wallpaper -->
     <footer class="footer">
@@ -5616,34 +5766,24 @@
 
         // 1. Single form adjustments
         if (nameEl) {
-          if (!nameEl.hasAttribute("readonly")) {
-            tamuDraftName = nameEl.value;
-          }
           nameEl.setAttribute("readonly", "readonly");
           nameEl.classList.add("input-readonly-kemnaker");
           nameEl.removeAttribute("maxlength");
+          nameEl.value = "";
+          nameEl.placeholder = "Pilih Unit Kerja & Jabatan di atas";
         }
         if (posEl) {
-          if (!posEl.hasAttribute("readonly")) {
-            tamuDraftPos = posEl.value;
-          }
           posEl.setAttribute("readonly", "readonly");
           posEl.classList.add("input-readonly-kemnaker");
-        }
-        if (nameHint) {
-          nameHint.innerHTML = "Nama terisi lengkap dari Kemnaker. <strong>Gelar otomatis dibersihkan pada pratinjau &amp; cetak PDF</strong>.";
-        }
-        if (posHint) {
-          posHint.textContent = "Jabatan terisi otomatis dari struktur bagan resmi Kemnaker RI.";
+          posEl.value = "";
+          posEl.placeholder = "Pilih Unit Kerja & Jabatan di atas";
         }
 
         // 2. Batch form adjustments
         if (bulkEl) {
-          if (!bulkEl.hasAttribute("readonly")) {
-            tamuDraftBulk = bulkEl.value;
-          }
           bulkEl.setAttribute("readonly", "readonly");
           bulkEl.classList.add("input-readonly-kemnaker");
+          bulkEl.value = "";
           bulkEl.placeholder = "Pilih Unit Kerja di atas untuk memuat seluruh struktur pejabat ke daftar ini.";
         }
 
@@ -5655,20 +5795,17 @@
         if (offSelect) {
           offSelect.innerHTML = '<option value="">-- Pilih Unit Kerja Terlebih Dahulu --</option>';
           offSelect.disabled = true;
+          offSelect.value = "";
         }
         if (countBadge) countBadge.textContent = "0 Pilihan";
-        if (nameEl) {
-          nameEl.value = "";
-          nameEl.placeholder = "Pilih Unit Kerja & Jabatan di atas";
-        }
-        if (posEl) {
-          posEl.value = "";
-          posEl.placeholder = "Pilih Unit Kerja & Jabatan di atas";
-        }
 
         const batchUnitSelect = document.getElementById("kemnakerBatchUnitSelect");
         if (batchUnitSelect) batchUnitSelect.value = "";
-        if (bulkEl) bulkEl.value = "";
+
+        // Reset all drafts so switching always starts completely clean
+        tamuDraftName = "";
+        tamuDraftPos = "";
+        tamuDraftBulk = "";
 
         await loadKemnakerData();
         if (typeof syncAllModernDropdowns === "function") syncAllModernDropdowns();
@@ -5677,15 +5814,15 @@
         // --- TAMU MODE (Bersih / Default Awal Buka) ---
         if (singleContainer) singleContainer.style.display = "none";
         if (batchContainer) batchContainer.style.display = "none";
-        if (bulkBanner) bulkBanner.style.display = "flex";
+        if (bulkBanner) bulkBanner.style.display = "none";
         if (bulkCsv) bulkCsv.style.display = "flex";
 
-        // 1. Single form reset
+        // 1. Single form reset to clean initial state
         if (nameEl) {
           nameEl.removeAttribute("readonly");
           nameEl.classList.remove("input-readonly-kemnaker");
           nameEl.removeAttribute("maxlength");
-          nameEl.value = tamuDraftName || "";
+          nameEl.value = "";
           nameEl.placeholder = currentContentMode === "position_only"
             ? "Tidak digunakan dalam mode Jabatan Saja"
             : (currentContentMode === "name_only" ? "Masukkan Nama (bisa 1 atau 2 baris)" : "Masukkan Nama Lengkap");
@@ -5694,18 +5831,10 @@
           posEl.removeAttribute("readonly");
           posEl.classList.remove("input-readonly-kemnaker");
           posEl.removeAttribute("maxlength");
-          posEl.value = tamuDraftPos || "";
+          posEl.value = "";
           posEl.placeholder = currentContentMode === "name_only"
             ? "Tidak digunakan dalam mode Nama Saja"
             : (currentContentMode === "position_only" ? "Masukkan Jabatan (bisa 1 s/d 3 baris)" : "Masukkan Jabatan atau Posisi Lengkap");
-        }
-        if (nameHint) {
-          nameHint.textContent = currentContentMode === "name_only"
-            ? "Panjang nama bebas (bisa 1 atau 2 baris). Font otomatis menyesuaikan batas kartu."
-            : "Panjang nama bebas. Font otomatis menyesuaikan ke batas aman kartu atau dapat diatur manual.";
-        }
-        if (posHint) {
-          posHint.innerHTML = "Tekan <strong>Enter</strong> untuk membagi baris 1 &amp; 2 sesuai keinginan (font otomatis menyesuaikan batas aman kartu).";
         }
 
         const singleUnitSelect = document.getElementById("kemnakerUnitSelect");
@@ -5714,22 +5843,31 @@
         if (singleOffSelect) {
           singleOffSelect.innerHTML = '<option value="">-- Pilih Unit Kerja Terlebih Dahulu --</option>';
           singleOffSelect.disabled = true;
+          singleOffSelect.value = "";
         }
 
-        // 2. Batch form reset
+        // 2. Batch form reset to clean initial state
         if (bulkEl) {
           bulkEl.removeAttribute("readonly");
           bulkEl.classList.remove("input-readonly-kemnaker");
-          bulkEl.value = tamuDraftBulk || "";
+          bulkEl.value = "";
           bulkEl.placeholder = `Contoh:\nDr. H. Budi Santoso Wijaya, S.E., M.M., CPE. (Sekretaris Jenderal)\nNurul Aisyah Maharani Putri, M.Bus. - Direktur Jenderal PHI dan Jamsos\nProf. Dr. Ir. Muhammad Fauzan Ramadhan, S.T., IPU. : Kepala Badan\nPermatasari Wulan, M.A.\tDirektur Jenderal Binwasnaker`;
         }
 
         const batchUnitSelect = document.getElementById("kemnakerBatchUnitSelect");
         if (batchUnitSelect) batchUnitSelect.value = "";
 
+        // Reset all drafts so switching always starts completely clean
+        tamuDraftName = "";
+        tamuDraftPos = "";
+        tamuDraftBulk = "";
+
         if (typeof syncAllModernDropdowns === "function") syncAllModernDropdowns();
       }
 
+      currentBulkRows = [];
+      currentMainBulkIndex = 0;
+      currentModalBulkIndex = 0;
       update();
       updateBulkData();
       if (typeof syncAllModernDropdowns === "function") syncAllModernDropdowns();
@@ -5944,11 +6082,13 @@
       if (!slug || !kemnakerDataCache || !kemnakerDataCache.units) {
         officialSelect.innerHTML = '<option value="">-- Pilih Unit Kerja Terlebih Dahulu --</option>';
         officialSelect.disabled = true;
+        officialSelect.value = "";
         if (countBadge) countBadge.textContent = "0 Pilihan";
         if (nameEl) nameEl.value = "";
         if (posEl) posEl.value = "";
         if (typeof syncAllModernDropdowns === "function") syncAllModernDropdowns();
         update();
+        if (typeof fitPreview === "function") fitPreview();
         return;
       }
 
@@ -6049,6 +6189,8 @@
       if (!slug) {
         bulkEl.value = "";
         if (statusText) statusText.textContent = "📋 Silakan pilih Unit Kerja di atas untuk memuat pejabat";
+        currentBulkRows = [];
+        currentMainBulkIndex = 0;
         updateBulkData();
         return;
       }
@@ -6383,12 +6525,34 @@
 
     const PT_TO_PX = 96 / 72;
 
+    function adaptPreviewLayout() {
+      const isMobile = window.innerWidth <= 1060;
+      const frame = document.getElementById("previewCardFrame");
+      const mobileSlot = document.getElementById("mobilePreviewSlot");
+      const desktopSlot = document.getElementById("desktopPreviewSlot");
+      if (!frame || !mobileSlot || !desktopSlot) return;
+
+      if (isMobile) {
+        if (frame.parentNode !== mobileSlot) {
+          mobileSlot.appendChild(frame);
+        }
+      } else {
+        if (frame.parentNode !== desktopSlot) {
+          desktopSlot.appendChild(frame);
+        }
+      }
+    }
+    window.adaptPreviewLayout = adaptPreviewLayout;
+
     function fitPreview() {
-      const wrap = document.querySelector(".preview-scale-wrap");
-      if (wrap && wrap.clientWidth > 0 && typeof CARD !== "undefined") {
-        const cardWidthPx = CARD.PAGE_W * PT_TO_PX;
-        const cardHeightPx = CARD.PAGE_H * PT_TO_PX;
-        const scale = wrap.clientWidth / cardWidthPx;
+      if (typeof CARD === "undefined") return;
+      const cardWidthPx = CARD.PAGE_W * PT_TO_PX;
+      const cardHeightPx = CARD.PAGE_H * PT_TO_PX;
+
+      // Scale Single Mode Preview Card
+      const singleWrap = document.querySelector("#singlePreviewContainer .preview-scale-wrap");
+      if (singleWrap && singleWrap.clientWidth > 0) {
+        const scale = singleWrap.clientWidth / cardWidthPx;
         const cardElem = document.getElementById("card");
         const previewInner = document.getElementById("previewInner");
         if (cardElem) {
@@ -6403,12 +6567,26 @@
         }
       }
 
-      if (typeof fitSheetPreview === "function") {
-        fitSheetPreview();
+      // Scale Bulk Mode Mobile Active Preview Card
+      const bulkWrap = document.querySelector(".bulk-active-scale-wrap");
+      if (bulkWrap && bulkWrap.clientWidth > 0) {
+        const scale = bulkWrap.clientWidth / cardWidthPx;
+        const cardBulkActive = document.getElementById("card-bulk-active");
+        const bulkActiveInner = document.getElementById("bulkActivePreviewInner");
+        if (cardBulkActive) {
+          cardBulkActive.style.width = cardWidthPx + "px";
+          cardBulkActive.style.height = cardHeightPx + "px";
+          cardBulkActive.style.transformOrigin = "top left";
+          cardBulkActive.style.transform = `scale(${scale})`;
+          cardBulkActive.style.zoom = "1";
+        }
+        if (bulkActiveInner) {
+          bulkActiveInner.style.height = (cardHeightPx * scale) + "px";
+        }
       }
 
-      if (currentTab === "batch") {
-        renderBulkPreview();
+      if (typeof fitSheetPreview === "function") {
+        fitSheetPreview();
       }
     }
     window.fitPreview = fitPreview;
@@ -6743,10 +6921,29 @@
         if (currentGlobalSource === "kemnaker") {
           const singleContainer = document.getElementById("kemnakerSelectorsContainer");
           if (singleContainer) singleContainer.style.display = "block";
+          const unitSelect = document.getElementById("kemnakerUnitSelect");
+          const offSelect = document.getElementById("kemnakerOfficialSelect");
+          const countBadge = document.getElementById("kemnakerCountBadge");
+          if (unitSelect) unitSelect.value = "";
+          if (offSelect) {
+            offSelect.innerHTML = '<option value="">-- Pilih Unit Kerja Terlebih Dahulu --</option>';
+            offSelect.disabled = true;
+            offSelect.value = "";
+          }
+          if (countBadge) countBadge.textContent = "0 Pilihan";
         }
 
-        fitPreview();
+        // Reset single form to clean initial state before input
+        const nameEl = document.getElementById("name");
+        const posEl = document.getElementById("position");
+        if (nameEl) nameEl.value = "";
+        if (posEl) posEl.value = "";
+        tamuDraftName = "";
+        tamuDraftPos = "";
+
         update();
+        if (typeof syncAllModernDropdowns === "function") syncAllModernDropdowns();
+        if (typeof fitPreview === "function") fitPreview();
       } else {
         batchBtn.classList.add("active");
         singleBtn.classList.remove("active");
@@ -6764,17 +6961,23 @@
         if (currentGlobalSource === "kemnaker") {
           const batchContainer = document.getElementById("kemnakerBatchSelectorsContainer");
           if (batchContainer) batchContainer.style.display = "block";
-
           const batchUnitSelect = document.getElementById("kemnakerBatchUnitSelect");
-          const singleUnitSelect = document.getElementById("kemnakerUnitSelect");
-          if (batchUnitSelect && !batchUnitSelect.value && singleUnitSelect && singleUnitSelect.value) {
-            batchUnitSelect.value = singleUnitSelect.value;
-            onKemnakerBatchUnitChanged();
-          }
+          if (batchUnitSelect) batchUnitSelect.value = "";
+          const batchStatusText = document.getElementById("kemnakerBatchStatusText");
+          if (batchStatusText) batchStatusText.textContent = "📋 Seluruh struktur pejabat unit kerja akan otomatis masuk ke daftar";
         }
 
+        // Reset batch form to clean initial state before input
+        const bulkEl = document.getElementById("bulk_data");
+        if (bulkEl) bulkEl.value = "";
+        tamuDraftBulk = "";
+        currentBulkRows = [];
+        currentMainBulkIndex = 0;
+
         updateBulkData();
+        if (typeof syncAllModernDropdowns === "function") syncAllModernDropdowns();
         if (typeof fitBulkPreview === "function") fitBulkPreview();
+        if (typeof fitPreview === "function") fitPreview();
       }
 
       updateTabGlider(true);
@@ -6927,6 +7130,10 @@
             <div style="font-size: 12px;">Ketik atau tempel data nama dan jabatan di kolom kiri untuk melihat pratinjau semua lembar di sini.</div>
           </div>
         `;
+        // Fully reset mobile filmstrip gallery & active preview card to initial state!
+        renderMainBulkPills([]);
+        currentMainBulkIndex = 0;
+        renderMainBulkSheetCard(null);
         updateModalBulkPreview();
         return;
       }
@@ -7005,9 +7212,303 @@
         }
       });
 
+      // Also render mobile filmstrip gallery view
+      renderMainBulkPills(currentBulkRows);
+      if (currentMainBulkIndex >= currentBulkRows.length) {
+        currentMainBulkIndex = Math.max(0, currentBulkRows.length - 1);
+      }
+      renderMainBulkSheetCard(currentBulkRows[currentMainBulkIndex] || null);
+
       updateModalBulkPreview();
     }
     window.renderBulkPreview = renderBulkPreview;
+
+    let currentMainBulkIndex = 0;
+    let isMainScrubberInit = false;
+    let isMainProgrammaticScroll = false;
+
+    function renderMainBulkSheetCard(row) {
+      const normalBlock = document.getElementById("block-normal-bulk-active");
+      const flipBlock = document.getElementById("block-flip-bulk-active");
+      const bg = document.getElementById("bg-bulk-active");
+      const activeBg = currentBgUrl || BG_TEMPLATE_URL;
+      if (bg && activeBg) bg.src = activeBg;
+
+      const isSingleSide = currentSides === 1;
+      const sheetPill = document.getElementById("bulkActiveSheetPill");
+      const sheetTitle = document.getElementById("bulkActiveSheetTitle");
+      const btnPrev = document.getElementById("btnMainBulkPrev");
+      const btnNext = document.getElementById("btnMainBulkNext");
+
+      const textarea = document.getElementById("bulk_data");
+      const rows = textarea ? parseBulkData(textarea.value) : [];
+      const total = rows.length;
+
+      if (btnPrev) btnPrev.disabled = (currentMainBulkIndex <= 0);
+      if (btnNext) btnNext.disabled = (currentMainBulkIndex >= total - 1);
+
+      let rawName = (row && row.name) ? row.name.toString().trim() : "";
+      let rawPos = (row && row.position) ? row.position.toString().trim() : "";
+
+      if (typeof stripTrailingPunctuation === "function") {
+        rawName = stripTrailingPunctuation(rawName);
+        rawPos = stripTrailingPunctuation(rawPos);
+      }
+
+      const isNameEmpty = !rawName;
+      const isPosEmpty = !rawPos;
+
+      const placeholderName = (typeof DEFAULT_PREVIEW_NAME !== "undefined") ? DEFAULT_PREVIEW_NAME : "TAMPILAN NAMA LENGKAP";
+      const placeholderPos = (typeof DEFAULT_PREVIEW_POSITION !== "undefined") ? DEFAULT_PREVIEW_POSITION : "TAMPILAN JABATAN ATAU POSISI";
+
+      let displayName = rawName;
+      let displayPos = rawPos;
+      let nameOpacity = 1.0;
+      let positionOpacity = 1.0;
+
+      if (currentContentMode === "name_only") {
+        displayName = isNameEmpty ? placeholderName : rawName;
+        nameOpacity = isNameEmpty ? 0.6 : 1.0;
+        displayPos = "";
+      } else if (currentContentMode === "position_only") {
+        displayPos = isPosEmpty ? placeholderPos : rawPos;
+        positionOpacity = isPosEmpty ? 0.6 : 1.0;
+        displayName = "";
+      } else {
+        displayName = isNameEmpty ? placeholderName : rawName;
+        displayPos = isPosEmpty ? placeholderPos : rawPos;
+        nameOpacity = isNameEmpty ? 0.6 : 1.0;
+        positionOpacity = isPosEmpty ? 0.6 : 1.0;
+      }
+
+      if (total > 0) {
+        if (sheetPill) sheetPill.textContent = `Lembar ${currentMainBulkIndex + 1} dari ${total}`;
+        const titleSnippet = rawName ? (rawName + (rawPos ? ` - ${rawPos}` : "")) : (rawPos || "-");
+        if (sheetTitle) sheetTitle.textContent = titleSnippet;
+      } else {
+        if (sheetPill) sheetPill.textContent = "Contoh Pratinjau";
+        if (sheetTitle) sheetTitle.textContent = "Belum Ada Data";
+      }
+
+      const lines = displayPos ? (typeof wrapPosition === "function" ? wrapPosition(displayPos, { textCase: currentTextCase }) : [displayPos]) : [];
+      const blockOpts = {
+        mode: currentContentMode,
+        rawPosition: displayPos,
+        textCase: currentTextCase,
+        nameFontFamily: currentFontNameFamily,
+        posFontFamily: currentFontPosFamily,
+        nameFontSize: currentFontSizeName,
+        posFontSize: currentFontSizePos,
+        nameOpacity: nameOpacity,
+        positionOpacity: positionOpacity,
+        spacingGap: currentSpacingGap,
+        horizontalOffset: currentHorizontalOffset,
+        sides: currentSides,
+        bgUrl: activeBg,
+        cleanTitles: false
+      };
+
+      if (typeof layoutBlock === "function") {
+        if (normalBlock) layoutBlock(normalBlock, displayName, lines, blockOpts);
+        if (flipBlock) {
+          if (isSingleSide) {
+            flipBlock.style.display = "none";
+          } else {
+            flipBlock.style.display = "block";
+            layoutBlock(flipBlock, displayName, lines, blockOpts);
+          }
+        }
+      }
+    }
+    window.renderMainBulkSheetCard = renderMainBulkSheetCard;
+
+    function renderMainBulkPills(rows) {
+      const strip = document.getElementById("mainBulkPillsStrip");
+      const galleryBar = document.getElementById("mainBulkGalleryBar");
+      if (!strip) return;
+      if (!rows || rows.length === 0) {
+        strip.innerHTML = "";
+        if (galleryBar) galleryBar.style.display = "none";
+        return;
+      }
+      if (galleryBar) galleryBar.style.display = "flex";
+
+      const activeBg = currentBgUrl || BG_TEMPLATE_URL;
+      let html = "";
+      rows.forEach((r, idx) => {
+        const activeClass = (idx === currentMainBulkIndex) ? "active" : "";
+        const nameLabel = r.name ? r.name : `Lembar ${idx + 1}`;
+        const posLabel = r.position ? r.position : "";
+        html += `<button type="button" class="bulk-pill-item ios-thumb-item ${activeClass}" id="mainBulkPill-${idx}" onclick="selectMainBulkSheet(${idx})" data-index="${idx}" title="${escapeHtml(nameLabel)}${posLabel ? ' - ' + escapeHtml(posLabel) : ''}">
+          <div class="ios-thumb-card">
+            <img class="ios-thumb-bg" src="${activeBg}" alt="">
+            <span class="ios-thumb-badge">${idx + 1}</span>
+            <div class="ios-thumb-content">
+              <div class="ios-thumb-name">${escapeHtml(nameLabel)}</div>
+              ${posLabel ? `<div class="ios-thumb-pos">${escapeHtml(posLabel)}</div>` : ''}
+            </div>
+          </div>
+          <div class="ios-thumb-active-ring"></div>
+        </button>`;
+      });
+      strip.innerHTML = html;
+      initMainFilmstripScrubber();
+      scrollMainBulkPillIntoView(currentMainBulkIndex, false);
+    }
+    window.renderMainBulkPills = renderMainBulkPills;
+
+    function initMainFilmstripScrubber() {
+      const viewport = document.getElementById("mainFilmstripViewport");
+      const strip = document.getElementById("mainBulkPillsStrip");
+      if (!viewport || !strip || isMainScrubberInit) return;
+      isMainScrubberInit = true;
+
+      let rafId = null;
+
+      function handleCenterDetection() {
+        if (isMainProgrammaticScroll) return;
+        const vpRect = viewport.getBoundingClientRect();
+        const vpCenter = vpRect.left + vpRect.width / 2;
+        const items = strip.querySelectorAll(".ios-thumb-item");
+        if (!items || items.length === 0) return;
+
+        let closestIdx = -1;
+        let closestDist = Infinity;
+
+        items.forEach(item => {
+          const rect = item.getBoundingClientRect();
+          const itemCenter = rect.left + rect.width / 2;
+          const dist = Math.abs(vpCenter - itemCenter);
+          if (dist < closestDist) {
+            closestDist = dist;
+            closestIdx = parseInt(item.dataset.index, 10);
+          }
+        });
+
+        if (closestIdx !== -1 && !isNaN(closestIdx) && closestIdx !== currentMainBulkIndex) {
+          currentMainBulkIndex = closestIdx;
+          strip.querySelectorAll(".ios-thumb-item").forEach((btn, i) => {
+            btn.classList.toggle("active", i === currentMainBulkIndex);
+          });
+          const textarea = document.getElementById("bulk_data");
+          const rows = textarea ? parseBulkData(textarea.value) : [];
+          if (rows && rows[currentMainBulkIndex]) {
+            renderMainBulkSheetCard(rows[currentMainBulkIndex]);
+          }
+        }
+      }
+
+      viewport.addEventListener("scroll", () => {
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(handleCenterDetection);
+      }, { passive: true });
+
+      let isTouching = false;
+      viewport.addEventListener("touchstart", () => {
+        isTouching = true;
+      }, { passive: true });
+
+      viewport.addEventListener("touchmove", () => {
+        if (isTouching) {
+          if (rafId) cancelAnimationFrame(rafId);
+          rafId = requestAnimationFrame(handleCenterDetection);
+        }
+      }, { passive: true });
+
+      viewport.addEventListener("touchend", () => {
+        isTouching = false;
+        setTimeout(() => {
+          scrollMainBulkPillIntoView(currentMainBulkIndex, true);
+        }, 150);
+      }, { passive: true });
+
+      viewport.addEventListener("wheel", (e) => {
+        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+          e.preventDefault();
+          viewport.scrollLeft += e.deltaY * 0.7;
+          handleCenterDetection();
+        }
+      }, { passive: false });
+
+      let isMouseDown = false;
+      let mouseStartX = 0;
+      let mouseScrollLeft = 0;
+
+      viewport.addEventListener("mousedown", (e) => {
+        isMouseDown = true;
+        viewport.classList.add("is-dragging");
+        mouseStartX = e.pageX - viewport.offsetLeft;
+        mouseScrollLeft = viewport.scrollLeft;
+      });
+
+      window.addEventListener("mousemove", (e) => {
+        if (!isMouseDown) return;
+        const x = e.pageX - viewport.offsetLeft;
+        const walk = (x - mouseStartX) * 1.1;
+        viewport.scrollLeft = mouseScrollLeft - walk;
+        handleCenterDetection();
+      });
+
+      window.addEventListener("mouseup", () => {
+        if (isMouseDown) {
+          isMouseDown = false;
+          viewport.classList.remove("is-dragging");
+          scrollMainBulkPillIntoView(currentMainBulkIndex, true);
+        }
+      });
+    }
+    window.initMainFilmstripScrubber = initMainFilmstripScrubber;
+
+    function selectMainBulkSheet(idx) {
+      const textarea = document.getElementById("bulk_data");
+      const rows = textarea ? parseBulkData(textarea.value) : [];
+      if (idx >= 0 && idx < rows.length) {
+        currentMainBulkIndex = idx;
+        const strip = document.getElementById("mainBulkPillsStrip");
+        if (strip) {
+          strip.querySelectorAll(".ios-thumb-item").forEach((btn, i) => {
+            btn.classList.toggle("active", i === currentMainBulkIndex);
+          });
+        }
+        renderMainBulkSheetCard(rows[currentMainBulkIndex]);
+        scrollMainBulkPillIntoView(currentMainBulkIndex, true);
+      }
+    }
+    window.selectMainBulkSheet = selectMainBulkSheet;
+
+    function navigateMainBulkSheet(direction) {
+      const textarea = document.getElementById("bulk_data");
+      const rows = textarea ? parseBulkData(textarea.value) : [];
+      const nextIdx = currentMainBulkIndex + direction;
+      if (nextIdx >= 0 && nextIdx < rows.length) {
+        selectMainBulkSheet(nextIdx);
+      }
+    }
+    window.navigateMainBulkSheet = navigateMainBulkSheet;
+
+    function scrollMainBulkPillIntoView(idx, smooth = true) {
+      const viewport = document.getElementById("mainFilmstripViewport");
+      const strip = document.getElementById("mainBulkPillsStrip");
+      if (!viewport || !strip) return;
+      const item = strip.querySelector(`[data-index="${idx}"]`);
+      if (!item) return;
+
+      isMainProgrammaticScroll = true;
+      const vpWidth = viewport.clientWidth;
+      const itemLeft = item.offsetLeft;
+      const itemWidth = item.offsetWidth;
+      const targetLeft = itemLeft - (vpWidth - itemWidth) / 2;
+
+      viewport.scrollTo({
+        left: targetLeft,
+        behavior: smooth ? "smooth" : "auto"
+      });
+
+      setTimeout(() => {
+        isMainProgrammaticScroll = false;
+      }, smooth ? 350 : 50);
+    }
+    window.scrollMainBulkPillIntoView = scrollMainBulkPillIntoView;
 
     // -------------------------------------------------------------------------
     // Modal Settings Sheet Preview & Gallery Scrubber Logic (Sesi Pengaturan Tampilan)
@@ -7248,11 +7749,15 @@
       const active = document.getElementById("modalBulkPill-" + currentModalBulkIndex);
       const viewport = document.getElementById("modalFilmstripViewport");
       if (active && viewport) {
+        viewport._isProgrammaticScroll = true;
         const activeLeft = active.offsetLeft;
         const activeWidth = active.offsetWidth;
         const vpWidth = viewport.offsetWidth;
         const targetScroll = activeLeft - (vpWidth / 2) + (activeWidth / 2);
         viewport.scrollTo({ left: targetScroll, behavior: "smooth" });
+        setTimeout(() => {
+          viewport._isProgrammaticScroll = false;
+        }, 350);
       }
     }
     window.scrollActiveModalPillIntoView = scrollActiveModalPillIntoView;
@@ -7261,6 +7766,48 @@
       const viewport = document.getElementById("modalFilmstripViewport");
       if (!viewport || viewport._iosScrubberInit) return;
       viewport._iosScrubberInit = true;
+
+      let rafModalId = null;
+      function handleModalCenterDetection() {
+        if (viewport._isProgrammaticScroll) return;
+        const vpRect = viewport.getBoundingClientRect();
+        const vpCenter = vpRect.left + vpRect.width / 2;
+        const items = viewport.querySelectorAll(".ios-thumb-item");
+        if (!items || items.length === 0) return;
+
+        let closestIdx = -1;
+        let closestDist = Infinity;
+
+        items.forEach(item => {
+          const rect = item.getBoundingClientRect();
+          const itemCenter = rect.left + rect.width / 2;
+          const dist = Math.abs(vpCenter - itemCenter);
+          if (dist < closestDist) {
+            closestDist = dist;
+            closestIdx = parseInt(item.dataset.index, 10);
+          }
+        });
+
+        if (closestIdx !== -1 && !isNaN(closestIdx) && closestIdx !== currentModalBulkIndex) {
+          currentModalBulkIndex = closestIdx;
+          const textarea = document.getElementById("bulk_data");
+          const rows = textarea ? parseBulkData(textarea.value) : [];
+          if (rows && rows[currentModalBulkIndex]) {
+            renderModalSheetCard(rows[currentModalBulkIndex]);
+            const strip = document.getElementById("modalBulkPillsStrip");
+            if (strip) {
+              strip.querySelectorAll(".bulk-pill-item").forEach((btn, idx) => {
+                btn.classList.toggle("active", idx === currentModalBulkIndex);
+              });
+            }
+          }
+        }
+      }
+
+      viewport.addEventListener("scroll", () => {
+        if (rafModalId) cancelAnimationFrame(rafModalId);
+        rafModalId = requestAnimationFrame(handleModalCenterDetection);
+      }, { passive: true });
 
       let isDown = false;
       let startX = 0;
@@ -7271,6 +7818,7 @@
         if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
           e.preventDefault();
           viewport.scrollLeft += e.deltaY * 0.7;
+          handleModalCenterDetection();
         }
       }, { passive: false });
 
@@ -7287,15 +7835,7 @@
         const x = e.pageX - viewport.offsetLeft;
         const walk = (x - startX) * 1.1;
         viewport.scrollLeft = scrollLeft - walk;
-
-        const targetElem = document.elementFromPoint(e.clientX, e.clientY);
-        const item = targetElem ? targetElem.closest(".ios-thumb-item") : null;
-        if (item && item.dataset && item.dataset.index !== undefined) {
-          const idx = parseInt(item.dataset.index, 10);
-          if (!isNaN(idx) && idx !== currentModalBulkIndex) {
-            selectModalBulkSheet(idx);
-          }
-        }
+        handleModalCenterDetection();
       });
 
       window.addEventListener("mouseup", () => {
@@ -7307,34 +7847,12 @@
       });
 
       // Touch Dragging / Scrubbing (Mobile)
-      let touchStartX = 0;
-      let touchScrollLeft = 0;
-      viewport.addEventListener("touchstart", (e) => {
-        if (e.touches.length === 1) {
-          touchStartX = e.touches[0].pageX - viewport.offsetLeft;
-          touchScrollLeft = viewport.scrollLeft;
-        }
-      }, { passive: true });
-
-      viewport.addEventListener("touchmove", (e) => {
-        if (e.touches.length === 1) {
-          const x = e.touches[0].pageX - viewport.offsetLeft;
-          const walk = (x - touchStartX) * 1.1;
-          viewport.scrollLeft = touchScrollLeft - walk;
-
-          const targetElem = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
-          const item = targetElem ? targetElem.closest(".ios-thumb-item") : null;
-          if (item && item.dataset && item.dataset.index !== undefined) {
-            const idx = parseInt(item.dataset.index, 10);
-            if (!isNaN(idx) && idx !== currentModalBulkIndex) {
-              selectModalBulkSheet(idx);
-            }
-          }
-        }
+      viewport.addEventListener("touchmove", () => {
+        handleModalCenterDetection();
       }, { passive: true });
 
       viewport.addEventListener("touchend", () => {
-        scrollActiveModalPillIntoView();
+        setTimeout(scrollActiveModalPillIntoView, 150);
       });
     }
     window.initIosFilmstripScrubber = initIosFilmstripScrubber;
@@ -8426,8 +8944,9 @@
       }
     });
 
-    // Initial render
+    // Initial render & responsive layout adapt
     window.addEventListener("DOMContentLoaded", () => {
+      adaptPreviewLayout();
       initAllModernDropdowns();
       syncAllModernDropdowns();
       updateAllGliders(false);
@@ -8442,8 +8961,15 @@
         }, 500);
       }
     });
-    setTimeout(() => { updateAllGliders(false); syncAllModernDropdowns(); update(); fitPreview(); fitFooterBrandText(); }, 400);
-    setTimeout(() => { updateAllGliders(false); syncAllModernDropdowns(); update(); fitPreview(); fitFooterBrandText(); }, 1000);
+
+    window.addEventListener("resize", () => {
+      adaptPreviewLayout();
+      fitPreview();
+      fitFooterBrandText();
+    });
+
+    setTimeout(() => { adaptPreviewLayout(); updateAllGliders(false); syncAllModernDropdowns(); update(); fitPreview(); fitFooterBrandText(); }, 400);
+    setTimeout(() => { adaptPreviewLayout(); updateAllGliders(false); syncAllModernDropdowns(); update(); fitPreview(); fitFooterBrandText(); }, 1000);
   </script>
 
   <!-- Pronaker Toast Notification -->
