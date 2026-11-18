@@ -1785,23 +1785,22 @@
     .preview-headline {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 8px;
       background: #f8fafc;
       border: 1.5px solid #e2e8f0;
-      padding: 3.5px 9.5px;
+      padding: 6px 14px;
       border-radius: 9999px;
-      font-size: 10px;
+      font-size: 11.5px;
       font-weight: 800;
       color: #15406a;
-      letter-spacing: 0.4px;
+      letter-spacing: 0.6px;
       text-transform: uppercase;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-      line-height: 1;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
     }
 
     .preview-headline .badge-live {
-      width: 6px;
-      height: 6px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
       background: #ef4444;
       display: inline-block;
@@ -2381,9 +2380,9 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 9px;
-      padding-bottom: 8px;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
       border-bottom: 1px solid #f1f5f9;
       flex-wrap: wrap;
     }
@@ -2393,22 +2392,21 @@
       color: #ffffff;
       border: 1px solid rgba(0, 51, 102, 0.2);
       border-radius: 9999px;
-      padding: 4px 11px;
-      font-size: 11px;
+      padding: 7px 15px;
+      font-size: 12.5px;
       font-weight: 700;
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 7px;
       cursor: pointer;
       transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: 0 2px 6px rgba(0, 51, 102, 0.22);
+      box-shadow: 0 2px 6px rgba(0, 51, 102, 0.25);
       white-space: nowrap;
       outline: none;
-      line-height: 1;
     }
     .btn-top-settings svg {
-      width: 12.5px;
-      height: 12.5px;
+      width: 15px;
+      height: 15px;
     }
     .btn-top-settings:hover {
       background: #002244;
@@ -2417,6 +2415,9 @@
     }
     .btn-top-settings:active {
       transform: translateY(0);
+    }
+    .btn-top-settings-compact {
+      display: none;
     }
     @media (max-width: 640px) {
       .preview-top-bar {
@@ -2443,6 +2444,12 @@
       .btn-top-settings svg {
         width: 11px;
         height: 11px;
+      }
+      .btn-top-settings-full {
+        display: none;
+      }
+      .btn-top-settings-compact {
+        display: inline;
       }
     }
 
@@ -4675,9 +4682,10 @@
                 <span class="status-circle"></span>
                 <span id="fontStatus">Myriad Pro Memuat…</span>
               </div>
-              <button type="button" class="btn-top-settings" onclick="openOpt2Sheet()" id="btnTopSettings" title="Pengaturan Desain &amp; Format">
-                <svg width="12.5" height="12.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                <span>Pengaturan</span>
+              <button type="button" class="btn-top-settings" onclick="openOpt2Sheet()" id="btnTopSettings" title="Sesuaikan Desain &amp; Format">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                <span class="btn-top-settings-full">Sesuaikan Desain &amp; Format</span>
+                <span class="btn-top-settings-compact">Pengaturan</span>
               </button>
             </div>
 
