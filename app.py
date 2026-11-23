@@ -14,7 +14,9 @@ from urllib.parse import parse_qs
 
 from flask import Flask, render_template, request, send_file, flash, redirect, url_for, jsonify, send_from_directory
 
+import io
 import kemnaker_data
+import generate_notepad
 from generate_html import build_pdf_with_fallback as build_pdf
 from generate_html import build_pdf_multipage
 from paths import resource_path, output_dir, slugify, base_dir, is_frozen
@@ -64,7 +66,44 @@ def nametable():
 
 @app.route("/notepad", methods=["GET"])
 def notepad():
-    return redirect("/nametable?coming_soon=notepad")
+    return render_template("notepad.html")
+
+
+@app.route("/generate_notepad", methods=["POST"])
+def generate_notepad_route():
+    import json
+    data = None
+    if request.is_json:
+        data = request.get_json(silent=True)
+    if not data:
+        data = request.form.to_dict()
+        if "pendamping_list" in data and isinstance(data["pendamping_list"], str):
+            try:
+                data["pendamping_list"] = json.loads(data["pendamping_list"])
+            except Exception:
+                data["pendamping_list"] = []
+        if "peserta_list" in data and isinstance(data["peserta_list"], str):
+            try:
+                data["peserta_list"] = json.loads(data["peserta_list"])
+            except Exception:
+                data["peserta_list"] = []
+        if "use_numbering" in data:
+            data["use_numbering"] = data["use_numbering"] in ("true", "1", "on", True)
+
+    if not data:
+        return "Data tidak valid", 400
+
+    pdf_bytes = generate_notepad.build_notepad_pdf(data)
+    title = (data.get("title") or "Notepad").strip()
+    slug = slugify(title)[:40] if title else "notepad"
+    filename = f"Notepad_{slug}.pdf"
+    
+    return send_file(
+        io.BytesIO(pdf_bytes),
+        mimetype="application/pdf",
+        as_attachment=True,
+        download_name=filename
+    )
 
 
 
@@ -87,10 +126,15 @@ def download_sample_csv():
 
 
 @app.route("/api/kemnaker-units", methods=["GET"])
+@app.route("/kemnaker_data", methods=["GET"])
 def api_kemnaker_units():
     force_refresh = request.args.get("refresh", "0") in ("1", "true", "True")
     data = kemnaker_data.get_kemnaker_data(force_refresh=force_refresh)
-    return jsonify(data)
+    resp = jsonify(data)
+    resp.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, max-age=0"
+    resp.headers["Pragma"] = "no-cache"
+    resp.headers["Expires"] = "0"
+    return resp
 
 
 import hashlib
@@ -159,6 +203,7 @@ def _extract_card_options(form):
     font_size_name = form.get("font_size_name", "auto").strip()
     font_size_pos = form.get("font_size_pos", "auto").strip()
     spacing_gap = form.get("spacing_gap", "40").strip()
+    spacing_is_manual = form.get("spacing_is_manual", "0").strip()
     horizontal_offset = form.get("horizontal_offset", "0").strip()
     text_case = form.get("text_case", "uppercase").strip()
     paper_size = form.get("paper_size", "a4").strip()
@@ -176,6 +221,7 @@ def _extract_card_options(form):
         "font_size_name": font_size_name,
         "font_size_pos": font_size_pos,
         "spacing_gap": spacing_gap,
+        "spacing_is_manual": spacing_is_manual,
         "horizontal_offset": horizontal_offset,
         "text_case": text_case,
         "paper_size": paper_size,
@@ -194,7 +240,7 @@ def generate_single():
         content_mode = "both"
 
     input_source = request.form.get("input_source", "tamu").strip().lower()
-    raw_name = sanitize_text(request.form.get("name", ""))
+    raw_name = sanitize_text(request.form.get("name", ""), preserve_newlines=(content_mode == "name_only"))
     raw_position = sanitize_text(request.form.get("position", ""), preserve_newlines=True)
 
     opts = _extract_card_options(request.form)
@@ -202,7 +248,10 @@ def generate_single():
     if input_source == "kemnaker":
         raw_position = kemnaker_data.expand_kemnaker_position(raw_position)
         cleaned_position = clean_position_text(raw_position)
-        cleaned_name = format_bulk_name(raw_name, max_len=24, font=opts.get("font_name_choice"), font_size=opts.get("font_size_name"))
+        if content_mode == "name_only" and "\n" in raw_name:
+            cleaned_name = "\n".join(clean_titles(part) for part in raw_name.splitlines() if part.strip())
+        else:
+            cleaned_name = format_bulk_name(raw_name, max_len=24, font=opts.get("font_name_choice"), font_size=opts.get("font_size_name"))
     else:
         # Manual Single Input (Tamu / Manual): preserve user's full name, titles, and position text verbatim
         cleaned_name = raw_name

@@ -3,17 +3,18 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <meta name="referrer" content="no-referrer">
-  <title>Protokol Kemnaker RI</title>
+  <title>Protokol Tools Kemnaker RI</title>
   <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo_kemnaker.png') }}">
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
   <link rel="apple-touch-icon" href="{{ url_for('static', filename='logo_kemnaker.png') }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,700&family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;1,600;1,700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600;1,700&family=Roboto:ital,wght@0,400;0,500;0,700;1,400;1,700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,700&family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;1,600;1,700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600;1,700;1,800&family=Roboto:ital,wght@0,400;0,500;0,700;1,400;1,700&display=swap"
     rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='dropdown.css') }}?v=20261123a">
 
   <style>
     @font-face {
@@ -589,9 +590,11 @@
     /* --- Hero Section --- */
     .hero-section {
       position: relative;
-      background: radial-gradient(circle at 85% 20%, #1a4e80 0%, #15406a 45%, #0b243d 100%);
+      background: radial-gradient(960px circle at 85% 180px, #1a4e80 0%, #15406a 45%, #0b243d 100%);
+      background-color: #0b243d;
       color: #ffffff;
-      overflow: hidden;
+      overflow-x: clip;
+      overflow-y: visible;
       padding: 24px 24px 0;
       flex: 1 0 auto;
       min-height: calc(100vh - 72px);
@@ -623,6 +626,11 @@
       max-width: 1240px;
       margin: 0 auto;
       flex: 1 0 auto;
+      z-index: 10;
+    }
+
+    .hero-container:has(.custom-select-wrapper.open) {
+      z-index: 60;
     }
 
     .hero-header {
@@ -713,6 +721,7 @@
       gap: 32px;
       align-items: start;
       margin-top: 10px;
+      margin-bottom: 36px;
     }
 
     @media (max-width: 1060px) {
@@ -725,6 +734,8 @@
 
     /* --- Left Side: Generator Control Card --- */
     .generator-card {
+      position: relative;
+      z-index: 20;
       background: #ffffff;
       border-radius: 20px;
       padding: 24px;
@@ -735,7 +746,11 @@
       max-width: 100%;
       min-width: 0;
       box-sizing: border-box;
-      overflow: hidden;
+      overflow: visible;
+    }
+
+    .generator-card:has(.custom-select-wrapper.open) {
+      z-index: 999;
     }
 
     .tab-switch-wrap {
@@ -963,472 +978,6 @@
       box-sizing: border-box;
     }
 
-    /* =========================================================================
-       Modern Custom Dropdown Component (Kemnaker Theme: Unit Kerja, Jabatan, Font)
-       ========================================================================= */
-    .custom-select-wrapper {
-      position: relative;
-      width: 100%;
-      max-width: 100%;
-      min-width: 0;
-      box-sizing: border-box;
-      user-select: none;
-      font-family: inherit;
-    }
-
-    .custom-select-wrapper.open {
-      z-index: 1000;
-    }
-
-    .feature-pill-card:has(.custom-select-wrapper.open) {
-      z-index: 60;
-    }
-
-    /* Trigger Button */
-    .custom-select-trigger {
-      width: 100%;
-      max-width: 100%;
-      min-width: 0;
-      overflow: hidden;
-      min-height: 44px;
-      padding: 11px 14px;
-      background: #ffffff;
-      border: 1.5px solid #cbd5e1;
-      border-radius: 10px;
-      font-size: 13.5px;
-      font-weight: 600;
-      font-family: inherit;
-      color: #0f172a;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      cursor: pointer;
-      outline: none;
-      box-sizing: border-box;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-      text-align: left;
-    }
-
-    .custom-select-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #94a3b8;
-      flex-shrink: 0;
-      width: 18px;
-      height: 18px;
-      transition: color 0.15s ease;
-    }
-
-    .custom-select-icon svg {
-      width: 18px;
-      height: 18px;
-      display: block;
-    }
-
-    .custom-select-trigger:hover:not(.disabled) .custom-select-icon,
-    .custom-select-wrapper.open .custom-select-icon {
-      color: var(--kemnaker-blue);
-    }
-
-    .custom-select-trigger.disabled .custom-select-icon {
-      color: #cbd5e1;
-    }
-
-    .custom-select-trigger:hover:not(.disabled) {
-      border-color: #94a3b8;
-      background: #fbfcfe;
-    }
-
-    .custom-select-wrapper.open .custom-select-trigger {
-      border-color: var(--kemnaker-blue);
-      box-shadow: 0 0 0 3.5px rgba(21, 64, 106, 0.12), 0 2px 8px rgba(21, 64, 106, 0.08);
-      background: #ffffff;
-    }
-
-    .custom-select-trigger.disabled {
-      background: #f1f5f9 !important;
-      color: #94a3b8 !important;
-      border-color: #e2e8f0 !important;
-      cursor: not-allowed !important;
-      box-shadow: none !important;
-    }
-
-    .custom-select-value {
-      flex: 1;
-      min-width: 0;
-      max-width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      color: #0f172a;
-    }
-
-    .custom-select-trigger.disabled .custom-select-value,
-    .custom-select-value.is-placeholder {
-      color: #94a3b8;
-      font-weight: 500;
-    }
-
-    .custom-select-chevron {
-      color: #64748b;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: transform 0.25s cubic-bezier(0.34, 1.3, 0.64, 1), color 0.2s ease;
-    }
-
-    .custom-select-wrapper.open .custom-select-chevron {
-      transform: rotate(180deg);
-      color: var(--kemnaker-blue);
-    }
-
-    .custom-select-trigger.disabled .custom-select-chevron {
-      color: #cbd5e1;
-    }
-
-    /* Floating Menu Panel */
-    .custom-select-menu {
-      position: absolute;
-      top: calc(100% + 6px);
-      left: 0;
-      right: 0;
-      z-index: 9999;
-      background: rgba(255, 255, 255, 0.98);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1.5px solid rgba(21, 64, 106, 0.16);
-      border-radius: 14px;
-      padding: 6px;
-      box-shadow: 0 16px 38px -4px rgba(15, 23, 42, 0.18), 0 6px 16px -2px rgba(21, 64, 106, 0.1);
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(-6px) scale(0.98);
-      transform-origin: top center;
-      transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-        transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-        visibility 0.2s;
-      pointer-events: none;
-    }
-
-    .custom-select-wrapper.open .custom-select-menu {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0) scale(1);
-      pointer-events: auto;
-    }
-
-    .custom-select-wrapper.drop-up .custom-select-menu {
-      top: auto;
-      bottom: calc(100% + 6px);
-      transform-origin: bottom center;
-    }
-
-    /* Search Bar inside dropdown */
-    .custom-select-search-wrap {
-      position: relative;
-      padding: 4px;
-      margin-bottom: 6px;
-      border-bottom: 1px solid #f1f5f9;
-    }
-
-    .custom-select-search-input {
-      width: 100%;
-      padding: 8px 10px 8px 32px;
-      font-size: 12.5px;
-      font-weight: 500;
-      font-family: inherit;
-      color: #1e293b;
-      background: #f8fafc;
-      border: 1.5px solid #e2e8f0;
-      border-radius: 8px;
-      outline: none;
-      box-sizing: border-box;
-      transition: all 0.15s ease;
-    }
-
-    .custom-select-search-input:focus {
-      background: #ffffff;
-      border-color: var(--kemnaker-blue);
-      box-shadow: 0 0 0 2.5px rgba(21, 64, 106, 0.12);
-    }
-
-    .custom-select-search-icon {
-      position: absolute;
-      left: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #94a3b8;
-      pointer-events: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* Options List */
-    .custom-select-options {
-      max-height: 250px;
-      overflow-y: auto;
-      padding: 2px;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-      scrollbar-width: thin;
-      scrollbar-color: #cbd5e1 transparent;
-    }
-
-    .custom-select-options::-webkit-scrollbar {
-      width: 5px;
-    }
-
-    .custom-select-options::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
-      border-radius: 9999px;
-    }
-
-    .custom-select-options::-webkit-scrollbar-thumb:hover {
-      background: #94a3b8;
-    }
-
-    /* Individual Option Item */
-    .custom-select-option {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 9px 12px;
-      border-radius: 9px;
-      font-size: 13px;
-      font-weight: 500;
-      color: #334155;
-      cursor: pointer;
-      transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
-      line-height: 1.35;
-      text-decoration: none;
-    }
-
-    .custom-select-option:hover {
-      background: #f0f5fa;
-      color: var(--kemnaker-blue);
-      transform: translateX(2px);
-    }
-
-    .custom-select-option.selected {
-      background: linear-gradient(135deg, rgba(21, 64, 106, 0.09) 0%, rgba(21, 64, 106, 0.03) 100%);
-      color: var(--kemnaker-blue);
-      font-weight: 700;
-    }
-
-    .custom-select-opt-content {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex: 1;
-      min-width: 0;
-    }
-
-    .custom-select-opt-avatar {
-      position: relative;
-      width: 36px;
-      height: 36px;
-      border-radius: 9px;
-      background: #eef3f8;
-      color: #1e3a5f;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      overflow: hidden;
-      border: 1px solid rgba(21, 64, 106, 0.12);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-      transition: all 0.15s ease;
-    }
-
-    .custom-select-opt-avatar.has-photo {
-      background: #ffffff;
-      border: 1px solid #cbd5e1;
-    }
-
-    .custom-select-opt-avatar img {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: inherit;
-      display: block;
-      z-index: 1;
-    }
-
-    .custom-select-option:hover .custom-select-opt-avatar:not(.has-photo) {
-      background: #e2eaf2;
-      color: var(--kemnaker-blue);
-    }
-
-    .custom-select-option:hover .custom-select-opt-avatar.has-photo {
-      border-color: var(--kemnaker-blue);
-      transform: scale(1.04);
-    }
-
-    .custom-select-option.selected .custom-select-opt-avatar:not(.has-photo) {
-      background: var(--kemnaker-blue);
-      color: #ffffff;
-      border-color: var(--kemnaker-blue);
-      box-shadow: 0 2px 6px rgba(21, 64, 106, 0.35);
-    }
-
-    .custom-select-option.selected .custom-select-opt-avatar.has-photo {
-      border-color: var(--kemnaker-blue);
-      box-shadow: 0 0 0 2px rgba(21, 64, 106, 0.25);
-    }
-
-    .custom-select-opt-text {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .custom-select-opt-title {
-      display: block;
-      font-weight: 600;
-      color: inherit;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .custom-select-opt-sub {
-      display: block;
-      font-size: 11px;
-      color: #64748b;
-      margin-top: 2px;
-      font-weight: 400;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .custom-select-option.selected .custom-select-opt-sub {
-      color: #1e3a5f;
-    }
-
-    .custom-select-opt-check {
-      color: var(--kemnaker-blue);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      opacity: 0;
-      transform: scale(0.6);
-      transition: all 0.18s cubic-bezier(0.34, 1.3, 0.64, 1);
-    }
-
-    .custom-select-option.selected .custom-select-opt-check {
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    .custom-select-empty {
-      padding: 18px 12px;
-      text-align: center;
-      font-size: 12.5px;
-      color: #94a3b8;
-      font-style: italic;
-    }
-
-    /* Compact variation for Feature Card / Bubble (Font Select) */
-    .custom-select-wrapper.compact {
-      flex: 1.35;
-      min-width: 0;
-    }
-
-    .custom-select-wrapper.compact .custom-select-trigger {
-      padding: 0 10px;
-      height: 28px;
-      min-height: 28px;
-      font-size: 11px;
-      font-weight: 600;
-      border-radius: 7px;
-      border: 1px solid #cbd5e1;
-      background: #ffffff;
-      color: #1e293b;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-    }
-
-    .custom-select-wrapper.compact .custom-select-trigger:hover {
-      border-color: #94a3b8;
-      background: #fbfcfe;
-    }
-
-    .custom-select-wrapper.compact.open .custom-select-trigger {
-      border-color: var(--kemnaker-blue);
-      box-shadow: 0 0 0 2px rgba(21, 64, 106, 0.15);
-      background: #ffffff;
-    }
-
-    .custom-select-wrapper.compact .custom-select-menu {
-      border-radius: 12px;
-      padding: 5px;
-      min-width: 235px;
-      max-width: min(320px, calc(100vw - 36px));
-      box-shadow: 0 16px 36px -4px rgba(15, 23, 42, 0.22), 0 4px 14px rgba(21, 64, 106, 0.08);
-      border: 1.5px solid rgba(21, 64, 106, 0.15);
-      background: rgba(255, 255, 255, 0.98);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      z-index: 9999;
-    }
-
-    .custom-select-wrapper.compact .custom-select-options {
-      max-height: 220px;
-      overflow-y: auto;
-      overscroll-behavior: contain;
-    }
-
-    .custom-select-wrapper.compact .custom-select-option {
-      padding: 6px 9px;
-      font-size: 11.5px;
-      border-radius: 7px;
-      min-height: 30px;
-    }
-
-    .custom-select-opt-content.custom-select-opt-upload {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .custom-select-opt-badge {
-      font-size: 9.5px;
-      font-weight: 700;
-      padding: 2px 6px;
-      border-radius: 9999px;
-      background: #ecfdf5;
-      color: #059669;
-      margin-left: 6px;
-      white-space: nowrap;
-      letter-spacing: 0.2px;
-    }
-
-    .custom-select-opt-badge.badge-kemnaker {
-      background: #eef3f8;
-      color: var(--kemnaker-blue);
-      border: 1px solid #cbdbe9;
-    }
-
-    .custom-select-opt-badge.badge-action {
-      background: #f1f5f9;
-      color: #475569;
-    }
-
-    .custom-select-divider {
-      height: 1px;
-      background: #e2e8f0;
-      margin: 4px 6px;
-    }
 
     .form-input.input-readonly-kemnaker,
     .bulk-textarea.input-readonly-kemnaker {
@@ -1495,12 +1044,13 @@
       font-size: 14px;
       font-family: inherit;
       color: #0f172a;
-      background: #ffffff;
+      background: #f8fafc;
       transition: all 0.2s ease;
     }
 
     .form-input:focus {
       outline: none;
+      background: #ffffff;
       border-color: var(--primary-blue);
       box-shadow: 0 0 0 3.5px rgba(21, 64, 106, 0.15);
     }
@@ -2075,7 +1625,6 @@
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       text-rendering: geometricPrecision;
-      image-rendering: -webkit-optimize-contrast;
     }
 
     /* iOS Photos Style Filmstrip Scrubber Gallery (Modal Pengaturan) */
@@ -2198,6 +1747,7 @@
       overflow-y: hidden;
       position: relative;
       cursor: grab;
+      touch-action: pan-y;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
       -ms-overflow-style: none;
@@ -2432,8 +1982,9 @@
       .preview-top-bar {
         flex-wrap: nowrap;
         gap: 6px;
-        margin-bottom: 7px;
-        padding-bottom: 7px;
+        margin-bottom: 8px;
+        padding-bottom: 0;
+        border-bottom: none;
       }
       .preview-headline {
         padding: 3px 8px;
@@ -2466,7 +2017,7 @@
     body.modal-open {
       overflow: hidden !important;
       overscroll-behavior: none !important;
-      touch-action: none !important;
+      touch-action: pan-y;
     }
 
     /* Bottom Sheet / Modal Backdrop */
@@ -2485,7 +2036,7 @@
       align-items: center;
       justify-content: center;
       overscroll-behavior: contain;
-      touch-action: none;
+      touch-action: pan-y;
     }
     .sheet-backdrop.open {
       opacity: 1;
@@ -2595,7 +2146,7 @@
       .sheet-backdrop {
         align-items: flex-end;
         overscroll-behavior: contain;
-        touch-action: none;
+        touch-action: pan-y;
       }
       .sheet-drawer {
         width: 100%;
@@ -2607,6 +2158,7 @@
         flex-direction: column;
         overflow: hidden;
         overscroll-behavior: contain;
+        touch-action: pan-y;
       }
       .sheet-backdrop.open .sheet-drawer {
         transform: translateY(0);
@@ -3680,9 +3232,15 @@
         grid-template-columns: minmax(0, 1fr);
         gap: 16px;
         margin-top: 6px;
+        margin-bottom: 28px;
         width: 100%;
         max-width: 100%;
         min-width: 0;
+      }
+
+      .preview-top-bar {
+        border-bottom: none !important;
+        padding-bottom: 0 !important;
       }
 
       /* Generator Card */
@@ -3693,7 +3251,7 @@
         width: 100%;
         max-width: 100%;
         min-width: 0;
-        overflow: hidden;
+        overflow: visible;
         box-sizing: border-box;
       }
 
@@ -3721,6 +3279,7 @@
       }
 
       .mobile-preview-slot .preview-card-frame {
+        position: relative;
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
@@ -3730,8 +3289,37 @@
       }
 
       .mobile-preview-slot .preview-top-bar {
-        margin-bottom: 8px;
-        padding: 0 2px;
+        position: absolute;
+        top: 7px;
+        right: 7px;
+        z-index: 25;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: auto;
+        justify-content: flex-end;
+        pointer-events: none;
+      }
+
+      .mobile-preview-slot .preview-headline,
+      .mobile-preview-slot .bulk-mobile-sheet-header {
+        display: none !important;
+      }
+
+      .mobile-preview-slot .btn-top-settings {
+        pointer-events: auto;
+        padding: 4.5px 9.5px !important;
+        font-size: 10px !important;
+        gap: 4px !important;
+        background: rgba(0, 51, 102, 0.92) !important;
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        border: 1px solid rgba(255, 255, 255, 0.35) !important;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.22) !important;
+      }
+
+      .mobile-preview-slot .btn-top-settings svg {
+        width: 11px !important;
+        height: 11px !important;
       }
 
       .mobile-preview-slot .preview-scale-wrap {
@@ -3755,14 +3343,6 @@
         display: none !important;
       }
 
-      .bulk-mobile-sheet-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 8px;
-        padding: 0 2px;
-      }
-
       .bulk-active-sheet-pill {
         font-size: 11px;
         font-weight: 700;
@@ -3781,8 +3361,73 @@
         text-overflow: ellipsis;
       }
 
+      .bulk-gallery-bar,
+      .modal-bulk-gallery-bar {
+        margin-top: 8px !important;
+        padding: 5px 8px !important;
+        border-radius: 11px !important;
+      }
+
+      .ios-filmstrip-row {
+        gap: 6px;
+      }
+
+      .btn-gallery-nav {
+        width: 26px;
+        height: 26px;
+      }
+
+      .btn-gallery-nav svg {
+        width: 13px;
+        height: 13px;
+      }
+
+      .ios-filmstrip-viewport {
+        padding: 3px 6px;
+        border-radius: 9px;
+      }
+
+      .bulk-pills-strip.ios-filmstrip-track,
       .ios-filmstrip-track {
-        padding: 4px calc(50% - 53px) !important;
+        gap: 6px !important;
+        padding: 2px calc(50% - 34px) !important;
+      }
+
+      .bulk-pill-item.ios-thumb-item {
+        width: 68px;
+        height: 32px;
+        border-radius: 6px;
+      }
+
+      .ios-thumb-card {
+        border-radius: 6px;
+      }
+
+      .ios-thumb-badge {
+        top: 2px;
+        left: 2px;
+        font-size: 7px;
+        padding: 1px 4px;
+        border-radius: 3px;
+      }
+
+      .ios-thumb-content {
+        padding: 1px 3px 1px 15px;
+      }
+
+      .ios-thumb-name {
+        font-size: 6.5px;
+        padding: 1.5px 4px;
+        border-radius: 3px;
+      }
+
+      .ios-thumb-active-ring {
+        border-width: 2px;
+        border-radius: 7px;
+      }
+
+      .bulk-pill-item.ios-thumb-item.active .ios-thumb-active-ring {
+        inset: -2px;
       }
 
       .tab-btn {
@@ -3803,8 +3448,13 @@
         margin-bottom: 4px;
       }
 
-      .form-input {
-        font-size: 14px;
+      .form-input,
+      input.form-input,
+      textarea.form-input,
+      select.form-input,
+      .opt2-input,
+      .opt2-select {
+        font-size: 16px !important;
         padding: 9px 12px 9px 36px;
         border-radius: 10px;
         max-width: 100%;
@@ -3902,7 +3552,7 @@
       }
 
       .bulk-textarea {
-        font-size: 13px;
+        font-size: 16px !important;
         padding: 10px;
         min-height: 120px;
       }
@@ -4242,7 +3892,7 @@
             </svg>
             <span>Name Table</span>
           </a>
-          <a href="/notepad" class="nav-page-tab disabled" onclick="showComingSoonToast('Note Pad Generator'); return false;" title="Note Pad Generator (Segera Hadir)">
+          <a href="/notepad" class="nav-page-tab" title="Note Pad Generator">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
               <polyline points="14 2 14 8 20 8"></polyline>
@@ -4250,7 +3900,6 @@
               <line x1="16" y1="17" x2="8" y2="17"></line>
             </svg>
             <span>Note Pad</span>
-            <span class="nav-page-badge">Coming Soon</span>
           </a>
         </nav>
 
@@ -4277,7 +3926,7 @@
               <span class="menu-title">Name Table</span>
               <span class="menu-check">✓</span>
             </a>
-            <a href="/notepad" class="mobile-menu-item disabled" onclick="showComingSoonToast('Note Pad Generator'); closeMobileMenu(); return false;">
+            <a href="/notepad" class="mobile-menu-item">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                 <polyline points="14 2 14 8 20 8"></polyline>
@@ -4285,7 +3934,6 @@
                 <line x1="16" y1="17" x2="8" y2="17"></line>
               </svg>
               <span class="menu-title">Note Pad</span>
-              <span class="nav-page-badge">COMING SOON</span>
             </a>
           </div>
         </div>
@@ -4302,7 +3950,7 @@
       <div class="hero-header">
         <div class="hero-header-left">
           <h1 class="hero-title" id="heroTitle">
-            Name Table <span class="highlight-silver">Standar</span> Kemnaker RI
+            Name Table <span class="highlight-silver">Tools</span> Kemnaker RI
           </h1>
         </div>
         <div class="hero-header-right">
@@ -4446,6 +4094,7 @@
               <input type="hidden" name="font_size_name" class="sync-font-size-name-val" value="auto">
               <input type="hidden" name="font_size_pos" class="sync-font-size-pos-val" value="auto">
               <input type="hidden" name="spacing_gap" class="sync-spacing-val" value="40">
+              <input type="hidden" name="spacing_is_manual" class="sync-spacing-manual-val" value="0">
               <input type="hidden" name="horizontal_offset" class="sync-offset-x-val" value="0">
               <input type="hidden" name="text_case" class="sync-case-val" value="uppercase">
               <input type="hidden" name="paper_size" class="sync-paper-val" value="a4">
@@ -4515,7 +4164,7 @@
                     <polyline points="7 10 12 15 17 10"></polyline>
                     <line x1="12" y1="15" x2="12" y2="3"></line>
                   </svg>
-                  <span>Generate & Unduh PDF</span>
+                  <span>Unduh File</span>
                 </button>
                 <button type="button" class="btn-output-print" onclick="printCurrentCards()">
                   <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
@@ -4523,7 +4172,7 @@
                     <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
                     <rect x="6" y="14" width="12" height="8"></rect>
                   </svg>
-                  <span>Cetak Langsung</span>
+                  <span>Cetak</span>
                 </button>
               </div>
             </form>
@@ -4541,6 +4190,7 @@
               <input type="hidden" name="font_size_name" class="sync-font-size-name-val" value="auto">
               <input type="hidden" name="font_size_pos" class="sync-font-size-pos-val" value="auto">
               <input type="hidden" name="spacing_gap" class="sync-spacing-val" value="40">
+              <input type="hidden" name="spacing_is_manual" class="sync-spacing-manual-val" value="0">
               <input type="hidden" name="horizontal_offset" class="sync-offset-x-val" value="0">
               <input type="hidden" name="text_case" class="sync-case-val" value="uppercase">
               <input type="hidden" name="paper_size" class="sync-paper-val" value="a4">
@@ -4661,7 +4311,7 @@
                     <polyline points="7 10 12 15 17 10"></polyline>
                     <line x1="12" y1="15" x2="12" y2="3"></line>
                   </svg>
-                  <span>Generate & Unduh PDF</span>
+                  <span>Unduh File</span>
                 </button>
                 <button type="button" class="btn-output-print" onclick="printCurrentCards()">
                   <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
@@ -4669,7 +4319,7 @@
                     <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
                     <rect x="6" y="14" width="12" height="8"></rect>
                   </svg>
-                  <span>Cetak Langsung</span>
+                  <span>Cetak</span>
                 </button>
               </div>
 
@@ -4704,9 +4354,9 @@
                 <span class="status-circle"></span>
                 <span id="fontStatus">Myriad Pro Memuat…</span>
               </div>
-              <button type="button" class="btn-top-settings" onclick="openOpt2Sheet()" id="btnTopSettings" title="Sesuaikan Desain &amp; Format">
+              <button type="button" class="btn-top-settings" onclick="openOpt2Sheet()" id="btnTopSettings" title="Pengaturan Desain &amp; Format">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                <span class="btn-top-settings-full">Sesuaikan Desain &amp; Format</span>
+                <span class="btn-top-settings-full">Pengaturan</span>
                 <span class="btn-top-settings-compact">Pengaturan</span>
               </button>
             </div>
@@ -4859,7 +4509,7 @@
                   <div class="sheet-content">
                 <!-- Row 1: Font Nama & Jabatan -->
                 <div class="sheet-grid-2">
-                  <div class="sheet-section">
+                  <div class="sheet-section" id="fontNameSectionCard">
                     <div class="sheet-section-title">
                       <span>Font &amp; Ukuran Nama</span>
                       <span class="pill-status-badge" id="fontNameBadgeStatus">Default</span>
@@ -4886,7 +4536,12 @@
                           </button>
                           <select id="fontSizeNameSelect" class="ps-size-select" title="Pilih preset">
                             <option value="" disabled selected hidden></option>
-                            <option value="auto">Auto (46pt)</option>
+                            <option value="auto" id="optFontSizeNameAuto">Auto (46pt)</option>
+                            <option value="12">12 pt</option>
+                            <option value="14">14 pt</option>
+                            <option value="16">16 pt</option>
+                            <option value="18">18 pt</option>
+                            <option value="20">20 pt</option>
                             <option value="24">24 pt</option>
                             <option value="30">30 pt</option>
                             <option value="36">36 pt</option>
@@ -4904,7 +4559,7 @@
                     </div>
                   </div>
 
-                  <div class="sheet-section">
+                  <div class="sheet-section" id="fontPosSectionCard">
                     <div class="sheet-section-title">
                       <span>Font &amp; Ukuran Jabatan</span>
                       <span class="pill-status-badge" id="fontPosBadgeStatus">Default</span>
@@ -4931,7 +4586,7 @@
                           </button>
                           <select id="fontSizePosSelect" class="ps-size-select" title="Pilih preset">
                             <option value="" disabled selected hidden></option>
-                            <option value="auto">Auto (18pt)</option>
+                            <option value="auto" id="optFontSizePosAuto">Auto (18pt)</option>
                             <option value="12">12 pt</option>
                             <option value="14">14 pt</option>
                             <option value="16">16 pt</option>
@@ -4941,6 +4596,11 @@
                             <option value="24">24 pt</option>
                             <option value="28">28 pt</option>
                             <option value="32">32 pt</option>
+                            <option value="36">36 pt</option>
+                            <option value="40">40 pt</option>
+                            <option value="46">46 pt</option>
+                            <option value="52">52 pt</option>
+                            <option value="60">60 pt</option>
                           </select>
                         </div>
                       </div>
@@ -4986,9 +4646,9 @@
                       <span class="pill-status-badge badge-neutral" id="spacingBadgeStatus" style="cursor: pointer;" title="Klik untuk kembali ke Otomatis" onclick="resetSpacingToAuto()">Standar (40)</span>
                     </div>
                     <div class="spacing-slider-container">
-                      <div class="spacing-slider-track-wrap" title="Geser untuk mengatur spasi (15 - 95 pt). Titik indikator = Posisi Otomatis">
+                      <div class="spacing-slider-track-wrap" title="Geser untuk mengatur spasi (12 - 110 pt). Titik indikator = Posisi Otomatis">
                         <div class="slider-default-pip" id="spacingDefaultPip" title="Posisi Otomatis: 40 pt"></div>
-                        <input type="range" id="spacingRangeInput" class="spacing-volume-slider" min="15" max="95" value="40" step="1" oninput="setSpacingOption(this.value, true, false, true)">
+                        <input type="range" id="spacingRangeInput" class="spacing-volume-slider" min="12" max="110" value="40" step="1" oninput="setSpacingOption(this.value, true, false, true)">
                       </div>
                       <div class="word-spacing-box" title="Ketik jarak spasi manual (pt)">
                         <input type="number" id="spacingNumberInput" class="word-spacing-input" min="10" max="150" value="40" step="1" oninput="setSpacingOption(this.value, false, true, true)">
@@ -5073,7 +4733,8 @@
   </section>
 
   <!-- Scripts -->
-  <script src="{{ url_for('static', filename='nametag.js') }}?v=20261104b"></script>
+  <script src="{{ url_for('static', filename='nametag.js') }}?v=20261123a"></script>
+  <script src="{{ url_for('static', filename='dropdown.js') }}?v=20261123a"></script>
   <script>
     let currentTab = "single";
     let currentBulkIndex = 0;
@@ -5267,489 +4928,6 @@
       document.fonts.ready.then(() => updateAllGliders(false));
     }
 
-    // =========================================================================
-    // Modern Custom Dropdown System (Kemnaker Theme: Unit Kerja, Jabatan, Font)
-    // =========================================================================
-    function escapeHtml(str) {
-      if (!str) return "";
-      return String(str)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-    }
-
-    class ModernDropdown {
-      constructor(selectEl, config = {}) {
-        this.selectEl = selectEl;
-        this.config = Object.assign({
-          withIcon: false,
-          searchable: false,
-          compact: false,
-          searchPlaceholder: "Cari...",
-          defaultPlaceholder: "-- Pilih --",
-          isOfficial: false,
-          isFont: false
-        }, config);
-
-        this.wrapper = null;
-        this.trigger = null;
-        this.valueSpan = null;
-        this.menu = null;
-        this.searchInput = null;
-        this.optionsContainer = null;
-        this.isOpen = false;
-
-        this.init();
-      }
-
-      init() {
-        if (!this.selectEl) return;
-        // Visually hide native select
-        this.selectEl.style.display = "none";
-
-        // Build wrapper
-        this.wrapper = document.createElement("div");
-        this.wrapper.className = "custom-select-wrapper" +
-          (this.config.withIcon ? " with-icon" : "") +
-          (this.config.compact ? " compact" : "");
-        this.wrapper.id = "customSelect_" + this.selectEl.id;
-
-        // Trigger
-        this.trigger = document.createElement("button");
-        this.trigger.type = "button";
-        this.trigger.className = "custom-select-trigger";
-        this.trigger.setAttribute("aria-haspopup", "listbox");
-        this.trigger.setAttribute("aria-expanded", "false");
-
-        // Inherit icon from parent .input-wrapper if present (Unit Kerja, Jabatan, etc.)
-        const parentWrapper = this.selectEl.closest(".input-wrapper");
-        const existingIcon = parentWrapper ? parentWrapper.querySelector(".input-icon") : null;
-        if (existingIcon) {
-          existingIcon.style.display = "none";
-          const iconDiv = document.createElement("div");
-          iconDiv.className = "custom-select-icon";
-          iconDiv.innerHTML = existingIcon.innerHTML;
-          this.trigger.appendChild(iconDiv);
-        }
-
-        this.valueSpan = document.createElement("span");
-        this.valueSpan.className = "custom-select-value";
-        this.trigger.appendChild(this.valueSpan);
-
-        const chevronSvg = `
-          <svg class="custom-select-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
-        `;
-        this.trigger.insertAdjacentHTML("beforeend", chevronSvg);
-
-        // Menu
-        this.menu = document.createElement("div");
-        this.menu.className = "custom-select-menu";
-
-        // Search input if searchable
-        if (this.config.searchable) {
-          const searchWrap = document.createElement("div");
-          searchWrap.className = "custom-select-search-wrap";
-          searchWrap.innerHTML = `
-            <span class="custom-select-search-icon">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-              </svg>
-            </span>
-            <input type="text" class="custom-select-search-input" placeholder="${this.config.searchPlaceholder}">
-          `;
-          this.searchInput = searchWrap.querySelector("input");
-          this.searchInput.addEventListener("input", (e) => this.filter(e.target.value));
-          this.searchInput.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              const firstVis = this.optionsContainer.querySelector(".custom-select-option:not([style*='display: none'])");
-              if (firstVis) firstVis.click();
-            }
-          });
-          this.menu.appendChild(searchWrap);
-        }
-
-        this.optionsContainer = document.createElement("div");
-        this.optionsContainer.className = "custom-select-options";
-        this.optionsContainer.setAttribute("role", "listbox");
-        this.menu.appendChild(this.optionsContainer);
-
-        this.wrapper.appendChild(this.trigger);
-        this.wrapper.appendChild(this.menu);
-
-        // Insert wrapper into DOM right after native select
-        this.selectEl.parentNode.insertBefore(this.wrapper, this.selectEl.nextSibling);
-
-        // Event listeners
-        this.trigger.addEventListener("click", (e) => {
-          e.stopPropagation();
-          if (this.selectEl.disabled) return;
-          this.toggle();
-        });
-
-        // Populate options
-        this.sync();
-
-        // Attach MutationObserver to native select
-        this.observer = new MutationObserver(() => this.sync());
-        this.observer.observe(this.selectEl, { childList: true, attributes: true, attributeFilter: ["disabled"] });
-
-        this.selectEl._modernDropdown = this;
-      }
-
-      toggle() {
-        if (this.isOpen) {
-          this.close();
-        } else {
-          this.open();
-        }
-      }
-
-      open() {
-        if (this.selectEl.disabled) return;
-        // Close other dropdowns
-        document.querySelectorAll(".custom-select-wrapper.open").forEach(w => {
-          if (w !== this.wrapper) {
-            w.classList.remove("open");
-            w.querySelector(".custom-select-trigger")?.setAttribute("aria-expanded", "false");
-            w.closest(".sheet-section")?.classList.remove("has-open-dropdown");
-            w.closest(".sheet-grid-2")?.classList.remove("has-open-dropdown");
-          }
-        });
-        document.querySelectorAll(".ps-size-combo.open").forEach(c => {
-          c.classList.remove("open");
-          c.closest(".sheet-section")?.classList.remove("has-open-dropdown");
-          c.closest(".sheet-grid-2")?.classList.remove("has-open-dropdown");
-        });
-
-        // Determine drop-up vs drop-down
-        const rect = this.wrapper.getBoundingClientRect();
-        const spaceBelow = window.innerHeight - rect.bottom;
-        const menuHeight = 240;
-        if (spaceBelow < menuHeight && rect.top > spaceBelow) {
-          this.wrapper.classList.add("drop-up");
-        } else {
-          this.wrapper.classList.remove("drop-up");
-        }
-
-        this.wrapper.classList.add("open");
-        this.trigger.setAttribute("aria-expanded", "true");
-        this.isOpen = true;
-
-        const sec = this.wrapper.closest(".sheet-section");
-        if (sec) sec.classList.add("has-open-dropdown");
-        const grd = this.wrapper.closest(".sheet-grid-2");
-        if (grd) grd.classList.add("has-open-dropdown");
-
-        if (this.searchInput) {
-          this.searchInput.value = "";
-          this.filter("");
-          setTimeout(() => this.searchInput.focus(), 60);
-        }
-
-        // Scroll active item into view
-        const selectedOpt = this.optionsContainer.querySelector(".custom-select-option.selected");
-        if (selectedOpt) {
-          setTimeout(() => selectedOpt.scrollIntoView({ block: "nearest" }), 50);
-        }
-      }
-
-      close() {
-        this.wrapper.classList.remove("open");
-        this.trigger.setAttribute("aria-expanded", "false");
-        this.isOpen = false;
-        const sec = this.wrapper.closest(".sheet-section");
-        if (sec) sec.classList.remove("has-open-dropdown");
-        const grd = this.wrapper.closest(".sheet-grid-2");
-        if (grd) grd.classList.remove("has-open-dropdown");
-      }
-
-      sync() {
-        // Disabled state
-        const isDisabled = this.selectEl.disabled;
-        this.trigger.classList.toggle("disabled", isDisabled);
-
-        // Options rebuild
-        this.optionsContainer.innerHTML = "";
-        const options = Array.from(this.selectEl.options);
-        const curVal = this.selectEl.value;
-
-        let selectedText = "";
-        let isPlaceholder = false;
-
-        if (options.length === 0) {
-          this.valueSpan.textContent = this.config.defaultPlaceholder;
-          this.valueSpan.classList.add("is-placeholder");
-          return;
-        }
-
-        options.forEach((opt, idx) => {
-          // Special divider for font select before upload
-          if (this.config.isFont && opt.value === "__custom__" && idx > 0) {
-            const div = document.createElement("div");
-            div.className = "custom-select-divider";
-            this.optionsContainer.appendChild(div);
-          }
-
-          const item = document.createElement("div");
-          item.className = "custom-select-option" + (opt.value === curVal ? " selected" : "");
-          item.dataset.value = opt.value;
-          item.dataset.searchText = opt.textContent;
-
-          let contentHtml = "";
-
-          if (this.config.isOfficial && opt.value !== "") {
-            // 2-line layout for officials: Name in bold, Position in subtitle
-            const rawText = opt.textContent;
-            let posText = "";
-            let nameText = rawText;
-            if (rawText.includes(" — ")) {
-              const parts = rawText.split(" — ");
-              posText = parts[0] || "";
-              nameText = parts[1] || parts[0];
-            } else if (rawText.includes(" - ")) {
-              const parts = rawText.split(" - ");
-              posText = parts[0] || "";
-              nameText = parts[1] || parts[0];
-            }
-            item.dataset.searchText = `${nameText} ${posText}`;
-
-            const rawPhoto = opt.dataset.photo || "";
-            const photoUrl = rawPhoto || "";
-            const personSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`;
-            let avatarHtml = "";
-            if (photoUrl) {
-              avatarHtml = `
-                <div class="custom-select-opt-avatar has-photo">
-                  <img src="${escapeHtml(photoUrl)}" referrerpolicy="no-referrer" alt="" loading="lazy" onerror="this.parentElement.classList.remove('has-photo'); this.remove();">
-                  ${personSvg}
-                </div>
-              `;
-            } else {
-              avatarHtml = `<div class="custom-select-opt-avatar">${personSvg}</div>`;
-            }
-
-            contentHtml = `
-              <div class="custom-select-opt-content">
-                ${avatarHtml}
-                <div class="custom-select-opt-text">
-                  <span class="custom-select-opt-title">${escapeHtml(nameText)}</span>
-                  ${posText ? `<span class="custom-select-opt-sub">${escapeHtml(posText)}</span>` : ""}
-                </div>
-              </div>
-            `;
-          } else if (this.config.isFont) {
-            let badgeHtml = "";
-            let fontStyle = "";
-            if (opt.value === "Montserrat") {
-              badgeHtml = `<span class="custom-select-opt-badge badge-kemnaker">Default</span>`;
-              fontStyle = 'style="font-family: \'Montserrat-Bold\', Montserrat, sans-serif; font-weight: 700;"';
-            } else if (opt.value === "MyriadPro") {
-              badgeHtml = `<span class="custom-select-opt-badge badge-neutral">Standar</span>`;
-              fontStyle = 'style="font-family: MyriadPro, Arial, sans-serif; font-weight: 600;"';
-            } else if (opt.value === "Arial") {
-              fontStyle = 'style="font-family: Arial, sans-serif;"';
-            } else if (opt.value === "Times New Roman") {
-              fontStyle = 'style="font-family: \'Times New Roman\', serif;"';
-            } else if (opt.value === "Calibri") {
-              fontStyle = 'style="font-family: Calibri, sans-serif;"';
-            } else if (opt.value === "Plus Jakarta Sans") {
-              badgeHtml = `<span class="custom-select-opt-badge badge-neutral">Modern</span>`;
-              fontStyle = 'style="font-family: \'Plus Jakarta Sans\', sans-serif; font-weight: 600;"';
-            } else if (opt.value === "Roboto") {
-              fontStyle = 'style="font-family: Roboto, sans-serif;"';
-            } else if (opt.value === "Open Sans") {
-              fontStyle = 'style="font-family: \'Open Sans\', sans-serif;"';
-            } else if (opt.value === "Georgia") {
-              fontStyle = 'style="font-family: Georgia, serif;"';
-            } else if (opt.value === "Garamond") {
-              fontStyle = 'style="font-family: \'EB Garamond\', Garamond, serif;"';
-            } else if (opt.value === "__custom__") {
-              badgeHtml = `<span class="custom-select-opt-badge badge-action">Upload</span>`;
-            } else if (opt.value.startsWith("CustomUserFont") || opt.value.startsWith("CustomNameFont") || opt.value.startsWith("CustomPosFont")) {
-              badgeHtml = `<span class="custom-select-opt-badge badge-action">Kustom</span>`;
-              fontStyle = `style="font-family: '${opt.value}', sans-serif; font-weight: 600;"`;
-            }
-
-            if (opt.value === "__custom__") {
-              contentHtml = `
-                <div class="custom-select-opt-content custom-select-opt-upload">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color: var(--kemnaker-blue); flex-shrink: 0;">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <polyline points="17 8 12 3 7 8"></polyline>
-                    <line x1="12" y1="3" x2="12" y2="15"></line>
-                  </svg>
-                  <span class="custom-select-opt-title" style="font-weight: 600; color: var(--kemnaker-blue);">${escapeHtml(opt.textContent)}</span>
-                  ${badgeHtml}
-                </div>
-              `;
-            } else {
-              contentHtml = `
-                <div class="custom-select-opt-content" ${fontStyle}>
-                  <span class="custom-select-opt-title">${escapeHtml(opt.textContent)}</span>
-                  ${badgeHtml}
-                </div>
-              `;
-            }
-          } else {
-            // Unit kerja or general
-            let iconHtml = "";
-            let badgeHtml = "";
-            if (opt.value === "__all__") {
-              badgeHtml = `<span class="custom-select-opt-badge badge-kemnaker">Semua</span>`;
-            } else if (opt.value !== "") {
-              iconHtml = `
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--kemnaker-blue); flex-shrink: 0;">
-                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                </svg>
-              `;
-            }
-
-            contentHtml = `
-              <div class="custom-select-opt-content">
-                ${iconHtml}
-                <div class="custom-select-opt-text">
-                  <span class="custom-select-opt-title">${escapeHtml(opt.textContent)}</span>
-                </div>
-                ${badgeHtml}
-              </div>
-            `;
-          }
-
-          const checkSvg = `
-            <svg class="custom-select-opt-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
-          `;
-
-          item.innerHTML = contentHtml + checkSvg;
-
-          item.addEventListener("click", () => {
-            this.selectValue(opt.value);
-            this.close();
-          });
-
-          this.optionsContainer.appendChild(item);
-
-          if (opt.value === curVal || (curVal === "" && idx === 0)) {
-            selectedText = opt.textContent;
-            isPlaceholder = (opt.value === "");
-          }
-        });
-
-        // Update trigger text
-        if (!selectedText) {
-          const selectedOpt = this.selectEl.options[this.selectEl.selectedIndex];
-          selectedText = selectedOpt ? selectedOpt.textContent : this.config.defaultPlaceholder;
-          isPlaceholder = (!selectedOpt || selectedOpt.value === "");
-        }
-
-        if (this.config.isOfficial && this.selectEl.value !== "") {
-          if (selectedText.includes(" — ")) {
-            const parts = selectedText.split(" — ");
-            selectedText = `${parts[1]} (${parts[0]})`;
-          }
-        }
-
-        this.valueSpan.textContent = selectedText;
-        this.valueSpan.title = selectedText || "";
-        this.valueSpan.classList.toggle("is-placeholder", isPlaceholder);
-
-        if (this.config.isFont && curVal && curVal !== "__custom__" && typeof getFontFamilyCss === "function") {
-          this.valueSpan.style.fontFamily = getFontFamilyCss(curVal);
-          if (curVal === "Montserrat") {
-            this.valueSpan.style.fontWeight = "700";
-          } else {
-            this.valueSpan.style.fontWeight = "600";
-          }
-        }
-
-        // Update trigger icon with selected official photo if available
-        if (this.config.isOfficial) {
-          const iconDiv = this.trigger.querySelector(".custom-select-icon");
-          if (iconDiv) {
-            const selectedOpt = this.selectEl.options[this.selectEl.selectedIndex];
-            const rawSelPhoto = (selectedOpt && selectedOpt.dataset.photo) ? selectedOpt.dataset.photo : "";
-            const selPhoto = rawSelPhoto || "";
-            if (selPhoto && this.selectEl.value !== "") {
-              iconDiv.innerHTML = `<img src="${escapeHtml(selPhoto)}" referrerpolicy="no-referrer" style="width: 22px; height: 22px; border-radius: 6px; object-fit: cover; display: block;" alt="" onerror="this.remove()">`;
-            } else {
-              iconDiv.innerHTML = `
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-                </svg>
-              `;
-            }
-          }
-        }
-      }
-
-      selectValue(val) {
-        this.selectEl.value = val;
-        // Dispatch events
-        this.selectEl.dispatchEvent(new Event("change", { bubbles: true }));
-        if (typeof this.selectEl.onchange === "function") {
-          this.selectEl.onchange();
-        }
-        this.sync();
-      }
-
-      filter(query) {
-        const q = (query || "").trim().toLowerCase();
-        const items = this.optionsContainer.querySelectorAll(".custom-select-option");
-        let visibleCount = 0;
-
-        items.forEach(item => {
-          const text = (item.dataset.searchText || "").toLowerCase();
-          const match = !q || text.includes(q);
-          item.style.display = match ? "flex" : "none";
-          if (match) visibleCount++;
-        });
-
-        let emptyMsg = this.optionsContainer.querySelector(".custom-select-empty");
-        if (visibleCount === 0) {
-          if (!emptyMsg) {
-            emptyMsg = document.createElement("div");
-            emptyMsg.className = "custom-select-empty";
-            emptyMsg.textContent = "Tidak ditemukan hasil yang cocok";
-            this.optionsContainer.appendChild(emptyMsg);
-          }
-          emptyMsg.style.display = "block";
-        } else if (emptyMsg) {
-          emptyMsg.style.display = "none";
-        }
-      }
-    }
-
-    // Global click-outside & escape listeners
-    document.addEventListener("click", (e) => {
-      if (!e.target.closest(".custom-select-wrapper")) {
-        document.querySelectorAll(".custom-select-wrapper.open").forEach(w => {
-          w.classList.remove("open");
-          w.querySelector(".custom-select-trigger")?.setAttribute("aria-expanded", "false");
-          w.closest(".sheet-section")?.classList.remove("has-open-dropdown");
-          w.closest(".sheet-grid-2")?.classList.remove("has-open-dropdown");
-        });
-      }
-    });
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        document.querySelectorAll(".custom-select-wrapper.open").forEach(w => {
-          w.classList.remove("open");
-          w.querySelector(".custom-select-trigger")?.setAttribute("aria-expanded", "false");
-          w.closest(".sheet-section")?.classList.remove("has-open-dropdown");
-          w.closest(".sheet-grid-2")?.classList.remove("has-open-dropdown");
-        });
-      }
-    });
 
     function initSizePresetDropdown(selectId, inputId) {
       const sel = document.getElementById(selectId);
@@ -5861,6 +5039,7 @@
         new ModernDropdown(unitSingle, {
           withIcon: true,
           searchable: true,
+          noScroll: true,
           searchPlaceholder: "Cari unit kerja...",
           defaultPlaceholder: "-- Pilih Unit Kerja --"
         });
@@ -5880,6 +5059,7 @@
         new ModernDropdown(unitBatch, {
           withIcon: true,
           searchable: true,
+          noScroll: true,
           searchPlaceholder: "Cari unit kerja...",
           defaultPlaceholder: "-- Pilih Unit Kerja --"
         });
@@ -6074,6 +5254,8 @@
     window.setGlobalSource = setGlobalSource;
     window.setSingleSource = setGlobalSource;
 
+    let lastKemnakerFetchTime = 0;
+
     async function loadKemnakerData(forceRefresh = false) {
       const statusText = document.getElementById("kemnakerStatusText");
       const batchStatusText = document.getElementById("kemnakerBatchStatusText");
@@ -6091,8 +5273,10 @@
       `;
 
       if (!forceRefresh && kemnakerDataCache && kemnakerDataCache.units && kemnakerDataCache.units.length > 0) {
-        populateKemnakerUnits(kemnakerDataCache.units);
-        return;
+        if (Date.now() - lastKemnakerFetchTime < 30 * 60 * 1000) {
+          populateKemnakerUnits(kemnakerDataCache.units);
+          return;
+        }
       }
 
       if (forceRefresh) {
@@ -6117,11 +5301,15 @@
       }
 
       try {
-        const url = "/api/kemnaker-units" + (forceRefresh ? "?refresh=1&_t=" + Date.now() : "");
-        const res = await fetch(url);
+        const url = "/api/kemnaker-units?_t=" + Date.now() + (forceRefresh ? "&refresh=1" : "");
+        const res = await fetch(url, {
+          cache: "no-store",
+          headers: { "Pragma": "no-cache", "Cache-Control": "no-cache" }
+        });
         const data = await res.json();
         if (data && data.success && data.units && data.units.length > 0) {
           kemnakerDataCache = data;
+          lastKemnakerFetchTime = Date.now();
           const shortDate = data.date_formatted ? data.date_formatted.split(",")[0] : "kemnaker.go.id";
           if (dateBadge) dateBadge.textContent = shortDate;
           if (batchDateBadge) batchDateBadge.textContent = shortDate;
@@ -6178,6 +5366,14 @@
       }
     }
 
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        if (currentGlobalSource === "kemnaker" && (Date.now() - lastKemnakerFetchTime > 30 * 60 * 1000)) {
+          loadKemnakerData(false);
+        }
+      }
+    });
+
     function isValidOfficialName(name) {
       if (!name) return false;
       const s = String(name).trim();
@@ -6189,7 +5385,10 @@
 
     function populateKemnakerUnits(units) {
       const unitSelect = document.getElementById("kemnakerUnitSelect");
+      const officialSelect = document.getElementById("kemnakerOfficialSelect");
       const batchUnitSelect = document.getElementById("kemnakerBatchUnitSelect");
+      const nameEl = document.getElementById("name");
+      const posEl = document.getElementById("position");
 
       // Ensure 'menteri-ketenagakerjaan' (Kementerian Ketenagakerjaan RI) is ALWAYS at the very top
       const sortedUnits = [...(units || [])].sort((a, b) => {
@@ -6200,6 +5399,10 @@
 
       if (unitSelect) {
         const currentVal = unitSelect.value;
+        const currentOfficialVal = officialSelect ? officialSelect.value : "";
+        const prevName = nameEl ? nameEl.value : "";
+        const prevPos = posEl ? posEl.value : "";
+
         unitSelect.innerHTML = '<option value="">-- Pilih Unit Kerja --</option>';
         sortedUnits.forEach(u => {
           const opt = document.createElement("option");
@@ -6208,8 +5411,9 @@
           unitSelect.appendChild(opt);
         });
         if (currentVal) {
-          unitSelect.value = currentVal;
-          onKemnakerUnitChanged();
+          const unitStillExists = sortedUnits.some(u => u.slug === currentVal);
+          unitSelect.value = unitStillExists ? currentVal : "";
+          onKemnakerUnitChanged(unitStillExists, currentOfficialVal, prevName, prevPos);
         }
       }
 
@@ -6226,7 +5430,8 @@
           batchUnitSelect.appendChild(opt);
         });
         if (currentBatchVal) {
-          batchUnitSelect.value = currentBatchVal;
+          const batchExists = currentBatchVal === "__all__" || sortedUnits.some(u => u.slug === currentBatchVal);
+          batchUnitSelect.value = batchExists ? currentBatchVal : "";
           onKemnakerBatchUnitChanged();
         }
       }
@@ -6268,7 +5473,7 @@
       return [...leaders, ...nonLeaders];
     }
 
-    function onKemnakerUnitChanged() {
+    function onKemnakerUnitChanged(preserveExisting = false, prevOfficialIdx = "", prevName = "", prevPos = "") {
       const unitSelect = document.getElementById("kemnakerUnitSelect");
       const officialSelect = document.getElementById("kemnakerOfficialSelect");
       const countBadge = document.getElementById("kemnakerCountBadge");
@@ -6282,8 +5487,10 @@
         officialSelect.disabled = true;
         officialSelect.value = "";
         if (countBadge) countBadge.textContent = "0 Pilihan";
-        if (nameEl) nameEl.value = "";
-        if (posEl) posEl.value = "";
+        if (!preserveExisting) {
+          if (nameEl) nameEl.value = "";
+          if (posEl) posEl.value = "";
+        }
         if (typeof syncAllModernDropdowns === "function") syncAllModernDropdowns();
         update();
         if (typeof fitPreview === "function") fitPreview();
@@ -6295,8 +5502,10 @@
         officialSelect.innerHTML = '<option value="">(Belum ada data jabatan)</option>';
         officialSelect.disabled = true;
         if (countBadge) countBadge.textContent = "0 Pilihan";
-        if (nameEl) nameEl.value = "";
-        if (posEl) posEl.value = "";
+        if (!preserveExisting) {
+          if (nameEl) nameEl.value = "";
+          if (posEl) posEl.value = "";
+        }
         if (typeof syncAllModernDropdowns === "function") syncAllModernDropdowns();
         update();
         return;
@@ -6308,8 +5517,10 @@
         officialSelect.innerHTML = '<option value="">(Belum ada pejabat aktif)</option>';
         officialSelect.disabled = true;
         if (countBadge) countBadge.textContent = "0 Pilihan";
-        if (nameEl) nameEl.value = "";
-        if (posEl) posEl.value = "";
+        if (!preserveExisting) {
+          if (nameEl) nameEl.value = "";
+          if (posEl) posEl.value = "";
+        }
         if (typeof syncAllModernDropdowns === "function") syncAllModernDropdowns();
         update();
         return;
@@ -6327,12 +5538,43 @@
       });
 
       officialSelect.disabled = false;
-      officialSelect.value = "";
       if (countBadge) countBadge.textContent = `${validOfficials.length} Pilihan`;
 
-      // Inputs remain empty until user explicitly chooses a specific official!
-      if (nameEl) nameEl.value = "";
-      if (posEl) posEl.value = "";
+      if (preserveExisting && (prevName || prevPos || prevOfficialIdx !== "")) {
+        const pn = (prevName || "").trim().toLowerCase();
+        const pp = (prevPos || "").trim().toLowerCase();
+        let matchedIdx = -1;
+        if (pn && pp) {
+          matchedIdx = validOfficials.findIndex(o => {
+            const on = (typeof stripTrailingPunctuation === "function" ? stripTrailingPunctuation(o.name) : o.name).trim().toLowerCase();
+            const op = (typeof expandKemnakerPosition === "function" ? expandKemnakerPosition(o.position) : o.position).trim().toLowerCase();
+            return on === pn && op === pp;
+          });
+        }
+        if (matchedIdx === -1 && pp) {
+          matchedIdx = validOfficials.findIndex(o => {
+            const op = (typeof expandKemnakerPosition === "function" ? expandKemnakerPosition(o.position) : o.position).trim().toLowerCase();
+            return op === pp;
+          });
+        }
+        if (matchedIdx === -1 && prevOfficialIdx !== "" && validOfficials[parseInt(prevOfficialIdx, 10)]) {
+          matchedIdx = parseInt(prevOfficialIdx, 10);
+        }
+        if (matchedIdx >= 0 && validOfficials[matchedIdx]) {
+          officialSelect.value = matchedIdx.toString();
+          const matchedOff = validOfficials[matchedIdx];
+          if (nameEl) nameEl.value = typeof stripTrailingPunctuation === "function" ? stripTrailingPunctuation(matchedOff.name) : matchedOff.name;
+          if (posEl) posEl.value = typeof expandKemnakerPosition === "function" ? expandKemnakerPosition(matchedOff.position) : matchedOff.position;
+        } else {
+          officialSelect.value = "";
+          if (prevName && nameEl) nameEl.value = prevName;
+          if (prevPos && posEl) posEl.value = prevPos;
+        }
+      } else {
+        officialSelect.value = "";
+        if (nameEl) nameEl.value = "";
+        if (posEl) posEl.value = "";
+      }
       if (typeof syncAllModernDropdowns === "function") syncAllModernDropdowns();
       update();
       if (typeof fitPreview === "function") fitPreview();
@@ -6512,9 +5754,9 @@
           let renderName = nameInput ? nameInput.value : "";
           let renderPos = positionInput ? positionInput.value : "";
 
-          // Strip tabs and control characters
+          // Strip tabs and control characters (preserve newlines for name_only and position!)
           if (typeof sanitizeText === "function") {
-            renderName = sanitizeText(renderName);
+            renderName = sanitizeText(renderName, currentContentMode === "name_only");
             renderPos = sanitizeText(renderPos, true); // preserve explicit newlines!
           }
 
@@ -6528,7 +5770,9 @@
             if (currentContentMode === "position_only") {
               renderName = "";
             } else if (currentGlobalSource === "kemnaker") {
-              if (typeof formatBulkName === "function") {
+              if (currentContentMode === "name_only" && renderName.includes("\n") && typeof cleanTitles === "function") {
+                renderName = renderName.split(/\r?\n/).map(p => cleanTitles(p)).filter(Boolean).join("\n");
+              } else if (typeof formatBulkName === "function") {
                 renderName = formatBulkName(renderName, { fontSize: currentFontSizeName, fontFamily: currentFontNameFamily, textCase: currentTextCase });
               } else if (typeof cleanTitles === "function") {
                 renderName = cleanTitles(renderName);
@@ -6584,7 +5828,7 @@
           let renderName = nameInput ? nameInput.value : "";
           let renderPos = positionInput ? positionInput.value : "";
           if (typeof sanitizeText === "function") {
-            renderName = sanitizeText(renderName);
+            renderName = sanitizeText(renderName, currentContentMode === "name_only");
             renderPos = sanitizeText(renderPos, true);
           }
           if (typeof stripTrailingPunctuation === "function") {
@@ -6592,7 +5836,9 @@
             renderPos = stripTrailingPunctuation(renderPos);
           }
           if (renderName && currentGlobalSource === "kemnaker" && currentContentMode !== "position_only") {
-            if (typeof formatBulkName === "function") {
+            if (currentContentMode === "name_only" && renderName.includes("\n") && typeof cleanTitles === "function") {
+              renderName = renderName.split(/\r?\n/).map(p => cleanTitles(p)).filter(Boolean).join("\n");
+            } else if (typeof formatBulkName === "function") {
               renderName = formatBulkName(renderName, { fontSize: currentFontSizeName, fontFamily: currentFontNameFamily, textCase: currentTextCase });
             } else if (typeof cleanTitles === "function") {
               renderName = cleanTitles(renderName);
@@ -6635,6 +5881,13 @@
       const nameHint = document.getElementById("nameHintText");
       const posHint = document.getElementById("posHintText");
 
+      const fontNameCard = document.getElementById("fontNameSectionCard");
+      const fontPosCard = document.getElementById("fontPosSectionCard");
+      const optNameAuto = document.getElementById("optFontSizeNameAuto");
+      const optPosAuto = document.getElementById("optFontSizePosAuto");
+      const nameBadge = document.getElementById("fontNameBadgeStatus");
+      const posBadge = document.getElementById("fontPosBadgeStatus");
+
       if (currentContentMode === "name_only") {
         if (modeBadge) {
           modeBadge.textContent = "Nama";
@@ -6642,10 +5895,25 @@
         }
         if (nameGroup) nameGroup.style.display = "block";
         if (posGroup) posGroup.style.display = "none";
+        if (fontNameCard) {
+          fontNameCard.style.opacity = "1";
+          fontNameCard.style.pointerEvents = "auto";
+        }
+        if (fontPosCard) {
+          fontPosCard.style.opacity = "0.42";
+          fontPosCard.style.pointerEvents = "none";
+        }
+        if (optNameAuto) optNameAuto.textContent = "Auto (60pt)";
+        if (optPosAuto) optPosAuto.textContent = "Auto (18pt)";
+        if (typeof updateFontNameBadge === "function") updateFontNameBadge();
+        if (posBadge) {
+          posBadge.textContent = "Nonaktif";
+          posBadge.className = "pill-status-badge";
+        }
         if (nameInputEl) {
           nameInputEl.required = true;
           nameInputEl.removeAttribute("maxlength");
-          nameInputEl.placeholder = "Masukkan Nama (bisa 1 atau 2 baris)";
+          nameInputEl.placeholder = "Masukkan Nama (tekan Enter untuk membuat beberapa baris)";
           nameInputEl.style.minHeight = "68px";
           nameInputEl.style.height = "68px";
           nameInputEl.style.resize = "vertical";
@@ -6656,7 +5924,7 @@
         if (nameHint) {
           nameHint.innerHTML = currentGlobalSource === "kemnaker"
             ? "Nama terisi lengkap dari Kemnaker. <strong>Gelar otomatis dibersihkan pada pratinjau &amp; cetak PDF</strong>."
-            : "Panjang nama bebas (font 60 pt atau disesuaikan). Tekan Enter untuk membagi 2 baris.";
+            : "Panjang nama bebas (ukuran &amp; font dapat diatur). Tekan Enter untuk mengatur baris secara manual.";
         }
       } else if (currentContentMode === "position_only") {
         if (modeBadge) {
@@ -6665,21 +5933,36 @@
         }
         if (nameGroup) nameGroup.style.display = "none";
         if (posGroup) posGroup.style.display = "block";
+        if (fontNameCard) {
+          fontNameCard.style.opacity = "0.42";
+          fontNameCard.style.pointerEvents = "none";
+        }
+        if (fontPosCard) {
+          fontPosCard.style.opacity = "1";
+          fontPosCard.style.pointerEvents = "auto";
+        }
+        if (optNameAuto) optNameAuto.textContent = "Auto (46pt)";
+        if (optPosAuto) optPosAuto.textContent = "Auto (40–52pt)";
+        if (nameBadge) {
+          nameBadge.textContent = "Nonaktif";
+          nameBadge.className = "pill-status-badge";
+        }
+        if (typeof updateFontPosBadge === "function") updateFontPosBadge();
         if (nameInputEl) {
           nameInputEl.required = false;
         }
         if (posInputEl) {
           posInputEl.required = true;
           posInputEl.removeAttribute("maxlength");
-          posInputEl.placeholder = "Masukkan Jabatan (bisa 1 s/d 3 baris)";
+          posInputEl.placeholder = "Masukkan Jabatan (tekan Enter untuk membuat beberapa baris)";
           posInputEl.style.minHeight = "68px";
           posInputEl.style.height = "68px";
           posInputEl.style.resize = "vertical";
         }
         if (posHint) {
           posHint.textContent = currentGlobalSource === "kemnaker"
-            ? "Jabatan terisi otomatis dari struktur bagan resmi Kemnaker RI (maks. 3 baris)."
-            : "Panjang jabatan bebas hingga 3 baris (ukuran teks otomatis menyesuaikan). Tekan Enter untuk membagi baris.";
+            ? "Jabatan terisi otomatis dari struktur bagan resmi Kemnaker RI (tekan Enter untuk mengatur baris manual)."
+            : "Panjang jabatan bebas hingga 4 baris (ukuran &amp; font dapat diatur). Tekan Enter untuk mengatur baris secara manual.";
         }
       } else {
         // 'both' (default)
@@ -6689,6 +5972,18 @@
         }
         if (nameGroup) nameGroup.style.display = "block";
         if (posGroup) posGroup.style.display = "block";
+        if (fontNameCard) {
+          fontNameCard.style.opacity = "1";
+          fontNameCard.style.pointerEvents = "auto";
+        }
+        if (fontPosCard) {
+          fontPosCard.style.opacity = "1";
+          fontPosCard.style.pointerEvents = "auto";
+        }
+        if (optNameAuto) optNameAuto.textContent = "Auto (46pt)";
+        if (optPosAuto) optPosAuto.textContent = "Auto (18pt)";
+        if (typeof updateFontNameBadge === "function") updateFontNameBadge();
+        if (typeof updateFontPosBadge === "function") updateFontPosBadge();
         if (nameInputEl) {
           nameInputEl.required = true;
           nameInputEl.removeAttribute("maxlength");
@@ -6718,7 +6013,11 @@
       }
 
       document.querySelectorAll(".sync-mode-val").forEach(el => el.value = currentContentMode);
-      update();
+      if (typeof onFontOrSizeChange === "function") {
+        onFontOrSizeChange();
+      } else {
+        update();
+      }
     }
     window.setContentModeOption = setContentModeOption;
 
@@ -6758,8 +6057,8 @@
           cardElem.style.width = cardWidthPx + "px";
           cardElem.style.height = cardHeightPx + "px";
           cardElem.style.transformOrigin = "top left";
-          cardElem.style.transform = `scale(${scale})`;
-          cardElem.style.zoom = "1";
+          cardElem.style.transform = "none";
+          cardElem.style.zoom = `${scale}`;
         }
         if (previewInner) {
           previewInner.style.height = (cardHeightPx * scale) + "px";
@@ -6776,8 +6075,8 @@
           cardBulkActive.style.width = cardWidthPx + "px";
           cardBulkActive.style.height = cardHeightPx + "px";
           cardBulkActive.style.transformOrigin = "top left";
-          cardBulkActive.style.transform = `scale(${scale})`;
-          cardBulkActive.style.zoom = "1";
+          cardBulkActive.style.transform = "none";
+          cardBulkActive.style.zoom = `${scale}`;
         }
         if (bulkActiveInner) {
           bulkActiveInner.style.height = (cardHeightPx * scale) + "px";
@@ -6803,8 +6102,8 @@
           cardSheetElem.style.width = cardWidthPx + "px";
           cardSheetElem.style.height = cardHeightPx + "px";
           cardSheetElem.style.transformOrigin = "top left";
-          cardSheetElem.style.transform = `scale(${scale})`;
-          cardSheetElem.style.zoom = "1";
+          cardSheetElem.style.transform = "none";
+          cardSheetElem.style.zoom = `${scale}`;
         }
         if (previewSheetInner) {
           previewSheetInner.style.height = (cardHeightPx * scale) + "px";
@@ -6842,13 +6141,13 @@
     }
 
     function syncHiddenInputs() {
-      document.querySelectorAll(".sync-font-choice-val").forEach(el => el.value = currentFontNameChoice || "MyriadPro");
-      document.querySelectorAll(".sync-font-val").forEach(el => el.value = currentFontNameFamily || "");
+      document.querySelectorAll(".sync-font-val").forEach(el => el.value = currentFontNameChoice || "Montserrat");
+      document.querySelectorAll(".sync-font-name-choice-val").forEach(el => el.value = currentFontNameChoice || "Montserrat");
       document.querySelectorAll(".sync-font-size-name-val").forEach(el => el.value = currentFontSizeName || "auto");
-      document.querySelectorAll(".sync-font-pos-choice-val").forEach(el => el.value = currentFontPosChoice || "MyriadPro");
-      document.querySelectorAll(".sync-font-pos-val").forEach(el => el.value = currentFontPosFamily || "");
+      document.querySelectorAll(".sync-font-pos-choice-val").forEach(el => el.value = currentFontPosChoice || "Montserrat");
       document.querySelectorAll(".sync-font-size-pos-val").forEach(el => el.value = currentFontSizePos || "auto");
       document.querySelectorAll(".sync-spacing-val").forEach(el => el.value = (currentSpacingGap || 40).toString());
+      document.querySelectorAll(".sync-spacing-manual-val").forEach(el => el.value = isSpacingManual ? "1" : "0");
       document.querySelectorAll(".sync-offset-x-val").forEach(el => el.value = (currentHorizontalOffset || 0).toString());
       document.querySelectorAll(".sync-case-val").forEach(el => el.value = currentTextCase || "uppercase");
       document.querySelectorAll(".sync-sides-val").forEach(el => el.value = (currentSides || 2).toString());
@@ -7327,11 +6626,11 @@
         vp.style.height = itemH + "px";
       });
       container.querySelectorAll(".bulk-card-canvas").forEach(cv => {
-        cv.style.zoom = "1";
         cv.style.width = cardWidthPx + "px";
         cv.style.height = cardHeightPx + "px";
         cv.style.transformOrigin = "top left";
-        cv.style.transform = `scale(${scale})`;
+        cv.style.transform = "none";
+        cv.style.zoom = `${scale}`;
       });
     }
     window.fitBulkPreview = fitBulkPreview;
@@ -7393,7 +6692,7 @@
               ${subText ? `<span class="sheet-person-position" title="${escapeHtml(subText)}">${escapeHtml(subText)}</span>` : ''}
             </div>
             <div class="bulk-card-viewport" style="height: ${itemH}px;">
-              <div class="bulk-card-canvas" style="width: ${cardWidthPx}px; height: ${cardHeightPx}px; transform-origin: top left; transform: scale(${scale});">
+              <div class="bulk-card-canvas" style="width: ${cardWidthPx}px; height: ${cardHeightPx}px; transform-origin: top left; transform: none; zoom: ${scale};">
                 <img class="bulk-bg" src="${activeBg}" alt="Card Background">
                 <div id="bulk-normal-${idx}" class="block"></div>
                 <div id="bulk-flip-${idx}" class="block block-flip" style="${isSingleSide ? 'display: none;' : ''}"></div>
@@ -7586,13 +6885,116 @@
     }
     window.renderMainBulkPills = renderMainBulkPills;
 
+    function getFilmstripScrubMultiplier(viewport) {
+      const maxScroll = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
+      if (maxScroll <= 0) return 1;
+      // Scale drag distance so ~60% of the visible filmstrip width scrubs through all sheets (e.g. 10+ cards) in one swipe
+      const targetSpan = Math.max(100, viewport.clientWidth * 0.6);
+      return Math.min(8, Math.max(2.5, maxScroll / targetSpan));
+    }
+
+    function bindAcceleratedFilmstrip(viewport, onCenterUpdate, onSnapEnd) {
+      let rafId = null;
+      const scheduleCenter = () => {
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(onCenterUpdate);
+      };
+
+      viewport.addEventListener("scroll", scheduleCenter, { passive: true });
+
+      viewport.addEventListener("wheel", (e) => {
+        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+          e.preventDefault();
+          viewport.scrollLeft += e.deltaY * getFilmstripScrubMultiplier(viewport) * 0.5;
+          onCenterUpdate();
+        }
+      }, { passive: false });
+
+      // Suppress accidental card click immediately after scrubbing
+      viewport.addEventListener("click", (e) => {
+        if (Date.now() < (viewport._suppressClickUntil || 0)) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }, true);
+
+      // Accelerated Touch Scrubbing (Mobile)
+      let tStartX = 0, tStartY = 0, tStartScroll = 0, tAxis = null, tMoved = false, tMult = 2.5;
+      viewport.addEventListener("touchstart", (e) => {
+        if (!e.touches || !e.touches.length) return;
+        const t = e.touches[0];
+        tStartX = t.clientX;
+        tStartY = t.clientY;
+        tStartScroll = viewport.scrollLeft;
+        tAxis = null;
+        tMoved = false;
+        tMult = getFilmstripScrubMultiplier(viewport);
+      }, { passive: true });
+
+      viewport.addEventListener("touchmove", (e) => {
+        if (!e.touches || !e.touches.length) return;
+        const t = e.touches[0];
+        const dx = t.clientX - tStartX;
+        const dy = t.clientY - tStartY;
+        if (tAxis === null && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+          tAxis = Math.abs(dx) >= Math.abs(dy) ? "x" : "y";
+        }
+        if (tAxis === "x") {
+          e.preventDefault();
+          tMoved = true;
+          const maxScroll = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
+          viewport.scrollLeft = Math.max(0, Math.min(maxScroll, tStartScroll - dx * tMult));
+          scheduleCenter();
+        }
+      }, { passive: false });
+
+      viewport.addEventListener("touchend", () => {
+        if (tAxis === "x" && tMoved) {
+          viewport._suppressClickUntil = Date.now() + 140;
+          setTimeout(onSnapEnd, 90);
+        }
+        tAxis = null;
+        tMoved = false;
+      }, { passive: true });
+
+      // Accelerated Mouse Scrubbing (Desktop / DevTools)
+      let isMouseDown = false, mStartX = 0, mStartScroll = 0, mMoved = false, mMult = 2.5;
+      viewport.addEventListener("mousedown", (e) => {
+        isMouseDown = true;
+        viewport.classList.add("is-dragging");
+        mStartX = e.pageX - viewport.offsetLeft;
+        mStartScroll = viewport.scrollLeft;
+        mMoved = false;
+        mMult = getFilmstripScrubMultiplier(viewport);
+      });
+
+      window.addEventListener("mousemove", (e) => {
+        if (!isMouseDown) return;
+        const x = e.pageX - viewport.offsetLeft;
+        const dx = x - mStartX;
+        if (Math.abs(dx) > 4) mMoved = true;
+        if (mMoved) {
+          viewport.scrollLeft = mStartScroll - dx * mMult;
+          onCenterUpdate();
+        }
+      });
+
+      window.addEventListener("mouseup", () => {
+        if (!isMouseDown) return;
+        isMouseDown = false;
+        viewport.classList.remove("is-dragging");
+        if (mMoved) {
+          viewport._suppressClickUntil = Date.now() + 140;
+          onSnapEnd();
+        }
+      });
+    }
+
     function initMainFilmstripScrubber() {
       const viewport = document.getElementById("mainFilmstripViewport");
       const strip = document.getElementById("mainBulkPillsStrip");
       if (!viewport || !strip || isMainScrubberInit) return;
       isMainScrubberInit = true;
-
-      let rafId = null;
 
       function handleCenterDetection() {
         if (isMainProgrammaticScroll) return;
@@ -7627,64 +7029,11 @@
         }
       }
 
-      viewport.addEventListener("scroll", () => {
-        if (rafId) cancelAnimationFrame(rafId);
-        rafId = requestAnimationFrame(handleCenterDetection);
-      }, { passive: true });
-
-      let isTouching = false;
-      viewport.addEventListener("touchstart", () => {
-        isTouching = true;
-      }, { passive: true });
-
-      viewport.addEventListener("touchmove", () => {
-        if (isTouching) {
-          if (rafId) cancelAnimationFrame(rafId);
-          rafId = requestAnimationFrame(handleCenterDetection);
-        }
-      }, { passive: true });
-
-      viewport.addEventListener("touchend", () => {
-        isTouching = false;
-        setTimeout(() => {
-          scrollMainBulkPillIntoView(currentMainBulkIndex, true);
-        }, 150);
-      }, { passive: true });
-
-      viewport.addEventListener("wheel", (e) => {
-        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-          e.preventDefault();
-          viewport.scrollLeft += e.deltaY * 0.7;
-          handleCenterDetection();
-        }
-      }, { passive: false });
-
-      let isMouseDown = false;
-      let mouseStartX = 0;
-      let mouseScrollLeft = 0;
-
-      viewport.addEventListener("mousedown", (e) => {
-        isMouseDown = true;
-        viewport.classList.add("is-dragging");
-        mouseStartX = e.pageX - viewport.offsetLeft;
-        mouseScrollLeft = viewport.scrollLeft;
-      });
-
-      window.addEventListener("mousemove", (e) => {
-        if (!isMouseDown) return;
-        const x = e.pageX - viewport.offsetLeft;
-        const walk = (x - mouseStartX) * 1.1;
-        viewport.scrollLeft = mouseScrollLeft - walk;
-        handleCenterDetection();
-      });
-
-      window.addEventListener("mouseup", () => {
-        if (isMouseDown) {
-          isMouseDown = false;
-          viewport.classList.remove("is-dragging");
-          scrollMainBulkPillIntoView(currentMainBulkIndex, true);
-        }
-      });
+      bindAcceleratedFilmstrip(
+        viewport,
+        handleCenterDetection,
+        () => scrollMainBulkPillIntoView(currentMainBulkIndex, true)
+      );
     }
     window.initMainFilmstripScrubber = initMainFilmstripScrubber;
 
@@ -7997,7 +7346,6 @@
       if (!viewport || viewport._iosScrubberInit) return;
       viewport._iosScrubberInit = true;
 
-      let rafModalId = null;
       function handleModalCenterDetection() {
         if (viewport._isProgrammaticScroll) return;
         const vpRect = viewport.getBoundingClientRect();
@@ -8034,56 +7382,11 @@
         }
       }
 
-      viewport.addEventListener("scroll", () => {
-        if (rafModalId) cancelAnimationFrame(rafModalId);
-        rafModalId = requestAnimationFrame(handleModalCenterDetection);
-      }, { passive: true });
-
-      let isDown = false;
-      let startX = 0;
-      let scrollLeft = 0;
-
-      // Mouse Wheel: Horizontal scroll
-      viewport.addEventListener("wheel", (e) => {
-        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-          e.preventDefault();
-          viewport.scrollLeft += e.deltaY * 0.7;
-          handleModalCenterDetection();
-        }
-      }, { passive: false });
-
-      // Mouse Dragging / Scrubbing
-      viewport.addEventListener("mousedown", (e) => {
-        isDown = true;
-        viewport.classList.add("is-dragging");
-        startX = e.pageX - viewport.offsetLeft;
-        scrollLeft = viewport.scrollLeft;
-      });
-
-      window.addEventListener("mousemove", (e) => {
-        if (!isDown) return;
-        const x = e.pageX - viewport.offsetLeft;
-        const walk = (x - startX) * 1.1;
-        viewport.scrollLeft = scrollLeft - walk;
-        handleModalCenterDetection();
-      });
-
-      window.addEventListener("mouseup", () => {
-        if (isDown) {
-          isDown = false;
-          viewport.classList.remove("is-dragging");
-          scrollActiveModalPillIntoView();
-        }
-      });
-
-      // Touch Dragging / Scrubbing (Mobile)
-      viewport.addEventListener("touchmove", () => {
-        handleModalCenterDetection();
-      }, { passive: true });
-
-      viewport.addEventListener("touchend", () => {
-        setTimeout(scrollActiveModalPillIntoView, 150);
-      });
+      bindAcceleratedFilmstrip(
+        viewport,
+        handleModalCenterDetection,
+        scrollActiveModalPillIntoView
+      );
     }
     window.initIosFilmstripScrubber = initIosFilmstripScrubber;
 
@@ -8689,6 +7992,14 @@
     // Interactive Feature 5: Jarak Spasi Antara Nama & Jabatan (Slider & Manual Input)
     // -------------------------------------------------------------------------
     function getEffectiveAutoSpacing() {
+      if (currentContentMode === "name_only") {
+        const sz = (currentFontSizeName && currentFontSizeName !== "auto") ? parseFloat(currentFontSizeName) : 60.0;
+        return Math.max(sz * 1.15, sz + 6.0);
+      }
+      if (currentContentMode === "position_only") {
+        const sz = (currentFontSizePos && currentFontSizePos !== "auto") ? parseFloat(currentFontSizePos) : 40.0;
+        return Math.max(sz * 1.25, sz + 4.0);
+      }
       const nSize = (currentFontSizeName && currentFontSizeName !== "auto") ? parseFloat(currentFontSizeName) : 45.86;
       const pSize = (currentFontSizePos && currentFontSizePos !== "auto") ? parseFloat(currentFontSizePos) : 18.0;
       if (typeof calculateAutoSpacingGap === "function") {
@@ -8702,8 +8013,8 @@
       const pip = document.getElementById("spacingDefaultPip");
       const slider = document.getElementById("spacingRangeInput");
       if (pip && slider) {
-        const min = parseFloat(slider.min) || 15;
-        const max = parseFloat(slider.max) || 95;
+        const min = parseFloat(slider.min) || 12;
+        const max = parseFloat(slider.max) || 110;
         const pct = Math.max(0, Math.min(100, ((autoVal - min) / (max - min)) * 100));
         pip.style.left = `calc(10px + (100% - 20px) * ${pct / 100})`;
         pip.title = `Posisi Otomatis: ${autoVal} pt`;
@@ -8730,18 +8041,18 @@
       const slider = document.getElementById("spacingRangeInput");
       const inputEl = document.getElementById("spacingNumberInput");
       const badge = document.getElementById("spacingBadgeStatus");
+      const sliderMin = slider ? (parseFloat(slider.min) || 12) : 12;
+      const sliderMax = slider ? (parseFloat(slider.max) || 110) : 110;
 
       if (slider && !fromSlider) {
-        slider.value = Math.max(15, Math.min(95, currentSpacingGap));
+        slider.value = Math.max(sliderMin, Math.min(sliderMax, currentSpacingGap));
       }
       if (inputEl && !fromInput) {
         inputEl.value = currentSpacingGap;
       }
       if (slider) {
-        const min = parseFloat(slider.min) || 15;
-        const max = parseFloat(slider.max) || 95;
         const sVal = parseFloat(slider.value) || 40;
-        const pct = Math.max(0, Math.min(100, ((sVal - min) / (max - min)) * 100));
+        const pct = Math.max(0, Math.min(100, ((sVal - sliderMin) / (sliderMax - sliderMin)) * 100));
         slider.style.setProperty("--slider-pct", pct + "%");
       }
 
@@ -8749,7 +8060,7 @@
 
       if (badge) {
         if (!isSpacingManual) {
-          if (currentSpacingGap === 40) {
+          if (currentSpacingGap === 40 && currentContentMode === "both") {
             badge.textContent = "Standar (40)";
           } else {
             badge.textContent = `Otomatis (${currentSpacingGap} pt)`;
@@ -8764,6 +8075,7 @@
       }
 
       document.querySelectorAll(".sync-spacing-val").forEach(el => el.value = currentSpacingGap.toString());
+      document.querySelectorAll(".sync-spacing-manual-val").forEach(el => el.value = isSpacingManual ? "1" : "0");
       update();
     }
     window.setSpacingOption = setSpacingOption;
@@ -8890,9 +8202,11 @@
     function printCurrentCards() {
       let cards = [];
       const cleanName = (n) => {
-        let s = typeof sanitizeText === "function" ? sanitizeText(n) : (n || "");
+        let s = typeof sanitizeText === "function" ? sanitizeText(n, currentContentMode === "name_only") : (n || "");
         if (currentTab === "batch" || (currentTab === "single" && currentGlobalSource === "kemnaker")) {
-          if (typeof formatBulkName === "function") {
+          if (currentContentMode === "name_only" && s.includes("\n") && typeof cleanTitles === "function") {
+            s = s.split(/\r?\n/).map(p => cleanTitles(p)).filter(Boolean).join("\n");
+          } else if (typeof formatBulkName === "function") {
             s = formatBulkName(s, { fontSize: currentFontSizeName, fontFamily: currentFontNameFamily, textCase: currentTextCase });
           } else if (typeof cleanTitles === "function") {
             s = cleanTitles(s);
@@ -9096,7 +8410,7 @@
         </head>
         <body>
           ${cardsHtml}
-          <script src="/static/nametag.js?v=20261102b"><\/script>
+          <script src="/static/nametag.js?v=20261119c"><\/script>
           <script>
             async function doPrint() {
               if (window.setNameFontFamily) window.setNameFontFamily('${currentFontNameFamily}');
@@ -9119,7 +8433,7 @@
                 const safeName = (card.name || "").toString();
                 const safePos = (card.position || "").toString();
                 const lines = wrapPosition(safePos);
-                const blockOpts = { mode: '${currentContentMode}', rawPosition: safePos };
+                const blockOpts = { mode: '${currentContentMode}', rawPosition: safePos, spacingGap: ${currentSpacingGap}, isAutoSpacing: ${!isSpacingManual} };
                 if (normal) layoutBlock(normal, safeName, lines, blockOpts);
                 if (flip && ${isSingleSide ? 'false' : 'true'}) layoutBlock(flip, safeName, lines, blockOpts);
               });

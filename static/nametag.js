@@ -256,8 +256,10 @@ function wrapPosition(text) {
   return lines.slice(0, 2);
 }
 
-// Word-wrap for 60 pt Name Only / Position Only mode (max 36 chars, 1 or 2 lines)
-function wrap60pt(text, maxChars = 36) {
+// Word-wrap for Name Only mode:
+// - Respects user's explicit Enter key breaks (\n) verbatim (up to 4 lines)
+// - When continuous, measures with the active fontSize & fontFamily so shrinking font size allows single-line fit
+function wrap60pt(text, maxChars = 128, fontSizePt = CARD.MODE_60PT_FONT_SIZE, fontFamily = null) {
   if (!text || typeof text !== "string") return [];
   let cleanText = stripTrailingPunctuation(text.trim());
   if (cleanText.length > maxChars) {
@@ -265,37 +267,39 @@ function wrap60pt(text, maxChars = 36) {
   }
   if (!cleanText) return [];
 
-  // 1. Explicit newline (Enter key)
+  const sz = (fontSizePt && !isNaN(parseFloat(fontSizePt))) ? parseFloat(fontSizePt) : CARD.MODE_60PT_FONT_SIZE;
+  const fam = fontFamily || CARD.NAME_FONT_FAMILY;
+
+  // 1. Explicit newline (Enter key) — preserve user's exact lines per line break!
   if (cleanText.includes("\n")) {
     const rawLines = cleanText.split(/\r?\n/)
       .map(l => stripTrailingPunctuation(l.trim()).replace(/\s+/g, " "))
       .filter(Boolean);
-    if (rawLines.length === 1) return [rawLines[0]];
-    if (rawLines.length >= 2) {
-      return [rawLines[0], rawLines.slice(1).join(" ")].slice(0, 2);
+    if (rawLines.length >= 1) {
+      return rawLines.slice(0, 4);
     }
   }
 
-  // 2. Single continuous line
+  // 2. Single continuous line — measure using the ACTUAL chosen fontSize & fontFamily
   const singleLine = cleanText.replace(/\s+/g, " ");
-  const widthPt = measureTextWidthPt(singleLine, CARD.NAME_FONT_WEIGHT, CARD.MODE_60PT_FONT_SIZE);
+  const widthPt = measureTextWidthPt(singleLine, CARD.NAME_FONT_WEIGHT, sz, fam);
   if (widthPt <= CARD.MAX_TEXT_WIDTH) {
     return [singleLine];
   }
 
-  // 3. Balanced 2-line wrap
+  // 3. Balanced 2-line wrap measured at sz & fam
   const words = singleLine.split(" ").filter(Boolean);
   if (words.length <= 1) {
     return [singleLine];
   }
 
   let bestDiff = Infinity;
-  let bestSplit = [singleLine];
+  let bestSplit = null;
   for (let i = 1; i < words.length; i++) {
     const l1 = words.slice(0, i).join(" ");
     const l2 = words.slice(i).join(" ");
-    const w1 = measureTextWidthPt(l1, CARD.NAME_FONT_WEIGHT, CARD.MODE_60PT_FONT_SIZE);
-    const w2 = measureTextWidthPt(l2, CARD.NAME_FONT_WEIGHT, CARD.MODE_60PT_FONT_SIZE);
+    const w1 = measureTextWidthPt(l1, CARD.NAME_FONT_WEIGHT, sz, fam);
+    const w2 = measureTextWidthPt(l2, CARD.NAME_FONT_WEIGHT, sz, fam);
     if (w1 <= CARD.MAX_TEXT_WIDTH && w2 <= CARD.MAX_TEXT_WIDTH) {
       const diff = Math.abs(w1 - w2);
       if (diff < bestDiff) {
@@ -305,29 +309,32 @@ function wrap60pt(text, maxChars = 36) {
     }
   }
 
-  if (bestDiff === Infinity) {
-    let current = "";
-    const lines = [];
-    for (const w of words) {
-      const candidate = current ? current + " " + w : w;
-      if (measureTextWidthPt(candidate, CARD.NAME_FONT_WEIGHT, CARD.MODE_60PT_FONT_SIZE) <= CARD.MAX_TEXT_WIDTH) {
-        current = candidate;
-      } else {
-        if (current) lines.push(current);
-        current = w;
-        if (lines.length >= 2) break;
-      }
-    }
-    if (current && lines.length < 2) lines.push(current);
-    return lines.slice(0, 2);
+  if (bestSplit) {
+    return bestSplit;
   }
 
-  return bestSplit;
+  // 4. Greedy wrap (or balanced 2-line fallback if text scales down in layoutBlock)
+  let current = "";
+  const lines = [];
+  for (const w of words) {
+    const candidate = current ? current + " " + w : w;
+    if (measureTextWidthPt(candidate, CARD.NAME_FONT_WEIGHT, sz, fam) <= CARD.MAX_TEXT_WIDTH) {
+      current = candidate;
+    } else {
+      if (current) lines.push(current);
+      current = w;
+      if (lines.length >= 3) break;
+    }
+  }
+  if (current && lines.length < 3) lines.push(current);
+  if (lines.length === 0) return [singleLine];
+  return lines.slice(0, 3);
 }
 
-// Dynamic 1-to-3 line layout & auto-font-reduction for Position Only (Jabatan Saja) mode
-// Supports explicit newlines (Enter key) as well as automatic wrapping for long positions (up to 128 chars).
-function layoutPositionOnly(text, maxChars = 128) {
+// Dynamic layout for Position Only (Jabatan Saja) mode:
+// - Respects explicit Enter key breaks (\n) verbatim (up to 4 lines) without re-splitting lines
+// - Respects user's manual font size & chosen font family before deciding whether continuous text wraps
+function layoutPositionOnly(text, maxChars = 128, fontFamily = null, customSizePt = null) {
   if (!text || typeof text !== "string") {
     return { lines: [], fontSize: 40, baselines: [] };
   }
@@ -339,132 +346,182 @@ function layoutPositionOnly(text, maxChars = 128) {
     return { lines: [], fontSize: 40, baselines: [] };
   }
 
-  const weight = CARD.NAME_FONT_WEIGHT;
+  const weight = CARD.POSITION_FONT_WEIGHT || CARD.NAME_FONT_WEIGHT;
+  const fam = fontFamily || CARD.POSITION_FONT_FAMILY;
   const maxW = CARD.MAX_TEXT_WIDTH;
+  const hasCustom = customSizePt !== null && customSizePt !== undefined && customSizePt !== "auto" && !isNaN(parseFloat(customSizePt));
+  const targetSize = hasCustom ? parseFloat(customSizePt) : null;
 
   function getBaselines(numLines, fontSize) {
-    const gap = fontSize * 1.25;
+    const gap = Math.max(fontSize * 1.25, fontSize + 4.0);
     if (numLines === 1) {
       return [86.0];
     } else if (numLines === 2) {
       return [86.0 + gap / 2.0, 86.0 - gap / 2.0];
-    } else {
+    } else if (numLines === 3) {
       return [86.0 + gap, 86.0, 86.0 - gap];
+    } else {
+      const top = 86.0 + ((numLines - 1) * gap) / 2.0;
+      return Array.from({ length: numLines }, (_, i) => top - i * gap);
     }
   }
 
-  // 1. Explicit newlines entered by user (Enter key)
+  // 1. Explicit newlines entered by user (Enter key) — preserve lines per Enter break!
   if (cleanText.includes("\n")) {
     const rawLines = cleanText.split(/\r?\n/)
-      .map(l => l.trim().replace(/\s+/g, " "))
+      .map(l => stripTrailingPunctuation(l.trim()).replace(/\s+/g, " "))
       .filter(Boolean);
 
     if (rawLines.length === 1) {
       cleanText = rawLines[0];
-    } else if (rawLines.length === 2) {
-      const l1 = rawLines[0];
-      const l2 = rawLines[1];
-      let s = 46.0;
-      while (s >= 16.0) {
-        if (measureTextWidthPt(l1, weight, s) <= maxW && measureTextWidthPt(l2, weight, s) <= maxW) {
-          break;
+    } else if (rawLines.length >= 2) {
+      const keptLines = rawLines.slice(0, 4);
+      let s = hasCustom
+        ? targetSize
+        : (keptLines.length === 2 ? 46.0 : (keptLines.length === 3 ? 34.0 : 26.0));
+      const minAuto = keptLines.length <= 2 ? 12.0 : 10.0;
+      if (hasCustom) {
+        let maxLineW = 0;
+        keptLines.forEach(l => {
+          const w = measureTextWidthPt(l, weight, s, fam);
+          if (w > maxLineW) maxLineW = w;
+        });
+        if (maxLineW > maxW && maxW > 0) {
+          s = Math.max(8.0, Math.floor(s * (maxW / maxLineW) * 10) / 10);
         }
-        s -= 1.0;
-      }
-      return { lines: [l1, l2], fontSize: s, baselines: getBaselines(2, s) };
-    } else {
-      const l1 = rawLines[0];
-      const l2 = rawLines[1];
-      const l3 = rawLines.slice(2).join(" ");
-      let s = 34.0;
-      while (s >= 14.0) {
-        if (measureTextWidthPt(l1, weight, s) <= maxW &&
-            measureTextWidthPt(l2, weight, s) <= maxW &&
-            measureTextWidthPt(l3, weight, s) <= maxW) {
-          break;
+      } else {
+        while (s > minAuto) {
+          if (keptLines.every(l => measureTextWidthPt(l, weight, s, fam) <= maxW)) {
+            break;
+          }
+          s -= 1.0;
         }
-        s -= 1.0;
       }
-      return { lines: [l1, l2, l3], fontSize: s, baselines: getBaselines(3, s) };
+      return { lines: keptLines, fontSize: s, baselines: getBaselines(keptLines.length, s) };
     }
   }
 
-  // 2. Continuous text
+  // 2. Continuous text (no explicit Enter breaks)
   const continuousText = cleanText.replace(/\s+/g, " ");
   const words = continuousText.split(" ").filter(Boolean);
   if (words.length === 0) {
-    return { lines: [], fontSize: 40, baselines: [] };
+    return { lines: [], fontSize: hasCustom ? targetSize : 40, baselines: [] };
   }
 
-  // Step 2a: Check if fits on 1 line
+  // Helper to find balanced 2-line split at a specific font size
+  function findBalanced2Lines(sz) {
+    if (words.length < 2) return null;
+    const TARGET_RATIO = 0.60;
+    const trailingStopwords = new Set(['DAN', 'ATAU', 'PADA', 'DI', 'KE', 'DENGAN', 'UNTUK']);
+    const candidates = [];
+    for (let i = 1; i < words.length; i++) {
+      const l1 = words.slice(0, i).join(" ");
+      const l2 = words.slice(i).join(" ");
+      const w1 = measureTextWidthPt(l1, weight, sz, fam);
+      const w2 = measureTextWidthPt(l2, weight, sz, fam);
+      if (w1 <= maxW && w2 <= maxW) {
+        const totalW = w1 + w2;
+        const ratio = totalW > 0 ? w1 / totalW : 0.5;
+        const isTopHeavy = w1 > w2;
+        const lastWordL1 = words[i - 1].toUpperCase();
+        const trailingPenalty = trailingStopwords.has(lastWordL1) ? 0.15 : 0.0;
+
+        let score, priority;
+        if (isTopHeavy) {
+          score = Math.abs(ratio - TARGET_RATIO) + trailingPenalty;
+          priority = 0;
+        } else {
+          score = (0.55 - ratio) + 1.0 + trailingPenalty;
+          priority = 1;
+        }
+        candidates.push({ priority, score, lines: [l1, l2] });
+      }
+    }
+    if (candidates.length > 0) {
+      candidates.sort((a, b) => a.priority - b.priority || a.score - b.score);
+      return candidates[0].lines;
+    }
+    return null;
+  }
+
+  function findBalanced3Lines(sz) {
+    if (words.length < 3) return null;
+    let bestDiff = Infinity;
+    let bestSplit = null;
+    const n = words.length;
+    for (let i = 1; i < n - 1; i++) {
+      for (let j = i + 1; j < n; j++) {
+        const l1 = words.slice(0, i).join(" ");
+        const l2 = words.slice(i, j).join(" ");
+        const l3 = words.slice(j).join(" ");
+        const w1 = measureTextWidthPt(l1, weight, sz, fam);
+        const w2 = measureTextWidthPt(l2, weight, sz, fam);
+        const w3 = measureTextWidthPt(l3, weight, sz, fam);
+        if (w1 <= maxW && w2 <= maxW && w3 <= maxW) {
+          const diff = Math.max(w1, w2, w3) - Math.min(w1, w2, w3);
+          if (diff < bestDiff) {
+            bestDiff = diff;
+            bestSplit = [l1, l2, l3];
+          }
+        }
+      }
+    }
+    return bestSplit;
+  }
+
+  // If user chose an explicit manual font size, evaluate wrapping AT that font size first!
+  if (hasCustom) {
+    if (measureTextWidthPt(continuousText, weight, targetSize, fam) <= maxW) {
+      return { lines: [continuousText], fontSize: targetSize, baselines: getBaselines(1, targetSize) };
+    }
+    const split2 = findBalanced2Lines(targetSize);
+    if (split2) {
+      return { lines: split2, fontSize: targetSize, baselines: getBaselines(2, targetSize) };
+    }
+    const split3 = findBalanced3Lines(targetSize);
+    if (split3) {
+      return { lines: split3, fontSize: targetSize, baselines: getBaselines(3, targetSize) };
+    }
+    // Greedy wrap at targetSize (will scale down in layoutBlock if any line still overflows)
+    const gLines = [];
+    let gCur = "";
+    for (const w of words) {
+      const cand = gCur ? gCur + " " + w : w;
+      if (measureTextWidthPt(cand, weight, targetSize, fam) <= maxW) {
+        gCur = cand;
+      } else {
+        if (gCur) gLines.push(gCur);
+        gCur = w;
+        if (gLines.length === 3) break;
+      }
+    }
+    if (gCur && gLines.length < 4) gLines.push(gCur);
+    if (gLines.length > 0) {
+      return { lines: gLines, fontSize: targetSize, baselines: getBaselines(gLines.length, targetSize) };
+    }
+    return { lines: [continuousText], fontSize: targetSize, baselines: getBaselines(1, targetSize) };
+  }
+
+  // Auto mode: Step 2a: Check if fits on 1 line
   for (const s of [52, 48, 44, 40]) {
-    if (measureTextWidthPt(continuousText, weight, s) <= maxW) {
+    if (measureTextWidthPt(continuousText, weight, s, fam) <= maxW) {
       return { lines: [continuousText], fontSize: s, baselines: [86.0] };
     }
   }
 
-  // Step 2b: Try 2 lines
-  if (words.length >= 2) {
-    for (const s of [44, 40, 36, 32, 30]) {
-      const TARGET_RATIO = 0.60;
-      const trailingStopwords = new Set(['DAN', 'ATAU', 'PADA', 'DI', 'KE', 'DENGAN', 'UNTUK']);
-      const candidates = [];
-      for (let i = 1; i < words.length; i++) {
-        const l1 = words.slice(0, i).join(" ");
-        const l2 = words.slice(i).join(" ");
-        const w1 = measureTextWidthPt(l1, weight, s);
-        const w2 = measureTextWidthPt(l2, weight, s);
-        if (w1 <= maxW && w2 <= maxW) {
-          const totalW = w1 + w2;
-          const ratio = totalW > 0 ? w1 / totalW : 0.5;
-          const isTopHeavy = w1 > w2;
-          const lastWordL1 = words[i - 1].toUpperCase();
-          const trailingPenalty = trailingStopwords.has(lastWordL1) ? 0.15 : 0.0;
-
-          let score, priority;
-          if (isTopHeavy) {
-            score = Math.abs(ratio - TARGET_RATIO) + trailingPenalty;
-            priority = 0;
-          } else {
-            score = (0.55 - ratio) + 1.0 + trailingPenalty;
-            priority = 1;
-          }
-          candidates.push({ priority, score, lines: [l1, l2] });
-        }
-      }
-      if (candidates.length > 0) {
-        candidates.sort((a, b) => a.priority - b.priority || a.score - b.score);
-        return { lines: candidates[0].lines, fontSize: s, baselines: getBaselines(2, s) };
-      }
+  // Auto mode: Step 2b: Try 2 lines
+  for (const s of [44, 40, 36, 32, 30]) {
+    const split2 = findBalanced2Lines(s);
+    if (split2) {
+      return { lines: split2, fontSize: s, baselines: getBaselines(2, s) };
     }
   }
 
-  // Step 2c: Try 3 lines
-  if (words.length >= 3) {
-    for (let s = 32; s >= 14; s -= 1) {
-      let bestDiff = Infinity;
-      let bestSplit = null;
-      const n = words.length;
-      for (let i = 1; i < n - 1; i++) {
-        for (let j = i + 1; j < n; j++) {
-          const l1 = words.slice(0, i).join(" ");
-          const l2 = words.slice(i, j).join(" ");
-          const l3 = words.slice(j).join(" ");
-          const w1 = measureTextWidthPt(l1, weight, s);
-          const w2 = measureTextWidthPt(l2, weight, s);
-          const w3 = measureTextWidthPt(l3, weight, s);
-          if (w1 <= maxW && w2 <= maxW && w3 <= maxW) {
-            const diff = Math.max(w1, w2, w3) - Math.min(w1, w2, w3);
-            if (diff < bestDiff) {
-              bestDiff = diff;
-              bestSplit = [l1, l2, l3];
-            }
-          }
-        }
-      }
-      if (bestSplit) {
-        return { lines: bestSplit, fontSize: s, baselines: getBaselines(3, s) };
-      }
+  // Auto mode: Step 2c: Try 3 lines
+  for (let s = 32; s >= 14; s -= 1) {
+    const split3 = findBalanced3Lines(s);
+    if (split3) {
+      return { lines: split3, fontSize: s, baselines: getBaselines(3, s) };
     }
   }
 
@@ -474,7 +531,7 @@ function layoutPositionOnly(text, maxChars = 128) {
     let current = "";
     for (const w of words) {
       const candidate = current ? current + " " + w : w;
-      if (measureTextWidthPt(candidate, weight, s) <= maxW) {
+      if (measureTextWidthPt(candidate, weight, s, fam) <= maxW) {
         current = candidate;
       } else {
         if (current) lines.push(current);
@@ -483,7 +540,7 @@ function layoutPositionOnly(text, maxChars = 128) {
       }
     }
     if (current) lines.push(current);
-    if (lines.length <= 3 && lines.every(l => measureTextWidthPt(l, weight, s) <= maxW)) {
+    if (lines.length <= 3 && lines.every(l => measureTextWidthPt(l, weight, s, fam) <= maxW)) {
       return { lines, fontSize: s, baselines: getBaselines(lines.length, s) };
     }
   }
@@ -581,14 +638,15 @@ function layoutBlock(container, name, positionLines, options = {}) {
   // Only clean titles if explicitly requested (e.g. bulk import or official kemnaker dropdown)
   const cleanN = (options.cleanTitles && typeof cleanTitles === "function")
     ? cleanTitles(name)
-    : (typeof sanitizeText === "function" ? sanitizeText(name) : (name || ""));
+    : (typeof sanitizeText === "function" ? sanitizeText(name, mode === "name_only") : (name || ""));
   const safeName = applyTextCase(cleanN, textCase);
 
-  // Mode: Nama Saja (Dynamic optical vertical centering)
+  // Mode: Nama Saja (Dynamic optical vertical centering + manual line & spacing support)
   if (mode === "name_only") {
     if (!safeName) return;
-    let fontSize = customNameSize && customNameSize !== "auto" ? parseFloat(customNameSize) : CARD.MODE_60PT_FONT_SIZE;
-    const lines = wrap60pt(safeName, CARD.MODE_60PT_MAX_CHARS);
+    const targetNameSize = (customNameSize && customNameSize !== "auto") ? parseFloat(customNameSize) : CARD.MODE_60PT_FONT_SIZE;
+    let fontSize = targetNameSize;
+    const lines = wrap60pt(safeName, 128, targetNameSize, nameFontFamily);
     // Boundary protection: enforce safe margin (CARD.MAX_TEXT_WIDTH = 625 pt)
     lines.forEach(line => {
       const w = measureTextWidthPt(line, CARD.NAME_FONT_WEIGHT, fontSize, nameFontFamily);
@@ -599,38 +657,17 @@ function layoutBlock(container, name, positionLines, options = {}) {
 
     const nameAscent = nameMetrics.ascentRatio * fontSize;
     const nameDescent = nameMetrics.descentRatio * fontSize;
+    const n = lines.length;
+    const autoLineGap = Math.max(fontSize * 1.15, fontSize + 6.0);
+    const hasManualSpacing = (options.isAutoSpacing === false && options.spacingGap !== undefined && options.spacingGap !== null && options.spacingGap !== "auto");
+    const lineGap = hasManualSpacing ? parseFloat(options.spacingGap) : autoLineGap;
+    const topBaseline = opticalCenterY + ((n - 1) * lineGap + nameDescent - nameAscent) / 2.0;
 
-    if (lines.length === 1) {
-      const dynamicBaseline = opticalCenterY - (nameAscent - nameDescent) / 2.0;
-      const top = boxTopForBaseline(dynamicBaseline, fontSize, nameMetrics.ascentRatio);
-      container.appendChild(makeLine(lines[0], {
+    for (let i = 0; i < n; i++) {
+      const baseline = topBaseline - i * lineGap;
+      const top = boxTopForBaseline(baseline, fontSize, nameMetrics.ascentRatio);
+      container.appendChild(makeLine(lines[i], {
         top: top,
-        left: cx - CARD.MAX_TEXT_WIDTH / 2,
-        width: CARD.MAX_TEXT_WIDTH,
-        centerX: cx,
-        size: fontSize,
-        weight: CARD.NAME_FONT_WEIGHT,
-        opacity: nameOpacity,
-        fontFamily: nameFontFamily,
-      }));
-    } else if (lines.length >= 2) {
-      const lineGap = Math.max(fontSize * 1.15, fontSize + 6.0);
-      const topBaseline = opticalCenterY + (lineGap + nameDescent - nameAscent) / 2.0;
-      const bottomBaseline = topBaseline - lineGap;
-      const top1 = boxTopForBaseline(topBaseline, fontSize, nameMetrics.ascentRatio);
-      const top2 = boxTopForBaseline(bottomBaseline, fontSize, nameMetrics.ascentRatio);
-      container.appendChild(makeLine(lines[0], {
-        top: top1,
-        left: cx - CARD.MAX_TEXT_WIDTH / 2,
-        width: CARD.MAX_TEXT_WIDTH,
-        centerX: cx,
-        size: fontSize,
-        weight: CARD.NAME_FONT_WEIGHT,
-        opacity: nameOpacity,
-        fontFamily: nameFontFamily,
-      }));
-      container.appendChild(makeLine(lines[1], {
-        top: top2,
         left: cx - CARD.MAX_TEXT_WIDTH / 2,
         width: CARD.MAX_TEXT_WIDTH,
         centerX: cx,
@@ -643,18 +680,18 @@ function layoutBlock(container, name, positionLines, options = {}) {
     return;
   }
 
-  // Mode: Jabatan Saja (Dynamic optical vertical centering)
+  // Mode: Jabatan Saja (Dynamic optical vertical centering + manual line, size, & spacing support)
   if (mode === "position_only") {
     const rawPosText = options.rawPosition !== undefined
       ? options.rawPosition
       : (Array.isArray(positionLines) ? positionLines.join("\n") : (positionLines || name || ""));
-    const safePos = applyTextCase(sanitizeText(rawPosText || ""), textCase);
+    const safePos = applyTextCase(sanitizeText(rawPosText || "", true), textCase);
     if (!safePos) return;
-    const { lines, fontSize } = layoutPositionOnly(safePos, 128);
-    let finalSize = customPosSize && customPosSize !== "auto" ? parseFloat(customPosSize) : fontSize;
+    const { lines, fontSize } = layoutPositionOnly(safePos, 128, posFontFamily, customPosSize);
+    let finalSize = (customPosSize && customPosSize !== "auto") ? parseFloat(customPosSize) : fontSize;
     // Boundary protection: enforce safe margin (CARD.MAX_TEXT_WIDTH = 625 pt)
     lines.forEach(line => {
-      const w = measureTextWidthPt(line, CARD.NAME_FONT_WEIGHT, finalSize, posFontFamily);
+      const w = measureTextWidthPt(line, CARD.POSITION_FONT_WEIGHT, finalSize, posFontFamily);
       if (w > CARD.MAX_TEXT_WIDTH && CARD.MAX_TEXT_WIDTH > 0) {
         finalSize = Math.floor(finalSize * (CARD.MAX_TEXT_WIDTH / w) * 10) / 10;
       }
@@ -662,11 +699,13 @@ function layoutBlock(container, name, positionLines, options = {}) {
 
     const posAscent = posMetrics.ascentRatio * finalSize;
     const posDescent = posMetrics.descentRatio * finalSize;
-    const lineGap = Math.max(finalSize * 1.25, finalSize + 4.0);
     const n = lines.length;
+    const autoLineGap = Math.max(finalSize * 1.25, finalSize + 4.0);
+    const hasManualSpacing = (options.isAutoSpacing === false && options.spacingGap !== undefined && options.spacingGap !== null && options.spacingGap !== "auto");
+    const lineGap = hasManualSpacing ? parseFloat(options.spacingGap) : autoLineGap;
     const topBaseline = opticalCenterY + ((n - 1) * lineGap + posDescent - posAscent) / 2.0;
 
-    for (let i = 0; i < lines.length; i++) {
+    for (let i = 0; i < n; i++) {
       const baseline = topBaseline - i * lineGap;
       const top = boxTopForBaseline(baseline, finalSize, posMetrics.ascentRatio);
       container.appendChild(makeLine(lines[i], {
@@ -848,29 +887,32 @@ function renderCard(name, position, options = {}) {
 // ---------------------------------------------------------------------------
 // Bulk Title Cleaner & Parser Utilities
 // ---------------------------------------------------------------------------
-const LEADING_LIST_PREFIX_PATTERN = /^\s*(?:\(?\d+[\.\)\:\-\]]*|[-*•·–—>→+~▪▫◦■/\\|]+)\s*/;
+const LEADING_LIST_PREFIX_PATTERN = /^\s*(?:\[\d{1,2}[\/\-\.]\d{1,2}(?:[\/\-\.]\d{2,4})?,?\s*\d{1,2}[\.:]\d{2}(?::\d{2})?(?:\s*[APap][Mm])?\]\s*[^:\n]{1,50}:\s*|\(?\d+[\.\)\:\-\]]*|\[?\d+\]|[-*•·–—>→+~▪▫◦■/\\|]+)\s*/;
 
-const FRONT_TITLES_PATTERN = /^\s*(?:Prof(?:esor)?\.?|Drs\.?|Dra\.?|Drg\.?|Drh\.?|Dr\.?|Ir\.?|Apt\.?|Ns\.?|K\.?\s*H\.?|KH\.?|Kiai\s+Haji|Kyai\s+Haji|Hjh\.?|Hj\.?|H\.|(?:\bH\b\.?)|Haji|Hajjah|Hajah|Ust(?:adz)?\.?|Habib|Sayyid|Bpk\.?|Bapak|Ibu|Sdri?\.?|Saudara|Saudari|Plt\.?|Plh\.?|Pj\.?|Jenderal|Letjen|Mayjen|Brigjen|Kolonel|Letkol|Mayor|Kapten|Lettu|Letda|Irjen(?:\s+Pol)?\.?|Brigjen(?:\s+Pol)?\.?|Kombes(?:\s+Pol)?\.?|AKBP|Kompol|AKP|Iptu|Ipda)(?:[\.\s\:\-\/–—]+|$)/i;
+const FRONT_TITLES_PATTERN = /^\s*(?:Prof(?:esor)?\.?|Dr\.?\s*\(\s*H\.?\s*C\.?\s*\)|\(\s*H\.?\s*C\.?\s*\)|H\.?\s*C\.?|Drs\.?|Dra\.?|Drg\.?|Drh\.?|Dr\.?|Ir\.?|Apt\.?|Ns\.?|Gr\.?|K\.?\s*H\.?|KH\.?|Kiai\s+Haji|Kyai\s+Haji|Hjh\.?|Hj\.?|H\.|(?:\bH\b\.?)|Haji|Hajjah|Hajah|Ust(?:adz)?\.?|Habib|Sayyid|Bpk\.?|Bapak|Ibu|Sdri?\.?|Saudara|Saudari|Plt\.?|Plh\.?|Pj\.?|Jenderal|Letjen|Mayjen|Brigjen|Kolonel|Letkol|Mayor|Kapten|Lettu|Letda|Irjen(?:\s+Pol)?\.?|Brigjen(?:\s+Pol)?\.?|Kombes(?:\s+Pol)?\.?|AKBP|Kompol|AKP|Iptu|Ipda)(?:[\.\s\:\-\/–—]+|$)/i;
 
 function isValidOfficialName(name) {
   if (!name) return false;
   const s = String(name).trim();
   if (!s) return false;
   if (!/[A-Za-z0-9]/.test(s)) return false;
-  if (["kosong", "belum ada", "vacant", "nihil", "n/a", "none", "null", "plt", "plt.", "plh", "plh.", "pj", "pj."].includes(s.toLowerCase())) return false;
+  if (["kosong", "belum ada", "vacant", "nihil", "n/a", "none", "null", "plt", "plt.", "plh", "plh.", "pj", "pj.", "-", "–"].includes(s.toLowerCase())) return false;
   return true;
 }
 
-const TITLE_TOKEN_PATTERN = /^(?:[SMDA]\.\s*[A-Za-z]+(?:\.\s*[A-Za-z]+)*\.?|Sp\.\s*[A-Za-z]+(?:\s*\([A-Za-z]+\)|-[A-Za-z0-9]+|(?:\.\s*[A-Za-z]+)*)\.?|Subsp\.\s*[A-Za-z]+(?:\.\s*[A-Za-z]+)*\.?|Ph\.?\s*D\.?|PhD|M\.?\s*B\.?\s*A\.?|MBA|M\.?\s*Bus\.?|B\.?\s*[A-Z]\.?\s*(?:Sc|A)?\.?|LL\.?\s*M\.?|LLM|Ed\.?\s*D\.?|D\.?\s*Sc\.?|D\.?\s*B\.?\s*A\.?|IP[UMP]\b\.?|(?:ASEAN|Asean)\s+Eng\.?|ACPE|CPE|(?:SE|SH|ST|SKom|SPd|SSos|SIP|SIKom|SKM|SPi|SPt|SHut|SAg|SFarm|SPsi|SSn|SKed)\b|(?:MM|MH|MT|ME|MSi|MPd|MKes|MKom|MA|MSc|MP|MKn|MAP|MAg|MFarm|MPsi|MSn|MEcon)\b|FINASIM|FACS|FICS|CMA|CPA|CIA|CHRP|CPHR|QIA|CBV|CPMA|CFA|CFP|QWP|FRM|PMP|CAPM|CISA|CISM|CISSP|CEH|CRA|CRP|CRGP|CSO|CGO|CGP|Ak\.?|Akt\.?|CA\b|BKP|CTA|ACPA|MM\.PD)$/i;
+const TITLE_TOKEN_PATTERN = /^(?:[SMDA]\.\s*[A-Za-z]+(?:\.\s*[A-Za-z]+)*(?:\s*\([A-Za-z0-9\s\.\-]+\))?\.?|S\.?\s*Tr\.?(?:\.\s*[A-Za-z]+|[A-Za-z]+)*\.?|A\.?\s*Md\.?(?:\.\s*[A-Za-z]+|[A-Za-z]+)*\.?|D\.?\s*(?:III|IV|3|4)\.?|Sp\.\s*[A-Za-z]+(?:\s*\([A-Za-z0-9\s\.\-]+\)|-[A-Za-z0-9\-]+|(?:\.\s*[A-Za-z]+)*)\.?|Subsp\.\s*[A-Za-z]+(?:\.\s*[A-Za-z]+)*\.?|Ph\.?\s*D\.?|PhD\.?|M\.?\s*B\.?\s*A\.?|MBA\.?|M\.?\s*(?:Bus|Com|Sc|Eng|Ed|Fin|Phil|Arch|Tech|Law|Res|Des|Pub\.?\s*Pol|Int\.?\s*Rel)\.?|B\.?\s*(?:Sc|Eng|A|Com|Ed|Bus|Tech|Fin|Acc|Arch|Pharm|Psych|Phil|Law|B\.?A|I\.?T|C\.?A|S\.?)\.?(?:\s*\([A-Za-z]+\))?|LL\.?\s*[BM]\.?|LL[BM]\.?|Ed\.?\s*D\.?|EdD\.?|D\.?\s*Sc\.?|DSc\.?|D\.?\s*B\.?\s*A\.?|DBA\.?|Psy\.?\s*D\.?|\(\s*H\.?\s*C\.?\s*\)|H\.?\s*C\.?|I\.?\s*P\.?\s*[UMP]\.?|IP[UMP]\.?|(?:ASEAN|Asean)\s+Eng\.?|P\.?\s*Eng\.?|C\.?\s*Eng\.?|A\.?\s*C\.?\s*P\.?\s*E\.?|ACPE\.?|C\.?\s*P\.?\s*E\.?|CPE\.?|Psikolog\.?|Kons\.?|Gr\.?|Apt\.?|Ns\.?|Bdn\.?|(?:SE|SH|ST|SP|SKom|SPd|SSos|SIP|SIKom|SKM|SKep|SGz|SPi|SPt|SHut|SAg|SFarm|SPsi|SSn|SKed|SStat|SAkt|SIK|SHum|SFils|STr\w*|AMd\w*)\.?|(?:MM|MH|MT|ME|MSi|MPd|MKes|MKom|MA|MSc|MEng|MP|MKn|MAP|MAg|MFarm|MPsi|MSn|MEcon|MARS|MPH|MPP|MPA|MKM|MIKom|MIP|MKP|MHut|MHum|MFils|MStat|MFin|MMgt|MTech|MPhil|BSc|BEng|BA|BBA|BCom|BEd)\.?|(?:FINASIM|FACS|FICS|FIHA|FACC|FESC|FACP|FRCS|MRCP|CMA|CPA|CIA|CHRP|CPHR|QIA|CBV|CPMA|CFA|CFP|QWP|FRM|PRM|CWM|RFP|PMP|CAPM|PRINCE2|CSM|CSPO|ITIL|TOGAF|CISA|CISM|CISSP|CGEIT|CRISC|CEH|OSCP|CIPM|CIPP|CDPSE|CRA|CRP|CRGP|CRMP|CRMO|CERG|CCRP|CSO|CGO|CGP|FCCA|ACCA|FCA|ACMA|CGMA|CIMA|SHRM-?S?CP|SPHR|GPHR|PHR|CAFM|BKP|CTA|ACPA|CA)\.?|(?:[A-Z]\.){3,6}|Ak\.?|Akt\.?|MM\.?PD\.?|\(K\)|Konsultan)$/i;
 
-const BACK_TITLES_PATTERN = /(?:,\s*|\s+)(?:[SMDA]\.\s*[A-Za-z]+(?:\.\s*[A-Za-z]+)*(?:\s*\([A-Za-z0-9\s\.\-]+\))?\.?|Sp\.\s*[A-Za-z]+(?:\s*\([A-Za-z0-9\s\.\-]+\)|-[A-Za-z0-9]+|(?:\.\s*[A-Za-z]+)*)\.?|Subsp\.\s*[A-Za-z]+(?:\s*\([A-Za-z0-9\s\.\-]+\)|-[A-Za-z0-9]+|(?:\.\s*[A-Za-z]+)*)\.?|Ph\.?\s*D\.?|PhD|M\.?\s*B\.?\s*A\.?|MBA|M\.?\s*Bus\.?|B\.?\s*[A-Z]\.?\s*(?:Sc|A)?\.?|LL\.?\s*M\.?|LLM|Ed\.?\s*D\.?|D\.?\s*Sc\.?|D\.?\s*B\.?\s*A\.?|IP[UMP]\b\.?|(?:ASEAN|Asean)\s+Eng\.?|ACPE|CPE|(?:SE|SH|ST|SKom|SPd|SSos|SIP|SIKom|SKM|SPi|SPt|SHut|SAg|SFarm|SPsi|SSn|SKed)\b|(?:MM|MH|MT|ME|MSi|MPd|MKes|MKom|MA|MSc|MP|MKn|MAP|MAg|MFarm|MPsi|MSn|MEcon)\b|FINASIM|FACS|FICS|CMA|CPA|CIA|CHRP|CPHR|QIA|CBV|CPMA|CFA|CFP|QWP|FRM|PMP|CAPM|CISA|CISM|CISSP|CEH|CRA|CRP|CRGP|CSO|CGO|CGP|Ak\.?|Akt\.?|CA\b|BKP|CTA|ACPA|MM\.PD|H\.|Hj\.|Haji|Hajjah|Hajah|Hjh\.?)(?:\.+(?:\b|\)|$)?|\b|\)|$)/gi;
+const BACK_TITLES_PATTERN = /(?:,\s*|\s+)(?:[SMDA]\.\s*[A-Za-z]+(?:\.\s*[A-Za-z]+)*(?:\s*\([A-Za-z0-9\s\.\-]+\))?\.?|S\.?\s*Tr\.?(?:\.\s*[A-Za-z]+|[A-Za-z]+)*\.?|A\.?\s*Md\.?(?:\.\s*[A-Za-z]+|[A-Za-z]+)*\.?|D\.?\s*(?:III|IV|3|4)|Sp\.\s*[A-Za-z]+(?:\s*\([A-Za-z0-9\s\.\-]+\)|-[A-Za-z0-9\-]+|(?:\.\s*[A-Za-z]+)*)\.?|Subsp\.\s*[A-Za-z]+(?:\s*\([A-Za-z0-9\s\.\-]+\)|-[A-Za-z0-9\-]+|(?:\.\s*[A-Za-z]+)*)\.?|Ph\.?\s*D\.?|PhD|M\.?\s*B\.?\s*A\.?|MBA|M\.?\s*(?:Bus|Com|Sc|Eng|Ed|Fin|Phil|Arch|Tech|Law|Res|Des|Pub\.?\s*Pol|Int\.?\s*Rel)\.?|B\.?\s*(?:Sc|Eng|A|Com|Ed|Bus|Tech|Fin|Acc|Arch|Pharm|Psych|Phil|Law|B\.?A|I\.?T|C\.?A|S\.?)\.?|LL\.?\s*[BM]\.?|LL[BM]|Ed\.?\s*D\.?|EdD|D\.?\s*Sc\.?|DSc|D\.?\s*B\.?\s*A\.?|DBA|Psy\.?\s*D\.?|\(\s*H\.?\s*C\.?\s*\)|H\.?\s*C\.?|I\.?\s*P\.?\s*[UMP]\b\.?|(?:ASEAN|Asean)\s+Eng\.?|P\.?\s*Eng\.?|C\.?\s*Eng\.?|A\.?\s*C\.?\s*P\.?\s*E|ACPE|C\.?\s*P\.?\s*E|CPE|Psikolog|Kons\.?|Gr\.?|Apt\.?|Ns\.?|Bdn\.?|(?:SE|SH|ST|SP|SKom|SPd|SSos|SIP|SIKom|SKM|SKep|SGz|SPi|SPt|SHut|SAg|SFarm|SPsi|SSn|SKed|SStat|SAkt|SIK|SHum|SFils|STr\w*|AMd\w*)\b|(?:MM|MH|MT|ME|MSi|MPd|MKes|MKM|MKom|MA|MSc|MEng|MP|MKn|MAP|MPA|MPP|MPH|MAg|MFarm|MPsi|MSn|MEcon|MARS|MIKom|MIP|MKP|MHut|MHum|MFils|MStat|MFin|MMgt|MTech|MPhil|BSc|BEng|BA|BBA|BCom|BEd)\b|FINASIM|FACS|FICS|FIHA|FACC|FESC|FACP|FRCS|MRCP|CMA|CPA|CIA|CHRP|CPHR|QIA|CBV|CPMA|CFA|CFP|QWP|FRM|PRM|CWM|RFP|PMP|CAPM|PRINCE2|CSM|CSPO|ITIL|TOGAF|CISA|CISM|CISSP|CGEIT|CRISC|CEH|OSCP|CIPM|CIPP|CDPSE|CRA|CRP|CRGP|CRMP|CRMO|CERG|CCRP|CSO|CGO|CGP|FCCA|ACCA|FCA|ACMA|CGMA|CIMA|SHRM-?S?CP|SPHR|GPHR|PHR|CAFM|Ak\.?|Akt\.?|CA\b|BKP|CTA|ACPA|MM\.?PD|(?:[A-Z]\.){3,8}(?![A-Za-z0-9])|H\.|Hj\.|Haji|Hajjah|Hajah|Hjh\.?)(?:\.+(?=$|[\s,\)\]\-;:/])|(?=$|[\s,\)\]\-;:/]))/gi;
 
 function cleanTitles(name) {
   if (!name) return "";
   let s = sanitizeText(name);
 
-  // 1. Strip parenthesized religious/academic titles e.g. "(H.) " or "(Hj.) " or "(Dr.) "
-  s = s.replace(/^\s*\((?:H\.|Hj\.|Haji|Hajjah|Hajah|Hjh\.?|Dr\.?|Drs\.?|Dra\.?)\)\s*/i, "").trim();
+  // Strip wrapping markdown emphasis / quotes (WhatsApp / copy-paste noise)
+  s = s.replace(/^[*_~`"'“”‘’]+|[*_~`"'“”‘’]+$/g, "").replace(/[*_~`]+/g, " ").trim();
+
+  // 1. Strip parenthesized religious/academic titles e.g. "(H.) " or "(Hj.) " or "(Dr.) " or "(H.C.) "
+  s = s.replace(/^\s*\((?:H\.|Hj\.|Haji|Hajjah|Hajah|Hjh\.?|Dr\.?|Drs\.?|Dra\.?|H\.?\s*C\.?)\)\s*/i, "").trim();
 
   // 2. Strip leading numbering or bullet markers
   let prev = null;
@@ -893,8 +935,8 @@ function cleanTitles(name) {
     s = s.replace(BACK_TITLES_PATTERN, "").trim();
   }
 
-  // 4b. Strip parenthesized trailing titles/subspecialties e.g. "(K)", "(Konsultan)", "(Han)"
-  s = s.replace(/\s*\((?:K|Konsultan|Sp\.[A-Za-z]+|[A-Za-z0-9\.\s\-]+)\)\s*$/i, "").trim();
+  // 4b. Strip parenthesized trailing titles/subspecialties e.g. "(K)", "(Konsultan)", "(Han)", "(H.C.)"
+  s = s.replace(/\s*\((?:K|Konsultan|Sp\.[A-Za-z]+|H\.?\s*C\.?|[A-Za-z0-9\.\s\-]+)\)\s*$/i, "").trim();
 
   // 5. Clean leftover punctuation at ends (preserving trailing period ONLY if part of a single initial e.g. 'R.', 'P.')
   s = s.replace(/^[,\.\s\-–—>·•\:\=\|\/]+/, "").trim();
@@ -903,12 +945,12 @@ function cleanTitles(name) {
     s = s.replace(/\.+$/, "").trim();
   }
 
-  // 6. Clean any trailing comma or short unrecognized title abbreviations
+  // 6. Clean trailing comma-separated degree abbreviations
   while (s.includes(",")) {
     const lastCommaIdx = s.lastIndexOf(",");
     const before = s.substring(0, lastCommaIdx).trim();
     const after = s.substring(lastCommaIdx + 1).trim();
-    if (/^(?:[A-Za-z0-9\.\s\-\(\)]+|\(K\)|Konsultan)$/i.test(after) && after.length <= 15) {
+    if (TITLE_TOKEN_PATTERN.test(after) || (after.length <= 14 && /^(?:[A-Z]\.(?:[A-Za-z0-9\.\-\s]*)|[A-Z]{2,6}|\([A-Za-z\.]+\)|Konsultan)$/.test(after))) {
       s = before;
     } else {
       break;
@@ -1043,11 +1085,16 @@ function cleanPositionText(pos) {
   if (!pos) return "";
   const lines = String(pos).split(/\r?\n/);
   const cleaned = lines.map(line => {
-    let s = sanitizeText(line).replace(/^[\s\-–—>·•\:\=\|\/]+/, "").trim();
+    let s = sanitizeText(line)
+      .replace(/^[*_~`"'“”‘’]+|[*_~`"'“”‘’]+$/g, "")
+      .replace(/[*_~`]+/g, " ")
+      .replace(/^[\s\-–—>·•\:\=\|\/]+/, "")
+      .trim();
+    s = s.replace(/^(?:Jabatan|Posisi|Sebagai)\s*:\s*/i, "").trim();
     let prev = null;
     while (prev !== s) {
       prev = s;
-      s = s.replace(/^\s*(?:[SMDA]\.[A-Za-z]+(?:\.[A-Za-z]+)*\.?|Ph\.?D\.?|PhD|M\.?B\.?A\.?|MBA|Sp\.[A-Za-z]+|Subsp\.[A-Za-z]+|M\.?M\.?|M\.?Si\.?|S\.?E\.?|S\.?H\.?|S\.?T\.?|S\.?Kom\.?|S\.?Pd\.?|S\.?Sos\.?|M\.?Kom\.?|M\.?H\.?|M\.?T\.?|M\.?Pd\.?|FINASIM|Ak\.?|Akt\.?|CA\b|MM\.PD)(?:[,\s\:\-\/–—]+|$)/i, "").trim();
+      s = s.replace(/^\s*(?:[SMDA]\.\s*[A-Za-z]+(?:\.\s*[A-Za-z]+)*\.?|S\.?\s*Tr\.?(?:\.\s*[A-Za-z]+|[A-Za-z]+)*\.?|A\.?\s*Md\.?(?:\.\s*[A-Za-z]+|[A-Za-z]+)*\.?|Ph\.?\s*D\.?|PhD|M\.?\s*B\.?\s*A\.?|MBA|Sp\.\s*[A-Za-z]+|Subsp\.\s*[A-Za-z]+|M\.?M\.?|M\.?Si\.?|S\.?E\.?|S\.?H\.?|S\.?T\.?|S\.?Kom\.?|S\.?Pd\.?|S\.?Sos\.?|M\.?Kom\.?|M\.?H\.?|M\.?T\.?|M\.?Pd\.?|M\.?K\.?K\.?K\.?|M\.?K\.?M\.?|FINASIM|Ak\.?|Akt\.?|CA\b|MM\.PD|Psikolog|\(H\.?\s*C\.?\))(?:[,\s\:\-\/–—]+|$)/i, "").trim();
     }
     s = s.replace(/^[\s\-–—>·•\:\=\|\/]+/, "").trim();
     return stripTrailingPunctuation(s);
@@ -1055,14 +1102,59 @@ function cleanPositionText(pos) {
   return cleaned.join("\n");
 }
 
+function _isCommaDegreeSegment(seg) {
+  if (!seg) return false;
+  const s = seg.replace(/^[,\s]+|[,\s]+$/g, "").trim();
+  if (!s) return false;
+  if (TITLE_TOKEN_PATTERN.test(s)) return true;
+  // Space-joined degrees inside a single comma segment e.g. "S.H. M.H." or "SE MM"
+  const tokens = s.split(/\s+/).filter(Boolean);
+  return tokens.length >= 1 && tokens.every(t => TITLE_TOKEN_PATTERN.test(t));
+}
+
+function _splitCommaNameAndPosition(str) {
+  if (!str || !str.includes(",")) return null;
+  const parts = str.split(",").map(p => p.trim()).filter(Boolean);
+  if (parts.length < 2) return null;
+  let splitIdx = 1;
+  while (splitIdx < parts.length && _isCommaDegreeSegment(parts[splitIdx])) {
+    splitIdx++;
+  }
+  if (splitIdx < parts.length) {
+    return {
+      name: stripTrailingPunctuation(parts.slice(0, splitIdx).join(", ")),
+      position: parts.slice(splitIdx).join(", ").trim()
+    };
+  }
+  return null;
+}
+
 function splitNameAndPosition(line) {
   if (!line) return { name: "", position: "" };
   line = String(line).trim();
   if (!line) return { name: "", position: "" };
 
+  // Pre-clean WhatsApp timestamps / formatting & weird Unicode dashes
+  line = line
+    .replace(/^\s*\[\d{1,2}[\/\-\.]\d{1,2}(?:[\/\-\.]\d{2,4})?,?\s*\d{1,2}[\.:]\d{2}(?::\d{2})?(?:\s*[APap][Mm])?\]\s*[^:\n]{1,50}:\s*/, "")
+    .replace(/[\u2010\u2011\u2012\u2212]/g, "-")
+    .replace(/^[*_~`]+|[*_~`]+$/g, "")
+    .trim();
+
+  // Strip leading bullets / numbering first when followed by clean content (preserve tabs if TSV)
+  if (!line.includes("\t")) {
+    let prevL = null;
+    while (prevL !== line) {
+      prevL = line;
+      line = line.replace(LEADING_LIST_PREFIX_PATTERN, "").trim();
+    }
+    line = line.replace(/[*_~`]+/g, " ").replace(/\s+/g, " ").trim();
+  }
+  if (!line) return { name: "", position: "" };
+
   // Check TSV (Excel copy-paste with tabs)
   if (line.includes("\t")) {
-    const parts = line.split("\t").map(p => p.trim()).filter(Boolean);
+    const parts = line.split("\t").map(p => p.replace(/[*_~`]+/g, "").trim()).filter(Boolean);
     if (parts.length >= 3) {
       if (/^\(?\d+[\.\)\:\-\]]*$/.test(parts[0]) || /^(?:no|nomor)$/i.test(parts[0])) {
         return {
@@ -1095,7 +1187,7 @@ function splitNameAndPosition(line) {
     }
   }
 
-  // Strip leading numbering: e.g. "1. ", "1, ", "1) ", "1 - ", "1; "
+  // Strip leading numbering again cleanly
   const numMatch = line.match(/^\(?\d+[\.\)\:\-\]\,\;]\s+(.*)$/);
   if (numMatch) {
     line = numMatch[1].trim();
@@ -1119,13 +1211,12 @@ function splitNameAndPosition(line) {
 
   line = sanitizeText(line);
 
-  // 1. Parentheses / brackets: e.g. "Nama Pejabat (Jabatan Lengkap)"
-  // or "Nama - Jabatan (Keterangan)"
+  // 1. Parentheses / brackets at end: e.g. "Nama Pejabat (Jabatan)" OR "Nama, S.T., Koordinator PEP (Perencanaan, Evaluasi)"
   const parenMatch = line.match(/^(.*?)\s*[\(\[\{](.+?)[\)\]\}]\s*$/);
   if (parenMatch) {
     const beforeParen = parenMatch[1].trim();
     const insideParen = parenMatch[2].trim();
-    const delims = ["|", ";", ":", " - ", " – ", " — ", "="];
+    const delims = ["|", ";", ":", " - ", " – ", " — ", " / ", "="];
     let foundDelim = null;
     for (const d of delims) {
       if (beforeParen.includes(d)) {
@@ -1141,10 +1232,20 @@ function splitNameAndPosition(line) {
         return { name: namePart, position: posPart };
       }
     } else {
-      const namePart = stripTrailingPunctuation(beforeParen);
-      const posPart = insideParen;
-      if (namePart && posPart) {
-        return { name: namePart, position: posPart };
+      const commaSplit = _splitCommaNameAndPosition(beforeParen);
+      if (commaSplit && commaSplit.name && commaSplit.position) {
+        return {
+          name: commaSplit.name,
+          position: commaSplit.position + " (" + insideParen + ")"
+        };
+      }
+      // If insideParen itself is purely a degree/subspecialty like (H.C.) or (K), do not treat it as position
+      if (!_isCommaDegreeSegment(insideParen)) {
+        const namePart = stripTrailingPunctuation(beforeParen);
+        const posPart = insideParen;
+        if (namePart && posPart) {
+          return { name: namePart, position: posPart };
+        }
       }
     }
   }
@@ -1161,19 +1262,10 @@ function splitNameAndPosition(line) {
     }
   }
 
-  // 3. Comma check: could separate degrees or name/position
-  if (line.includes(",")) {
-    const parts = line.split(",").map(p => p.trim()).filter(Boolean);
-    if (parts.length >= 2) {
-      const lastPart = parts[parts.length - 1];
-      const isTitle = TITLE_TOKEN_PATTERN.test(lastPart);
-      if (!isTitle) {
-        return {
-          name: stripTrailingPunctuation(parts.slice(0, -1).join(", ")),
-          position: lastPart
-        };
-      }
-    }
+  // 3. Smart Comma check: skips trailing degree tokens left-to-right so positions with commas stay whole
+  const commaRes = _splitCommaNameAndPosition(line);
+  if (commaRes) {
+    return commaRes;
   }
 
   // 4. Single dash or slash between words
@@ -1283,7 +1375,7 @@ function deduplicateBulkRows(rows, contentMode = "both", source = "kemnaker") {
   const uniqueRows = [];
 
   for (const r of rows) {
-    const name = (r.name || "").trim();
+    const name = (r.rawName || r.name || "").trim();
     const pos = (r.position || "").trim();
 
     const cleanedN = typeof cleanTitles === "function" ? cleanTitles(name) : name;
@@ -1336,6 +1428,7 @@ window.cleanPositionText = cleanPositionText;
 window.stripTrailingPunctuation = stripTrailingPunctuation;
 window.expandKemnakerPosition = expandKemnakerPosition;
 window.deduplicateBulkRows = deduplicateBulkRows;
+window.isValidOfficialName = isValidOfficialName;
 window.sanitizeText = sanitizeText;
 window.applyTextCase = applyTextCase;
 window.setFontFamily = setFontFamily;

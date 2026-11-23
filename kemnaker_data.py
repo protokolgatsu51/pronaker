@@ -212,25 +212,42 @@ def get_official_rank(pos, slug):
 
 def transform_unit_data(raw_units_dict, last_updated=None):
     units_list = []
-    for u in UNITS:
-        slug = u["slug"]
+    default_order = {u["slug"]: idx for idx, u in enumerate(UNITS)}
+    default_names = {u["slug"]: u["name"] for u in UNITS}
+
+    # Dynamically iterate over whatever units exist in raw_units_dict (supports additions & removals!)
+    active_slugs = [slug for slug, data in (raw_units_dict or {}).items() if isinstance(data, dict)]
+    active_slugs.sort(key=lambda s: (
+        0 if s == "menteri-ketenagakerjaan" else 1,
+        raw_units_dict[s].get("order", default_order.get(s, 999)),
+        default_order.get(s, 999),
+        s
+    ))
+
+    for slug in active_slugs:
         data = raw_units_dict.get(slug, {})
         officials = []
-        clean_unit_name = re.sub(r'\s*\([^)]*\)', '', u["name"]).strip()
-        
+        raw_unit_name = data.get("unit_name") or default_names.get(slug) or slug.replace("-", " ").title()
+        clean_unit_name = re.sub(r'\s*\([^)]*\)', '', raw_unit_name).strip()
+        if clean_unit_name.lower() == "kementerian ketenagakerjaan republik indonesia":
+            clean_unit_name = "Kementerian Ketenagakerjaan RI"
+
+        seen_pairs = set()
+
         # 1. Pimpinan Unit
         leader = data.get("leader") or {}
         leader_name = strip_trailing_punctuation((leader.get("name") or "").strip())
         leader_photo = (leader.get("photo") or "").strip()
         leader_pos = expand_kemnaker_position(leader.get("position") or clean_unit_name)
         if is_valid_official_name(leader_name):
+            seen_pairs.add((leader_name.lower(), leader_pos.lower()))
             officials.append({
                 "name": leader_name,
                 "position": leader_pos,
                 "photo": leader_photo,
                 "is_leader": True
             })
-            
+
         # 2. Staff / Pejabat di bawahnya
         staff_list = data.get("staff") or []
         parsed_staff = []
@@ -238,25 +255,29 @@ def transform_unit_data(raw_units_dict, last_updated=None):
             s_name = strip_trailing_punctuation((s.get("name") or "").strip())
             s_pos = expand_kemnaker_position(s.get("position") or "")
             s_photo = (s.get("photo") or "").strip()
-            
+
             if is_valid_official_name(s_name) and s_pos:
+                pair_k = (s_name.lower(), s_pos.lower())
+                if pair_k in seen_pairs:
+                    continue
+                seen_pairs.add(pair_k)
                 parsed_staff.append({
                     "name": s_name,
                     "position": s_pos,
                     "photo": s_photo,
                     "is_leader": False
                 })
-                
+
         # Sort staff so Sekretaris is ALWAYS right after the leader/jenderal
         parsed_staff.sort(key=lambda s: get_official_rank(s["position"], slug))
         officials.extend(parsed_staff)
-                
+
         units_list.append({
             "slug": slug,
             "name": clean_unit_name,
             "officials": officials
         })
-        
+
     now_iso = datetime.now(timezone.utc).isoformat()
     return {
         "success": True,
@@ -265,57 +286,109 @@ def transform_unit_data(raw_units_dict, last_updated=None):
         "units": units_list
     }
 
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import html as _html
+
+def discover_kemnaker_units(headers, ctx):
+    """
+    Dynamically discovers official Kemnaker work units (/unit/<slug>) from kemnaker.go.id/struktur-organisasi.
+    Handles added, renamed, or removed units gracefully; falls back to static UNITS if unreachable.
+    """
+    try:
+        req = urllib.request.Request("https://kemnaker.go.id/struktur-organisasi", headers=headers)
+        with urllib.request.urlopen(req, timeout=6, context=ctx) as res:
+            body = res.read().decode("utf-8", "ignore")
+        matches = re.findall(r'href=["\']/unit/([a-z0-9-]+)["\'][^>]*>(.*?)</a>', body, re.DOTALL | re.IGNORECASE)
+        discovered = []
+        seen = set()
+        for slug, raw_label in matches:
+            slug = slug.strip().lower()
+            if not slug or slug in seen:
+                continue
+            seen.add(slug)
+            label = _html.unescape(re.sub(r'\s+', ' ', raw_label)).strip()
+            if label.lower() == "kementerian ketenagakerjaan republik indonesia":
+                label = "Kementerian Ketenagakerjaan RI"
+            discovered.append({"slug": slug, "name": label or slug.replace("-", " ").title()})
+        if discovered and any(u["slug"] == "menteri-ketenagakerjaan" for u in discovered):
+            # Keep menteri-ketenagakerjaan at index 0
+            discovered.sort(key=lambda u: (0 if u["slug"] == "menteri-ketenagakerjaan" else 1))
+            return discovered
+    except Exception as e:
+        print(f"[Info] Dynamic unit discovery fallback to defaults: {e}")
+    return list(UNITS)
+
+def _fetch_single_unit(u, order_idx, headers, ctx):
+    slug = u["slug"]
+    clean_unit_name = re.sub(r'\s*\([^)]*\)', '', u["name"]).strip()
+    url = f"https://portal.kemnaker.go.id/api/v1/organizations/{slug}"
+    try:
+        req = urllib.request.Request(url, headers=headers)
+        with urllib.request.urlopen(req, timeout=6, context=ctx) as res:
+            data = json.loads(res.read().decode("utf-8"))
+            node = data.get("data", {})
+            if not node:
+                return slug, None
+            top_name = strip_trailing_punctuation((node.get("name") or "").strip())
+            top_pos = expand_kemnaker_position((node.get("job_title") or "").strip())
+            top_photo = (node.get("photo") or "").strip()
+            children = node.get("childrens", [])
+
+            child_list = []
+            seen_child = set()
+            def extract_children(items):
+                for c in items:
+                    c_name = strip_trailing_punctuation((c.get("name") or "").strip())
+                    c_pos = expand_kemnaker_position((c.get("job_title") or "").strip())
+                    c_photo = (c.get("photo") or "").strip()
+                    if is_valid_official_name(c_name) and c_pos:
+                        pk = (c_name.lower(), c_pos.lower())
+                        if pk not in seen_child:
+                            seen_child.add(pk)
+                            child_list.append({"name": c_name, "position": c_pos, "photo": c_photo})
+                    sub = c.get("childrens", [])
+                    if sub:
+                        extract_children(sub)
+            extract_children(children)
+
+            return slug, {
+                "unit_name": clean_unit_name,
+                "slug": slug,
+                "order": order_idx,
+                "leader": {
+                    "name": top_name if is_valid_official_name(top_name) else "",
+                    "position": top_pos,
+                    "photo": top_photo
+                },
+                "staff": sorted(child_list, key=lambda s: get_official_rank(s["position"], slug))
+            }
+    except Exception as e:
+        print(f"[Warning] Gagal fetch unit {slug}: {e}")
+        return slug, None
+
 def fetch_from_kemnaker_portal():
     ctx = ssl.create_default_context()
     ctx.check_hostname = False
     ctx.verify_mode = ssl.CERT_NONE
-    
+
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
         "Accept": "application/json, text/plain, */*"
     }
-    
+
+    active_units = discover_kemnaker_units(headers, ctx)
+
     scraped_units = {}
-    for u in UNITS:
-        slug = u["slug"]
-        clean_unit_name = re.sub(r'\s*\([^)]*\)', '', u["name"]).strip()
-        url = f"https://portal.kemnaker.go.id/api/v1/organizations/{slug}"
-        try:
-            req = urllib.request.Request(url, headers=headers)
-            with urllib.request.urlopen(req, timeout=8, context=ctx) as res:
-                data = json.loads(res.read().decode("utf-8"))
-                node = data.get("data", {})
-                top_name = strip_trailing_punctuation((node.get("name") or "").strip())
-                top_pos = expand_kemnaker_position((node.get("job_title") or "").strip())
-                top_photo = (node.get("photo") or "").strip()
-                children = node.get("childrens", [])
-                
-                child_list = []
-                def extract_children(items):
-                    for c in items:
-                        c_name = strip_trailing_punctuation((c.get("name") or "").strip())
-                        c_pos = expand_kemnaker_position((c.get("job_title") or "").strip())
-                        c_photo = (c.get("photo") or "").strip()
-                        if is_valid_official_name(c_name) and c_pos:
-                            child_list.append({"name": c_name, "position": c_pos, "photo": c_photo})
-                        sub = c.get("childrens", [])
-                        if sub:
-                            extract_children(sub)
-                extract_children(children)
-                        
-                scraped_units[slug] = {
-                    "unit_name": clean_unit_name,
-                    "slug": slug,
-                    "leader": {
-                        "name": top_name if is_valid_official_name(top_name) else "",
-                        "position": top_pos,
-                        "photo": top_photo
-                    },
-                    "staff": sorted(child_list, key=lambda s: get_official_rank(s["position"], slug))
-                }
-        except Exception as e:
-            print(f"[Warning] Gagal fetch unit {slug}: {e}")
-            
+    with ThreadPoolExecutor(max_workers=min(max(len(active_units), 1), 12)) as executor:
+        futures = {
+            executor.submit(_fetch_single_unit, u, idx, headers, ctx): u["slug"]
+            for idx, u in enumerate(active_units)
+        }
+        for future in as_completed(futures):
+            slug, unit_data = future.result()
+            if unit_data:
+                scraped_units[slug] = unit_data
+
     return scraped_units
 
 def get_kemnaker_data(force_refresh=False):
@@ -330,19 +403,23 @@ def get_kemnaker_data(force_refresh=False):
         except Exception:
             cache_data = None
 
-    if not cache_data and os.path.exists(fallback_path):
+    fallback_data = None
+    if os.path.exists(fallback_path):
         try:
             with open(fallback_path, "r", encoding="utf-8") as f:
-                raw_fallback = json.load(f)
-                cache_data = {
-                    "last_updated": datetime.now(timezone.utc).isoformat(),
-                    "units_dict": raw_fallback
-                }
+                fallback_data = json.load(f)
         except Exception:
-            cache_data = None
+            fallback_data = None
+
+    if not cache_data and fallback_data:
+        cache_data = {
+            "last_updated": "2026-11-19T04:51:36.213007+00:00",
+            "units_dict": fallback_data,
+            "is_fallback": True
+        }
 
     is_today = False
-    if cache_data and "last_updated" in cache_data:
+    if cache_data and "last_updated" in cache_data and not cache_data.get("is_fallback"):
         try:
             dt = datetime.fromisoformat(cache_data["last_updated"])
             wib = timezone(timedelta(hours=7))
@@ -356,10 +433,10 @@ def get_kemnaker_data(force_refresh=False):
     if is_today and not force_refresh and cache_data and "units_dict" in cache_data:
         return transform_unit_data(cache_data["units_dict"], cache_data.get("last_updated"))
 
-    # Need refresh or not today
+    # Need refresh or not today or fallback
     try:
         fresh_dict = fetch_from_kemnaker_portal()
-        if fresh_dict and len(fresh_dict) >= len(UNITS) // 2:
+        if fresh_dict and len(fresh_dict) >= 1:
             new_cache = {
                 "last_updated": datetime.now(timezone.utc).isoformat(),
                 "units_dict": fresh_dict
@@ -367,15 +444,21 @@ def get_kemnaker_data(force_refresh=False):
             try:
                 with open(cache_path, "w", encoding="utf-8") as f:
                     json.dump(new_cache, f, indent=2, ensure_ascii=False)
+                # Also keep fallback updated locally
+                if os.path.exists(fallback_path):
+                    with open(fallback_path, "w", encoding="utf-8") as f:
+                        json.dump(fresh_dict, f, indent=2, ensure_ascii=False)
             except Exception as e:
                 print(f"[Warning] Gagal menulis cache file: {e}")
             return transform_unit_data(fresh_dict, new_cache["last_updated"])
     except Exception as e:
         print(f"[Warning] Gagal memperbarui data Kemnaker: {e}")
 
-    # If fetch failed, return what we have in cache
+    # If fetch failed, return what we have in cache or fallback
     if cache_data and "units_dict" in cache_data:
         return transform_unit_data(cache_data["units_dict"], cache_data.get("last_updated"))
+    if fallback_data:
+        return transform_unit_data(fallback_data, "2026-11-19T04:51:36.213007+00:00")
 
     return {
         "success": False,

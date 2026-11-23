@@ -134,10 +134,12 @@
   </div>
   {% endfor %}
 
-  <script src="{{ asset_prefix }}nametag.js?v=20261028a"></script>
+  <script src="{{ asset_prefix }}nametag.js?v=20261119c"></script>
   <script>
     const CARDS = {{ cards|tojson }};
     const CONTENT_MODE = {{ (content_mode or 'both')|tojson }};
+    const SPACING_IS_MANUAL = {{ (spacing_is_manual or '0')|tojson }};
+    const HORIZONTAL_OFFSET = {{ (horizontal_offset or '0')|tojson }};
 
     function resolveFontFamily(choice, customData, customName) {
       if (customData && customName) return `"${customName}", sans-serif`;
@@ -174,6 +176,7 @@
     if (window.setNameFontSize) window.setNameFontSize({{ font_size_name|tojson }});
     if (window.setPosFontSize) window.setPosFontSize({{ font_size_pos|tojson }});
     if (window.setSpacingGap) window.setSpacingGap({{ spacing_gap|tojson }});
+    if (window.setHorizontalOffset) window.setHorizontalOffset(parseFloat(HORIZONTAL_OFFSET) || 0.0);
     if (window.setTextCase) window.setTextCase({{ (text_case or 'uppercase')|tojson }});
     if (window.setPaperSize) window.setPaperSize({{ (paper_size or 'a4')|tojson }});
     if (window.setCardSides) window.setCardSides({{ 1 if sides == '1' else 2 }});
@@ -195,6 +198,8 @@
           nameFontSize: {{ font_size_name|tojson }},
           posFontSize: {{ font_size_pos|tojson }},
           spacingGap: parseFloat({{ spacing_gap|tojson }}) || 40.0,
+          isAutoSpacing: !(String(SPACING_IS_MANUAL) === "1" || String(SPACING_IS_MANUAL).toLowerCase() === "true"),
+          horizontalOffset: parseFloat(HORIZONTAL_OFFSET) || 0.0,
         };
         if (normal) layoutBlock(normal, safeName, lines, blockOpts);
         if (flip && {{ 'false' if sides == '1' else 'true' }}) layoutBlock(flip, safeName, lines, blockOpts);

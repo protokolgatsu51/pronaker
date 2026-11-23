@@ -150,23 +150,23 @@ TITLE_TOKEN_PATTERN = re.compile(
     r'[SMDA]\.\s*[A-Za-z]+(?:\.\s*[A-Za-z]+)*\.?|'
     r'Sp\.\s*[A-Za-z]+(?:\s*\([A-Za-z]+\)|-[A-Za-z0-9]+|(?:\.\s*[A-Za-z]+)*)\.?|'
     r'Subsp\.\s*[A-Za-z]+(?:\.\s*[A-Za-z]+)*\.?|'
-    r'Ph\.?\s*D\.?|PhD|'
-    r'M\.?\s*B\.?\s*A\.?|MBA|'
-    r'M\.?\s*Bus\.?|'
+    r'Ph\.?\s*D\.?|PhD\.?|'
+    r'M\.?\s*B\.?\s*A\.?|MBA\.?|'
+    r'M\.?\s*(?:Bus|Com|Sc|Eng|Ed|Fin|Phil|Arch|Tech|Law|Res|Des|Pub\.?\s*Pol|Int\.?\s*Rel)\.?|'
     r'B\.?\s*[A-Z]\.?\s*(?:Sc|A)?\.?|'
     r'LL\.?\s*M\.?|LLM|'
     r'Ed\.?\s*D\.?|D\.?\s*Sc\.?|D\.?\s*B\.?\s*A\.?|'
-    r'IP[UMP]\b\.?|'
+    r'I\.?\s*P\.?\s*[UMP]\b\.?|IP[UMP]\.?|'
     r'(?:ASEAN|Asean)\s+Eng\.?|'
-    r'ACPE|CPE|'
-    r'(?:SE|SH|ST|SKom|SPd|SSos|SIP|SIKom|SKM|SPi|SPt|SHut|SAg|SFarm|SPsi|SSn|SKed)\b|'
-    r'(?:MM|MH|MT|ME|MSi|MPd|MKes|MKom|MA|MSc|MP|MKn|MAP|MAg|MFarm|MPsi|MSn|MEcon)\b|'
+    r'A\.?\s*C\.?\s*P\.?\s*E\.?|ACPE\.?|C\.?\s*P\.?\s*E\.?|CPE\.?|'
+    r'(?:SE|SH|ST|SKom|SPd|SSos|SIP|SIKom|SKM|SPi|SPt|SHut|SAg|SFarm|SPsi|SSn|SKed|SStat|SAkt|SIK|SHum|SFils|STr\w*|AMd\w*)\b\.?|'
+    r'(?:MM|MH|MT|ME|MSi|MPd|MKes|MKM|MKom|MA|MSc|MEng|MP|MKn|MAP|MPA|MPP|MPH|MAg|MFarm|MPsi|MSn|MEcon|MARS|MFin|MMgt|MTech|MPhil|BSc|BEng|BA|BBA|BCom|BEd)\b\.?|'
     r'FINASIM|FACS|FICS|'
     r'CMA|CPA|CIA|CHRP|CPHR|QIA|CBV|CPMA|'
     r'CFA|CFP|QWP|FRM|PMP|CAPM|'
     r'CISA|CISM|CISSP|CEH|'
     r'CRA|CRP|CRGP|CSO|CGO|CGP|'
-    r'Ak\.?|Akt\.?|CA\b|BKP|CTA|ACPA|'
+    r'Ak\.?|Akt\.?|CA\b\.?|BKP\.?|CTA\.?|ACPA\.?|FCCA\.?|ACCA\.?|CHRP\.?|CPHR\.?|PMP\.?|CFA\.?|CFP\.?|CPA\.?|CMA\.?|CIA\.?|CISA\.?|CISM\.?|CISSP\.?|QWP\.?|FRM\.?|'
     r'MM\.PD'
     r')$',
     re.IGNORECASE
@@ -177,26 +177,26 @@ BACK_TITLES_PATTERN = re.compile(
     r'[SMDA]\.\s*[A-Za-z]+(?:\.\s*[A-Za-z]+)*(?:\s*\([A-Za-z0-9\s\.\-]+\))?\.?|'
     r'Sp\.\s*[A-Za-z]+(?:\s*\([A-Za-z0-9\s\.\-]+\)|-[A-Za-z0-9]+|(?:\.\s*[A-Za-z]+)*)\.?|'
     r'Subsp\.\s*[A-Za-z]+(?:\s*\([A-Za-z0-9\s\.\-]+\)|-[A-Za-z0-9]+|(?:\.\s*[A-Za-z]+)*)\.?|'
-    r'Ph\.?\s*D\.?|PhD|'
-    r'M\.?\s*B\.?\s*A\.?|MBA|'
-    r'M\.?\s*Bus\.?|'
+    r'Ph\.?\s*D\.?|PhD\.?|'
+    r'M\.?\s*B\.?\s*A\.?|MBA\.?|'
+    r'M\.?\s*(?:Bus|Com|Sc|Eng|Ed|Fin|Phil|Arch|Tech|Law|Res|Des|Pub\.?\s*Pol|Int\.?\s*Rel)\.?|'
     r'B\.?\s*[A-Z]\.?\s*(?:Sc|A)?\.?|'
     r'LL\.?\s*M\.?|LLM|'
     r'Ed\.?\s*D\.?|D\.?\s*Sc\.?|D\.?\s*B\.?\s*A\.?|'
-    r'IP[UMP]\b\.?|'
+    r'I\.?\s*P\.?\s*[UMP]\b\.?|IP[UMP]\.?|'
     r'(?:ASEAN|Asean)\s+Eng\.?|'
-    r'ACPE|CPE|'
-    r'(?:SE|SH|ST|SKom|SPd|SSos|SIP|SIKom|SKM|SPi|SPt|SHut|SAg|SFarm|SPsi|SSn|SKed)\b|'
-    r'(?:MM|MH|MT|ME|MSi|MPd|MKes|MKom|MA|MSc|MP|MKn|MAP|MAg|MFarm|MPsi|MSn|MEcon)\b|'
+    r'A\.?\s*C\.?\s*P\.?\s*E\.?|ACPE\.?|C\.?\s*P\.?\s*E\.?|CPE\.?|'
+    r'(?:SE|SH|ST|SKom|SPd|SSos|SIP|SIKom|SKM|SPi|SPt|SHut|SAg|SFarm|SPsi|SSn|SKed|SStat|SAkt|SIK|SHum|SFils|STr\w*|AMd\w*)\b\.?|'
+    r'(?:MM|MH|MT|ME|MSi|MPd|MKes|MKM|MKom|MA|MSc|MEng|MP|MKn|MAP|MPA|MPP|MPH|MAg|MFarm|MPsi|MSn|MEcon|MARS|MFin|MMgt|MTech|MPhil|BSc|BEng|BA|BBA|BCom|BEd)\b\.?|'
     r'FINASIM|FACS|FICS|'
     r'CMA|CPA|CIA|CHRP|CPHR|QIA|CBV|CPMA|'
     r'CFA|CFP|QWP|FRM|PMP|CAPM|'
     r'CISA|CISM|CISSP|CEH|'
     r'CRA|CRP|CRGP|CSO|CGO|CGP|'
-    r'Ak\.?|Akt\.?|CA\b|BKP|CTA|ACPA|'
+    r'Ak\.?|Akt\.?|CA\b\.?|BKP\.?|CTA\.?|ACPA\.?|FCCA\.?|ACCA\.?|CHRP\.?|CPHR\.?|PMP\.?|CFA\.?|CFP\.?|CPA\.?|CMA\.?|CIA\.?|CISA\.?|CISM\.?|CISSP\.?|QWP\.?|FRM\.?|'
     r'MM\.PD|'
-    r'H\.|Hj\.|Haji|Hajjah|Hajah|Hjh\.?'
-    r')(?:\.+(?:\b|\)|$)?|\b|\)|$)',
+    r'(?:[A-Z]\.){3,8}(?![A-Za-z0-9])|H\.|Hj\.|Haji|Hajjah|Hajah|Hjh\.?'
+    r')(?:\.+(?=$|[\s,\)\]\-;:/])|(?=$|[\s,\)\]\-;:/]))',
     re.IGNORECASE
 )
 
@@ -630,21 +630,28 @@ def wrap_position(position, font=POSITION_FONT, size=POSITION_FONT_SIZE,
     return lines[:2]
 
 
-def wrap_60pt(text, max_len=36, max_width=MAX_TEXT_WIDTH, font=NAME_FONT):
-    clean_text = (text or "").strip()[:max_len].strip()
+def wrap_60pt(text, max_len=128, max_width=MAX_TEXT_WIDTH, font=NAME_FONT, font_size=60.0):
+    clean_text = strip_trailing_punctuation((text or "").strip())
+    if len(clean_text) > max_len:
+        clean_text = strip_trailing_punctuation(clean_text[:max_len].strip())
     if not clean_text:
         return []
-    if "\n" in clean_text:
-        lines = [l.strip().upper() for l in clean_text.splitlines() if l.strip()]
-        if len(lines) == 1:
-            return [lines[0]]
-        return [lines[0], " ".join(lines[1:])][:2]
 
-    single_line = " ".join(clean_text.split()).upper()
+    sz = float(font_size) if font_size else 60.0
+
+    # 1. Explicit newline (Enter key) — preserve user's exact lines verbatim (up to 4 lines)
+    if "\n" in clean_text:
+        lines = [strip_trailing_punctuation(l.strip()) for l in clean_text.splitlines() if strip_trailing_punctuation(l.strip())]
+        lines = [" ".join(l.split()) for l in lines if l]
+        if lines:
+            return lines[:4]
+
+    # 2. Single continuous line — measure using the ACTUAL chosen font_size & font
+    single_line = " ".join(clean_text.split())
     try:
-        w = pdfmetrics.stringWidth(single_line, font, 60.0)
+        w = pdfmetrics.stringWidth(single_line, font, sz)
     except Exception:
-        w = len(single_line) * 32.0
+        w = len(single_line) * sz * 0.55
 
     if w <= max_width:
         return [single_line]
@@ -654,16 +661,16 @@ def wrap_60pt(text, max_len=36, max_width=MAX_TEXT_WIDTH, font=NAME_FONT):
         return [single_line]
 
     best_diff = float("inf")
-    best_split = [single_line]
+    best_split = None
     for i in range(1, len(words)):
         l1 = " ".join(words[:i])
         l2 = " ".join(words[i:])
         try:
-            w1 = pdfmetrics.stringWidth(l1, font, 60.0)
-            w2 = pdfmetrics.stringWidth(l2, font, 60.0)
+            w1 = pdfmetrics.stringWidth(l1, font, sz)
+            w2 = pdfmetrics.stringWidth(l2, font, sz)
         except Exception:
-            w1 = len(l1) * 32.0
-            w2 = len(l2) * 32.0
+            w1 = len(l1) * sz * 0.55
+            w2 = len(l2) * sz * 0.55
 
         if w1 <= max_width and w2 <= max_width:
             diff = abs(w1 - w2)
@@ -671,41 +678,47 @@ def wrap_60pt(text, max_len=36, max_width=MAX_TEXT_WIDTH, font=NAME_FONT):
                 best_diff = diff
                 best_split = [l1, l2]
 
-    if best_diff == float("inf"):
-        lines = []
-        cur = ""
-        for w_word in words:
-            cand = (cur + " " + w_word).strip() if cur else w_word
-            try:
-                cw = pdfmetrics.stringWidth(cand, font, 60.0)
-            except Exception:
-                cw = len(cand) * 32.0
-            if cw <= max_width:
-                cur = cand
-            else:
-                if cur:
-                    lines.append(cur)
-                cur = w_word
-                if len(lines) >= 2:
-                    break
-        if cur and len(lines) < 2:
-            lines.append(cur)
-        return lines[:2]
+    if best_split:
+        return best_split
 
-    return best_split
+    lines = []
+    cur = ""
+    for w_word in words:
+        cand = (cur + " " + w_word).strip() if cur else w_word
+        try:
+            cw = pdfmetrics.stringWidth(cand, font, sz)
+        except Exception:
+            cw = len(cand) * sz * 0.55
+        if cw <= max_width:
+            cur = cand
+        else:
+            if cur:
+                lines.append(cur)
+            cur = w_word
+            if len(lines) >= 3:
+                break
+    if cur and len(lines) < 3:
+        lines.append(cur)
+    return lines[:3] if lines else [single_line]
 
 
-def layout_position_only(text, font=NAME_FONT, max_width=MAX_TEXT_WIDTH, max_chars=128):
+def layout_position_only(text, font=NAME_FONT, max_width=MAX_TEXT_WIDTH, max_chars=128, custom_size=None):
     """
-    Dynamic 1-to-3 line layout & auto-font-reduction for Position Only mode.
-    Handles explicit newlines (Enter key) as well as continuous titles up to max_chars.
+    Dynamic 1-to-4 line layout & auto-font-reduction for Position Only mode.
+    - Preserves explicit newlines (Enter key) verbatim without re-splitting lines
+    - Respects user's manual custom_size before deciding whether continuous text wraps
     Returns (lines, font_size, baselines).
     """
     if not text:
         return [], 40.0, []
-    clean_text = text.strip()[:max_chars].strip()
+    clean_text = strip_trailing_punctuation(text.strip())
+    if len(clean_text) > max_chars:
+        clean_text = strip_trailing_punctuation(clean_text[:max_chars].strip())
     if not clean_text:
         return [], 40.0, []
+
+    has_custom = custom_size is not None and str(custom_size).lower() != "auto"
+    target_size = float(custom_size) if has_custom else None
 
     def measure(t, sz):
         try:
@@ -714,99 +727,141 @@ def layout_position_only(text, font=NAME_FONT, max_width=MAX_TEXT_WIDTH, max_cha
             return len(t) * sz * 0.55
 
     def get_baselines(num_lines, sz):
-        gap = sz * 1.25
+        gap = max(sz * 1.25, sz + 4.0)
         if num_lines == 1:
             return [86.0]
         elif num_lines == 2:
             return [86.0 + gap / 2.0, 86.0 - gap / 2.0]
-        else:
+        elif num_lines == 3:
             return [86.0 + gap, 86.0, 86.0 - gap]
+        else:
+            top = 86.0 + ((num_lines - 1) * gap) / 2.0
+            return [top - i * gap for i in range(num_lines)]
 
-    # 1. Explicit newlines entered by user
+    # 1. Explicit newlines entered by user — preserve lines per Enter break!
     if "\n" in clean_text:
-        raw_lines = [l.strip().upper() for l in clean_text.splitlines() if l.strip()]
+        raw_lines = [strip_trailing_punctuation(l.strip()) for l in clean_text.splitlines() if strip_trailing_punctuation(l.strip())]
+        raw_lines = [" ".join(l.split()) for l in raw_lines if l]
         if len(raw_lines) == 1:
             clean_text = raw_lines[0]
-        elif len(raw_lines) == 2:
-            l1, l2 = raw_lines[0], raw_lines[1]
-            s = 46.0
-            while s >= 16.0:
-                if measure(l1, s) <= max_width and measure(l2, s) <= max_width:
-                    break
-                s -= 1.0
-            return [l1, l2], s, get_baselines(2, s)
-        else:
-            l1, l2, l3 = raw_lines[0], raw_lines[1], " ".join(raw_lines[2:])
-            s = 34.0
-            while s >= 14.0:
-                if measure(l1, s) <= max_width and measure(l2, s) <= max_width and measure(l3, s) <= max_width:
-                    break
-                s -= 1.0
-            return [l1, l2, l3], s, get_baselines(3, s)
+        elif len(raw_lines) >= 2:
+            kept_lines = raw_lines[:4]
+            if has_custom:
+                s = target_size
+                max_lw = max((measure(l, s) for l in kept_lines), default=0.0)
+                if max_lw > max_width and max_width > 0:
+                    s = max(8.0, s * (max_width / max_lw))
+            else:
+                s = 46.0 if len(kept_lines) == 2 else (34.0 if len(kept_lines) == 3 else 26.0)
+                min_auto = 12.0 if len(kept_lines) <= 2 else 10.0
+                while s > min_auto:
+                    if all(measure(l, s) <= max_width for l in kept_lines):
+                        break
+                    s -= 1.0
+            return kept_lines, s, get_baselines(len(kept_lines), s)
 
     # 2. Continuous text
-    upper = " ".join(clean_text.split()).upper()
-    words = upper.split()
+    continuous = " ".join(clean_text.split())
+    words = continuous.split()
     if not words:
-        return [], 40.0, []
+        return [], (target_size if has_custom else 40.0), []
 
-    # 2a. Check if fits on 1 line
-    for s in [52.0, 48.0, 44.0, 40.0]:
-        if measure(upper, s) <= max_width:
-            return [upper], s, [86.0]
+    def find_balanced_2_lines(sz):
+        if len(words) < 2:
+            return None
+        TARGET_RATIO = 0.60
+        trailing_stopwords = {'DAN', 'ATAU', 'PADA', 'DI', 'KE', 'DENGAN', 'UNTUK'}
+        candidates = []
+        for i in range(1, len(words)):
+            l1 = " ".join(words[:i])
+            l2 = " ".join(words[i:])
+            w1 = measure(l1, sz)
+            w2 = measure(l2, sz)
+            if w1 <= max_width and w2 <= max_width:
+                total_w = w1 + w2
+                ratio = w1 / total_w if total_w > 0 else 0.5
+                is_top_heavy = (w1 > w2)
+                last_word_l1 = words[i - 1].upper()
+                trailing_penalty = 0.15 if last_word_l1 in trailing_stopwords else 0.0
 
-    # 2b. Try 2 lines
-    if len(words) >= 2:
-        for s in [44.0, 40.0, 36.0, 32.0, 30.0]:
-            TARGET_RATIO = 0.60
-            trailing_stopwords = {'DAN', 'ATAU', 'PADA', 'DI', 'KE', 'DENGAN', 'UNTUK'}
-            candidates = []
-            for i in range(1, len(words)):
+                if is_top_heavy:
+                    score = abs(ratio - TARGET_RATIO) + trailing_penalty
+                    priority = 0
+                else:
+                    score = (0.55 - ratio) + 1.0 + trailing_penalty
+                    priority = 1
+
+                candidates.append((priority, score, [l1, l2]))
+        if candidates:
+            candidates.sort(key=lambda x: (x[0], x[1]))
+            return candidates[0][2]
+        return None
+
+    def find_balanced_3_lines(sz):
+        if len(words) < 3:
+            return None
+        best_diff = float("inf")
+        best_split = None
+        n = len(words)
+        for i in range(1, n - 1):
+            for j in range(i + 1, n):
                 l1 = " ".join(words[:i])
-                l2 = " ".join(words[i:])
-                w1 = measure(l1, s)
-                w2 = measure(l2, s)
-                if w1 <= max_width and w2 <= max_width:
-                    total_w = w1 + w2
-                    ratio = w1 / total_w if total_w > 0 else 0.5
-                    is_top_heavy = (w1 > w2)
-                    last_word_l1 = words[i - 1].upper()
-                    trailing_penalty = 0.15 if last_word_l1 in trailing_stopwords else 0.0
+                l2 = " ".join(words[i:j])
+                l3 = " ".join(words[j:])
+                w1 = measure(l1, sz)
+                w2 = measure(l2, sz)
+                w3 = measure(l3, sz)
+                if w1 <= max_width and w2 <= max_width and w3 <= max_width:
+                    diff = max(w1, w2, w3) - min(w1, w2, w3)
+                    if diff < best_diff:
+                        best_diff = diff
+                        best_split = [l1, l2, l3]
+        return best_split
 
-                    if is_top_heavy:
-                        score = abs(ratio - TARGET_RATIO) + trailing_penalty
-                        priority = 0
-                    else:
-                        score = (0.55 - ratio) + 1.0 + trailing_penalty
-                        priority = 1
+    # Custom size set by user: check 1 line / 2 lines / 3 lines at target_size first!
+    if has_custom:
+        if measure(continuous, target_size) <= max_width:
+            return [continuous], target_size, get_baselines(1, target_size)
+        split2 = find_balanced_2_lines(target_size)
+        if split2:
+            return split2, target_size, get_baselines(2, target_size)
+        split3 = find_balanced_3_lines(target_size)
+        if split3:
+            return split3, target_size, get_baselines(3, target_size)
+        g_lines, g_cur = [], ""
+        for w in words:
+            cand = (g_cur + " " + w).strip() if g_cur else w
+            if measure(cand, target_size) <= max_width:
+                g_cur = cand
+            else:
+                if g_cur:
+                    g_lines.append(g_cur)
+                g_cur = w
+                if len(g_lines) == 3:
+                    break
+        if g_cur and len(g_lines) < 4:
+            g_lines.append(g_cur)
+        if g_lines:
+            return g_lines, target_size, get_baselines(len(g_lines), target_size)
+        return [continuous], target_size, get_baselines(1, target_size)
 
-                    candidates.append((priority, score, [l1, l2]))
-            if candidates:
-                candidates.sort(key=lambda x: (x[0], x[1]))
-                return candidates[0][2], s, get_baselines(2, s)
+    # Auto mode: 2a. Check if fits on 1 line
+    for s in [52.0, 48.0, 44.0, 40.0]:
+        if measure(continuous, s) <= max_width:
+            return [continuous], s, [86.0]
 
-    # 2c. Try 3 lines
-    if len(words) >= 3:
-        for s in range(32, 13, -1):
-            s_float = float(s)
-            best_diff = float("inf")
-            best_split = None
-            n = len(words)
-            for i in range(1, n - 1):
-                for j in range(i + 1, n):
-                    l1 = " ".join(words[:i])
-                    l2 = " ".join(words[i:j])
-                    l3 = " ".join(words[j:])
-                    w1 = measure(l1, s_float)
-                    w2 = measure(l2, s_float)
-                    w3 = measure(l3, s_float)
-                    if w1 <= max_width and w2 <= max_width and w3 <= max_width:
-                        diff = max(w1, w2, w3) - min(w1, w2, w3)
-                        if diff < best_diff:
-                            best_diff = diff
-                            best_split = [l1, l2, l3]
-            if best_split:
-                return best_split, s_float, get_baselines(3, s_float)
+    # Auto mode: 2b. Try 2 lines
+    for s in [44.0, 40.0, 36.0, 32.0, 30.0]:
+        split2 = find_balanced_2_lines(s)
+        if split2:
+            return split2, s, get_baselines(2, s)
+
+    # Auto mode: 2c. Try 3 lines
+    for s in range(32, 13, -1):
+        s_float = float(s)
+        split3 = find_balanced_3_lines(s_float)
+        if split3:
+            return split3, s_float, get_baselines(3, s_float)
 
     # Fallback greedy wrap up to 3 lines
     for s in range(22, 11, -1):
@@ -827,7 +882,7 @@ def layout_position_only(text, font=NAME_FONT, max_width=MAX_TEXT_WIDTH, max_cha
         if len(lines) <= 3 and all(measure(l, s_float) <= max_width for l in lines):
             return lines, s_float, get_baselines(len(lines), s_float)
 
-    return [upper], 16.0, [86.0]
+    return [continuous], 16.0, [86.0]
 
 
 PAGE_SIZES = {
@@ -866,53 +921,72 @@ def _resolve_reportlab_font(choice, is_bold=False):
 def _draw_block(c, name, position_lines, content_mode="both",
                 name_font=None, pos_font=None,
                 name_size=None, pos_size=None,
-                spacing_gap=None, text_case="uppercase",
+                spacing_gap=None, spacing_is_manual=False, text_case="uppercase",
                 center_x=None, max_name_width=None, max_text_width=None,
                 clean_titles_flag=False, horizontal_offset=0.0):
     """Draws the text block using local coords where (0,0)
     behaves like the normal (bottom, right-side-up) orientation."""
     n_font = _resolve_reportlab_font(name_font, is_bold=True)
-    p_font = _resolve_reportlab_font(pos_font, is_bold=False)
+    p_font = _resolve_reportlab_font(pos_font, is_bold=(content_mode == "position_only"))
     n_size = float(name_size) if name_size and str(name_size).lower() != "auto" else NAME_FONT_SIZE
     p_size = float(pos_size) if pos_size and str(pos_size).lower() != "auto" else POSITION_FONT_SIZE
     gap = float(spacing_gap) if spacing_gap else NAME_TO_POSITION_GAP
+    is_manual_gap = str(spacing_is_manual).lower() in ("1", "true", "yes")
     cx = (center_x if center_x is not None else CENTER_X) + float(horizontal_offset or 0.0)
     mw = max_name_width if max_name_width is not None else MAX_NAME_WIDTH
     tw = max_text_width if max_text_width is not None else MAX_TEXT_WIDTH
 
     # Only clean academic/religious titles if clean_titles_flag is True (bulk/kemnaker mode)
     if clean_titles_flag and name:
-        clean_n = clean_titles(name)
+        if content_mode == "name_only" and "\n" in str(name):
+            clean_n = "\n".join(clean_titles(part) for part in str(name).splitlines() if part.strip())
+        else:
+            clean_n = clean_titles(name)
     else:
-        clean_n = sanitize_text(name) if name else ""
+        clean_n = sanitize_text(name, preserve_newlines=(content_mode == "name_only")) if name else ""
     safe_name = apply_text_case(clean_n, text_case)
+
+    optical_center_y = 97.45
 
     if content_mode == "name_only":
         if safe_name:
             sz = 60.0 if not name_size or str(name_size).lower() == "auto" else n_size
-            lines = wrap_60pt(safe_name, 36, font=n_font)
+            lines = wrap_60pt(safe_name, 128, max_width=tw, font=n_font, font_size=sz)
             for l in lines:
                 w_l = get_name_text_width_pt(l, n_font, sz)
                 if w_l > tw and tw > 0:
                     sz = sz * (tw / w_l)
             c.setFont(n_font, sz)
-            if len(lines) == 1:
-                c.drawCentredString(cx, 86.0, lines[0])
-            elif len(lines) >= 2:
-                c.drawCentredString(cx, 115.0, lines[0])
-                c.drawCentredString(cx, 57.0, lines[1])
+            n = len(lines)
+            line_gap = gap if is_manual_gap else max(sz * 1.15, sz + 6.0)
+            name_ascent = 0.75 * sz
+            name_descent = 0.25 * sz
+            top_baseline = optical_center_y + ((n - 1) * line_gap + name_descent - name_ascent) / 2.0
+            for idx, line_txt in enumerate(lines):
+                baseline = top_baseline - idx * line_gap
+                c.drawCentredString(cx, baseline, line_txt)
         return
 
     if content_mode == "position_only":
         pos_text = position_lines if isinstance(position_lines, str) else "\n".join(position_lines)
-        safe_pos = sanitize_text(pos_text or name or "")
+        safe_pos = sanitize_text(pos_text or name or "", preserve_newlines=True)
         safe_pos = apply_text_case(safe_pos, text_case)
         if safe_pos:
-            lines, font_sz, baselines = layout_position_only(safe_pos, font=p_font, max_width=tw, max_chars=128)
-            sz = p_size if pos_size and str(pos_size).lower() != "auto" else font_sz
+            custom_p = p_size if (pos_size and str(pos_size).lower() != "auto") else None
+            lines, sz, _ = layout_position_only(safe_pos, font=p_font, max_width=tw, max_chars=128, custom_size=custom_p)
+            for l in lines:
+                w_l = get_name_text_width_pt(l, p_font, sz)
+                if w_l > tw and tw > 0:
+                    sz = sz * (tw / w_l)
             c.setFont(p_font, sz)
-            for line, y in zip(lines, baselines):
-                c.drawCentredString(cx, y, line)
+            n = len(lines)
+            line_gap = gap if is_manual_gap else max(sz * 1.25, sz + 4.0)
+            pos_ascent = 0.75 * sz
+            pos_descent = 0.25 * sz
+            top_baseline = optical_center_y + ((n - 1) * line_gap + pos_descent - pos_ascent) / 2.0
+            for idx, line_txt in enumerate(lines):
+                baseline = top_baseline - idx * line_gap
+                c.drawCentredString(cx, baseline, line_txt)
         return
 
     # Default 'both' mode
@@ -934,7 +1008,6 @@ def _draw_block(c, name, position_lines, content_mode="both",
             if w_p > tw and tw > 0:
                 actual_p_size = actual_p_size * (tw / w_p)
 
-    optical_center_y = 97.45
     name_ascent = 0.75 * font_sz
     name_descent = 0.25 * font_sz
     pos_descent = 0.25 * actual_p_size
@@ -968,7 +1041,7 @@ def build_pdf(name, position, output_path, sides="2", content_mode="both",
     c.drawImage(bg, 0, 0, width=page_w, height=page_h,
                 preserveAspectRatio=False, mask="auto")
 
-    position_lines = wrap_position(position)
+    position_lines = [position] if content_mode == "position_only" else wrap_position(position)
 
     scale_ratio = page_w / PAGE_W
     draw_kwargs = {
@@ -978,6 +1051,7 @@ def build_pdf(name, position, output_path, sides="2", content_mode="both",
         "name_size": name_size,
         "pos_size": pos_size,
         "spacing_gap": spacing_gap,
+        "spacing_is_manual": kwargs.get("spacing_is_manual", False),
         "text_case": text_case,
         "center_x": CENTER_X * scale_ratio,
         "max_name_width": MAX_NAME_WIDTH * scale_ratio,
@@ -1025,6 +1099,7 @@ def build_pdf_multipage(rows, output_path, sides="2", content_mode="both",
         "name_size": name_size,
         "pos_size": pos_size,
         "spacing_gap": spacing_gap,
+        "spacing_is_manual": kwargs.get("spacing_is_manual", False),
         "text_case": text_case,
         "center_x": CENTER_X * scale_ratio,
         "max_name_width": MAX_NAME_WIDTH * scale_ratio,
@@ -1041,7 +1116,7 @@ def build_pdf_multipage(rows, output_path, sides="2", content_mode="both",
             name, position = row[0], row[1]
         c.drawImage(bg, 0, 0, width=page_w, height=page_h,
                     preserveAspectRatio=False, mask="auto")
-        position_lines = wrap_position(position)
+        position_lines = [position] if content_mode == "position_only" else wrap_position(position)
         # Normal orientation (bottom half, right-side-up)
         c.saveState()
         _draw_block(c, name, position_lines, **draw_kwargs)

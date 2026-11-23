@@ -1,0 +1,4778 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <meta name="referrer" content="no-referrer">
+  <title>Protokol Tools Kemnaker RI</title>
+  <meta name="description"
+    content="Generator Lembar Note Pad Tools Kementerian Ketenagakerjaan RI. Ukuran presisi Notepad Besar dan Notepad Kecil dengan live preview dan cetak instan.">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo_kemnaker.png') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,700&family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;1,600;1,700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600;1,700;1,800&family=Roboto:ital,wght@0,400;0,500;0,700;1,400;1,700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='dropdown.css') }}?v=20261123a">
+
+  <style>
+    /* =========================================================================
+       CSS VARIABLES & GLOBAL RESET
+       ========================================================================= */
+    :root {
+      --kemnaker-blue: #15406a;
+      --kemnaker-dark: #0b243d;
+      --kemnaker-accent-yellow: #fbbf24;
+      --primary-green: #059669;
+      --primary-green-hover: #047857;
+      --text-navy: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --bg-light: #f8fafc;
+      --card-bg: rgba(255, 255, 255, 0.98);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 14px rgba(15, 23, 42, 0.08);
+      --shadow-lg: 0 10px 25px rgba(15, 23, 42, 0.12);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      max-width: 100vw;
+      min-height: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body {
+      font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background-color: #0b243d;
+      color: var(--text-navy);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* --- Top Navbar (Unified with PRONAKER Name Table) --- */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: #ffffff;
+      border-bottom: 1px solid #eef2f6;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+      height: 72px;
+      flex-shrink: 0;
+      width: 100%;
+    }
+
+    .nav-container {
+      max-width: 1240px;
+      height: 100%;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-sizing: border-box;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .kemnaker-brand-icon.logo-full {
+      display: block;
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+      transition: transform 0.2s ease;
+    }
+
+    .kemnaker-brand-icon.logo-symbol {
+      display: none;
+    }
+
+    .brand-divider {
+      width: 1.5px;
+      height: 24px;
+      background: #cbd5e1;
+      margin: 0 2px;
+    }
+
+    .brand-logo:hover .kemnaker-brand-icon {
+      transform: scale(1.03);
+    }
+
+    .brand-title {
+      display: inline-block;
+      font-size: 20px;
+      font-weight: 800;
+      color: #15406a;
+      letter-spacing: 0.5px;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
+
+    /* Desktop Navigation Tabs */
+    .nav-page-switcher {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      background: transparent;
+      padding: 0;
+      border: none;
+      box-shadow: none;
+      height: 100%;
+    }
+
+    .nav-page-tab {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      height: 100%;
+      padding: 0 4px;
+      font-size: 14.5px;
+      font-weight: 600;
+      color: #64748b;
+      text-decoration: none;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: color 0.2s ease, transform 0.15s ease;
+      font-family: inherit;
+    }
+
+    .nav-page-tab svg {
+      color: #94a3b8;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .nav-page-tab:hover {
+      color: #15406a;
+    }
+
+    .nav-page-tab:hover svg {
+      color: #15406a;
+      transform: translateY(-1px);
+    }
+
+    .nav-page-tab.active {
+      color: #15406a;
+      font-weight: 700;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .nav-page-tab.active svg {
+      color: #15406a;
+    }
+
+    .nav-page-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: #15406a;
+      border-radius: 9999px 9999px 0 0;
+      box-shadow: 0 -1px 6px rgba(21, 64, 106, 0.2);
+    }
+
+    /* Mobile Menu Button & Dropdown */
+    .mobile-menu-wrapper {
+      position: relative;
+      display: none;
+    }
+
+    .btn-mobile-menu {
+      height: 34px;
+      padding: 0 11px 0 10px;
+      border-radius: 10px;
+      border: 1.5px solid #cbd5e1;
+      background: #ffffff;
+      color: #15406a;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+      font-family: inherit;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-mobile-menu .mobile-menu-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #15406a;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .btn-mobile-menu .mobile-menu-chevron {
+      color: #64748b;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      flex-shrink: 0;
+    }
+
+    .btn-mobile-menu.active .mobile-menu-chevron {
+      transform: rotate(180deg);
+      color: #15406a;
+    }
+
+    .mobile-menu-dropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      min-width: 200px;
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 14px 35px -5px rgba(15, 23, 42, 0.18), 0 6px 12px -3px rgba(15, 23, 42, 0.08);
+      padding: 6px;
+      z-index: 1050;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .mobile-menu-dropdown.show {
+      transform: translateY(0);
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .mobile-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      text-decoration: none;
+      text-align: left;
+      cursor: pointer;
+      font-family: inherit;
+      box-sizing: border-box;
+    }
+
+    .mobile-menu-item svg {
+      color: #94a3b8;
+      flex-shrink: 0;
+    }
+
+    .mobile-menu-item .menu-title {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #64748b;
+      white-space: nowrap;
+    }
+
+    .mobile-menu-item.active {
+      background: #f0f6fc;
+    }
+
+    .mobile-menu-item.active svg {
+      color: #15406a;
+    }
+
+    .mobile-menu-item.active .menu-title {
+      color: #15406a;
+      font-weight: 700;
+    }
+
+    .mobile-menu-item .menu-check {
+      font-weight: 800;
+      color: #15406a;
+      font-size: 13px;
+      margin-left: auto;
+    }
+
+    /* --- Hero Section --- */
+    .hero-section {
+      position: relative;
+      background: radial-gradient(960px circle at 85% 180px, #1a4e80 0%, #15406a 45%, #0b243d 100%);
+      background-color: #0b243d;
+      color: #ffffff;
+      overflow-x: clip;
+      overflow-y: visible;
+      padding: 24px 24px 0;
+      flex: 1 0 auto;
+      min-height: calc(100vh - 72px);
+      min-height: calc(100dvh - 72px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-sizing: border-box;
+      width: 100%;
+    }
+
+    .hero-pattern {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle at 20% 35%, rgba(255, 255, 255, 0.05) 0, rgba(255, 255, 255, 0.05) 80px, transparent 81px),
+        radial-gradient(circle at 20% 35%, rgba(255, 255, 255, 0.03) 0, rgba(255, 255, 255, 0.03) 160px, transparent 161px),
+        radial-gradient(circle at 80% 50%, rgba(255, 255, 255, 0.04) 0, rgba(255, 255, 255, 0.04) 220px, transparent 221px),
+        radial-gradient(circle at 80% 50%, rgba(255, 255, 255, 0.03) 0, rgba(255, 255, 255, 0.03) 380px, transparent 381px),
+        radial-gradient(circle, rgba(255, 255, 255, 0.12) 1.2px, transparent 1.2px);
+      background-size: auto, auto, auto, auto, 36px 36px;
+      opacity: 0.9;
+    }
+
+    .hero-container {
+      position: relative;
+      width: 100%;
+      max-width: 1240px;
+      margin: 0 auto;
+      flex: 1 0 auto;
+      box-sizing: border-box;
+      z-index: 10;
+    }
+
+    .hero-container:has(.custom-select-wrapper.open),
+    .hero-container:has(.calendar-popover.open) {
+      z-index: 60;
+    }
+
+    .hero-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 100%;
+      width: 100%;
+      margin-bottom: 20px;
+      gap: 20px;
+      box-sizing: border-box;
+    }
+
+    .hero-title {
+      font-size: 34px;
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.8px;
+      margin-bottom: 0;
+    }
+
+    .highlight-silver,
+    .hero-title .highlight-silver {
+      color: #e2e8f0;
+      background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 50%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-style: italic;
+      font-weight: 800;
+      position: relative;
+    }
+
+    /* Switcher Tipe Notepad (Persis Tema Name Table: White Pill + Kemnaker Navy Glider) */
+    .notepad-type-switcher {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      background: #ffffff;
+      border: 1.5px solid rgba(255, 255, 255, 0.45);
+      border-radius: var(--radius-full);
+      padding: 3.5px;
+      gap: 2px;
+      box-shadow: 0 4px 18px rgba(11, 36, 61, 0.35), 0 1px 3px rgba(0, 0, 0, 0.12);
+      user-select: none;
+      isolation: isolate;
+      box-sizing: border-box;
+    }
+
+    .type-switcher-glider {
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-radius: var(--radius-full);
+      background: linear-gradient(135deg, #15406a 0%, #0d2b45 100%);
+      box-shadow: 0 3px 12px rgba(11, 36, 61, 0.45), 0 1px 3px rgba(0, 0, 0, 0.15);
+      pointer-events: none;
+      transition: all 0.35s cubic-bezier(0.34, 1.25, 0.64, 1);
+      z-index: 1;
+    }
+
+    .type-switch-btn {
+      position: relative;
+      z-index: 2;
+      background: transparent !important;
+      border: none;
+      outline: none;
+      padding: 7px 18px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #334155;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border-radius: var(--radius-full);
+      line-height: 1;
+      transition: color 0.25s ease;
+      white-space: nowrap;
+      font-family: inherit;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .type-switch-btn svg {
+      transition: transform 0.25s cubic-bezier(0.34, 1.3, 0.64, 1);
+    }
+
+    .type-switch-btn:hover:not(.active) {
+      color: #15406a;
+    }
+
+    .type-switch-btn:hover:not(.active) svg {
+      transform: scale(1.08);
+    }
+
+    .type-switch-btn.active {
+      color: #ffffff !important;
+      font-weight: 700;
+    }
+
+    .lbl-desktop {
+      display: inline;
+    }
+
+    .lbl-mobile {
+      display: none;
+    }
+
+    /* --- Dashboard Grid --- */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 480px minmax(0, 1fr);
+      gap: 32px;
+      margin-top: 10px;
+      margin-bottom: 36px;
+      align-items: start;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .form-card,
+    .preview-card-frame {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-sizing: border-box;
+      width: 100%;
+      min-width: 0;
+      color: var(--text-navy);
+      position: relative;
+      z-index: 20;
+      overflow: visible;
+    }
+
+    .form-card:has(.custom-select-wrapper.open),
+    .form-card:has(.calendar-popover.open) {
+      z-index: 999;
+    }
+
+    .kemnaker-selectors-box {
+      background: #f0f6fc;
+      border: 1.5px solid #cbdbe9;
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 10px;
+      box-sizing: border-box;
+    }
+
+    .input-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    .label-tag {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--kemnaker-blue);
+      background: #e2edf7;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      white-space: nowrap;
+    }
+
+    .kemnaker-sync-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+      font-size: 11px;
+      color: #64748b;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-bubble-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #ffffff;
+      color: var(--kemnaker-blue);
+      border: 1px solid #cbdbe9;
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 10.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: inherit;
+    }
+
+    .btn-bubble-action:hover {
+      background: #f8fafc;
+      border-color: var(--kemnaker-blue);
+    }
+
+    /* Section Headers inside Card */
+    .form-section-title {
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--kemnaker-blue);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1.5px solid #eef2f6;
+      padding-bottom: 8px;
+    }
+
+    /* Kecil Konten Switcher (Persis Tema Tab Input Tunggal | Input Banyak di Name Table) */
+    .tab-switch-wrap {
+      position: relative;
+      display: flex;
+      background: #f1f5f9;
+      padding: 4px;
+      border-radius: 12px;
+      margin-bottom: 18px;
+      gap: 4px;
+      user-select: none;
+      isolation: isolate;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .tab-switch-glider {
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--kemnaker-blue) 0%, #164673 100%);
+      box-shadow: 0 3px 10px rgba(21, 64, 106, 0.35);
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0;
+      will-change: transform, width, height;
+      transition: transform 0.32s cubic-bezier(0.34, 1.25, 0.64, 1),
+        width 0.32s cubic-bezier(0.34, 1.25, 0.64, 1),
+        height 0.32s cubic-bezier(0.34, 1.25, 0.64, 1),
+        opacity 0.2s ease;
+    }
+
+    .tab-switch-glider.ready {
+      opacity: 1;
+    }
+
+    .tab-btn {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 8px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #64748b;
+      background: transparent !important;
+      box-shadow: none !important;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      line-height: 1.1;
+      transition: color 0.25s ease;
+      font-family: inherit;
+      white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .tab-btn svg {
+      flex-shrink: 0;
+      transition: transform 0.25s cubic-bezier(0.34, 1.3, 0.64, 1);
+    }
+
+    .tab-btn.active {
+      color: #ffffff !important;
+    }
+
+    .tab-btn:hover:not(.active) {
+      color: var(--kemnaker-blue);
+      background: rgba(21, 64, 106, 0.05) !important;
+    }
+
+    .bubble-segmented-group {
+      display: flex;
+      gap: 4px;
+      background: #e2e8f0;
+      padding: 4px;
+      border-radius: 10px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .bubble-segment-btn {
+      flex: 1;
+      min-width: 0;
+      background: transparent;
+      border: none;
+      padding: 7px 10px;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #64748b;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+      white-space: nowrap;
+      font-family: inherit;
+    }
+
+    .bubble-segment-btn.active {
+      background: #ffffff;
+      color: var(--kemnaker-blue);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Form Inputs */
+    .form-group {
+      margin-bottom: 14px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .form-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 6px;
+    }
+
+    .form-input,
+    .form-textarea,
+    .form-select {
+      width: 100%;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-size: 13.5px;
+      font-family: inherit;
+      color: var(--text-navy);
+      background: #f1f5f9;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+      box-sizing: border-box;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus,
+    .form-select:focus {
+      background: #ffffff;
+      border-color: var(--kemnaker-blue);
+      box-shadow: 0 0 0 3.5px rgba(21, 64, 106, 0.15);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 74px;
+      line-height: 1.45;
+    }
+
+    .event-meta-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+      gap: 10px;
+      width: 100%;
+      box-sizing: border-box;
+      align-items: stretch;
+    }
+
+    /* Date Picker Input Group & Custom Kemnaker Calendar Popover */
+    .date-picker-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .date-picker-wrapper:has(.calendar-popover.open) {
+      z-index: 1000;
+    }
+
+    .date-text-input {
+      padding: 9px 44px 9px 12px !important;
+      height: 50px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .btn-calendar-trigger {
+      position: absolute;
+      right: 7px;
+      width: 34px;
+      height: 34px;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      color: var(--kemnaker-blue);
+      cursor: pointer;
+      padding: 0;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+      transition: all 0.15s ease;
+    }
+
+    .btn-calendar-trigger:hover {
+      background: var(--kemnaker-blue);
+      color: #ffffff;
+      border-color: var(--kemnaker-blue);
+      box-shadow: 0 2px 6px rgba(21, 64, 106, 0.25);
+    }
+
+    .calendar-popover {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      width: 280px;
+      max-width: calc(100vw - 36px);
+      z-index: 9999;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1.5px solid rgba(21, 64, 106, 0.16);
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: 0 16px 38px -4px rgba(15, 23, 42, 0.18), 0 6px 16px -2px rgba(21, 64, 106, 0.1);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-6px) scale(0.98);
+      transform-origin: top left;
+      overflow: hidden;
+      transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+        visibility 0.2s;
+      pointer-events: none;
+      box-sizing: border-box;
+    }
+
+    .calendar-popover.open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .cal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      gap: 6px;
+    }
+
+    .cal-month-label {
+      font-size: 13px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.2px;
+    }
+
+    .cal-nav-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      color: var(--kemnaker-blue);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+
+    .cal-nav-btn:hover {
+      background: var(--kemnaker-blue);
+      color: #ffffff;
+      border-color: var(--kemnaker-blue);
+    }
+
+    .cal-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+      margin-bottom: 4px;
+      text-align: center;
+      font-size: 10px;
+      font-weight: 800;
+      color: #64748b;
+      text-transform: uppercase;
+    }
+
+    .cal-days-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 3px;
+    }
+
+    @keyframes calSlideNext {
+      0% {
+        opacity: 0;
+        transform: translateX(22px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes calSlidePrev {
+      0% {
+        opacity: 0;
+        transform: translateX(-22px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .cal-anim-next {
+      animation: calSlideNext 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .cal-anim-prev {
+      animation: calSlidePrev 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .cal-day-btn {
+      height: 32px;
+      border-radius: 8px;
+      border: 1.5px solid transparent;
+      background: transparent;
+      font-size: 12px;
+      font-weight: 600;
+      color: #334155;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: inherit;
+      transition: all 0.12s ease;
+    }
+
+    .cal-day-btn:hover:not(.is-empty):not(.is-selected) {
+      background: #f0f5fa;
+      color: var(--kemnaker-blue);
+    }
+
+    .cal-day-btn.is-empty {
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .cal-day-btn.is-today:not(.is-selected) {
+      border-color: rgba(21, 64, 106, 0.4);
+      color: var(--kemnaker-blue);
+      font-weight: 800;
+      background: #f8fafc;
+    }
+
+    .cal-day-btn.is-selected {
+      background: linear-gradient(135deg, #15406a 0%, #0d2b45 100%);
+      color: #ffffff;
+      font-weight: 800;
+      box-shadow: 0 3px 8px rgba(21, 64, 106, 0.35);
+    }
+
+    .cal-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px solid #f1f5f9;
+    }
+
+    .cal-foot-btn {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 7px;
+      border: 1px solid #cbdbe9;
+      background: #eef3f8;
+      color: var(--kemnaker-blue);
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+    }
+
+    .cal-foot-btn:hover {
+      background: var(--kemnaker-blue);
+      color: #ffffff;
+      border-color: var(--kemnaker-blue);
+    }
+
+    .cal-foot-btn.subtle {
+      background: transparent;
+      border-color: #e2e8f0;
+      color: #64748b;
+    }
+
+    .cal-foot-btn.subtle:hover {
+      background: #f1f5f9;
+      color: #0f172a;
+      border-color: #cbd5e1;
+    }
+
+    .btn-text-action {
+      background: none;
+      border: none;
+      color: var(--kemnaker-blue);
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .btn-text-action:hover {
+      text-decoration: underline;
+    }
+
+    /* Modern Time Stepper Component (Vertical Top/Bottom Arrows + Editable Side-by-Side Digits) */
+    .badge-time-preview {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--kemnaker-blue);
+      background: #eef3f8;
+      padding: 1px 7px;
+      border-radius: 6px;
+    }
+
+    .time-stepper-widget {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      background: #f1f5f9;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 4px 8px;
+      height: 50px;
+      box-sizing: border-box;
+      width: 100%;
+    }
+
+    .time-digits-pair {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .time-digit-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1px;
+    }
+
+    .time-arrow-btn {
+      background: transparent;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      color: #64748b;
+      width: 34px;
+      height: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+      padding: 0;
+      line-height: 1;
+    }
+
+    .time-arrow-btn:hover {
+      background: #e2edf7;
+      color: var(--kemnaker-blue);
+    }
+
+    .time-arrow-btn:active {
+      transform: scale(0.92);
+    }
+
+    .time-digit-input {
+      width: 34px;
+      height: 22px;
+      font-size: 13.5px;
+      font-weight: 800;
+      font-family: inherit;
+      color: #0f172a;
+      text-align: center;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      background: #ffffff;
+      outline: none;
+      padding: 0;
+      font-variant-numeric: tabular-nums;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, color 0.15s ease;
+    }
+
+    .time-digit-input:focus {
+      border-color: var(--kemnaker-blue);
+      box-shadow: 0 0 0 2px rgba(21, 64, 106, 0.14);
+      color: var(--kemnaker-blue);
+    }
+
+    .time-stepper-widget .custom-select-wrapper.compact.pill-mini .custom-select-trigger {
+      height: 34px;
+      min-height: 34px;
+      background: #ffffff;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+
+    .time-separator-dots {
+      font-size: 15px;
+      font-weight: 800;
+      color: #94a3b8;
+      user-select: none;
+      margin: 0 1px;
+    }
+
+    /* List Tabs Header (Sleek Segmented Tray matching Name Table with Sliding Glider) */
+    .list-tabs-header {
+      position: relative;
+      display: flex;
+      gap: 4px;
+      padding: 4px;
+      background: #e2e8f0;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      width: 100%;
+      box-sizing: border-box;
+      isolation: isolate;
+      user-select: none;
+    }
+
+    .list-tabs-glider,
+    .subinput-glider,
+    .np-slide-glider {
+      position: absolute;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0;
+      will-change: transform, width, height;
+    }
+
+    .list-tabs-glider {
+      border-radius: 9px;
+      background: linear-gradient(135deg, #15406a 0%, #0d2b45 100%);
+      box-shadow: 0 3px 10px rgba(21, 64, 106, 0.28);
+    }
+
+    .subinput-glider {
+      border-radius: 7px;
+      background: #ffffff;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.12);
+    }
+
+    .np-slide-glider {
+      border-radius: 9999px;
+      background: var(--kemnaker-blue);
+      box-shadow: 0 2px 6px rgba(21, 64, 106, 0.28);
+    }
+
+    .list-tabs-glider.ready,
+    .subinput-glider.ready,
+    .np-slide-glider.ready {
+      opacity: 1;
+    }
+
+    .list-tabs-glider.animated,
+    .list-tabs-glider.ready:not(.no-animate),
+    .subinput-glider.animated,
+    .subinput-glider.ready:not(.no-animate),
+    .np-slide-glider.animated,
+    .np-slide-glider.ready:not(.no-animate) {
+      transition: transform 0.35s cubic-bezier(0.34, 1.25, 0.64, 1),
+        width 0.35s cubic-bezier(0.34, 1.25, 0.64, 1),
+        height 0.35s cubic-bezier(0.34, 1.25, 0.64, 1),
+        opacity 0.2s ease;
+    }
+
+    .list-tabs-glider.no-animate,
+    .subinput-glider.no-animate,
+    .np-slide-glider.no-animate {
+      transition: none !important;
+    }
+
+    .list-tab-btn {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border-radius: 9px;
+      border: 1px solid transparent;
+      background: transparent !important;
+      box-shadow: none !important;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #334155;
+      cursor: pointer;
+      transition: color 0.2s ease;
+      white-space: nowrap;
+      font-family: inherit;
+    }
+
+    .list-tab-btn:hover:not(.active) {
+      color: var(--kemnaker-blue);
+    }
+
+    .list-tab-btn.active {
+      color: #ffffff;
+      border-color: transparent;
+    }
+
+    .list-tab-badge {
+      background: rgba(255, 255, 255, 0.24);
+      color: inherit;
+      padding: 1.5px 7px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .list-tab-btn:not(.active) .list-tab-badge {
+      background: #cbd5e1;
+      color: #1e293b;
+    }
+
+    .input-subpanel {
+      background: #e8eef5;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 14px;
+    }
+
+    .input-subpanel .form-input,
+    .input-subpanel .form-textarea {
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+    }
+
+    .input-subpanel .form-input:focus,
+    .input-subpanel .form-textarea:focus {
+      background: #ffffff;
+      border-color: var(--kemnaker-blue);
+      box-shadow: 0 0 0 3.5px rgba(21, 64, 106, 0.15);
+    }
+
+    .subinput-tray {
+      position: relative;
+      display: flex;
+      gap: 4px;
+      padding: 3.5px;
+      background: #dbe3ee;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      isolation: isolate;
+      user-select: none;
+    }
+
+    .subinput-tray .bubble-segment-btn {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      border: none;
+      background: transparent !important;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 10px;
+      color: #334155;
+      box-shadow: none !important;
+      transition: color 0.2s ease;
+    }
+
+    .subinput-tray .bubble-segment-btn.active {
+      color: var(--kemnaker-blue);
+      font-weight: 800;
+    }
+
+    /* Active List Header Bar */
+    .active-list-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      gap: 8px;
+    }
+
+    .active-list-title-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .active-list-title-text {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: #1e293b;
+      letter-spacing: -0.1px;
+    }
+
+    .active-list-count-pill {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--kemnaker-blue);
+      background: #eef4fb;
+      border: 1px solid #d5e3f3;
+      padding: 1.5px 8px;
+      border-radius: 9999px;
+      white-space: nowrap;
+    }
+
+    .btn-clear-list {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #dc2626;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3.5px 10px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+    }
+
+    .btn-clear-list:hover {
+      background: #fee2e2;
+      border-color: #fca5a5;
+    }
+
+    /* Items Container & Elevated Card Rows (Show all items directly, no nested scroll conflict) */
+    .name-items-container {
+      max-height: none;
+      overflow: visible;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 8px;
+      background: #e8eef5;
+      margin-bottom: 14px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .name-items-container:empty::before {
+      content: "Belum ada data.";
+      display: block;
+      padding: 22px 14px;
+      text-align: center;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #64748b;
+    }
+
+    .name-item-row {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 10px 10px 15px;
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 11px;
+      margin-bottom: 7px;
+      cursor: grab;
+      touch-action: pan-y;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+      transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+      width: 100%;
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    .item-drag-zone {
+      display: inline-flex;
+      align-items: center;
+      align-self: stretch;
+      margin: -10px 0 -10px -15px;
+      padding: 10px 4px 10px 15px;
+      touch-action: none;
+      cursor: grab;
+      flex-shrink: 0;
+    }
+
+    .name-item-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .name-item-row::before {
+      content: "";
+      position: absolute;
+      left: 5px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3.5px;
+      height: 22px;
+      border-radius: 99px;
+      background: #cbd5e1;
+      transition: height 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), width 0.18s ease, background 0.18s ease;
+    }
+
+    .name-item-row:hover {
+      background: #ffffff;
+      border-color: #93c5fd;
+      box-shadow: 0 4px 12px -2px rgba(21, 64, 106, 0.12);
+      transform: translateY(-1px);
+    }
+
+    .name-item-row:hover::before {
+      width: 4px;
+      height: 28px;
+      background: var(--kemnaker-blue);
+    }
+
+    .name-item-row:active:not(.editing) {
+      cursor: grabbing;
+    }
+
+    /* Smartphone-Grade Smooth Pointer Drag Effects */
+    .name-item-row.drag-placeholder {
+      opacity: 0.35;
+      background: #e2edf7 !important;
+      border: 1.5px dashed #15406a !important;
+      box-shadow: none !important;
+      transform: none !important;
+    }
+
+    .name-item-row.drag-floating {
+      position: fixed;
+      z-index: 99999;
+      pointer-events: none;
+      margin: 0 !important;
+      background: #ffffff !important;
+      border: 1.5px solid #15406a !important;
+      box-shadow: 0 18px 36px -6px rgba(15, 23, 42, 0.26), 0 6px 14px rgba(21, 64, 106, 0.16);
+      transform: scale(1.025);
+      cursor: grabbing !important;
+      transition: box-shadow 0.15s ease, transform 0.15s ease !important;
+    }
+
+    .name-item-row.drag-floating::before {
+      width: 4px;
+      height: 26px;
+      background: var(--kemnaker-blue);
+    }
+
+    /* Inline Editing Row */
+    .name-item-row.editing {
+      cursor: default;
+      background: #f0fdf4 !important;
+      border-color: #86efac !important;
+      box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+      transform: none !important;
+      align-items: center;
+    }
+
+    .name-item-row.editing::before {
+      background: #22c55e;
+      height: 24px;
+    }
+
+    .edit-inputs-container {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .name-item-row.editing .item-actions {
+      flex-direction: column;
+      gap: 5px;
+      align-self: center;
+    }
+
+    .name-item-row.editing .form-input-sm {
+      background: #ffffff;
+    }
+
+    .form-input-sm {
+      padding: 6px 9px !important;
+      font-size: 12px !important;
+      border-radius: 6px !important;
+    }
+
+    .edit-pos-textarea {
+      min-height: 48px !important;
+      resize: vertical;
+      line-height: 1.38 !important;
+      font-family: inherit;
+      overflow-y: hidden;
+    }
+
+    .item-num {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--kemnaker-blue);
+      background: #eef4fb;
+      border: 1px solid #d5e3f3;
+      min-width: 24px;
+      height: 24px;
+      padding: 0 5px;
+      border-radius: 7px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-sizing: border-box;
+    }
+
+    .item-text-box {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .item-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #0f172a;
+      line-height: 1.3;
+      margin-bottom: 2px;
+      white-space: normal;
+      word-break: break-word;
+    }
+
+    .item-pos {
+      font-size: 11.5px;
+      font-weight: 500;
+      color: #475569;
+      line-height: 1.35;
+      white-space: normal;
+      word-break: break-word;
+    }
+
+    .item-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .btn-action-sm {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      cursor: pointer;
+      color: #64748b;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+
+    .btn-action-sm:hover {
+      background: #e2e8f0;
+      border-color: #cbd5e1;
+      color: #0f172a;
+    }
+
+    .btn-action-sm.edit:hover {
+      background: #e0f2fe;
+      color: #0284c7;
+    }
+
+    .btn-action-sm.save {
+      color: #059669;
+    }
+
+    .btn-action-sm.save:hover {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .btn-action-sm.cancel:hover {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    .btn-action-sm.delete:hover {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    /* Action Buttons */
+    .form-btn-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .btn-generate {
+      flex: 2;
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 12px 18px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .btn-generate:hover {
+      background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(5, 150, 105, 0.35);
+    }
+
+    .btn-print {
+      flex: 1;
+      background: #ffffff;
+      color: var(--kemnaker-blue);
+      border: 1.5px solid var(--kemnaker-blue);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .btn-print:hover {
+      background: #f0f6fc;
+      transform: translateY(-1px);
+    }
+
+    /* --- Preview Section --- */
+    .preview-card-frame {
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      width: 100%;
+    }
+
+    .preview-top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #f1f5f9;
+      flex-wrap: wrap;
+      gap: 8px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .preview-headline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #15406a;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .preview-headline .badge-live {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ef4444;
+      animation: pulseLive 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseLive {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      50% {
+        transform: scale(1.3);
+        opacity: 0.7;
+      }
+    }
+
+    .preview-spec-pill {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #475569;
+      background: #f1f5f9;
+      padding: 5px 12px;
+      border-radius: 9999px;
+      border: 1px solid #e2e8f0;
+      white-space: nowrap;
+    }
+
+    /* Realistic Paper Canvas */
+    .notepad-preview-viewport {
+      width: 100%;
+      max-width: 100%;
+      background: #e2e8f0;
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      overflow: hidden;
+      box-sizing: border-box;
+      transition: height 0.2s ease;
+    }
+
+    .notepad-sheet-wrap {
+      transform-origin: top center;
+      transition: transform 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      width: max-content;
+    }
+
+    .np-pages-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .np-page-slot {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .np-page-caption {
+      font-size: 11px;
+      font-weight: 700;
+      color: #475569;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid #cbd5e1;
+      border-radius: 9999px;
+      padding: 3px 10px;
+      margin-bottom: 8px;
+      letter-spacing: 0.02em;
+    }
+
+    .np-landscape-row {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 28px;
+    }
+
+    /* Mobile Horizontal Swipe Preview Carousel + Overlaid Pill Switcher (Keduanya mode <= 768px only) */
+    .np-mobile-carousel-wrap {
+      position: relative;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .np-mobile-slide-tabs {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 3px;
+      background: rgba(226, 232, 240, 0.92);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      border-radius: 9999px;
+      box-shadow: 0 3px 12px rgba(15, 23, 42, 0.16);
+      isolation: isolate;
+      user-select: none;
+    }
+
+    .np-mobile-slide-pill {
+      position: relative;
+      z-index: 2;
+      border: none;
+      background: transparent !important;
+      box-shadow: none !important;
+      color: #334155;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4.5px 13px;
+      border-radius: 9999px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: color 0.2s ease;
+    }
+
+    .np-mobile-slide-pill.active {
+      color: #ffffff;
+    }
+
+    .np-mobile-swipe-track {
+      display: flex;
+      flex-direction: row;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      gap: 12px;
+      width: 100%;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      padding-bottom: 4px;
+    }
+
+    .np-mobile-swipe-track::-webkit-scrollbar {
+      display: none;
+    }
+
+    .np-mobile-swipe-slide {
+      flex: 0 0 100%;
+      width: 100%;
+      scroll-snap-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      overflow: hidden;
+    }
+
+    .np-mobile-swipe-box-holder {
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    /* Note Pad Sheet Box with Double Border (1pt PDF == 1px CSS) */
+    .notepad-box-element {
+      background: #ffffff;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      font-family: Arial, sans-serif;
+      color: #000000;
+      box-sizing: border-box;
+      border: 1.44px solid #000000;
+      padding: 2.16px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .notepad-box-inner {
+      border: 0.72px solid #000000;
+      padding: 11px 0 8px 0;
+      height: 100%;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .notepad-box-element.besar {
+      width: 442.4px;
+      height: 438.07px;
+    }
+
+    .notepad-box-element.besar.full {
+      height: 644.4px;
+    }
+
+    .notepad-box-element.kecil {
+      width: 314.72px;
+      height: 438.07px;
+    }
+
+    /* Typography 100% Identical to ReportLab PDF */
+    .np-title {
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      font-weight: bold;
+      text-align: center;
+      text-transform: uppercase;
+      line-height: 13.8px;
+      padding: 0 7px;
+      margin-bottom: 7px;
+      color: #1F3864;
+      /* Navy Blue 0x1F3864 */
+      white-space: pre-line;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    .notepad-box-element.kecil .np-title {
+      font-size: 11px;
+      line-height: 12.2px;
+    }
+
+    .np-title-divider {
+      border-bottom: 0.75px solid #000000;
+      width: 100%;
+      margin: 0;
+      flex-shrink: 0;
+    }
+
+    .np-meta-block {
+      margin-top: 20px;
+      /* Matches ReportLab top_used spacing below divider above Hari */
+      margin-bottom: 17px;
+      padding-left: 43px;
+      padding-right: 7px;
+    }
+
+    .np-meta-block.no-title {
+      margin-top: 7px;
+    }
+
+    .np-meta-row {
+      display: flex;
+      align-items: baseline;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      line-height: 18.5px;
+      color: #1F3864;
+      /* Navy Blue 0x1F3864 */
+      margin: 0;
+    }
+
+    .np-meta-lbl {
+      width: 47px;
+      flex-shrink: 0;
+      font-weight: normal;
+    }
+
+    .np-meta-col {
+      width: 10px;
+      flex-shrink: 0;
+      text-align: left;
+      font-weight: normal;
+    }
+
+    .np-meta-val {
+      flex: 1;
+      min-width: 0;
+      font-weight: normal;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    .np-sections-wrap {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .np-section+.np-section {
+      margin-top: 25px;
+    }
+
+    .np-section-header {
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      line-height: 1.2;
+      font-weight: normal;
+      text-align: left;
+      margin-top: 0;
+      margin-bottom: 11px;
+      color: #000000;
+      padding-left: 4px;
+    }
+
+    .np-section-header.indent-peserta {
+      padding-left: 4px;
+    }
+
+    .np-list-item {
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      line-height: 20.7px;
+      text-align: left;
+      display: flex;
+      align-items: baseline;
+      margin: 0;
+      padding-left: 17px;
+      padding-right: 6px;
+      color: #000000;
+    }
+
+    .np-list-item.no-num {
+      padding-left: 35px;
+    }
+
+    .np-list-num {
+      width: 18px;
+      flex-shrink: 0;
+      font-weight: bold;
+    }
+
+    .np-item-content {
+      flex: 1;
+      min-width: 0;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    .np-name {
+      font-weight: bold;
+      color: #000000;
+    }
+
+    .np-pos {
+      font-weight: normal;
+      color: #000000;
+    }
+
+    /* --- Footer Seamless --- */
+    .footer {
+      position: relative;
+      z-index: 2;
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 24px 0 max(28px, env(safe-area-inset-bottom, 28px));
+      margin-top: auto;
+      width: 100%;
+      flex-shrink: 0;
+      box-sizing: border-box;
+    }
+
+    .footer-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 0 8px;
+      box-sizing: border-box;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #ffffff;
+      min-width: 0;
+    }
+
+    .footer-brand span {
+      white-space: nowrap !important;
+      min-width: 0;
+    }
+
+    .footer-kemnaker-logo {
+      height: 32px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25));
+    }
+
+    .footer-copy {
+      font-size: 12.5px;
+      color: rgba(255, 255, 255, 0.65);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    /* Print Stylesheet */
+    @media print {
+      body {
+        background: #ffffff !important;
+      }
+
+      .navbar,
+      .form-card,
+      .preview-top-bar,
+      .footer,
+      .hero-header,
+      .np-page-caption {
+        display: none !important;
+      }
+
+      .hero-section {
+        background: none !important;
+        padding: 0 !important;
+      }
+
+      .dashboard-grid {
+        display: block !important;
+      }
+
+      .preview-card-frame {
+        box-shadow: none !important;
+        padding: 0 !important;
+        border: none !important;
+        background: none !important;
+      }
+
+      .notepad-preview-viewport {
+        background: none !important;
+        padding: 0 !important;
+      }
+
+      .notepad-sheet-wrap {
+        transform: none !important;
+      }
+
+      .notepad-box-element {
+        box-shadow: none !important;
+        page-break-inside: avoid;
+        margin: 0 auto;
+      }
+    }
+
+    /* Responsive Media Queries */
+    /* Responsive Preview Slots (Mobile places preview above inputs like Name Table) */
+    .mobile-preview-slot {
+      display: none;
+    }
+
+    .desktop-preview-slot {
+      display: block;
+    }
+
+    @media (max-width: 1060px) {
+      .dashboard-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 18px;
+        margin-bottom: 30px;
+      }
+
+      .hero-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 12px;
+      }
+
+      .hero-title {
+        font-size: 26px;
+      }
+
+      .mobile-preview-slot {
+        display: block !important;
+        width: 100%;
+        margin-bottom: 14px;
+      }
+
+      .desktop-preview-slot {
+        display: none !important;
+      }
+
+      .mobile-preview-slot .preview-card-frame {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+      }
+
+      .mobile-preview-slot .preview-top-bar {
+        margin-bottom: 8px;
+        padding: 0 2px;
+        border-bottom: none !important;
+      }
+
+      .mobile-preview-slot .notepad-preview-viewport {
+        border-radius: 12px;
+        padding: 10px 8px;
+        border: 1px solid rgba(15, 23, 42, 0.08);
+      }
+    }
+
+    @media (max-width: 768px) {
+
+      .form-input,
+      .form-textarea,
+      .form-select,
+      .form-input-sm,
+      input,
+      textarea,
+      select {
+        font-size: 16px !important;
+      }
+
+      .notepad-type-switcher {
+        width: auto !important;
+        display: inline-flex;
+        margin: 0 auto;
+        padding: 2.5px;
+        gap: 2px;
+        border-radius: 9999px;
+      }
+
+      .type-switch-btn {
+        flex: initial;
+        padding: 5px 14px;
+        font-size: 11.5px;
+        gap: 5px;
+        font-weight: 700;
+      }
+
+      .type-switch-btn svg {
+        width: 13px;
+        height: 13px;
+      }
+
+      .time-stepper-widget {
+        height: 56px;
+        padding: 4px 12px;
+      }
+
+      .time-digit-input {
+        width: 40px;
+        height: 24px;
+      }
+
+      .time-arrow-btn {
+        width: 40px;
+        height: 12px;
+      }
+
+      .date-text-input {
+        height: 52px;
+      }
+
+      .tab-btn {
+        padding: 8px 10px;
+        font-size: 12px;
+        gap: 5px;
+      }
+
+      .form-btn-group {
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .btn-generate {
+        width: 100%;
+        flex: none;
+        padding: 12px 16px;
+        font-size: 13.5px;
+        border-radius: 12px;
+      }
+
+      .btn-print {
+        width: 100%;
+        flex: none;
+        padding: 11px 16px;
+        font-size: 13px;
+        border-radius: 12px;
+      }
+
+      .form-textarea {
+        min-height: 86px;
+      }
+
+      .nav-page-switcher {
+        display: none !important;
+      }
+
+      .mobile-menu-wrapper {
+        display: block !important;
+      }
+
+      .navbar {
+        height: 60px;
+      }
+
+      .nav-container {
+        padding: 0 12px;
+      }
+
+      .brand-logo {
+        gap: 6px;
+      }
+
+      .kemnaker-brand-icon.logo-full {
+        display: none !important;
+      }
+
+      .kemnaker-brand-icon.logo-symbol {
+        display: block !important;
+        height: 28px;
+        width: 28px;
+        object-fit: contain;
+      }
+
+      .brand-divider {
+        height: 18px;
+        margin: 0 2px;
+      }
+
+      .brand-title {
+        font-size: 15px;
+      }
+
+      .hero-section {
+        padding: 16px 14px 0;
+        min-height: calc(100vh - 60px);
+        min-height: calc(100dvh - 60px);
+      }
+
+      .hero-header {
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .hero-title {
+        font-size: clamp(14px, 5.2vw, 22px);
+        line-height: 1.25;
+        letter-spacing: -0.4px;
+        white-space: nowrap;
+        text-align: center;
+      }
+
+      .dashboard-grid {
+        gap: 16px;
+        margin-top: 6px;
+        margin-bottom: 28px;
+      }
+
+      .form-card,
+      .preview-card-frame {
+        padding: 16px 14px;
+        border-radius: 16px;
+      }
+
+      .preview-top-bar,
+      .mobile-preview-slot .preview-top-bar {
+        display: none !important;
+      }
+
+      .preview-headline {
+        padding: 3.5px 9px;
+        font-size: 9.5px;
+        gap: 5px;
+        flex-shrink: 0;
+      }
+
+      .preview-headline .badge-live {
+        width: 6px;
+        height: 6px;
+      }
+
+      .preview-spec-pill {
+        padding: 3.5px 9px;
+        font-size: 9.5px;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .footer {
+        padding: 24px 14px max(24px, env(safe-area-inset-bottom, 24px));
+      }
+
+      .footer-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 0;
+      }
+
+      .footer-brand {
+        width: 100%;
+      }
+
+      .footer-brand span {
+        font-size: clamp(9px, 3.2vw, 13.5px);
+      }
+
+      .footer-kemnaker-logo {
+        height: 28px;
+      }
+
+      .footer-copy {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        gap: 2px;
+        font-size: 11.5px;
+        line-height: 1.55;
+        width: 100%;
+        white-space: normal;
+      }
+
+      .footer-copy-sep {
+        display: none;
+      }
+    }
+
+    @media (max-width: 540px) {
+      .lbl-desktop {
+        display: none;
+      }
+
+      .lbl-mobile {
+        display: inline;
+      }
+
+      .list-tab-btn {
+        padding: 8px 8px;
+        font-size: 12px;
+        gap: 5px;
+      }
+
+      .list-tab-badge {
+        padding: 1px 6px;
+        font-size: 10.5px;
+      }
+
+      .subinput-tray .bubble-segment-btn {
+        padding: 6px 6px;
+        font-size: 11.5px;
+      }
+
+      .notepad-preview-viewport {
+        padding: 10px 6px;
+      }
+
+      .single-input-grid {
+        grid-template-columns: 1fr !important;
+      }
+
+      .single-input-actions {
+        flex-direction: column !important;
+        align-items: stretch !important;
+      }
+
+      .btn-add-single {
+        width: 100% !important;
+        justify-content: center !important;
+      }
+
+      .event-meta-grid {
+        grid-template-columns: 1fr !important;
+      }
+
+      .form-btn-group {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .btn-generate,
+      .btn-print {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-title {
+        font-size: clamp(13px, 5vw, 19px);
+      }
+    }
+
+    @media (max-width: 360px) {
+      .nav-container {
+        padding: 0 6px;
+      }
+
+      .brand-title {
+        font-size: 13px;
+      }
+
+      .btn-mobile-menu {
+        height: 30px;
+        padding: 0 6px;
+      }
+
+      .btn-mobile-menu .mobile-menu-label {
+        font-size: 10.5px;
+      }
+
+      .hero-title {
+        font-size: clamp(12px, 4.8vw, 17px);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Top Navigation Bar (Identical to PRONAKER Name Table) -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="/nametable" class="brand-logo" id="navBrandLogo">
+        <img src="{{ url_for('static', filename='LogoKemnakerRI.png') }}" alt="Logo Kementerian Ketenagakerjaan RI"
+          class="kemnaker-brand-icon logo-full">
+        <img src="{{ url_for('static', filename='logo_kemnaker.png') }}" alt="Logo Kemnaker"
+          class="kemnaker-brand-icon logo-symbol">
+        <div class="brand-divider"></div>
+        <span class="brand-title">PRONAKER</span>
+      </a>
+
+      <div class="nav-actions">
+        <!-- Pilihan Page Desktop -->
+        <nav class="nav-page-switcher" id="desktopNavPageSwitcher" aria-label="Menu Halaman">
+          <a href="/nametable" class="nav-page-tab" title="Name Table Generator">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+              <line x1="7" y1="8" x2="17" y2="8"></line>
+              <line x1="7" y1="12" x2="13" y2="12"></line>
+            </svg>
+            <span>Name Table</span>
+          </a>
+          <a href="/notepad" class="nav-page-tab active" title="Note Pad Generator">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+            <span>Note Pad</span>
+          </a>
+        </nav>
+
+        <!-- Pilihan Menu Mobile -->
+        <div class="mobile-menu-wrapper" id="mobileMenuWrapper">
+          <button type="button" class="btn-mobile-menu" id="btnMobileAppMenu" onclick="toggleMobileMenu(event)"
+            aria-label="Pilih Generator">
+            <svg class="mobile-menu-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+            <span class="mobile-menu-label">Note Pad</span>
+            <svg class="mobile-menu-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.5">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="mobile-menu-dropdown" id="mobileMenuDropdown">
+            <a href="/nametable" class="mobile-menu-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+                <line x1="7" y1="8" x2="17" y2="8"></line>
+                <line x1="7" y1="12" x2="13" y2="12"></line>
+              </svg>
+              <span class="menu-title">Name Table</span>
+            </a>
+            <a href="/notepad" class="mobile-menu-item active">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+              </svg>
+              <span class="menu-title">Note Pad</span>
+              <span class="menu-check">✓</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section" id="notepadSection">
+    <div class="hero-pattern"></div>
+    <div class="hero-container">
+
+      <!-- Hero Header -->
+      <div class="hero-header">
+        <h1 class="hero-title" id="heroTitle">
+          Note Pad <span class="highlight-silver">Tools</span> Kemnaker RI
+        </h1>
+
+        <!-- Pilihan Ukuran: Notepad Besar vs Notepad Kecil -->
+        <div class="notepad-type-switcher" role="group">
+          <div class="type-switcher-glider" id="typeSwitcherGlider"></div>
+          <button type="button" class="type-switch-btn active" id="btnTypeBesar" onclick="setNotepadType('besar')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+            </svg>
+            <span class="lbl-desktop">Notepad Besar</span>
+            <span class="lbl-mobile">Besar</span>
+          </button>
+          <button type="button" class="type-switch-btn" id="btnTypeKecil" onclick="setNotepadType('kecil')">
+            <svg width="13" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="5" y="3" width="14" height="18" rx="2"></rect>
+            </svg>
+            <span class="lbl-desktop">Notepad Kecil</span>
+            <span class="lbl-mobile">Kecil</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Dashboard Grid (Kiri: Form Input & List, Kanan: Live Preview) -->
+      <div class="dashboard-grid">
+
+        <!-- Kolom Kiri: Form Input -->
+        <div class="form-card">
+
+          <!-- Pilihan Konten Lembar Kecil (Langsung Gaya Tab Input Tunggal | Input Banyak Name Table) -->
+          <div id="kecilOptionsWrapper" class="tab-switch-wrap" style="display: none;">
+            <div class="tab-switch-glider" id="kecilModeGlider" aria-hidden="true"></div>
+            <button type="button" class="tab-btn" id="btnKecilPendamping" onclick="setKecilMode('pendamping')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <span>Pendamping</span>
+            </button>
+            <button type="button" class="tab-btn" id="btnKecilPeserta" onclick="setKecilMode('peserta')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="8.5" cy="7" r="4"></circle>
+                <polyline points="17 11 19 13 23 9"></polyline>
+              </svg>
+              <span>Peserta</span>
+            </button>
+            <button type="button" class="tab-btn active" id="btnKecilBoth" onclick="setKecilMode('both')"
+              title="Mencetak keduanya dalam 1 halaman A4 Landscape">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              <span>Keduanya</span>
+            </button>
+          </div>
+
+          <!-- Mobile Unified Live Preview Slot (situated above inputs, matching Name Table) -->
+          <div id="mobilePreviewSlot" class="mobile-preview-slot"></div>
+
+          <div class="form-section-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+            <span>Informasi Acara / Kegiatan</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="inputTitle">
+              <span>Judul Kegiatan</span>
+              <span id="titleCounter" style="font-size: 11px; color: #94a3b8;">0 karakter</span>
+            </label>
+            <textarea id="inputTitle" class="form-textarea"
+              placeholder="Contoh: MENERIMA SERIKAT PEKERJA NASIONAL DAN MANAGEMENT PT BANK MANDIRI INDONESIA (TBK.)"
+              oninput="updateNotepadPreview()"></textarea>
+          </div>
+
+          <!-- Event Meta Grid (Tanggal dengan Kalender Kustom & Waktu Editable + Panah Atas/Bawah) -->
+          <div class="event-meta-grid">
+            <!-- Tanggal dengan Kalender Popover Bertema Kemnaker -->
+            <div class="form-group">
+              <div class="form-label">
+                <span>Hari &amp; Tanggal</span>
+                <button type="button" onclick="setTodayDate()" class="btn-text-action">📅 Hari Ini</button>
+              </div>
+              <div class="date-picker-wrapper" id="datePickerWrapper">
+                <input type="text" id="inputDate" class="form-input date-text-input"
+                  placeholder="Contoh: Senin, 12 Oktober 2026" oninput="updateNotepadPreview()">
+                <button type="button" class="btn-calendar-trigger" id="btnCalendarTrigger"
+                  onclick="toggleCalendarPopover(event)" title="Buka Kalender Pemilih Tanggal">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                </button>
+                <div class="calendar-popover" id="customCalendarPopover" role="dialog" aria-label="Pilih Tanggal"></div>
+              </div>
+            </div>
+
+            <!-- Jam Waktu: Ketik Langsung atau Panah Atas-Bawah Sebelahan -->
+            <div class="form-group">
+              <div class="form-label">
+                <span>Waktu / Jam</span>
+                <input type="hidden" id="inputTime" value="11.00 WIB">
+                <span class="badge-time-preview" id="badgeTimePreview">11.00 WIB</span>
+              </div>
+              <div class="time-stepper-widget">
+                <div class="time-digits-pair">
+                  <!-- Hour Column (Up / Input / Down) -->
+                  <div class="time-digit-col">
+                    <button type="button" class="time-arrow-btn" onclick="stepHour(1)" title="Tambah Jam (▲)">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="3">
+                        <polyline points="18 15 12 9 6 15"></polyline>
+                      </svg>
+                    </button>
+                    <input type="text" id="timeHourInput" class="time-digit-input" inputmode="numeric" maxlength="2"
+                      value="11" aria-label="Jam" onfocus="this.select()" oninput="onManualTimeInput('hour')"
+                      onblur="onManualTimeBlur('hour')" onkeydown="onTimeKeyDown(event, 'hour')">
+                    <button type="button" class="time-arrow-btn" onclick="stepHour(-1)" title="Kurangi Jam (▼)">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="3">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                      </svg>
+                    </button>
+                  </div>
+
+                  <span class="time-separator-dots">:</span>
+
+                  <!-- Minute Column (Up / Input / Down per 15 min) -->
+                  <div class="time-digit-col">
+                    <button type="button" class="time-arrow-btn" onclick="stepMinute(15)" title="Tambah Menit (+15) (▲)">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="3">
+                        <polyline points="18 15 12 9 6 15"></polyline>
+                      </svg>
+                    </button>
+                    <input type="text" id="timeMinInput" class="time-digit-input" inputmode="numeric" maxlength="2"
+                      value="00" aria-label="Menit" onfocus="this.select()" oninput="onManualTimeInput('min')"
+                      onblur="onManualTimeBlur('min')" onkeydown="onTimeKeyDown(event, 'min')">
+                    <button type="button" class="time-arrow-btn" onclick="stepMinute(-15)"
+                      title="Kurangi Menit (-15) (▼)">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="3">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Timezone Pill Selector (ModernDropdown pillMini) -->
+                <select id="timeTzSelect" class="time-tz-select" onchange="onTimezoneChange()">
+                  <option value="WIB" selected>WIB</option>
+                  <option value="WITA">WITA</option>
+                  <option value="WIT">WIT</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section Kelola Daftar Nama -->
+          <div class="form-section-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            <span>Daftar Nama</span>
+          </div>
+
+          <!-- Tabs Pendamping vs Peserta -->
+          <div class="list-tabs-header" id="listTabsHeader">
+            <div class="list-tabs-glider" id="listTabsGlider" aria-hidden="true"></div>
+            <button type="button" class="list-tab-btn active" id="tabBtnPendamping"
+              onclick="switchListTab('pendamping')">
+              <span class="lbl-desktop">Pendamping (Kemnaker)</span>
+              <span class="lbl-mobile">Pendamping</span>
+              <span class="list-tab-badge" id="badgeCountPendamping">0</span>
+            </button>
+            <button type="button" class="list-tab-btn" id="tabBtnPeserta" onclick="switchListTab('peserta')">
+              <span class="lbl-desktop">Peserta (Tamu)</span>
+              <span class="lbl-mobile">Peserta</span>
+              <span class="list-tab-badge" id="badgeCountPeserta">0</span>
+            </button>
+          </div>
+
+          <!-- Input Panel (Satuan vs Banyak) -->
+          <div class="input-subpanel" id="inputSubPanel">
+            <div class="subinput-tray" id="subinputTray">
+              <div class="subinput-glider" id="subinputGlider" aria-hidden="true"></div>
+              <button type="button" class="bubble-segment-btn active" id="btnInputModeSingle"
+                onclick="setInputMode('single')">Input Satuan</button>
+              <button type="button" class="bubble-segment-btn" id="btnInputModeBulk"
+                onclick="setInputMode('bulk')">Input Banyak</button>
+            </div>
+
+            <!-- Single Input Box -->
+            <div id="singleInputBox">
+              <div class="single-input-grid"
+                style="display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 10px;">
+                <input type="text" id="inputSingleName" class="form-input" placeholder="Nama Lengkap"
+                  onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('inputSinglePos')?.focus();}"
+                  style="font-size: 12.5px; padding: 8px 11px;">
+                <textarea id="inputSinglePos" rows="2" class="form-input form-textarea" placeholder="Jabatan / Posisi"
+                  oninput="autoSizePosField(this)"
+                  onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault();addSingleName();}"
+                  style="font-size: 12.5px; padding: 8px 11px; min-height: 54px; line-height: 1.4; resize: vertical;"></textarea>
+              </div>
+              <div class="single-input-actions" id="singleInputActions"
+                style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                <button type="button" onclick="toggleKemnakerQuickPick()" id="btnQuickPickKemnaker"
+                  style="background:none;border:none;color:var(--kemnaker-blue);font-size:11.5px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px;">
+                  🏛️ Pilih Pejabat
+                </button>
+                <button type="button" class="btn-generate btn-add-single" onclick="addSingleName()"
+                  style="padding: 7px 14px; font-size: 12px; flex: none;">
+                  + Tambah
+                </button>
+              </div>
+
+              <!-- Collapsible Kemnaker Official Picker (Name Table Theme) -->
+              <div id="kemnakerPickerCollapse" class="kemnaker-selectors-box" style="display: none;">
+                <div class="form-group" style="margin-bottom: 10px;">
+                  <label for="kemnakerUnitSelect" class="form-label" style="margin-bottom: 5px;">
+                    <span>Unit Kerja</span>
+                    <span class="label-tag" id="kemnakerDateTag">Bagan Resmi</span>
+                  </label>
+                  <div class="input-wrapper">
+                    <div class="input-icon">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                      </svg>
+                    </div>
+                    <select id="kemnakerUnitSelect" class="form-input" onchange="onKemnakerUnitChange()"
+                      style="padding-left: 42px; cursor: pointer; font-weight: 600;">
+                      <option value="">-- Pilih Unit Kerja --</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 6px;">
+                  <label for="kemnakerOfficialSelect" class="form-label" style="margin-bottom: 5px;">
+                    <span>Pejabat &amp; Jabatan</span>
+                    <span class="label-tag" id="kemnakerCountBadge">0 Pilihan</span>
+                  </label>
+                  <div class="input-wrapper">
+                    <div class="input-icon">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                      </svg>
+                    </div>
+                    <select id="kemnakerOfficialSelect" class="form-input" onchange="onKemnakerOfficialSelected()"
+                      disabled style="padding-left: 42px; cursor: pointer; font-weight: 600;">
+                      <option value="">-- Pilih Unit Kerja Terlebih Dahulu --</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="kemnaker-sync-bar">
+                  <span id="kemnakerStatusText">📅 Bagan Kemnaker</span>
+                  <button type="button" class="btn-bubble-action" onclick="refreshNotepadKemnakerData()">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="23 4 23 10 17 10"></polyline>
+                      <polyline points="1 20 1 14 7 14"></polyline>
+                      <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                    </svg>
+                    Perbarui Data
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bulk Input Box -->
+            <div id="bulkInputBox" style="display: none;">
+              <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 6px;">
+                <span id="bulkDetectBadge"
+                  style="font-size: 11px; font-weight: 700; color: #059669; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 2px 8px; border-radius: 9999px;">0
+                  siap</span>
+              </div>
+              <textarea id="inputBulkText" class="form-textarea" oninput="updateBulkDetectCount()"
+                placeholder="Tempel daftar nama &amp; jabatan (satu per baris)..."
+                style="min-height: 110px; font-size: 12px;"></textarea>
+              <div
+                style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; gap: 8px; flex-wrap: wrap;">
+                <label
+                  style="font-size: 11.5px; color: #334155; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; cursor: pointer;">
+                  <input type="checkbox" id="checkReplaceOnBulkImport">
+                  <span>Ganti daftar</span>
+                </label>
+                <button type="button" class="btn-generate" onclick="processBulkNames()"
+                  style="padding: 7px 14px; font-size: 12px; flex: none;">
+                  ✨ Tambah Data
+                </button>
+              </div>
+              <div id="bulkStatusFeedback"
+                style="display: none; margin-top: 8px; padding: 7px 10px; border-radius: 8px; background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; font-size: 11.5px; font-weight: 600;">
+              </div>
+            </div>
+          </div>
+
+          <!-- List Manager -->
+          <div class="active-list-header-bar">
+            <div class="active-list-title-wrap">
+              <span class="active-list-title-text" id="activeListTitleLabel">Daftar Pendamping</span>
+              <span class="active-list-count-pill" id="activeListCountPill">0 Orang</span>
+            </div>
+            <button type="button" class="btn-clear-list" onclick="clearCurrentList()">Kosongkan</button>
+          </div>
+
+          <div class="name-items-container" id="nameItemsContainer">
+            <!-- Dynamic Rows injected via JS -->
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="form-btn-group">
+            <button type="button" class="btn-generate" onclick="generateAndDownloadPDF()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span>Unduh File</span>
+            </button>
+            <button type="button" class="btn-print" onclick="window.print()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                <rect x="6" y="14" width="12" height="8"></rect>
+              </svg>
+              <span>Cetak</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Kolom Kanan: Desktop Preview Slot -->
+        <div id="desktopPreviewSlot" class="desktop-preview-slot">
+          <div class="preview-card-frame" id="previewCardFrame">
+            <div class="preview-top-bar">
+              <div class="preview-headline">
+                <span class="badge-live"></span>
+                <span>PREVIEW LANGSUNG</span>
+              </div>
+            </div>
+
+            <div class="notepad-preview-viewport" id="previewViewport">
+              <div class="notepad-sheet-wrap" id="notepadSheetWrap">
+                <!-- Multi-sheet WYSIWYG preview dynamically rendered via JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <script>
+        (function () {
+          if (window.innerWidth <= 1060) {
+            var f = document.getElementById("previewCardFrame");
+            var s = document.getElementById("mobilePreviewSlot");
+            if (f && s && f.parentNode !== s) s.appendChild(f);
+          }
+        })();
+      </script>
+
+    </div>
+
+    <!-- Footer Seamless -->
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-brand">
+          <img src="{{ url_for('static', filename='Logo_Kementerian_Ketenagakerjaan_White.png') }}" alt="Logo Kemnaker"
+            class="footer-kemnaker-logo">
+          <span>Kementerian Ketenagakerjaan Republik Indonesia</span>
+        </div>
+        <div class="footer-copy">
+          <span class="footer-copy-l1">&copy; Kementerian Ketenagakerjaan Republik Indonesia 2026</span>
+          <span class="footer-copy-sep">&bull;</span>
+          <span class="footer-copy-l2">Hak Cipta Dilindungi Undang-Undang.</span>
+        </div>
+      </div>
+    </footer>
+  </section>
+
+  <!-- Shared Name Table & Notepad Utilities -->
+  <script src="{{ url_for('static', filename='nametag.js') }}?v=20261123a"></script>
+  <script src="{{ url_for('static', filename='dropdown.js') }}?v=20261123a"></script>
+
+  <!-- JavaScript Logic -->
+  <script>
+    // State
+    let currentNotepadType = "besar"; // "besar" | "kecil"
+    let currentKecilMode = "both";     // "pendamping" | "peserta" | "both"
+    let currentLayoutBoth = "single_page"; // Always 1 A4 Landscape (22.2cm x 15.45cm fits comfortably in 29.7cm x 21cm A4)
+    let activeListTab = "pendamping";   // "pendamping" | "peserta"
+    let currentInputMode = "single";    // "single" | "bulk"
+    let isDefaultPendampingSample = true;
+    let isDefaultPesertaSample = true;
+
+    // Time State
+    let currentHour = 11;
+    let currentMinute = 0;
+    let currentTz = "WIB";
+
+    // Edit state
+    let editingItemIndex = null;
+
+    let pendampingList = [
+      { name: "Andri Susila", position: "Direktur Bina Kelembagaan Pelatihan Vokasi" },
+      { name: "Irwan Arifyanto", position: "Koordinator PEP (Perencanaan, Evaluasi, dan Pelaporan)" },
+      { name: "Iwan Rinaldo Syarief", position: "TA Wamenaker" },
+      { name: "Dwianto Ananias", position: "TA Wamenaker" }
+    ];
+
+    let pesertaList = [
+      { name: "Dicky Sukanto", position: "Panglima Aksi Nasional Konfederasi Serikat Pekerja Indonesia (KSPI)" },
+      { name: "Riche Agnesia", position: "Ketua Badan Pembentukan Peraturan Daerah" },
+      { name: "Nasihin", position: "Wakil Ketua Bapemperda" },
+      { name: "Taufiq", position: "Anggota" },
+      { name: "Muhammad Helmi", position: "Anggota" }
+    ];
+
+    let kemnakerDataCache = null;
+
+    // Indonesian Day & Month names
+    const DAYS_ID = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+    const MONTHS_ID = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
+    function getTodayFormattedID() {
+      const now = new Date();
+      const dayName = DAYS_ID[now.getDay()];
+      const dayDate = now.getDate();
+      const monthName = MONTHS_ID[now.getMonth()];
+      const year = now.getFullYear();
+      return `${dayName}, ${dayDate} ${monthName} ${year}`;
+    }
+
+    function setTodayDate() {
+      const now = new Date();
+      selectedCalendarDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      calViewYear = now.getFullYear();
+      calViewMonth = now.getMonth();
+      document.getElementById("inputDate").value = getTodayFormattedID();
+      closeCalendarPopover();
+      updateNotepadPreview();
+    }
+
+    // Custom Kemnaker-Themed Calendar Popover
+    let calViewYear = new Date().getFullYear();
+    let calViewMonth = new Date().getMonth();
+    let selectedCalendarDate = new Date();
+
+    function _parseIndonesianDateInput(str) {
+      if (!str) return null;
+      const m = String(str).match(/(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})/);
+      if (!m) return null;
+      const day = parseInt(m[1], 10);
+      const monthName = m[2].toLowerCase();
+      const year = parseInt(m[3], 10);
+      const monthIdx = MONTHS_ID.findIndex(mn => mn.toLowerCase() === monthName);
+      if (monthIdx === -1 || isNaN(day) || isNaN(year)) return null;
+      const d = new Date(year, monthIdx, day);
+      return (d.getFullYear() === year && d.getMonth() === monthIdx && d.getDate() === day) ? d : null;
+    }
+
+    function toggleCalendarPopover(e) {
+      if (e) e.stopPropagation();
+      const pop = document.getElementById("customCalendarPopover");
+      if (!pop) return;
+      const willOpen = !pop.classList.contains("open");
+      // Close any open dropdown menus
+      document.querySelectorAll(".custom-select-wrapper.open").forEach(w => w.classList.remove("open"));
+      if (willOpen) {
+        const parsed = _parseIndonesianDateInput(document.getElementById("inputDate").value);
+        if (parsed) {
+          selectedCalendarDate = parsed;
+          calViewYear = parsed.getFullYear();
+          calViewMonth = parsed.getMonth();
+        }
+        renderCustomCalendar();
+        pop.classList.add("open");
+      } else {
+        pop.classList.remove("open");
+      }
+    }
+
+    function closeCalendarPopover() {
+      const pop = document.getElementById("customCalendarPopover");
+      if (pop) pop.classList.remove("open");
+    }
+
+    let calAnimDir = 0;
+
+    function shiftCalendarMonth(delta, e) {
+      if (e) e.stopPropagation();
+      calAnimDir = delta >= 0 ? 1 : -1;
+      calViewMonth += delta;
+      if (calViewMonth < 0) {
+        calViewMonth = 11;
+        calViewYear -= 1;
+      } else if (calViewMonth > 11) {
+        calViewMonth = 0;
+        calViewYear += 1;
+      }
+      renderCustomCalendar();
+    }
+
+    function selectCalendarDay(year, month, day, e) {
+      if (e) e.stopPropagation();
+      const d = new Date(year, month, day);
+      selectedCalendarDate = d;
+      const dayName = DAYS_ID[d.getDay()];
+      const monthName = MONTHS_ID[month];
+      document.getElementById("inputDate").value = `${dayName}, ${day} ${monthName} ${year}`;
+      closeCalendarPopover();
+      updateNotepadPreview();
+    }
+
+    function renderCustomCalendar() {
+      const pop = document.getElementById("customCalendarPopover");
+      if (!pop) return;
+      const today = new Date();
+      const firstDay = new Date(calViewYear, calViewMonth, 1).getDay(); // 0=Sun
+      const daysInMonth = new Date(calViewYear, calViewMonth + 1, 0).getDate();
+      const weekdays = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+
+      let daysHtml = "";
+      for (let b = 0; b < firstDay; b++) {
+        daysHtml += `<button type="button" class="cal-day-btn is-empty" tabindex="-1"></button>`;
+      }
+      for (let d = 1; d <= daysInMonth; d++) {
+        const isToday = (d === today.getDate() && calViewMonth === today.getMonth() && calViewYear === today.getFullYear());
+        const isSelected = selectedCalendarDate && (d === selectedCalendarDate.getDate() && calViewMonth === selectedCalendarDate.getMonth() && calViewYear === selectedCalendarDate.getFullYear());
+        const cls = "cal-day-btn" + (isToday ? " is-today" : "") + (isSelected ? " is-selected" : "");
+        daysHtml += `<button type="button" class="${cls}" onclick="selectCalendarDay(${calViewYear}, ${calViewMonth}, ${d}, event)">${d}</button>`;
+      }
+
+      const animCls = calAnimDir > 0 ? " cal-anim-next" : (calAnimDir < 0 ? " cal-anim-prev" : "");
+      calAnimDir = 0;
+
+      pop.innerHTML = `
+        <div class="cal-header">
+          <button type="button" class="cal-nav-btn" onclick="shiftCalendarMonth(-1, event)" title="Bulan Sebelumnya">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+          <span class="cal-month-label${animCls}">${MONTHS_ID[calViewMonth]} ${calViewYear}</span>
+          <button type="button" class="cal-nav-btn" onclick="shiftCalendarMonth(1, event)" title="Bulan Berikutnya">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
+        <div class="cal-weekdays">${weekdays.map(w => `<span>${w}</span>`).join("")}</div>
+        <div class="cal-days-grid${animCls}">${daysHtml}</div>
+        <div class="cal-footer">
+          <button type="button" class="cal-foot-btn" onclick="setTodayDate()">Hari Ini</button>
+          <button type="button" class="cal-foot-btn subtle" onclick="closeCalendarPopover()">Tutup</button>
+        </div>
+      `;
+    }
+
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest("#datePickerWrapper")) {
+        closeCalendarPopover();
+      }
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeCalendarPopover();
+    });
+
+    // Time Stepper + Direct Typing Functions
+    function stepHour(delta) {
+      currentHour = (currentHour + delta + 24) % 24;
+      updateTimeDisplay();
+    }
+
+    function stepMinute(delta) {
+      if (delta > 0) {
+        const nextMin = (Math.floor(currentMinute / 15) + 1) * 15;
+        if (nextMin >= 60) {
+          currentMinute = 0;
+          currentHour = (currentHour + 1) % 24;
+        } else {
+          currentMinute = nextMin;
+        }
+      } else if (delta < 0) {
+        const rem = currentMinute % 15;
+        if (rem !== 0) {
+          currentMinute = currentMinute - rem;
+        } else if (currentMinute === 0) {
+          currentMinute = 45;
+          currentHour = (currentHour - 1 + 24) % 24;
+        } else {
+          currentMinute = currentMinute - 15;
+        }
+      }
+      updateTimeDisplay();
+    }
+
+    function onManualTimeInput(part) {
+      const el = document.getElementById(part === "hour" ? "timeHourInput" : "timeMinInput");
+      if (!el) return;
+      const digits = el.value.replace(/\D/g, "").slice(0, 2);
+      if (el.value !== digits) el.value = digits;
+      if (digits === "") return;
+      let val = parseInt(digits, 10);
+      if (part === "hour") {
+        if (val > 23) { val = 23; el.value = "23"; }
+        currentHour = val;
+        updateTimeDisplay(false);
+        if (digits.length === 2) {
+          el.value = String(currentHour).padStart(2, "0");
+          const minEl = document.getElementById("timeMinInput");
+          if (minEl) {
+            minEl.focus();
+            minEl.select();
+          }
+        }
+      } else {
+        if (val > 59) { val = 59; el.value = "59"; }
+        currentMinute = val;
+        updateTimeDisplay(false);
+      }
+    }
+
+    function onManualTimeBlur(part) {
+      const el = document.getElementById(part === "hour" ? "timeHourInput" : "timeMinInput");
+      if (el) {
+        const digits = el.value.replace(/\D/g, "");
+        if (digits !== "") {
+          let val = parseInt(digits, 10);
+          if (part === "hour") currentHour = Math.min(23, Math.max(0, val));
+          else currentMinute = Math.min(59, Math.max(0, val));
+        }
+      }
+      updateTimeDisplay(true);
+    }
+
+    function onTimeKeyDown(e, part) {
+      if (e.key === "ArrowUp") {
+        e.preventDefault();
+        if (part === "hour") stepHour(1);
+        else stepMinute(15);
+      } else if (e.key === "ArrowDown") {
+        e.preventDefault();
+        if (part === "hour") stepHour(-1);
+        else stepMinute(-15);
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        onManualTimeBlur(part);
+        e.target.blur();
+      } else if (part === "min" && e.key === "Backspace" && !e.target.value) {
+        const hEl = document.getElementById("timeHourInput");
+        if (hEl) {
+          e.preventDefault();
+          hEl.focus();
+          const len = hEl.value.length;
+          try { hEl.setSelectionRange(len, len); } catch (_) { }
+        }
+      } else if (part === "hour" && e.key === "ArrowRight" && e.target.selectionStart >= (e.target.value || "").length) {
+        const minEl = document.getElementById("timeMinInput");
+        if (minEl) {
+          e.preventDefault();
+          minEl.focus();
+          minEl.select();
+        }
+      } else if (part === "min" && e.key === "ArrowLeft" && e.target.selectionStart === 0 && e.target.selectionEnd === 0) {
+        const hEl = document.getElementById("timeHourInput");
+        if (hEl) {
+          e.preventDefault();
+          hEl.focus();
+          hEl.select();
+        }
+      }
+    }
+
+    function onTimezoneChange() {
+      const sel = document.getElementById("timeTzSelect");
+      if (sel) currentTz = sel.value;
+      updateTimeDisplay(true);
+    }
+
+    function updateTimeDisplay(syncInputs = true) {
+      const hh = String(currentHour).padStart(2, "0");
+      const mm = String(currentMinute).padStart(2, "0");
+      const hEl = document.getElementById("timeHourInput");
+      const mEl = document.getElementById("timeMinInput");
+      const badge = document.getElementById("badgeTimePreview");
+      const input = document.getElementById("inputTime");
+
+      if (syncInputs) {
+        if (hEl) hEl.value = hh;
+        if (mEl) mEl.value = mm;
+      }
+      const formatted = `${hh}.${mm} ${currentTz}`;
+      if (badge) badge.textContent = formatted;
+      if (input) input.value = formatted;
+      updateNotepadPreview();
+    }
+
+    // Toggle Mobile Navigation Menu
+    function toggleMobileMenu(e) {
+      if (e) e.stopPropagation();
+      const dd = document.getElementById("mobileMenuDropdown");
+      const btn = document.getElementById("btnMobileAppMenu");
+      if (dd) {
+        dd.classList.toggle("show");
+        if (btn) btn.classList.toggle("active");
+      }
+    }
+
+    document.addEventListener("click", (e) => {
+      const wrap = document.getElementById("mobileMenuWrapper");
+      if (wrap && !wrap.contains(e.target)) {
+        const dd = document.getElementById("mobileMenuDropdown");
+        const btn = document.getElementById("btnMobileAppMenu");
+        if (dd) dd.classList.remove("show");
+        if (btn) btn.classList.remove("active");
+      }
+    });
+
+    // Notepad Type Switcher (Besar vs Kecil)
+    function setNotepadType(type) {
+      currentNotepadType = type;
+      const btnB = document.getElementById("btnTypeBesar");
+      const btnK = document.getElementById("btnTypeKecil");
+      const kecilOpts = document.getElementById("kecilOptionsWrapper");
+
+      if (type === "besar") {
+        btnB.classList.add("active");
+        btnK.classList.remove("active");
+        if (kecilOpts) kecilOpts.style.display = "none";
+        document.getElementById("listTabsHeader").style.display = "flex";
+      } else {
+        btnK.classList.add("active");
+        btnB.classList.remove("active");
+        if (kecilOpts) kecilOpts.style.display = "flex";
+        updateKecilModeTabs();
+        requestAnimationFrame(() => updateKecilModeGlider());
+      }
+
+      updateTypeGlider();
+      updateNotepadPreview();
+      fitNotepadPreview();
+    }
+
+    function updateTypeGlider() {
+      const btnB = document.getElementById("btnTypeBesar");
+      const btnK = document.getElementById("btnTypeKecil");
+      const glider = document.getElementById("typeSwitcherGlider");
+      if (!glider || !btnB || !btnK) return;
+      const activeBtn = currentNotepadType === "besar" ? btnB : btnK;
+      glider.style.left = `${activeBtn.offsetLeft}px`;
+      glider.style.top = `${activeBtn.offsetTop}px`;
+      glider.style.width = `${activeBtn.offsetWidth}px`;
+      glider.style.height = `${activeBtn.offsetHeight}px`;
+    }
+
+    function updateElementGlider(containerEl, gliderEl, activeBtnEl, animate = true) {
+      if (!containerEl || !gliderEl || !activeBtnEl) return;
+      if (containerEl.offsetParent === null && containerEl.offsetWidth === 0) return;
+
+      const left = activeBtnEl.offsetLeft;
+      const top = activeBtnEl.offsetTop;
+      const width = activeBtnEl.offsetWidth;
+      const height = activeBtnEl.offsetHeight;
+      if (width <= 0 || height <= 0) return;
+
+      if (animate) {
+        gliderEl.classList.remove("no-animate");
+        if (!gliderEl.classList.contains("animated")) {
+          gliderEl.classList.add("animated");
+          void gliderEl.offsetWidth;
+        }
+      } else {
+        gliderEl.classList.add("no-animate");
+        gliderEl.classList.remove("animated");
+      }
+
+      gliderEl.style.width = `${width}px`;
+      gliderEl.style.height = `${height}px`;
+      gliderEl.style.transform = `translate3d(${left}px, ${top}px, 0)`;
+      gliderEl.classList.add("ready");
+
+      if (!animate) {
+        requestAnimationFrame(() => {
+          gliderEl.classList.remove("no-animate");
+          gliderEl.classList.add("animated");
+        });
+      }
+    }
+
+    function updateKecilModeGlider() {
+      const wrap = document.getElementById("kecilOptionsWrapper");
+      const glider = document.getElementById("kecilModeGlider");
+      const activeBtn = wrap ? wrap.querySelector(".tab-btn.active") : null;
+      if (!wrap || !glider || !activeBtn || wrap.style.display === "none") return;
+      updateElementGlider(wrap, glider, activeBtn, true);
+    }
+
+    function updateListTabsGlider(animate = true) {
+      updateElementGlider(
+        document.getElementById("listTabsHeader"),
+        document.getElementById("listTabsGlider"),
+        document.querySelector("#listTabsHeader .list-tab-btn.active"),
+        animate
+      );
+    }
+
+    function updateSubinputGlider(animate = true) {
+      updateElementGlider(
+        document.getElementById("subinputTray"),
+        document.getElementById("subinputGlider"),
+        document.querySelector("#subinputTray .bubble-segment-btn.active"),
+        animate
+      );
+    }
+
+    function updateAllNotepadGliders(animate = false) {
+      updateTypeGlider();
+      updateKecilModeGlider();
+      updateListTabsGlider(animate);
+      updateSubinputGlider(animate);
+    }
+
+    function setKecilMode(mode) {
+      currentKecilMode = mode;
+      currentLayoutBoth = "single_page";
+      document.getElementById("btnKecilPendamping").classList.toggle("active", mode === "pendamping");
+      document.getElementById("btnKecilPeserta").classList.toggle("active", mode === "peserta");
+      document.getElementById("btnKecilBoth").classList.toggle("active", mode === "both");
+
+      updateKecilModeGlider();
+      updateKecilModeTabs();
+      updateNotepadPreview();
+    }
+
+    function updateKecilModeTabs() {
+      const tabPend = document.getElementById("tabBtnPendamping");
+      const tabPes = document.getElementById("tabBtnPeserta");
+      if (currentNotepadType === "kecil") {
+        if (currentKecilMode === "pendamping") {
+          tabPend.style.display = "flex";
+          tabPes.style.display = "none";
+          switchListTab("pendamping");
+        } else if (currentKecilMode === "peserta") {
+          tabPend.style.display = "none";
+          tabPes.style.display = "flex";
+          switchListTab("peserta");
+        } else {
+          tabPend.style.display = "flex";
+          tabPes.style.display = "flex";
+        }
+      } else {
+        tabPend.style.display = "flex";
+        tabPes.style.display = "flex";
+      }
+      requestAnimationFrame(() => updateListTabsGlider(false));
+    }
+
+    function switchListTab(tab) {
+      activeListTab = tab;
+      editingItemIndex = null;
+      document.getElementById("tabBtnPendamping").classList.toggle("active", tab === "pendamping");
+      document.getElementById("tabBtnPeserta").classList.toggle("active", tab === "peserta");
+      updateListTabsGlider(true);
+      document.getElementById("activeListTitleLabel").innerHTML = tab === "pendamping"
+        ? 'Daftar Pendamping <span class="lbl-desktop">(Kemnaker)</span>'
+        : 'Daftar Peserta <span class="lbl-desktop">(Tamu)</span>';
+
+      const quickBtn = document.getElementById("btnQuickPickKemnaker");
+      const pickerBox = document.getElementById("kemnakerPickerCollapse");
+      const actionsRow = document.getElementById("singleInputActions");
+      const isPendamping = tab === "pendamping";
+      if (quickBtn) quickBtn.style.display = isPendamping ? "inline-flex" : "none";
+      if (!isPendamping && pickerBox) pickerBox.style.display = "none";
+      if (actionsRow) actionsRow.style.justifyContent = isPendamping ? "space-between" : "flex-end";
+
+      renderNameList();
+    }
+
+    function setInputMode(mode) {
+      currentInputMode = mode;
+      document.getElementById("btnInputModeSingle").classList.toggle("active", mode === "single");
+      document.getElementById("btnInputModeBulk").classList.toggle("active", mode === "bulk");
+      updateSubinputGlider(true);
+      document.getElementById("singleInputBox").style.display = mode === "single" ? "block" : "none";
+      document.getElementById("bulkInputBox").style.display = mode === "bulk" ? "block" : "none";
+    }
+
+    function getActiveList() {
+      return activeListTab === "pendamping" ? pendampingList : pesertaList;
+    }
+
+    function updateBadges() {
+      document.getElementById("badgeCountPendamping").textContent = pendampingList.length;
+      document.getElementById("badgeCountPeserta").textContent = pesertaList.length;
+      const countPill = document.getElementById("activeListCountPill");
+      if (countPill) {
+        const list = getActiveList();
+        countPill.textContent = `${list.length} Orang`;
+      }
+    }
+
+    // Render Name List with Drag-and-Drop and Inline Edit
+    function renderNameList() {
+      const container = document.getElementById("nameItemsContainer");
+      container.innerHTML = "";
+      const list = getActiveList();
+
+      list.forEach((item, index) => {
+        const row = document.createElement("div");
+        row.dataset.index = index;
+
+        if (editingItemIndex === index) {
+          // Inline Edit Mode
+          row.className = "name-item-row editing";
+          row.innerHTML = `
+            <span class="item-num">${index + 1}</span>
+            <div class="edit-inputs-container">
+              <input type="text" id="inlineEditName" class="form-input form-input-sm" value="${escapeHtml(item.name)}" placeholder="Nama Lengkap" onkeydown="handleInlineEditKey(event, ${index})">
+              <textarea id="inlineEditPos" rows="2" class="form-input form-textarea form-input-sm edit-pos-textarea" placeholder="Jabatan / Posisi" oninput="autoSizePosField(this)" onkeydown="handleInlineEditKey(event, ${index})">${escapeHtml(item.position || '')}</textarea>
+            </div>
+            <div class="item-actions">
+              <button type="button" class="btn-action-sm save" onclick="saveInlineEdit(${index})" title="Simpan Perubahan (Enter)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </button>
+              <button type="button" class="btn-action-sm cancel" onclick="cancelInlineEdit()" title="Batal (Esc)">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </button>
+            </div>
+          `;
+        } else {
+          // Regular Display Row with Smooth Whole-Box Pointer Drag-to-Reorder & Edit/Delete Actions
+          row.className = "name-item-row";
+          row.title = "Tarik kotak ke atas/bawah untuk mengubah urutan";
+
+          row.innerHTML = `
+            <div class="item-drag-zone" title="Tarik untuk mengubah urutan">
+              <span class="item-num">${index + 1}</span>
+            </div>
+            <div class="item-text-box">
+              <div class="item-name">${escapeHtml(item.name)}</div>
+              <div class="item-pos">${escapeHtml(item.position || "-")}</div>
+            </div>
+            <div class="item-actions">
+              <button type="button" class="btn-action-sm edit" onclick="startInlineEdit(${index})" title="Edit nama &amp; jabatan (perbaiki typo)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+              </button>
+              <button type="button" class="btn-action-sm delete" onclick="deleteItem(${index})" title="Hapus">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </button>
+            </div>
+          `;
+
+          attachRowPointerDrag(row, index);
+        }
+
+        container.appendChild(row);
+      });
+
+      updateBadges();
+      updateNotepadPreview();
+      if (editingItemIndex !== null) {
+        autoSizePosField(document.getElementById("inlineEditPos"));
+      }
+    }
+
+    function autoSizePosField(el) {
+      if (!el) return;
+      el.style.height = "auto";
+      el.style.height = Math.max(48, el.scrollHeight + 2) + "px";
+    }
+
+    // Inline Editing Functions
+    function startInlineEdit(index) {
+      editingItemIndex = index;
+      renderNameList();
+      setTimeout(() => {
+        const inp = document.getElementById("inlineEditName");
+        if (inp) {
+          inp.focus();
+          inp.select();
+        }
+      }, 50);
+    }
+
+    function cancelInlineEdit() {
+      editingItemIndex = null;
+      renderNameList();
+    }
+
+    function saveInlineEdit(index) {
+      const nameInput = document.getElementById("inlineEditName");
+      const posInput = document.getElementById("inlineEditPos");
+      if (!nameInput) return;
+      const newName = nameInput.value.trim();
+      const newPos = posInput ? posInput.value.replace(/\r?\n+/g, " ").trim() : "";
+      if (!newName) {
+        alert("Nama tidak boleh kosong.");
+        nameInput.focus();
+        return;
+      }
+      markActiveListCustomized();
+      const list = getActiveList();
+      if (list[index]) {
+        list[index].name = newName;
+        list[index].position = newPos;
+      }
+      editingItemIndex = null;
+      renderNameList();
+    }
+
+    function handleInlineEditKey(e, index) {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        saveInlineEdit(index);
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        cancelInlineEdit();
+      }
+    }
+
+    function markActiveListCustomized() {
+      if (activeListTab === "pendamping") isDefaultPendampingSample = false;
+      else isDefaultPesertaSample = false;
+    }
+
+    function addSingleName() {
+      const name = (document.getElementById("inputSingleName").value || "").trim();
+      const pos = (document.getElementById("inputSinglePos").value || "").replace(/\r?\n+/g, " ").trim();
+
+      if (!name) {
+        alert("Mohon masukkan nama terlebih dahulu.");
+        return;
+      }
+
+      markActiveListCustomized();
+      const list = getActiveList();
+      list.push({ name: name, position: pos });
+
+      document.getElementById("inputSingleName").value = "";
+      const posEl = document.getElementById("inputSinglePos");
+      posEl.value = "";
+      posEl.style.height = "";
+      document.getElementById("inputSingleName").focus();
+
+      renderNameList();
+    }
+
+    function deleteItem(index) {
+      markActiveListCustomized();
+      const list = getActiveList();
+      list.splice(index, 1);
+      if (editingItemIndex === index) editingItemIndex = null;
+      renderNameList();
+    }
+
+    function clearCurrentList() {
+      if (confirm("Kosongkan daftar ini?")) {
+        markActiveListCustomized();
+        const list = getActiveList();
+        list.length = 0;
+        editingItemIndex = null;
+        renderNameList();
+      }
+    }
+
+    // Smartphone-Grade Smooth Pointer Drag-to-Reorder Engine (Mouse + Touch)
+    function attachRowPointerDrag(row, startIdx) {
+      row.addEventListener("contextmenu", (e) => {
+        if (editingItemIndex === null && !e.target.closest("input, textarea")) e.preventDefault();
+      });
+      row.addEventListener("pointerdown", (e) => {
+        if (editingItemIndex !== null) return;
+        if (e.target.closest("button, input, textarea, select, a")) return;
+        if (e.pointerType === "mouse" && e.button !== 0) return;
+
+        const list = getActiveList();
+        if (list.length < 2) return;
+
+        const rowRect = row.getBoundingClientRect();
+        const fromDragZone = Boolean(e.target.closest(".item-drag-zone")) || (e.clientX - rowRect.left) <= 44;
+        const isTouch = e.pointerType !== "mouse";
+        const container = document.getElementById("nameItemsContainer");
+        if (!container) return;
+
+        const startX = e.clientX;
+        const startY = e.clientY;
+        let dragActive = false;
+        let holdTimer = null;
+        let floatingClone = null;
+        let rows = [];
+        let rowRects = [];
+        let startRowTop = 0;
+        let startRowHeight = 0;
+        let startScrollY = 0;
+        let slotStep = 0;
+        let targetIdx = startIdx;
+
+        function beginDrag() {
+          if (dragActive) return;
+          dragActive = true;
+          if (isTouch && navigator.vibrate) {
+            try { navigator.vibrate(15); } catch (_) { }
+          }
+
+          rows = Array.from(container.querySelectorAll(".name-item-row"));
+          rowRects = rows.map(r => r.getBoundingClientRect());
+          startScrollY = window.scrollY || window.pageYOffset || 0;
+          const selfRect = rowRects[startIdx];
+          if (!selfRect) return;
+
+          startRowTop = selfRect.top;
+          startRowHeight = selfRect.height;
+          slotStep = (rowRects.length > 1)
+            ? (rowRects[1].top - rowRects[0].top)
+            : (selfRect.height + 7);
+
+          floatingClone = row.cloneNode(true);
+          floatingClone.classList.add("drag-floating");
+          floatingClone.style.top = `${selfRect.top}px`;
+          floatingClone.style.left = `${selfRect.left}px`;
+          floatingClone.style.width = `${selfRect.width}px`;
+          floatingClone.style.height = `${selfRect.height}px`;
+          document.body.appendChild(floatingClone);
+
+          row.classList.add("drag-placeholder");
+          document.body.style.userSelect = "none";
+          try { row.setPointerCapture(e.pointerId); } catch (_) { }
+        }
+
+        function updateOrderFromY(clientY) {
+          if (!dragActive || !floatingClone) return;
+          const dy = clientY - startY;
+          const floatTop = startRowTop + dy;
+          floatingClone.style.top = `${floatTop}px`;
+
+          const curScrollY = window.scrollY || window.pageYOffset || 0;
+          const scrollDelta = curScrollY - startScrollY;
+          const floatMidY = floatTop + startRowHeight / 2;
+          let newIdx = startIdx;
+          for (let i = 0; i < rowRects.length; i++) {
+            const center = (rowRects[i].top - scrollDelta) + rowRects[i].height / 2;
+            if (floatMidY > center && i > startIdx) {
+              newIdx = i;
+            } else if (floatMidY < center && i < startIdx) {
+              newIdx = Math.min(newIdx, i);
+            }
+          }
+
+          if (newIdx !== targetIdx) {
+            targetIdx = newIdx;
+          }
+
+          // Smoothly slide sibling items & placeholder into position
+          rows.forEach((r, idx) => {
+            if (idx === startIdx) {
+              r.style.transform = targetIdx !== startIdx ? `translateY(${(targetIdx - startIdx) * slotStep}px)` : "";
+            } else if (targetIdx > startIdx && idx > startIdx && idx <= targetIdx) {
+              r.style.transform = `translateY(${-slotStep}px)`;
+            } else if (targetIdx < startIdx && idx >= targetIdx && idx < startIdx) {
+              r.style.transform = `translateY(${slotStep}px)`;
+            } else {
+              r.style.transform = "";
+            }
+          });
+
+          // Gently auto-scroll page only when pointer nears viewport edge in the drag direction
+          const vh = window.innerHeight || 800;
+          const contRect = container.getBoundingClientRect();
+          if (clientY >= 0 && clientY < 44 && dy < 0 && curScrollY > 0 && contRect.top < 44) {
+            window.scrollBy(0, -10);
+          } else if (clientY <= vh && clientY > vh - 44 && dy > 0 && contRect.bottom > vh - 12) {
+            window.scrollBy(0, 10);
+          }
+        }
+
+        function onTouchMoveLock(tev) {
+          if (dragActive && tev.cancelable) {
+            tev.preventDefault();
+            if (tev.touches && tev.touches[0]) {
+              updateOrderFromY(tev.touches[0].clientY);
+            }
+          }
+        }
+
+        function onPointerMove(ev) {
+          const distY = Math.abs(ev.clientY - startY);
+          const distX = Math.abs(ev.clientX - startX);
+
+          if (!dragActive) {
+            if (!isTouch) {
+              if (distY >= 4 || (fromDragZone && distX >= 3)) {
+                if (ev.cancelable) ev.preventDefault();
+                beginDrag();
+                updateOrderFromY(ev.clientY);
+              }
+            } else if (fromDragZone) {
+              if (distY >= 3 || distX >= 3) {
+                if (ev.cancelable) ev.preventDefault();
+                beginDrag();
+                updateOrderFromY(ev.clientY);
+              }
+            } else if (distY > 8 || distX > 8) {
+              // User swiped quickly to scroll the page; cancel long-press lift
+              cleanupListeners();
+            }
+            return;
+          }
+
+          if (ev.cancelable) ev.preventDefault();
+          updateOrderFromY(ev.clientY);
+        }
+
+        function onPointerEnd() {
+          cleanupListeners();
+          if (!dragActive) return;
+
+          if (floatingClone) {
+            floatingClone.remove();
+            floatingClone = null;
+          }
+          document.body.style.userSelect = "";
+          rows.forEach(r => {
+            r.classList.remove("drag-placeholder");
+            r.style.transform = "";
+          });
+
+          if (targetIdx !== startIdx) {
+            markActiveListCustomized();
+            const moved = list.splice(startIdx, 1)[0];
+            list.splice(targetIdx, 0, moved);
+            editingItemIndex = null;
+            renderNameList();
+          }
+        }
+
+        function cleanupListeners() {
+          if (holdTimer) {
+            clearTimeout(holdTimer);
+            holdTimer = null;
+          }
+          try { row.releasePointerCapture(e.pointerId); } catch (_) { }
+          document.removeEventListener("touchmove", onTouchMoveLock);
+          document.removeEventListener("pointermove", onPointerMove);
+          document.removeEventListener("pointerup", onPointerEnd);
+          document.removeEventListener("pointercancel", onPointerEnd);
+        }
+
+        document.addEventListener("touchmove", onTouchMoveLock, { passive: false });
+        document.addEventListener("pointermove", onPointerMove, { passive: false });
+        document.addEventListener("pointerup", onPointerEnd);
+        document.addEventListener("pointercancel", onPointerEnd);
+
+        if (isTouch) {
+          if (fromDragZone) {
+            if (e.cancelable) e.preventDefault();
+            beginDrag();
+          } else {
+            holdTimer = setTimeout(() => beginDrag(), 200);
+          }
+        }
+      });
+    }
+
+    // Smart Bulk Parser (shared Name Table degree/format cleaner + messy multi-line support)
+    const NOTEPAD_HEADER_SKIP_RE = /^(?:no\.?|nomor|nama(?:\s+lengkap|\s+pejabat|\s+pegawai|\s+peserta)?|jabatan|posisi|unit(?:\s+kerja)?|instansi|daftar\s+(?:pendamping|peserta|hadir|tamu|pejabat)|pendamping(?:\s+kemnaker)?|peserta(?:\s+tamu|\s+audiensi)?|tamu(?:\s+undangan)?|[-_=*•·\s]{2,}):?$/i;
+    const NOTEPAD_BULLET_RE = /^\s*(?:\(?\d+[\.\)\:\-\]\,]*\s+|[-*•·–—>→+~▪▫◦■]+\s+)/;
+    const NOTEPAD_POS_PREFIX_RE = /^\s*(?:Jabatan|Posisi|Sebagai|Unit(?:\s+Kerja)?|Instansi|Bagian)\s*[:\-–—]\s*/i;
+    const NOTEPAD_WA_TS_RE = /^\s*\[\d{1,2}[\/\-\.]\d{1,2}(?:[\/\-\.]\d{2,4})?,?\s*\d{1,2}[\.:]\d{2}(?::\d{2})?(?:\s*[APap][Mm])?\]\s*[^:\n]{1,50}:\s*/;
+
+    function _preprocessBulkLine(raw) {
+      let s = String(raw || "")
+        .replace(/[\u00a0\u200b\u200e\u200f\ufeff]+/g, " ")
+        .replace(/[\u2010\u2011\u2012\u2212]/g, "-")
+        .replace(NOTEPAD_WA_TS_RE, "")
+        .trim();
+      const hadBullet = NOTEPAD_BULLET_RE.test(s);
+      // Remove outer markdown formatting around lines e.g. "*1. Budi Santoso*"
+      s = s.replace(/^[*_~`"'“”‘’]+|[*_~`"'“”‘’]+$/g, "").trim();
+      return { text: s, hadBullet };
+    }
+
+    function _isHeaderTableRow(text) {
+      if (!text) return true;
+      const stripped = text.replace(NOTEPAD_BULLET_RE, "").trim();
+      if (!stripped || NOTEPAD_HEADER_SKIP_RE.test(stripped)) return true;
+      if (stripped.includes("\t") || stripped.includes(";") || stripped.includes("|")) {
+        const cols = stripped.split(/[\t;|]+/).map(c => c.trim().toLowerCase()).filter(Boolean);
+        const headerWords = new Set(["no", "nomor", "nama", "nama lengkap", "nama pejabat", "nama pegawai", "jabatan", "posisi", "unit", "unit kerja", "instansi", "keterangan"]);
+        if (cols.length >= 2 && cols.every(c => headerWords.has(c))) return true;
+      }
+      return false;
+    }
+
+    function _hasExplicitDelimiter(line) {
+      if (!line) return false;
+      const noBullet = line.replace(NOTEPAD_BULLET_RE, "").trim();
+      if (noBullet.includes("\t") || noBullet.includes(";") || noBullet.includes("|")) return true;
+      for (const d of [" - ", " – ", " — ", " / ", " : ", "="]) {
+        if (noBullet.includes(d)) return true;
+      }
+      return false;
+    }
+
+    function parseNotepadBulkData(rawText) {
+      if (!rawText) return [];
+      const lines = String(rawText).split(/\r?\n/);
+
+      // Group blank-line blocks to detect clean 2-line per-person cards as well
+      const records = [];
+      let i = 0;
+      while (i < lines.length) {
+        const curInfo = _preprocessBulkLine(lines[i]);
+        const cur = curInfo.text;
+        if (!cur || _isHeaderTableRow(cur)) {
+          i++;
+          continue;
+        }
+
+        const splitCur = (typeof splitNameAndPosition === "function")
+          ? splitNameAndPosition(cur)
+          : { name: cur, position: "" };
+
+        let rawName = (splitCur.name || "").trim();
+        let rawPos = (splitCur.position || "").trim();
+
+        // Multi-line merge check when line 1 has no position yet
+        if (!rawPos && i + 1 < lines.length) {
+          const nextInfo = _preprocessBulkLine(lines[i + 1]);
+          const next = nextInfo.text;
+          const prevWasBlank = (i === 0) || !_preprocessBulkLine(lines[i - 1]).text;
+          const nextNextIsBlank = (i + 2 >= lines.length) || !_preprocessBulkLine(lines[i + 2]).text;
+          const nextHasRolePrefix = NOTEPAD_POS_PREFIX_RE.test(next);
+          const nextIsCleanRoleLine = next && !_isHeaderTableRow(next) && !nextInfo.hadBullet && !_hasExplicitDelimiter(next);
+
+          if (nextHasRolePrefix) {
+            rawPos = next.replace(NOTEPAD_POS_PREFIX_RE, "").trim();
+            i += 2;
+          } else if (curInfo.hadBullet && nextIsCleanRoleLine) {
+            rawPos = next;
+            i += 2;
+          } else if (prevWasBlank && nextNextIsBlank && nextIsCleanRoleLine) {
+            rawPos = next;
+            i += 2;
+          } else {
+            i++;
+          }
+        } else {
+          i++;
+        }
+
+        // Clean Name (strip academic/honorific degrees & messy punctuation, preserve full clean name)
+        let cleanName = (typeof cleanTitles === "function")
+          ? cleanTitles(rawName)
+          : rawName.replace(/\.+$/, "").trim();
+        cleanName = (typeof stripTrailingPunctuation === "function")
+          ? stripTrailingPunctuation(cleanName)
+          : cleanName;
+
+        // Clean Position
+        rawPos = rawPos.replace(NOTEPAD_POS_PREFIX_RE, "").trim();
+        let cleanPos = (typeof cleanPositionText === "function")
+          ? cleanPositionText(rawPos)
+          : rawPos.replace(/\.+$/, "").trim();
+        cleanPos = cleanPos.replace(/\n+/g, " ").replace(/\s+/g, " ").trim();
+
+        const validName = (typeof isValidOfficialName === "function")
+          ? isValidOfficialName(cleanName)
+          : Boolean(cleanName);
+
+        if (validName) {
+          records.push({ name: cleanName, position: cleanPos });
+        }
+      }
+
+      // Deduplicate parsed entries cleanly while preserving order
+      const seen = new Set();
+      const unique = [];
+      for (const r of records) {
+        const key = `${r.name.toLowerCase()}||${r.position.toLowerCase()}`;
+        if (!seen.has(key)) {
+          seen.add(key);
+          unique.push(r);
+        }
+      }
+      return unique;
+    }
+
+    function updateBulkDetectCount() {
+      const textarea = document.getElementById("inputBulkText");
+      const badge = document.getElementById("bulkDetectBadge");
+      if (!textarea || !badge) return;
+      const parsed = parseNotepadBulkData(textarea.value || "");
+      badge.textContent = `${parsed.length} siap`;
+    }
+
+    function processBulkNames(silent = false) {
+      const textarea = document.getElementById("inputBulkText");
+      const text = (textarea ? textarea.value : "").trim();
+      if (!text) return 0;
+
+      const parsed = parseNotepadBulkData(text);
+      if (parsed.length === 0) {
+        if (!silent) alert("Tidak ditemukan nama valid pada teks yang dimasukkan.");
+        return 0;
+      }
+
+      const replaceCheckbox = document.getElementById("checkReplaceOnBulkImport");
+      const isSampleActive = (activeListTab === "pendamping") ? isDefaultPendampingSample : isDefaultPesertaSample;
+      const shouldReplace = isSampleActive || Boolean(replaceCheckbox && replaceCheckbox.checked);
+
+      if (shouldReplace) {
+        if (activeListTab === "pendamping") {
+          pendampingList = [];
+        } else {
+          pesertaList = [];
+        }
+      }
+
+      markActiveListCustomized();
+      const list = getActiveList();
+      const existingKeys = new Set(list.map(it => `${(it.name || "").toLowerCase()}||${(it.position || "").toLowerCase()}`));
+      let addedCount = 0;
+
+      parsed.forEach(item => {
+        const k = `${item.name.toLowerCase()}||${item.position.toLowerCase()}`;
+        if (!existingKeys.has(k)) {
+          existingKeys.add(k);
+          list.push(item);
+          addedCount++;
+        }
+      });
+
+      if (textarea) textarea.value = "";
+      updateBulkDetectCount();
+
+      const feedback = document.getElementById("bulkStatusFeedback");
+      if (feedback) {
+        feedback.textContent = `✓ ${addedCount} data ditambahkan.`;
+        feedback.style.display = "block";
+      }
+
+      if (!silent) {
+        setInputMode("single");
+      }
+      renderNameList();
+      return addedCount;
+    }
+
+    let kemnakerUnitsList = [];
+
+    function initNotepadDropdowns() {
+      if (typeof ModernDropdown !== "function") return;
+      const tzSel = document.getElementById("timeTzSelect");
+      const unitSel = document.getElementById("kemnakerUnitSelect");
+      const offSel = document.getElementById("kemnakerOfficialSelect");
+
+      if (tzSel && !tzSel._modernDropdown) {
+        new ModernDropdown(tzSel, {
+          compact: true,
+          pillMini: true,
+          defaultPlaceholder: "WIB"
+        });
+      }
+      if (unitSel && !unitSel._modernDropdown) {
+        new ModernDropdown(unitSel, {
+          withIcon: true,
+          searchable: true,
+          noScroll: true,
+          searchPlaceholder: "Cari unit kerja...",
+          defaultPlaceholder: "-- Pilih Unit Kerja --"
+        });
+      }
+      if (offSel && !offSel._modernDropdown) {
+        new ModernDropdown(offSel, {
+          withIcon: true,
+          searchable: true,
+          isOfficial: true,
+          searchPlaceholder: "Cari nama pejabat / jabatan...",
+          defaultPlaceholder: "-- Pilih Unit Kerja Terlebih Dahulu --"
+        });
+      }
+    }
+
+    function syncNotepadDropdowns() {
+      ["timeTzSelect", "kemnakerUnitSelect", "kemnakerOfficialSelect"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el && el._modernDropdown) el._modernDropdown.sync();
+      });
+    }
+
+    function _getOfficialRankNp(pos, slug) {
+      const p = (pos || "").toLowerCase();
+      if (slug === "menteri-ketenagakerjaan") {
+        if (p.includes("wakil menteri")) return 1;
+        if (p.includes("sekretaris jenderal") || p.includes("sesjen")) return 2;
+        if (p.includes("inspektur jenderal")) return 3;
+        if (p.includes("direktur jenderal")) return 4;
+        if (p.includes("kepala badan")) return 5;
+        if (p.includes("staf ahli")) return 6;
+        return 10;
+      }
+      if (p.includes("sekretaris") || p.includes("sesditjen") || p.includes("sesitjen") || p.includes("sesbadan")) return 1;
+      if (["direktur", "inspektur", "kepala biro", "kepala pusat"].some(k => p.includes(k))) return 2;
+      if (["kepala balai besar", "kepala sekretariat"].some(k => p.includes(k))) return 3;
+      if (p.includes("kepala balai")) return 4;
+      return 5;
+    }
+
+    function _getSortedOfficialsNp(unit) {
+      if (!unit || !unit.officials) return [];
+      const isValid = typeof isValidOfficialName === "function" ? isValidOfficialName : (s) => Boolean((s || "").trim());
+      const leaders = unit.officials.filter(o => o.is_leader && isValid(o.name));
+      const nonLeaders = unit.officials.filter(o => !o.is_leader && isValid(o.name));
+      nonLeaders.sort((a, b) => _getOfficialRankNp(a.position, unit.slug) - _getOfficialRankNp(b.position, unit.slug));
+      return [...leaders, ...nonLeaders];
+    }
+
+    // Kemnaker Database Quick Picker
+    async function loadKemnakerData(forceRefresh = false) {
+      if (!forceRefresh && kemnakerUnitsList.length > 0) return;
+      const statusEl = document.getElementById("kemnakerStatusText");
+      if (statusEl && forceRefresh) statusEl.textContent = "⏳ Memperbarui data dari kemnaker.go.id...";
+      try {
+        const qs = (forceRefresh ? "refresh=1&" : "") + "_t=" + Date.now();
+        const res = await fetch("/api/kemnaker-units?" + qs, { cache: "no-store" });
+        if (res.ok) {
+          const json = await res.json();
+          if (json.units && Array.isArray(json.units)) {
+            kemnakerUnitsList = json.units;
+          } else if (json.units_dict) {
+            kemnakerUnitsList = Object.entries(json.units_dict).map(([slug, u]) => ({
+              slug: slug,
+              name: u.unit_name || slug,
+              officials: (u.leader ? [{ name: u.leader.name, position: u.leader.position, is_leader: true, photo: u.leader.photo || "" }] : []).concat(u.staff || [])
+            }));
+          }
+          populateKemnakerUnits();
+          const dateTag = document.getElementById("kemnakerDateTag");
+          if (dateTag && json.date_display) dateTag.textContent = json.date_display;
+          if (statusEl) {
+            statusEl.textContent = json.fetched_at ? `📅 Data: ${json.fetched_at}` : "📅 Bagan Kemnaker";
+          }
+        }
+      } catch (err) {
+        console.error("Gagal memuat data pejabat Kemnaker:", err);
+        if (statusEl) statusEl.textContent = "⚠️ Gagal memuat data kemnaker.go.id";
+      }
+    }
+
+    function refreshNotepadKemnakerData() {
+      loadKemnakerData(true);
+    }
+
+    function toggleKemnakerQuickPick() {
+      const box = document.getElementById("kemnakerPickerCollapse");
+      const isVisible = box.style.display === "block";
+      box.style.display = isVisible ? "none" : "block";
+      if (!isVisible && kemnakerUnitsList.length === 0) {
+        loadKemnakerData(false);
+      }
+    }
+
+    function populateKemnakerUnits() {
+      const unitSelect = document.getElementById("kemnakerUnitSelect");
+      const prevVal = unitSelect.value;
+      const sortedUnits = [...kemnakerUnitsList].sort((a, b) => {
+        if (a.slug === "menteri-ketenagakerjaan") return -1;
+        if (b.slug === "menteri-ketenagakerjaan") return 1;
+        return 0;
+      });
+      unitSelect.innerHTML = '<option value="">-- Pilih Unit Kerja --</option>';
+      sortedUnits.forEach(u => {
+        const opt = document.createElement("option");
+        opt.value = u.slug;
+        opt.textContent = (u.name || "").replace(/\s*\([^)]*\)/g, "").trim();
+        unitSelect.appendChild(opt);
+      });
+      if (prevVal && sortedUnits.some(u => u.slug === prevVal)) {
+        unitSelect.value = prevVal;
+      } else {
+        unitSelect.value = "";
+      }
+      onKemnakerUnitChange();
+      syncNotepadDropdowns();
+    }
+
+    function onKemnakerUnitChange() {
+      const unitKey = document.getElementById("kemnakerUnitSelect").value;
+      const offSelect = document.getElementById("kemnakerOfficialSelect");
+      const countBadge = document.getElementById("kemnakerCountBadge");
+
+      if (!unitKey) {
+        offSelect.innerHTML = '<option value="">-- Pilih Unit Kerja Terlebih Dahulu --</option>';
+        offSelect.disabled = true;
+        offSelect.value = "";
+        if (countBadge) countBadge.textContent = "0 Pilihan";
+        syncNotepadDropdowns();
+        return;
+      }
+
+      const unit = kemnakerUnitsList.find(u => u.slug === unitKey);
+      const validOfficials = _getSortedOfficialsNp(unit);
+      if (unit) unit._sortedOfficials = validOfficials;
+
+      if (!unit || validOfficials.length === 0) {
+        offSelect.innerHTML = '<option value="">(Belum ada pejabat aktif)</option>';
+        offSelect.disabled = true;
+        offSelect.value = "";
+        if (countBadge) countBadge.textContent = "0 Pilihan";
+        syncNotepadDropdowns();
+        return;
+      }
+
+      offSelect.innerHTML = '<option value="">-- Pilih Pejabat &amp; Jabatan --</option>';
+      validOfficials.forEach((off, idx) => {
+        const opt = document.createElement("option");
+        opt.value = idx;
+        const expandedPos = typeof expandKemnakerPosition === "function" ? expandKemnakerPosition(off.position) : (off.position || "");
+        const cleanRawName = typeof stripTrailingPunctuation === "function" ? stripTrailingPunctuation(off.name) : (off.name || "");
+        opt.textContent = `${expandedPos} — ${cleanRawName}`;
+        if (off.photo) opt.dataset.photo = off.photo;
+        offSelect.appendChild(opt);
+      });
+
+      offSelect.disabled = false;
+      offSelect.value = "";
+      if (countBadge) countBadge.textContent = `${validOfficials.length} Pilihan`;
+      syncNotepadDropdowns();
+    }
+
+    function onKemnakerOfficialSelected() {
+      const unitKey = document.getElementById("kemnakerUnitSelect").value;
+      const offIdx = document.getElementById("kemnakerOfficialSelect").value;
+      if (unitKey && offIdx !== "") {
+        const unit = kemnakerUnitsList.find(u => u.slug === unitKey);
+        const list = (unit && unit._sortedOfficials) ? unit._sortedOfficials : (unit ? unit.officials : []);
+        const off = list && list[offIdx];
+        if (off) {
+          const rawName = off.name || "";
+          const rawPos = off.position || "";
+          const cleanedName = (typeof cleanTitles === "function") ? cleanTitles(rawName) : rawName;
+          const expandedPos = (typeof expandKemnakerPosition === "function") ? expandKemnakerPosition(rawPos) : rawPos;
+          const cleanedPos = (typeof cleanPositionText === "function") ? cleanPositionText(expandedPos).replace(/\n+/g, " ").trim() : expandedPos;
+          document.getElementById("inputSingleName").value = cleanedName || rawName;
+          const posField = document.getElementById("inputSinglePos");
+          posField.value = cleanedPos || rawPos;
+          autoSizePosField(posField);
+        }
+      }
+    }
+
+    // Live Preview Rendering matching ReportLab PDF 1:1 across all modes
+    function updateNotepadPreview() {
+      const title = (document.getElementById("inputTitle").value || "").trim();
+      const date = (document.getElementById("inputDate").value || "").trim();
+      const time = (document.getElementById("inputTime").value || "").trim();
+      const sep = currentNotepadType === "kecil" ? "," : "–";
+      const useNum = true;
+
+      // Update title counter
+      document.getElementById("titleCounter").textContent = `${title.length} karakter`;
+
+      const wrap = document.getElementById("notepadSheetWrap");
+      if (!wrap) return;
+      wrap.innerHTML = "";
+
+      if (currentNotepadType === "besar") {
+        const sections = [];
+        if (pendampingList.length > 0) {
+          sections.push({ header: "Pendamping :", headerIndent: 2, items: pendampingList });
+        }
+        if (pesertaList.length > 0) {
+          sections.push({ header: "Peserta :", headerIndent: 5, items: pesertaList });
+        }
+        const totalItems = pendampingList.length + pesertaList.length;
+        const needsFull = totalItems > 6 || (pendampingList.length > 0 && pesertaList.length > 0);
+
+        const stack = document.createElement("div");
+        stack.className = "np-pages-stack";
+        const boxEl = buildPreviewBoxElement({
+          boxType: "besar",
+          isFullBesar: needsFull,
+          title, date, time, sep, useNum, sections
+        });
+        stack.appendChild(boxEl);
+        wrap.appendChild(stack);
+        autoFitPreviewBox(boxEl, "besar", totalItems);
+      } else {
+        // Notepad Kecil
+        if (currentKecilMode === "pendamping") {
+          const stack = document.createElement("div");
+          stack.className = "np-pages-stack";
+          const boxEl = buildPreviewBoxElement({
+            boxType: "kecil",
+            title, date, time, sep, useNum,
+            sections: [{ header: "Pendamping :", headerIndent: 2, items: pendampingList }]
+          });
+          stack.appendChild(boxEl);
+          wrap.appendChild(stack);
+          autoFitPreviewBox(boxEl, "kecil", pendampingList.length);
+        } else if (currentKecilMode === "peserta") {
+          const stack = document.createElement("div");
+          stack.className = "np-pages-stack";
+          const boxEl = buildPreviewBoxElement({
+            boxType: "kecil",
+            title, date, time, sep, useNum,
+            sections: [{ header: "", headerIndent: 5, items: pesertaList }]
+          });
+          stack.appendChild(boxEl);
+          wrap.appendChild(stack);
+          autoFitPreviewBox(boxEl, "kecil", pesertaList.length);
+        } else {
+          // Both Pendamping & Peserta
+          const boxesToFit = [];
+          const useMobileCarousel = window.innerWidth <= 768 && currentLayoutBoth === "single_page";
+          if (useMobileCarousel) {
+            const cWrap = document.createElement("div");
+            cWrap.className = "np-mobile-carousel-wrap";
+
+            const tabsBar = document.createElement("div");
+            tabsBar.className = "np-mobile-slide-tabs";
+            const slideGlider = document.createElement("div");
+            slideGlider.className = "np-slide-glider";
+            slideGlider.setAttribute("aria-hidden", "true");
+
+            const pillPend = document.createElement("button");
+            pillPend.type = "button";
+            pillPend.className = "np-mobile-slide-pill active";
+            pillPend.textContent = "Pendamping";
+            const pillPes = document.createElement("button");
+            pillPes.type = "button";
+            pillPes.className = "np-mobile-slide-pill";
+            pillPes.textContent = "Peserta";
+            tabsBar.appendChild(slideGlider);
+            tabsBar.appendChild(pillPend);
+            tabsBar.appendChild(pillPes);
+
+            const track = document.createElement("div");
+            track.className = "np-mobile-swipe-track";
+            track.id = "npMobileSwipeTrack";
+
+            const slide1 = document.createElement("div");
+            slide1.className = "np-mobile-swipe-slide";
+            const holder1 = document.createElement("div");
+            holder1.className = "np-mobile-swipe-box-holder";
+            const boxPend = buildPreviewBoxElement({
+              boxType: "kecil",
+              title, date, time, sep, useNum,
+              sections: [{ header: "Pendamping :", headerIndent: 2, items: pendampingList }]
+            });
+            holder1.appendChild(boxPend);
+            slide1.appendChild(holder1);
+
+            const slide2 = document.createElement("div");
+            slide2.className = "np-mobile-swipe-slide";
+            const holder2 = document.createElement("div");
+            holder2.className = "np-mobile-swipe-box-holder";
+            const boxPes = buildPreviewBoxElement({
+              boxType: "kecil",
+              title, date, time, sep, useNum,
+              sections: [{ header: "", headerIndent: 5, items: pesertaList }]
+            });
+            holder2.appendChild(boxPes);
+            slide2.appendChild(holder2);
+
+            track.appendChild(slide1);
+            track.appendChild(slide2);
+            cWrap.appendChild(track);
+            cWrap.appendChild(tabsBar);
+            wrap.appendChild(cWrap);
+
+            function syncSlidePill(isSecond, animate = true) {
+              pillPend.classList.toggle("active", !isSecond);
+              pillPes.classList.toggle("active", isSecond);
+              updateElementGlider(tabsBar, slideGlider, isSecond ? pillPes : pillPend, animate);
+            }
+            requestAnimationFrame(() => syncSlidePill(false, false));
+
+            pillPend.addEventListener("click", () => {
+              syncSlidePill(false, true);
+              track.scrollTo({ left: 0, behavior: "smooth" });
+            });
+            pillPes.addEventListener("click", () => {
+              syncSlidePill(true, true);
+              track.scrollTo({ left: slide2.offsetLeft, behavior: "smooth" });
+            });
+            track.addEventListener("scroll", () => {
+              const half = track.clientWidth * 0.5;
+              const isSecond = track.scrollLeft >= half;
+              syncSlidePill(isSecond, true);
+            }, { passive: true });
+
+            boxesToFit.push({ el: boxPend, count: pendampingList.length });
+            boxesToFit.push({ el: boxPes, count: pesertaList.length });
+          } else if (currentLayoutBoth === "single_page") {
+            const container = document.createElement("div");
+            container.className = "np-page-slot";
+
+            const row = document.createElement("div");
+            row.className = "np-landscape-row";
+
+            const boxPend = buildPreviewBoxElement({
+              boxType: "kecil",
+              title, date, time, sep, useNum,
+              sections: [{ header: "Pendamping :", headerIndent: 2, items: pendampingList }]
+            });
+            const boxPes = buildPreviewBoxElement({
+              boxType: "kecil",
+              title, date, time, sep, useNum,
+              sections: [{ header: "", headerIndent: 5, items: pesertaList }]
+            });
+            row.appendChild(boxPend);
+            row.appendChild(boxPes);
+            container.appendChild(row);
+            wrap.appendChild(container);
+            boxesToFit.push({ el: boxPend, count: pendampingList.length });
+            boxesToFit.push({ el: boxPes, count: pesertaList.length });
+          } else {
+            const stack = document.createElement("div");
+            stack.className = "np-pages-stack";
+
+            const slot1 = document.createElement("div");
+            slot1.className = "np-page-slot";
+            const boxPend = buildPreviewBoxElement({
+              boxType: "kecil",
+              title, date, time, sep, useNum,
+              sections: [{ header: "Pendamping :", headerIndent: 2, items: pendampingList }]
+            });
+            slot1.appendChild(boxPend);
+
+            const slot2 = document.createElement("div");
+            slot2.className = "np-page-slot";
+            const boxPes = buildPreviewBoxElement({
+              boxType: "kecil",
+              title, date, time, sep, useNum,
+              sections: [{ header: "", headerIndent: 5, items: pesertaList }]
+            });
+            slot2.appendChild(boxPes);
+
+            stack.appendChild(slot1);
+            stack.appendChild(slot2);
+            wrap.appendChild(stack);
+            boxesToFit.push({ el: boxPend, count: pendampingList.length });
+            boxesToFit.push({ el: boxPes, count: pesertaList.length });
+          }
+          boxesToFit.forEach((b) => autoFitPreviewBox(b.el, "kecil", b.count));
+        }
+      }
+
+      fitNotepadPreview();
+    }
+
+    function buildPreviewBoxElement({ boxType, isFullBesar = false, title, date, time, sep, useNum, sections }) {
+      const box = document.createElement("div");
+      box.className = `notepad-box-element ${boxType}${isFullBesar ? " full" : ""}`;
+
+      const inner = document.createElement("div");
+      inner.className = "notepad-box-inner";
+
+      // 1. Judul + Divider (only rendered if title is non-empty, matching ReportLab)
+      if (title) {
+        const titleEl = document.createElement("div");
+        titleEl.className = "np-title";
+        titleEl.textContent = title.toUpperCase();
+        inner.appendChild(titleEl);
+
+        const divEl = document.createElement("div");
+        divEl.className = "np-title-divider";
+        inner.appendChild(divEl);
+      }
+
+      // 2. Meta Block (Hari & Waktu with 1 clean blank line above Hari)
+      if (date || time) {
+        const metaBlock = document.createElement("div");
+        metaBlock.className = `np-meta-block${title ? "" : " no-title"}`;
+        if (date) {
+          const rowDate = document.createElement("div");
+          rowDate.className = "np-meta-row";
+          rowDate.innerHTML = `<span class="np-meta-lbl">Hari</span><span class="np-meta-col">:</span><span class="np-meta-val">${escapeHtml(date)}</span>`;
+          metaBlock.appendChild(rowDate);
+        }
+        if (time) {
+          const rowTime = document.createElement("div");
+          rowTime.className = "np-meta-row";
+          rowTime.innerHTML = `<span class="np-meta-lbl">Waktu</span><span class="np-meta-col">:</span><span class="np-meta-val">${escapeHtml(time)}</span>`;
+          metaBlock.appendChild(rowTime);
+        }
+        inner.appendChild(metaBlock);
+      }
+
+      // 3. List Sections
+      const secWrap = document.createElement("div");
+      secWrap.className = "np-sections-wrap";
+
+      sections.forEach((sec, sIdx) => {
+        const secEl = document.createElement("div");
+        secEl.className = "np-section";
+        if (sec.header) {
+          const hdr = document.createElement("div");
+          hdr.className = `np-section-header${sec.headerIndent > 3 ? " indent-peserta" : ""}`;
+          hdr.textContent = sec.header;
+          secEl.appendChild(hdr);
+        }
+        const listEl = document.createElement("div");
+        listEl.className = "np-list-container";
+        renderPreviewItems(listEl, sec.items || [], sep, useNum, 12.0, 20.7);
+        secEl.appendChild(listEl);
+        secWrap.appendChild(secEl);
+      });
+
+      inner.appendChild(secWrap);
+      box.appendChild(inner);
+      return box;
+    }
+
+    function renderPreviewItems(container, list, sep, useNum, itemFs = 12.0, lineH = 20.7) {
+      container.innerHTML = "";
+
+      list.forEach((item, idx) => {
+        const name = (item.name || "").trim();
+        const pos = (item.position || "").trim();
+
+        const row = document.createElement("div");
+        row.className = `np-list-item${useNum ? "" : " no-num"}`;
+        row.style.fontSize = `${itemFs}px`;
+        row.style.lineHeight = `${lineH}px`;
+
+        const numHtml = useNum ? `<span class="np-list-num">${idx + 1}.</span>` : "";
+        let nameText = name;
+        let posText = "";
+
+        if (pos) {
+          const cleanPos = pos.endsWith(".") ? pos : `${pos}.`;
+          if (sep === ",") {
+            nameText = `${name},`;
+            posText = ` ${cleanPos}`;
+          } else {
+            nameText = name;
+            posText = ` – ${cleanPos}`;
+          }
+        } else if (name && !name.endsWith(".")) {
+          nameText = `${name}.`;
+        }
+
+        const nameHtml = `<span class="np-name">${escapeHtml(nameText)}</span>`;
+        const posHtml = posText ? `<span class="np-pos">${escapeHtml(posText)}</span>` : "";
+
+        row.innerHTML = `
+          ${numHtml}
+          <div class="np-item-content">${nameHtml}${posHtml}</div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function autoFitPreviewBox(boxEl, boxType, totalItems) {
+      const inner = boxEl.querySelector(".notepad-box-inner");
+      if (!inner) return;
+
+      // For Besar: expand 438px -> 644px if 12pt wrapped lines overflow 438px
+      if (boxType === "besar" && !boxEl.classList.contains("full") && inner.scrollHeight > inner.clientHeight + 1) {
+        boxEl.classList.add("full");
+      }
+
+      const scaleCandidates = [
+        { fs: 12.0, lh: 20.7, secGap: 25, hdrMb: 11, metaMb: 17 },
+        { fs: 11.0, lh: 18.0, secGap: 21, hdrMb: 10, metaMb: 15 },
+        { fs: 10.0, lh: 16.0, secGap: 17, hdrMb: 8, metaMb: 12 },
+        { fs: 9.5, lh: 14.5, secGap: 12, hdrMb: 6, metaMb: 10 },
+        { fs: 9.0, lh: 13.2, secGap: 9, hdrMb: 5, metaMb: 8 },
+        { fs: 8.5, lh: 12.0, secGap: 8, hdrMb: 4, metaMb: 7 },
+        { fs: 8.0, lh: 11.0, secGap: 6, hdrMb: 3, metaMb: 6 },
+        { fs: 7.5, lh: 10.0, secGap: 5, hdrMb: 3, metaMb: 5 },
+        { fs: 7.0, lh: 9.2, secGap: 4, hdrMb: 2, metaMb: 4 },
+        { fs: 6.5, lh: 8.5, secGap: 3, hdrMb: 2, metaMb: 3 },
+        { fs: 6.0, lh: 7.8, secGap: 3, hdrMb: 2, metaMb: 3 },
+        { fs: 5.5, lh: 7.2, secGap: 2, hdrMb: 1, metaMb: 2 }
+      ];
+
+      let startIdx = 0;
+      if (boxType === "besar") {
+        if (totalItems > 18) startIdx = 2;
+        else if (totalItems > 16) startIdx = 1;
+      } else {
+        if (totalItems > 9) startIdx = 2;
+        else if (totalItems > 7) startIdx = 1;
+      }
+
+      const applyScale = (c) => {
+        const metaBlock = inner.querySelector(".np-meta-block");
+        if (metaBlock) metaBlock.style.marginBottom = `${c.metaMb}px`;
+        inner.querySelectorAll(".np-section-header").forEach((h) => {
+          h.style.fontSize = `${c.fs}px`;
+          h.style.marginBottom = `${c.hdrMb}px`;
+        });
+        inner.querySelectorAll(".np-section + .np-section").forEach((s) => {
+          s.style.marginTop = `${c.secGap}px`;
+        });
+        inner.querySelectorAll(".np-list-item").forEach((row) => {
+          row.style.fontSize = `${c.fs}px`;
+          row.style.lineHeight = `${c.lh}px`;
+        });
+      };
+
+      for (let i = startIdx; i < scaleCandidates.length; i++) {
+        applyScale(scaleCandidates[i]);
+        if (inner.scrollHeight <= inner.clientHeight + 1) {
+          break;
+        }
+      }
+    }
+
+    // Auto Fit Preview Scaling
+    function fitNotepadPreview() {
+      const viewport = document.getElementById("previewViewport");
+      const wrap = document.getElementById("notepadSheetWrap");
+      if (!viewport || !wrap) return;
+
+      const carousel = wrap.querySelector(".np-mobile-carousel-wrap");
+      if (carousel) {
+        wrap.style.width = "100%";
+        wrap.style.transform = "none";
+        const availW = Math.max(180, viewport.clientWidth - 20);
+        const boxW = 314.72;
+        const boxH = 438.07;
+        const sc = Math.min(1, availW / boxW);
+        const targetW = Math.round(boxW * sc);
+        const targetH = Math.ceil(boxH * sc);
+        carousel.querySelectorAll(".np-mobile-swipe-box-holder").forEach((holder) => {
+          holder.style.width = `${targetW}px`;
+          holder.style.height = `${targetH}px`;
+          const boxEl = holder.querySelector(".notepad-box-element");
+          if (boxEl) {
+            boxEl.style.transform = `scale(${sc})`;
+            boxEl.style.transformOrigin = "top left";
+          }
+        });
+        viewport.style.height = "auto";
+        viewport.style.minHeight = "auto";
+        return;
+      }
+
+      wrap.style.width = "";
+      wrap.style.transform = "scale(1)";
+      const sidePad = window.innerWidth <= 540 ? 12 : 32;
+      const availWidth = Math.max(120, viewport.clientWidth - sidePad);
+      const wrapWidth = wrap.scrollWidth || (currentNotepadType === "besar" ? 442 : 315);
+      const wrapHeight = wrap.scrollHeight || 438;
+
+      let scale = 1;
+      if (availWidth < wrapWidth) {
+        scale = Math.max(0.2, availWidth / wrapWidth);
+      }
+      wrap.style.transform = `scale(${scale})`;
+      wrap.style.transformOrigin = "top center";
+
+      const scaledHeight = Math.ceil(wrapHeight * scale);
+      viewport.style.height = `${scaledHeight + (window.innerWidth <= 540 ? 22 : 32)}px`;
+      viewport.style.minHeight = "auto";
+    }
+
+    function escapeHtml(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // PDF Download Form Post
+    function generateAndDownloadPDF() {
+      // Auto-import & clean any unimported bulk text directly before generating PDF
+      if (currentInputMode === "bulk") {
+        const bulkVal = (document.getElementById("inputBulkText").value || "").trim();
+        if (bulkVal) {
+          processBulkNames(true);
+        }
+      }
+      const data = {
+        notepad_type: currentNotepadType,
+        kecil_mode: currentKecilMode,
+        layout_both: currentLayoutBoth,
+        title: document.getElementById("inputTitle").value.trim(),
+        hari_tanggal: document.getElementById("inputDate").value.trim(),
+        waktu: document.getElementById("inputTime").value.trim(),
+        separator: currentNotepadType === "kecil" ? "," : "–",
+        use_numbering: true,
+        pendamping_list: pendampingList,
+        peserta_list: pesertaList
+      };
+
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = "/generate_notepad";
+      form.style.display = "none";
+
+      for (const [k, v] of Object.entries(data)) {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = k;
+        input.value = typeof v === "object" ? JSON.stringify(v) : v;
+        form.appendChild(input);
+      }
+
+      document.body.appendChild(form);
+      form.submit();
+      document.body.removeChild(form);
+    }
+
+    function adaptNotepadPreviewLayout() {
+      const isMobile = window.innerWidth <= 1060;
+      const frame = document.getElementById("previewCardFrame");
+      const mobileSlot = document.getElementById("mobilePreviewSlot");
+      const desktopSlot = document.getElementById("desktopPreviewSlot");
+      if (!frame || !mobileSlot || !desktopSlot) return;
+
+      if (isMobile) {
+        if (frame.parentNode !== mobileSlot) {
+          mobileSlot.appendChild(frame);
+        }
+      } else {
+        if (frame.parentNode !== desktopSlot) {
+          desktopSlot.appendChild(frame);
+        }
+      }
+      fitNotepadPreview();
+    }
+
+    // Initialize on page load
+    window.addEventListener("DOMContentLoaded", () => {
+      initNotepadDropdowns();
+      setTodayDate();
+      updateTimeDisplay();
+      document.getElementById("inputTitle").value = "MENERIMA SERIKAT PEKERJA NASIONAL DAN MANAGEMENT PT BANK MANDIRI INDONESIA (TBK.)";
+      switchListTab("pendamping");
+      setNotepadType("besar");
+      adaptNotepadPreviewLayout();
+      updateAllNotepadGliders(false);
+      setTimeout(() => {
+        updateAllNotepadGliders(false);
+        adaptNotepadPreviewLayout();
+      }, 100);
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => updateAllNotepadGliders(false));
+      }
+      window.addEventListener("load", () => updateAllNotepadGliders(false));
+      let wasMobilePreviewWidth = window.innerWidth <= 768;
+      window.addEventListener("resize", () => {
+        const nowMobilePreviewWidth = window.innerWidth <= 768;
+        updateAllNotepadGliders(false);
+        if (nowMobilePreviewWidth !== wasMobilePreviewWidth && currentNotepadType === "kecil" && currentKecilMode === "both") {
+          wasMobilePreviewWidth = nowMobilePreviewWidth;
+          updateNotepadPreview();
+        }
+        wasMobilePreviewWidth = nowMobilePreviewWidth;
+        adaptNotepadPreviewLayout();
+      });
+    });
+  </script>
+</body>
+
+</html>

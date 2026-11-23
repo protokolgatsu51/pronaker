@@ -120,6 +120,7 @@
     "font_size_name": {{ font_size_name|tojson }},
     "font_size_pos": {{ font_size_pos|tojson }},
     "spacing_gap": {{ spacing_gap|tojson }},
+    "spacing_is_manual": {{ (spacing_is_manual or '0')|tojson }},
     "horizontal_offset": {{ (horizontal_offset or 0)|tojson }},
     "text_case": {{ (text_case or 'uppercase')|tojson }},
     "paper_size": {{ (paper_size or 'a4')|tojson }},
@@ -129,7 +130,7 @@
   }
   </script>
 
-  <script src="{{ asset_prefix }}nametag.js?v=20261028a"></script>
+  <script src="{{ asset_prefix }}nametag.js?v=20261119c"></script>
   <script>
     const CONFIG = JSON.parse(document.getElementById("card-config").textContent);
     const NAME = CONFIG.name;
@@ -213,6 +214,7 @@
         nameFontSize: CONFIG.font_size_name,
         posFontSize: CONFIG.font_size_pos,
         spacingGap: parseFloat(CONFIG.spacing_gap) || 40.0,
+        isAutoSpacing: !(String(CONFIG.spacing_is_manual) === "1" || String(CONFIG.spacing_is_manual).toLowerCase() === "true"),
         horizontalOffset: parseFloat(CONFIG.horizontal_offset) || 0.0,
       });
       window.__rendered = true;
