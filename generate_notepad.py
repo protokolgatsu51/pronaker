@@ -448,26 +448,8 @@ def build_notepad_pdf(data, output_path=None):
         c = canvas.Canvas(dest, pagesize=(page_w, page_h))
         c.setTitle("Note Pad Tools Kemnaker RI")
 
-        # Calculate height: use BESAR_H_FULL (644.4pt) if both sections, > 6 items, OR 12pt wrapped content needs more than BESAR_H_MIN
-        sections_b = _prepare_sections(data, mode="besar")
-        total_items = sum(len(items) for _, items, _ in sections_b)
-        title_txt = (data.get("title") or "").strip().upper()
-        title_lines_b = wrap_text_lines(c, title_txt, FONT_BOLD, 12.0, (BESAR_W - 4.32) - 14.0) if title_txt else []
-        top_used = 22.2 + max(0, len(title_lines_b) - 1) * 13.8 + (14.2 if title_txt else 0.0)
-        if (data.get("hari_tanggal") or "").strip():
-            top_used += (28.0 if title_txt else 16.0) + (18.5 if (data.get("waktu") or "").strip() else 0.0)
-        elif (data.get("waktu") or "").strip():
-            top_used += (28.0 if title_txt else 16.0)
-        req_12 = _measure_sections_height(
-            c, sections_b, data.get("separator", "–"), FONT_REGULAR, FONT_BOLD,
-            12.0, 20.7, 20.7, (BESAR_W - 4.32 - 6.0) - 36.8
-        )
-        needs_full = (
-            total_items > 6
-            or bool(data.get("pendamping_list") and data.get("peserta_list"))
-            or (top_used + req_12 > (BESAR_H_MIN - 18.0))
-        )
-        box_h = BESAR_H_FULL if needs_full else BESAR_H_MIN
+        # Keep outer Notepad Besar frame fixed at BESAR_W x BESAR_H_FULL (15.6 x 22.7 cm)
+        box_h = BESAR_H_FULL
             
         box_x = 70.58  # Exact coordinate from Contoh Notepad Besar.pdf
         box_y = page_h - 72.0 - box_h  # 72.0pt (1 inch) top margin

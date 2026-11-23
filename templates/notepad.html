@@ -1892,10 +1892,6 @@
 
     .notepad-box-element.besar {
       width: 442.4px;
-      height: 438.07px;
-    }
-
-    .notepad-box-element.besar.full {
       height: 644.4px;
     }
 
@@ -2674,7 +2670,7 @@
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
               <polyline points="14 2 14 8 20 8"></polyline>
             </svg>
-            <span>Informasi Acara / Kegiatan</span>
+            <span>Informasi Kegiatan</span>
           </div>
 
           <div class="form-group">
@@ -2683,7 +2679,7 @@
               <span id="titleCounter" style="font-size: 11px; color: #94a3b8;">0 karakter</span>
             </label>
             <textarea id="inputTitle" class="form-textarea"
-              placeholder="Contoh: MENERIMA SERIKAT PEKERJA NASIONAL DAN MANAGEMENT PT BANK MANDIRI INDONESIA (TBK.)"
+              placeholder="Masukkan Judul Kegiatan"
               oninput="updateNotepadPreview()"></textarea>
           </div>
 
@@ -2697,7 +2693,7 @@
               </div>
               <div class="date-picker-wrapper" id="datePickerWrapper">
                 <input type="text" id="inputDate" class="form-input date-text-input"
-                  placeholder="Contoh: Senin, 12 Oktober 2026" oninput="updateNotepadPreview()">
+                  placeholder="Pilih Hari &amp; Tanggal" oninput="updateNotepadPreview()">
                 <button type="button" class="btn-calendar-trigger" id="btnCalendarTrigger"
                   onclick="toggleCalendarPopover(event)" title="Buka Kalender Pemilih Tanggal">
                   <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -2940,7 +2936,7 @@
               </svg>
               <span>Unduh File</span>
             </button>
-            <button type="button" class="btn-print" onclick="window.print()">
+            <button type="button" class="btn-print" onclick="printNotepad()">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="6 9 6 2 18 2 18 9"></polyline>
                 <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
@@ -3026,14 +3022,19 @@
     let pendampingList = [];
     let pesertaList = [];
 
-    const DEFAULT_PREVIEW_TITLE = "TAMPILAN JUDUL KEGIATAN / AUDIENSI";
+    const DEFAULT_PREVIEW_TITLE = "TAMPILAN JUDUL KEGIATAN";
     const SAMPLE_PENDAMPING_PREVIEW = [
-      { name: "Tampilan Nama Pendamping", position: "Tampilan Jabatan atau Posisi" },
-      { name: "Tampilan Nama Pendamping 2", position: "Tampilan Jabatan atau Posisi" }
+      { name: "Tampilan Nama Pendamping 1", position: "Tampilan Jabatan atau Posisi" },
+      { name: "Tampilan Nama Pendamping 2", position: "Tampilan Jabatan atau Posisi" },
+      { name: "Tampilan Nama Pendamping 3", position: "Tampilan Jabatan atau Posisi" },
+      { name: "Tampilan Nama Pendamping 4", position: "Tampilan Jabatan atau Posisi" }
     ];
     const SAMPLE_PESERTA_PREVIEW = [
-      { name: "Tampilan Nama Peserta", position: "Tampilan Jabatan atau Posisi" },
-      { name: "Tampilan Nama Peserta 2", position: "Tampilan Jabatan atau Posisi" }
+      { name: "Tampilan Nama Peserta 1", position: "Tampilan Jabatan atau Posisi" },
+      { name: "Tampilan Nama Peserta 2", position: "Tampilan Jabatan atau Posisi" },
+      { name: "Tampilan Nama Peserta 3", position: "Tampilan Jabatan atau Posisi" },
+      { name: "Tampilan Nama Peserta 4", position: "Tampilan Jabatan atau Posisi" },
+      { name: "Tampilan Nama Peserta 5", position: "Tampilan Jabatan atau Posisi" }
     ];
 
     let kemnakerDataCache = null;
@@ -4317,13 +4318,11 @@
           sections.push({ header: "Peserta :", headerIndent: 5, items: SAMPLE_PESERTA_PREVIEW, isPlaceholder: true });
           previewTotalItems = SAMPLE_PENDAMPING_PREVIEW.length + SAMPLE_PESERTA_PREVIEW.length;
         }
-        const needsFull = previewTotalItems > 6 || sections.length > 1;
-
         const stack = document.createElement("div");
         stack.className = "np-pages-stack";
         const boxEl = buildPreviewBoxElement({
           boxType: "besar",
-          isFullBesar: needsFull,
+          isFullBesar: true,
           title, titleIsPlaceholder, date, time, sep, useNum, sections
         });
         stack.appendChild(boxEl);
@@ -4604,11 +4603,6 @@
       const inner = boxEl.querySelector(".notepad-box-inner");
       if (!inner) return;
 
-      // For Besar: expand 438px -> 644px if 12pt wrapped lines overflow 438px
-      if (boxType === "besar" && !boxEl.classList.contains("full") && inner.scrollHeight > inner.clientHeight + 1) {
-        boxEl.classList.add("full");
-      }
-
       const scaleCandidates = [
         { fs: 12.0, lh: 20.7, secGap: 25, hdrMb: 11, metaMb: 17 },
         { fs: 11.0, lh: 18.0, secGap: 21, hdrMb: 10, metaMb: 15 },
@@ -4716,15 +4710,85 @@
         .replace(/'/g, "&#039;");
     }
 
-    // PDF Download Form Post
-    function generateAndDownloadPDF() {
-      // Auto-import & clean any unimported bulk text directly before generating PDF
+    function validateNotepadInputs() {
+      // Auto-import & clean any unimported bulk text directly before validating
       if (currentInputMode === "bulk") {
         const bulkVal = (document.getElementById("inputBulkText").value || "").trim();
         if (bulkVal) {
           processBulkNames(true);
         }
       }
+
+      const titleEl = document.getElementById("inputTitle");
+      const dateEl = document.getElementById("inputDate");
+      const title = (titleEl ? titleEl.value : "").trim();
+      const date = (dateEl ? dateEl.value : "").trim();
+      const time = (document.getElementById("inputTime").value || "").trim();
+
+      if (!title) {
+        alert("Silakan masukkan judul kegiatan terlebih dahulu.");
+        if (titleEl) titleEl.focus();
+        return false;
+      }
+      if (!date) {
+        alert("Silakan masukkan hari dan tanggal terlebih dahulu.");
+        if (dateEl) dateEl.focus();
+        return false;
+      }
+      if (!time) {
+        alert("Silakan masukkan waktu terlebih dahulu.");
+        const hrEl = document.getElementById("timeHourInput");
+        if (hrEl) hrEl.focus();
+        return false;
+      }
+
+      const focusListInput = (tab) => {
+        if (activeListTab !== tab) switchListTab(tab);
+        const target = document.getElementById(currentInputMode === "bulk" ? "inputBulkText" : "inputSingleName");
+        if (target) target.focus();
+      };
+
+      if (currentNotepadType === "besar") {
+        if (pendampingList.length === 0 && pesertaList.length === 0) {
+          alert("Silakan masukkan minimal 1 nama pada Daftar Pendamping atau Peserta terlebih dahulu.");
+          focusListInput(activeListTab);
+          return false;
+        }
+      } else {
+        if (currentKecilMode === "pendamping" && pendampingList.length === 0) {
+          alert("Silakan masukkan minimal 1 nama Pendamping terlebih dahulu.");
+          focusListInput("pendamping");
+          return false;
+        }
+        if (currentKecilMode === "peserta" && pesertaList.length === 0) {
+          alert("Silakan masukkan minimal 1 nama Peserta terlebih dahulu.");
+          focusListInput("peserta");
+          return false;
+        }
+        if (currentKecilMode === "both") {
+          if (pendampingList.length === 0) {
+            alert("Silakan masukkan minimal 1 nama Pendamping terlebih dahulu.");
+            focusListInput("pendamping");
+            return false;
+          }
+          if (pesertaList.length === 0) {
+            alert("Silakan masukkan minimal 1 nama Peserta terlebih dahulu.");
+            focusListInput("peserta");
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+
+    function printNotepad() {
+      if (!validateNotepadInputs()) return;
+      window.print();
+    }
+
+    // PDF Download Form Post
+    function generateAndDownloadPDF() {
+      if (!validateNotepadInputs()) return;
       const data = {
         notepad_type: currentNotepadType,
         kecil_mode: currentKecilMode,
