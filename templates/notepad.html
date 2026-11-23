@@ -55,6 +55,8 @@
       min-height: 100dvh;
       overflow-x: hidden;
       position: relative;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
     }
 
     body {
@@ -1739,12 +1741,17 @@
       justify-content: flex-start;
       overflow: hidden;
       box-sizing: border-box;
-      transition: height 0.2s ease;
+    }
+
+    .notepad-scale-stage {
+      position: relative;
+      margin: 0 auto;
+      overflow: visible;
+      flex-shrink: 0;
     }
 
     .notepad-sheet-wrap {
-      transform-origin: top center;
-      transition: transform 0.2s ease;
+      transform-origin: top left;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -1878,6 +1885,8 @@
       padding: 2.16px;
       overflow: hidden;
       flex-shrink: 0;
+      -webkit-text-size-adjust: 100% !important;
+      text-size-adjust: 100% !important;
     }
 
     .notepad-box-inner {
@@ -2247,8 +2256,9 @@
       }
 
       .time-digit-input {
-        width: 40px;
-        height: 24px;
+        width: 46px;
+        height: 26px;
+        padding: 0;
       }
 
       .time-arrow-btn {
@@ -2958,8 +2968,10 @@
             </div>
 
             <div class="notepad-preview-viewport" id="previewViewport">
-              <div class="notepad-sheet-wrap" id="notepadSheetWrap">
-                <!-- Multi-sheet WYSIWYG preview dynamically rendered via JS -->
+              <div class="notepad-scale-stage" id="notepadScaleStage">
+                <div class="notepad-sheet-wrap" id="notepadSheetWrap">
+                  <!-- Multi-sheet WYSIWYG preview dynamically rendered via JS -->
+                </div>
               </div>
             </div>
           </div>
@@ -4654,11 +4666,19 @@
     // Auto Fit Preview Scaling
     function fitNotepadPreview() {
       const viewport = document.getElementById("previewViewport");
+      const stage = document.getElementById("notepadScaleStage");
       const wrap = document.getElementById("notepadSheetWrap");
       if (!viewport || !wrap) return;
 
       const carousel = wrap.querySelector(".np-mobile-carousel-wrap");
       if (carousel) {
+        if (stage) {
+          stage.style.width = "100%";
+          stage.style.height = "auto";
+        }
+        wrap.style.position = "static";
+        wrap.style.top = "";
+        wrap.style.left = "";
         wrap.style.width = "100%";
         wrap.style.transform = "none";
         const availW = Math.max(180, viewport.clientWidth - 20);
@@ -4681,22 +4701,33 @@
         return;
       }
 
+      wrap.style.position = "absolute";
+      wrap.style.top = "0";
+      wrap.style.left = "0";
       wrap.style.width = "";
-      wrap.style.transform = "scale(1)";
-      const sidePad = window.innerWidth <= 540 ? 12 : 32;
-      const availWidth = Math.max(120, viewport.clientWidth - sidePad);
-      const wrapWidth = wrap.scrollWidth || (currentNotepadType === "besar" ? 442 : 315);
-      const wrapHeight = wrap.scrollHeight || 438;
+
+      const vpStyle = window.getComputedStyle(viewport);
+      const padLeft = parseFloat(vpStyle.paddingLeft) || 0;
+      const padRight = parseFloat(vpStyle.paddingRight) || 0;
+      const availWidth = Math.max(120, viewport.clientWidth - padLeft - padRight);
+      const wrapWidth = wrap.offsetWidth || wrap.scrollWidth || (currentNotepadType === "besar" ? 442.4 : 314.72);
+      const wrapHeight = wrap.offsetHeight || wrap.scrollHeight || (currentNotepadType === "besar" ? 644.4 : 438.07);
 
       let scale = 1;
       if (availWidth < wrapWidth) {
         scale = Math.max(0.2, availWidth / wrapWidth);
       }
-      wrap.style.transform = `scale(${scale})`;
-      wrap.style.transformOrigin = "top center";
 
+      const scaledWidth = Math.ceil(wrapWidth * scale);
       const scaledHeight = Math.ceil(wrapHeight * scale);
-      viewport.style.height = `${scaledHeight + (window.innerWidth <= 540 ? 22 : 32)}px`;
+      if (stage) {
+        stage.style.width = `${scaledWidth}px`;
+        stage.style.height = `${scaledHeight}px`;
+      }
+      wrap.style.transformOrigin = "top left";
+      wrap.style.transform = `scale(${scale})`;
+
+      viewport.style.height = "auto";
       viewport.style.minHeight = "auto";
     }
 
@@ -4857,8 +4888,12 @@
       }
       window.addEventListener("load", () => updateAllNotepadGliders(false));
       let wasMobilePreviewWidth = window.innerWidth <= 768;
+      let lastNotepadViewportWidth = window.innerWidth;
       window.addEventListener("resize", () => {
-        const nowMobilePreviewWidth = window.innerWidth <= 768;
+        const nextWidth = window.innerWidth;
+        if (Math.abs(nextWidth - lastNotepadViewportWidth) < 2) return;
+        lastNotepadViewportWidth = nextWidth;
+        const nowMobilePreviewWidth = nextWidth <= 768;
         updateAllNotepadGliders(false);
         if (nowMobilePreviewWidth !== wasMobilePreviewWidth && currentNotepadType === "kecil" && currentKecilMode === "both") {
           wasMobilePreviewWidth = nowMobilePreviewWidth;
@@ -4867,6 +4902,11 @@
         wasMobilePreviewWidth = nowMobilePreviewWidth;
         adaptNotepadPreviewLayout();
       });
+      window.addEventListener("orientationchange", () => setTimeout(() => {
+        lastNotepadViewportWidth = window.innerWidth;
+        updateAllNotepadGliders(false);
+        adaptNotepadPreviewLayout();
+      }, 120));
     });
   </script>
 </body>

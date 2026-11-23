@@ -507,3 +507,11 @@
   background: #e2e8f0;
   margin: 4px 6px;
 }
+
+@media (max-width: 768px) {
+  /* Force >= 16px on mobile inputs so iOS Safari never auto-zooms */
+  .custom-select-search-input {
+    font-size: 16px !important;
+    min-height: 38px;
+  }
+}
