@@ -1926,6 +1926,11 @@
       line-height: 12.2px;
     }
 
+    .np-title.is-placeholder,
+    .np-section.is-placeholder {
+      opacity: 0.48;
+    }
+
     .np-title-divider {
       border-bottom: 0.75px solid #000000;
       width: 100%;
@@ -3007,8 +3012,8 @@
     let currentLayoutBoth = "single_page"; // Always 1 A4 Landscape (22.2cm x 15.45cm fits comfortably in 29.7cm x 21cm A4)
     let activeListTab = "pendamping";   // "pendamping" | "peserta"
     let currentInputMode = "single";    // "single" | "bulk"
-    let isDefaultPendampingSample = true;
-    let isDefaultPesertaSample = true;
+    let isDefaultPendampingSample = false;
+    let isDefaultPesertaSample = false;
 
     // Time State
     let currentHour = 11;
@@ -3018,19 +3023,17 @@
     // Edit state
     let editingItemIndex = null;
 
-    let pendampingList = [
-      { name: "Andri Susila", position: "Direktur Bina Kelembagaan Pelatihan Vokasi" },
-      { name: "Irwan Arifyanto", position: "Koordinator PEP (Perencanaan, Evaluasi, dan Pelaporan)" },
-      { name: "Iwan Rinaldo Syarief", position: "TA Wamenaker" },
-      { name: "Dwianto Ananias", position: "TA Wamenaker" }
-    ];
+    let pendampingList = [];
+    let pesertaList = [];
 
-    let pesertaList = [
-      { name: "Dicky Sukanto", position: "Panglima Aksi Nasional Konfederasi Serikat Pekerja Indonesia (KSPI)" },
-      { name: "Riche Agnesia", position: "Ketua Badan Pembentukan Peraturan Daerah" },
-      { name: "Nasihin", position: "Wakil Ketua Bapemperda" },
-      { name: "Taufiq", position: "Anggota" },
-      { name: "Muhammad Helmi", position: "Anggota" }
+    const DEFAULT_PREVIEW_TITLE = "TAMPILAN JUDUL KEGIATAN / AUDIENSI";
+    const SAMPLE_PENDAMPING_PREVIEW = [
+      { name: "Tampilan Nama Pendamping", position: "Tampilan Jabatan atau Posisi" },
+      { name: "Tampilan Nama Pendamping 2", position: "Tampilan Jabatan atau Posisi" }
+    ];
+    const SAMPLE_PESERTA_PREVIEW = [
+      { name: "Tampilan Nama Peserta", position: "Tampilan Jabatan atau Posisi" },
+      { name: "Tampilan Nama Peserta 2", position: "Tampilan Jabatan atau Posisi" }
     ];
 
     let kemnakerDataCache = null;
@@ -4263,16 +4266,34 @@
       }
     }
 
+    function getKecilPreviewSection(role) {
+      const isPend = role === "pendamping";
+      const list = isPend ? pendampingList : pesertaList;
+      if (list.length > 0) {
+        return {
+          section: { header: isPend ? "Pendamping :" : "", headerIndent: isPend ? 2 : 5, items: list, isPlaceholder: false },
+          count: list.length
+        };
+      }
+      const sample = isPend ? SAMPLE_PENDAMPING_PREVIEW : SAMPLE_PESERTA_PREVIEW;
+      return {
+        section: { header: isPend ? "Pendamping :" : "", headerIndent: isPend ? 2 : 5, items: sample, isPlaceholder: true },
+        count: sample.length
+      };
+    }
+
     // Live Preview Rendering matching ReportLab PDF 1:1 across all modes
     function updateNotepadPreview() {
-      const title = (document.getElementById("inputTitle").value || "").trim();
+      const rawTitle = (document.getElementById("inputTitle").value || "").trim();
+      const titleIsPlaceholder = !rawTitle;
+      const title = titleIsPlaceholder ? DEFAULT_PREVIEW_TITLE : rawTitle;
       const date = (document.getElementById("inputDate").value || "").trim();
       const time = (document.getElementById("inputTime").value || "").trim();
       const sep = currentNotepadType === "kecil" ? "," : "–";
       const useNum = true;
 
       // Update title counter
-      document.getElementById("titleCounter").textContent = `${title.length} karakter`;
+      document.getElementById("titleCounter").textContent = `${rawTitle.length} karakter`;
 
       const wrap = document.getElementById("notepadSheetWrap");
       if (!wrap) return;
@@ -4280,49 +4301,61 @@
 
       if (currentNotepadType === "besar") {
         const sections = [];
-        if (pendampingList.length > 0) {
-          sections.push({ header: "Pendamping :", headerIndent: 2, items: pendampingList });
+        const hasRealItems = pendampingList.length > 0 || pesertaList.length > 0;
+        let previewTotalItems = 0;
+
+        if (hasRealItems) {
+          if (pendampingList.length > 0) {
+            sections.push({ header: "Pendamping :", headerIndent: 2, items: pendampingList, isPlaceholder: false });
+          }
+          if (pesertaList.length > 0) {
+            sections.push({ header: "Peserta :", headerIndent: 5, items: pesertaList, isPlaceholder: false });
+          }
+          previewTotalItems = pendampingList.length + pesertaList.length;
+        } else {
+          sections.push({ header: "Pendamping :", headerIndent: 2, items: SAMPLE_PENDAMPING_PREVIEW, isPlaceholder: true });
+          sections.push({ header: "Peserta :", headerIndent: 5, items: SAMPLE_PESERTA_PREVIEW, isPlaceholder: true });
+          previewTotalItems = SAMPLE_PENDAMPING_PREVIEW.length + SAMPLE_PESERTA_PREVIEW.length;
         }
-        if (pesertaList.length > 0) {
-          sections.push({ header: "Peserta :", headerIndent: 5, items: pesertaList });
-        }
-        const totalItems = pendampingList.length + pesertaList.length;
-        const needsFull = totalItems > 6 || (pendampingList.length > 0 && pesertaList.length > 0);
+        const needsFull = previewTotalItems > 6 || sections.length > 1;
 
         const stack = document.createElement("div");
         stack.className = "np-pages-stack";
         const boxEl = buildPreviewBoxElement({
           boxType: "besar",
           isFullBesar: needsFull,
-          title, date, time, sep, useNum, sections
+          title, titleIsPlaceholder, date, time, sep, useNum, sections
         });
         stack.appendChild(boxEl);
         wrap.appendChild(stack);
-        autoFitPreviewBox(boxEl, "besar", totalItems);
+        autoFitPreviewBox(boxEl, "besar", previewTotalItems);
       } else {
         // Notepad Kecil
+        const pendSpec = getKecilPreviewSection("pendamping");
+        const pesSpec = getKecilPreviewSection("peserta");
+
         if (currentKecilMode === "pendamping") {
           const stack = document.createElement("div");
           stack.className = "np-pages-stack";
           const boxEl = buildPreviewBoxElement({
             boxType: "kecil",
-            title, date, time, sep, useNum,
-            sections: [{ header: "Pendamping :", headerIndent: 2, items: pendampingList }]
+            title, titleIsPlaceholder, date, time, sep, useNum,
+            sections: [pendSpec.section]
           });
           stack.appendChild(boxEl);
           wrap.appendChild(stack);
-          autoFitPreviewBox(boxEl, "kecil", pendampingList.length);
+          autoFitPreviewBox(boxEl, "kecil", pendSpec.count);
         } else if (currentKecilMode === "peserta") {
           const stack = document.createElement("div");
           stack.className = "np-pages-stack";
           const boxEl = buildPreviewBoxElement({
             boxType: "kecil",
-            title, date, time, sep, useNum,
-            sections: [{ header: "", headerIndent: 5, items: pesertaList }]
+            title, titleIsPlaceholder, date, time, sep, useNum,
+            sections: [pesSpec.section]
           });
           stack.appendChild(boxEl);
           wrap.appendChild(stack);
-          autoFitPreviewBox(boxEl, "kecil", pesertaList.length);
+          autoFitPreviewBox(boxEl, "kecil", pesSpec.count);
         } else {
           // Both Pendamping & Peserta
           const boxesToFit = [];
@@ -4359,8 +4392,8 @@
             holder1.className = "np-mobile-swipe-box-holder";
             const boxPend = buildPreviewBoxElement({
               boxType: "kecil",
-              title, date, time, sep, useNum,
-              sections: [{ header: "Pendamping :", headerIndent: 2, items: pendampingList }]
+              title, titleIsPlaceholder, date, time, sep, useNum,
+              sections: [pendSpec.section]
             });
             holder1.appendChild(boxPend);
             slide1.appendChild(holder1);
@@ -4371,8 +4404,8 @@
             holder2.className = "np-mobile-swipe-box-holder";
             const boxPes = buildPreviewBoxElement({
               boxType: "kecil",
-              title, date, time, sep, useNum,
-              sections: [{ header: "", headerIndent: 5, items: pesertaList }]
+              title, titleIsPlaceholder, date, time, sep, useNum,
+              sections: [pesSpec.section]
             });
             holder2.appendChild(boxPes);
             slide2.appendChild(holder2);
@@ -4404,8 +4437,8 @@
               syncSlidePill(isSecond, true);
             }, { passive: true });
 
-            boxesToFit.push({ el: boxPend, count: pendampingList.length });
-            boxesToFit.push({ el: boxPes, count: pesertaList.length });
+            boxesToFit.push({ el: boxPend, count: pendSpec.count });
+            boxesToFit.push({ el: boxPes, count: pesSpec.count });
           } else if (currentLayoutBoth === "single_page") {
             const container = document.createElement("div");
             container.className = "np-page-slot";
@@ -4415,20 +4448,20 @@
 
             const boxPend = buildPreviewBoxElement({
               boxType: "kecil",
-              title, date, time, sep, useNum,
-              sections: [{ header: "Pendamping :", headerIndent: 2, items: pendampingList }]
+              title, titleIsPlaceholder, date, time, sep, useNum,
+              sections: [pendSpec.section]
             });
             const boxPes = buildPreviewBoxElement({
               boxType: "kecil",
-              title, date, time, sep, useNum,
-              sections: [{ header: "", headerIndent: 5, items: pesertaList }]
+              title, titleIsPlaceholder, date, time, sep, useNum,
+              sections: [pesSpec.section]
             });
             row.appendChild(boxPend);
             row.appendChild(boxPes);
             container.appendChild(row);
             wrap.appendChild(container);
-            boxesToFit.push({ el: boxPend, count: pendampingList.length });
-            boxesToFit.push({ el: boxPes, count: pesertaList.length });
+            boxesToFit.push({ el: boxPend, count: pendSpec.count });
+            boxesToFit.push({ el: boxPes, count: pesSpec.count });
           } else {
             const stack = document.createElement("div");
             stack.className = "np-pages-stack";
@@ -4437,8 +4470,8 @@
             slot1.className = "np-page-slot";
             const boxPend = buildPreviewBoxElement({
               boxType: "kecil",
-              title, date, time, sep, useNum,
-              sections: [{ header: "Pendamping :", headerIndent: 2, items: pendampingList }]
+              title, titleIsPlaceholder, date, time, sep, useNum,
+              sections: [pendSpec.section]
             });
             slot1.appendChild(boxPend);
 
@@ -4446,16 +4479,16 @@
             slot2.className = "np-page-slot";
             const boxPes = buildPreviewBoxElement({
               boxType: "kecil",
-              title, date, time, sep, useNum,
-              sections: [{ header: "", headerIndent: 5, items: pesertaList }]
+              title, titleIsPlaceholder, date, time, sep, useNum,
+              sections: [pesSpec.section]
             });
             slot2.appendChild(boxPes);
 
             stack.appendChild(slot1);
             stack.appendChild(slot2);
             wrap.appendChild(stack);
-            boxesToFit.push({ el: boxPend, count: pendampingList.length });
-            boxesToFit.push({ el: boxPes, count: pesertaList.length });
+            boxesToFit.push({ el: boxPend, count: pendSpec.count });
+            boxesToFit.push({ el: boxPes, count: pesSpec.count });
           }
           boxesToFit.forEach((b) => autoFitPreviewBox(b.el, "kecil", b.count));
         }
@@ -4464,7 +4497,7 @@
       fitNotepadPreview();
     }
 
-    function buildPreviewBoxElement({ boxType, isFullBesar = false, title, date, time, sep, useNum, sections }) {
+    function buildPreviewBoxElement({ boxType, isFullBesar = false, title, titleIsPlaceholder = false, date, time, sep, useNum, sections }) {
       const box = document.createElement("div");
       box.className = `notepad-box-element ${boxType}${isFullBesar ? " full" : ""}`;
 
@@ -4474,7 +4507,7 @@
       // 1. Judul + Divider (only rendered if title is non-empty, matching ReportLab)
       if (title) {
         const titleEl = document.createElement("div");
-        titleEl.className = "np-title";
+        titleEl.className = `np-title${titleIsPlaceholder ? " is-placeholder" : ""}`;
         titleEl.textContent = title.toUpperCase();
         inner.appendChild(titleEl);
 
@@ -4508,7 +4541,7 @@
 
       sections.forEach((sec, sIdx) => {
         const secEl = document.createElement("div");
-        secEl.className = "np-section";
+        secEl.className = `np-section${sec.isPlaceholder ? " is-placeholder" : ""}`;
         if (sec.header) {
           const hdr = document.createElement("div");
           hdr.className = `np-section-header${sec.headerIndent > 3 ? " indent-peserta" : ""}`;
@@ -4747,7 +4780,6 @@
       initNotepadDropdowns();
       setTodayDate();
       updateTimeDisplay();
-      document.getElementById("inputTitle").value = "MENERIMA SERIKAT PEKERJA NASIONAL DAN MANAGEMENT PT BANK MANDIRI INDONESIA (TBK.)";
       switchListTab("pendamping");
       setNotepadType("besar");
       adaptNotepadPreviewLayout();
