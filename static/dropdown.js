@@ -80,7 +80,11 @@
       this.trigger.insertAdjacentHTML("beforeend", chevronSvg);
 
       this.menu = document.createElement("div");
-      this.menu.className = "custom-select-menu";
+      this.menu.className = "custom-select-menu" +
+        (this.config.compact ? " is-compact" : "") +
+        (this.config.pillMini ? " is-pill-mini" : "") +
+        (this.config.noScroll ? " is-no-scroll" : "");
+      this.menu.dataset.dropdownId = this.wrapper.id;
 
       if (this.config.searchable) {
         const searchWrap = document.createElement("div");
@@ -138,38 +142,94 @@
       }
     }
 
+    reposition() {
+      if (!this.isOpen || !this.trigger || !this.menu) return;
+      const rect = this.trigger.getBoundingClientRect();
+      if (rect.width === 0 && rect.height === 0) {
+        this.close();
+        return;
+      }
+
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      let menuW = rect.width;
+      if (this.config.pillMini) {
+        menuW = Math.max(rect.width, 96);
+      } else if (this.config.compact) {
+        menuW = Math.min(Math.max(rect.width, 235), Math.min(320, vw - 24));
+      } else {
+        menuW = Math.min(rect.width, vw - 16);
+      }
+
+      let leftPos = rect.left;
+      if (this.config.pillMini) {
+        leftPos = rect.right - menuW;
+      }
+      leftPos = Math.max(8, Math.min(leftPos, vw - menuW - 8));
+
+      const spaceBelow = vh - rect.bottom - 12;
+      const spaceAbove = rect.top - 12;
+      const desiredMin = this.config.pillMini ? 115 : 175;
+      const openUp = !this.config.noScroll && spaceBelow < desiredMin && spaceAbove > spaceBelow;
+
+      this.menu.style.position = "fixed";
+      this.menu.style.left = leftPos + "px";
+      this.menu.style.right = "auto";
+      this.menu.style.width = menuW + "px";
+      this.menu.style.minWidth = menuW + "px";
+      this.menu.style.zIndex = "250000";
+
+      const searchOverhead = this.config.searchable ? 52 : 12;
+      const defaultOptMax = this.config.compact ? 220 : 290;
+
+      if (openUp) {
+        this.wrapper.classList.add("drop-up");
+        this.menu.classList.add("drop-up");
+        this.menu.style.top = "auto";
+        this.menu.style.bottom = (vh - rect.top + 5) + "px";
+        const maxOptsH = Math.max(96, Math.min(defaultOptMax, spaceAbove - searchOverhead));
+        if (!this.config.noScroll) {
+          this.optionsContainer.style.maxHeight = maxOptsH + "px";
+        }
+      } else {
+        this.wrapper.classList.remove("drop-up");
+        this.menu.classList.remove("drop-up");
+        this.menu.style.bottom = "auto";
+        this.menu.style.top = (rect.bottom + 5) + "px";
+        const maxOptsH = Math.max(96, Math.min(defaultOptMax, spaceBelow - searchOverhead));
+        if (!this.config.noScroll) {
+          this.optionsContainer.style.maxHeight = maxOptsH + "px";
+        }
+      }
+    }
+
     open() {
       if (this.selectEl.disabled) return;
       document.querySelectorAll(".custom-select-wrapper.open").forEach(w => {
         if (w !== this.wrapper) {
-          w.classList.remove("open");
-          w.querySelector(".custom-select-trigger")?.setAttribute("aria-expanded", "false");
-          w.closest(".sheet-section")?.classList.remove("has-open-dropdown");
-          w.closest(".sheet-grid-2")?.classList.remove("has-open-dropdown");
+          const inst = w.previousElementSibling?._modernDropdown || document.getElementById(w.id.replace("customSelect_", ""))?._modernDropdown;
+          if (inst && typeof inst.close === "function") {
+            inst.close();
+          } else {
+            w.classList.remove("open");
+            w.querySelector(".custom-select-trigger")?.setAttribute("aria-expanded", "false");
+          }
         }
       });
       document.querySelectorAll(".ps-size-combo.open").forEach(c => {
-        c.classList.remove("open");
-        c.closest(".sheet-section")?.classList.remove("has-open-dropdown");
-        c.closest(".sheet-grid-2")?.classList.remove("has-open-dropdown");
+        if (typeof c._closePsSizeMenu === "function") c._closePsSizeMenu();
+        else c.classList.remove("open");
       });
 
-      if (this.config.noScroll) {
-        this.wrapper.classList.remove("drop-up");
-      } else {
-        const rect = this.wrapper.getBoundingClientRect();
-        const spaceBelow = window.innerHeight - rect.bottom;
-        const menuHeight = this.config.pillMini ? 150 : 260;
-        if (spaceBelow < menuHeight && rect.top > spaceBelow) {
-          this.wrapper.classList.add("drop-up");
-        } else {
-          this.wrapper.classList.remove("drop-up");
-        }
+      if (this.menu.parentNode !== document.body) {
+        document.body.appendChild(this.menu);
       }
 
       this.wrapper.classList.add("open");
+      this.menu.classList.add("open", "portal-open");
       this.trigger.setAttribute("aria-expanded", "true");
       this.isOpen = true;
+      this.reposition();
 
       const sec = this.wrapper.closest(".sheet-section");
       if (sec) sec.classList.add("has-open-dropdown");
@@ -179,7 +239,9 @@
       if (this.searchInput) {
         this.searchInput.value = "";
         this.filter("");
-        setTimeout(() => this.searchInput.focus(), 60);
+        if (window.innerWidth > 768) {
+          setTimeout(() => this.searchInput.focus(), 60);
+        }
       }
 
       const selectedOpt = this.optionsContainer.querySelector(".custom-select-option.selected");
@@ -189,7 +251,20 @@
     }
 
     close() {
-      this.wrapper.classList.remove("open");
+      this.wrapper.classList.remove("open", "drop-up");
+      this.menu.classList.remove("open", "drop-up", "portal-open");
+      this.menu.style.position = "";
+      this.menu.style.left = "";
+      this.menu.style.right = "";
+      this.menu.style.top = "";
+      this.menu.style.bottom = "";
+      this.menu.style.width = "";
+      this.menu.style.minWidth = "";
+      this.menu.style.zIndex = "";
+      this.optionsContainer.style.maxHeight = "";
+      if (this.wrapper && this.menu.parentNode !== this.wrapper) {
+        this.wrapper.appendChild(this.menu);
+      }
       this.trigger.setAttribute("aria-expanded", "false");
       this.isOpen = false;
       const sec = this.wrapper.closest(".sheet-section");
@@ -452,27 +527,48 @@
     }
   }
 
-  document.addEventListener("click", (e) => {
-    if (!e.target.closest(".custom-select-wrapper")) {
-      document.querySelectorAll(".custom-select-wrapper.open").forEach(w => {
+  function closeAllCustomDropdowns() {
+    document.querySelectorAll(".custom-select-wrapper.open").forEach(w => {
+      const selectId = w.id ? w.id.replace("customSelect_", "") : "";
+      const inst = selectId ? document.getElementById(selectId)?._modernDropdown : null;
+      if (inst && typeof inst.close === "function") {
+        inst.close();
+      } else {
         w.classList.remove("open");
         w.querySelector(".custom-select-trigger")?.setAttribute("aria-expanded", "false");
-        w.closest(".sheet-section")?.classList.remove("has-open-dropdown");
-        w.closest(".sheet-grid-2")?.classList.remove("has-open-dropdown");
-      });
+      }
+    });
+  }
+
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".custom-select-wrapper") && !e.target.closest(".custom-select-menu")) {
+      closeAllCustomDropdowns();
     }
   });
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
-      document.querySelectorAll(".custom-select-wrapper.open").forEach(w => {
-        w.classList.remove("open");
-        w.querySelector(".custom-select-trigger")?.setAttribute("aria-expanded", "false");
-        w.closest(".sheet-section")?.classList.remove("has-open-dropdown");
-        w.closest(".sheet-grid-2")?.classList.remove("has-open-dropdown");
-      });
+      closeAllCustomDropdowns();
     }
   });
 
+  window.addEventListener("scroll", (e) => {
+    if (e.target && e.target.closest && e.target.closest(".custom-select-menu")) return;
+    document.querySelectorAll(".custom-select-wrapper.open").forEach(w => {
+      const selectId = w.id ? w.id.replace("customSelect_", "") : "";
+      const inst = selectId ? document.getElementById(selectId)?._modernDropdown : null;
+      if (inst && typeof inst.reposition === "function") inst.reposition();
+    });
+  }, true);
+
+  window.addEventListener("resize", () => {
+    document.querySelectorAll(".custom-select-wrapper.open").forEach(w => {
+      const selectId = w.id ? w.id.replace("customSelect_", "") : "";
+      const inst = selectId ? document.getElementById(selectId)?._modernDropdown : null;
+      if (inst && typeof inst.reposition === "function") inst.reposition();
+    });
+  });
+
   global.ModernDropdown = ModernDropdown;
+  global.closeAllCustomDropdowns = closeAllCustomDropdowns;
 })(window);

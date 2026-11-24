@@ -13,8 +13,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,700&family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;1,600;1,700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600;1,700;1,800&family=Roboto:ital,wght@0,400;0,500;0,700;1,400;1,700&display=swap"
-    rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='dropdown.css') }}?v=20261123a">
+    rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript>
+    <link
+      href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,700&family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;1,600;1,700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600;1,700;1,800&family=Roboto:ital,wght@0,400;0,500;0,700;1,400;1,700&display=swap"
+      rel="stylesheet">
+  </noscript>
+  <link rel="stylesheet" href="{{ url_for('static', filename='dropdown.css') }}?v=20261124a">
 
   <style>
     @font-face {
@@ -22,6 +27,7 @@
       src: url("{{ url_for('static', filename='fonts/Montserrat-Bold.ttf') }}") format("truetype");
       font-weight: 700;
       font-style: normal;
+      font-display: swap;
     }
 
     @font-face {
@@ -29,6 +35,7 @@
       src: url("{{ url_for('static', filename='fonts/Montserrat-Bold.ttf') }}") format("truetype");
       font-weight: 400;
       font-style: normal;
+      font-display: swap;
     }
 
     @font-face {
@@ -36,6 +43,7 @@
       src: url("{{ url_for('static', filename='fonts/Montserrat-Regular.ttf') }}") format("truetype");
       font-weight: 400;
       font-style: normal;
+      font-display: swap;
     }
 
     @font-face {
@@ -43,6 +51,7 @@
       src: url("{{ url_for('static', filename='fonts/Montserrat-Bold.ttf') }}") format("truetype");
       font-weight: 700;
       font-style: normal;
+      font-display: swap;
     }
 
     @font-face {
@@ -50,6 +59,7 @@
       src: url("{{ url_for('static', filename='fonts/MYRIADPRO-REGULAR.woff') }}") format("woff");
       font-weight: 400;
       font-style: normal;
+      font-display: swap;
     }
 
     @font-face {
@@ -57,6 +67,7 @@
       src: url("{{ url_for('static', filename='fonts/MYRIADPRO-BOLD.woff') }}") format("woff");
       font-weight: 700;
       font-style: normal;
+      font-display: swap;
     }
 
     :root {
@@ -969,15 +980,57 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 8px;
+      flex-wrap: nowrap;
+      gap: 10px;
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px solid #e2ecf5;
       font-size: 11px;
-      color: #64748b;
+      font-weight: 500;
+      color: #475569;
       width: 100%;
       max-width: 100%;
       min-width: 0;
       box-sizing: border-box;
+    }
+
+    .btn-refresh-kemnaker {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      background: linear-gradient(135deg, #eef4fb 0%, #e1ecf8 100%);
+      color: var(--kemnaker-blue);
+      border: 1px solid #bfd3ea;
+      border-radius: 9999px;
+      padding: 5px 11px;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      box-shadow: 0 1px 2px rgba(21, 64, 106, 0.06);
+      transition: all 0.16s ease;
+      line-height: 1.2;
+    }
+
+    .btn-refresh-kemnaker:hover {
+      background: linear-gradient(135deg, #e1ecf8 0%, #d3e3f4 100%);
+      border-color: #93b5d8;
+      color: var(--kemnaker-blue-dark);
+      transform: translateY(-0.5px);
+      box-shadow: 0 2px 6px rgba(21, 64, 106, 0.12);
+    }
+
+    .btn-refresh-kemnaker:active {
+      transform: scale(0.97);
+    }
+
+    .btn-refresh-kemnaker:disabled {
+      opacity: 0.72;
+      cursor: wait;
+      transform: none;
     }
 
 
@@ -2585,6 +2638,15 @@
     }
 
     /* Photoshop-style Font Size Combobox */
+    .ps-size-input-box {
+      flex: 1;
+      min-width: 0;
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-start;
+    }
+
     .ps-size-combo {
       position: relative;
       display: inline-flex;
@@ -2592,7 +2654,7 @@
       background: #ffffff;
       border: 1px solid #cbd5e1;
       border-radius: 7px;
-      overflow: visible;
+      overflow: hidden;
       height: 28px;
       transition: all 0.15s ease;
       box-sizing: border-box;
@@ -2687,6 +2749,7 @@
       pointer-events: none;
     }
 
+    .ps-size-menu.open,
     .ps-size-combo.open .ps-size-menu {
       opacity: 1;
       visibility: visible;
@@ -2694,10 +2757,22 @@
       pointer-events: auto;
     }
 
+    .ps-size-menu.portal-open {
+      position: fixed;
+      z-index: 250000;
+      right: auto;
+      transform-origin: top left;
+    }
+
+    .ps-size-menu.drop-up,
     .ps-size-combo.drop-up .ps-size-menu {
       top: auto;
       bottom: calc(100% + 5px);
       transform-origin: bottom right;
+    }
+
+    .ps-size-menu.portal-open.drop-up {
+      transform-origin: bottom left;
     }
 
     .ps-size-menu-item {
@@ -3470,6 +3545,8 @@
         margin-bottom: 4px;
       }
 
+      /* Force >= 16px computed font-size on mobile inputs so iOS Safari never auto-zooms,
+         while scaling visually down to ~13px for crisp compact proportions */
       .form-input,
       input.form-input,
       textarea.form-input,
@@ -3483,46 +3560,82 @@
       .sheet-drawer input,
       .sheet-drawer select {
         font-size: 16px !important;
-        max-width: 100%;
-        min-width: 0;
         box-sizing: border-box;
       }
 
-      .form-input,
-      input.form-input,
-      textarea.form-input,
-      select.form-input,
-      .opt2-input,
-      .opt2-select {
-        padding: 9px 12px 9px 36px;
-        border-radius: 10px;
+      .input-wrapper {
+        overflow: visible;
+      }
+
+      textarea#name.form-input {
+        flex: 0 0 123.08% !important;
+        width: 123.08% !important;
+        max-width: none !important;
+        height: 52px !important;
+        min-height: 52px !important;
+        padding: 15px 14px 13px 44px !important;
+        border-radius: 12px !important;
+        transform: scale(0.8125);
+        transform-origin: top left;
+        margin-bottom: -9.75px !important;
+        line-height: 1.35;
+        resize: none !important;
+      }
+
+      textarea#position.form-input {
+        flex: 0 0 123.08% !important;
+        width: 123.08% !important;
+        max-width: none !important;
+        height: 92px !important;
+        min-height: 92px !important;
+        padding: 14px 14px 12px 44px !important;
+        border-radius: 12px !important;
+        transform: scale(0.8125);
+        transform-origin: top left;
+        margin-bottom: -17.25px !important;
+        line-height: 1.4;
+        resize: none !important;
       }
 
       .ps-size-combo {
-        height: 36px;
+        height: 32px;
         flex: 1.05;
       }
 
       .ps-size-input {
-        padding: 0 4px 0 10px;
-        height: 100%;
+        flex: 0 0 123.08% !important;
+        width: 123.08% !important;
+        max-width: none !important;
+        height: 39.38px !important;
+        min-height: 39.38px !important;
+        padding: 0 4px 0 11px !important;
+        transform: scale(0.8125);
+        transform-origin: top left;
+        margin-bottom: -7.38px;
       }
 
       .ps-size-select-wrap {
-        width: 28px;
+        width: 26px;
       }
 
       .word-spacing-box {
-        height: 36px;
+        height: 32px;
+        overflow: hidden;
       }
 
       .word-spacing-input {
-        width: 46px;
+        width: 48px !important;
+        height: 36px !important;
         padding: 0 2px;
+        transform: scale(0.8125);
+        transform-origin: center center;
+        margin: -2px -4.5px;
       }
 
       .custom-select-wrapper.compact .custom-select-trigger {
-        min-height: 36px;
+        min-height: 32px;
+        height: 32px;
+        font-size: 12px;
       }
 
       .input-wrapper {
@@ -3530,6 +3643,12 @@
         max-width: 100%;
         min-width: 0;
         box-sizing: border-box;
+        align-items: flex-start;
+      }
+
+      .input-wrapper .input-icon {
+        z-index: 2;
+        top: 14px;
       }
 
       .input-icon {
@@ -3558,7 +3677,8 @@
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        gap: 6px;
+        flex-wrap: nowrap;
+        gap: 8px;
         width: 100%;
         max-width: 100%;
         min-width: 0;
@@ -3574,15 +3694,15 @@
         flex: 1;
       }
 
+      .kemnaker-sync-bar .btn-refresh-kemnaker,
       .kemnaker-sync-bar .btn-bubble-action {
         flex-shrink: 0;
+        width: auto;
       }
 
       .btn-refresh-kemnaker {
-        width: 100%;
-        justify-content: center;
-        padding: 6px 10px;
-        font-size: 11.5px;
+        padding: 5px 10px;
+        font-size: 10.5px;
       }
 
       .output-action-group {
@@ -3616,8 +3736,16 @@
 
       .bulk-textarea {
         font-size: 16px !important;
-        padding: 10px;
-        min-height: 120px;
+        width: 123.08% !important;
+        max-width: none !important;
+        height: 168px !important;
+        min-height: 168px !important;
+        padding: 13px 14px !important;
+        border-radius: 12px !important;
+        transform: scale(0.8125);
+        transform-origin: top left;
+        margin-bottom: -31.5px !important;
+        resize: none !important;
       }
 
       .bulk-csv-toggle {
@@ -4134,10 +4262,9 @@
               </div>
 
               <div class="kemnaker-sync-bar">
-                <span id="kemnakerStatusText">📅 Sumber bagan resmi kemnaker.go.id</span>
-                <button type="button" class="btn-bubble-action" onclick="refreshKemnakerData(true)"
-                  style="padding: 3px 8px; font-size: 10.5px; border-radius: 6px;">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <span id="kemnakerStatusText">📅 Bagan resmi kemnaker.go.id</span>
+                <button type="button" class="btn-refresh-kemnaker" onclick="refreshKemnakerData(true)">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                     <polyline points="23 4 23 10 17 10"></polyline>
                     <polyline points="1 20 1 14 7 14"></polyline>
                     <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
@@ -4290,11 +4417,9 @@
                 </div>
 
                 <div class="kemnaker-sync-bar">
-                  <span id="kemnakerBatchStatusText">📋 Seluruh struktur pejabat unit kerja akan otomatis masuk ke
-                    daftar</span>
-                  <button type="button" class="btn-bubble-action" onclick="refreshKemnakerData(true)"
-                    style="padding: 3px 8px; font-size: 10.5px; border-radius: 6px;">
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <span id="kemnakerBatchStatusText">📋 Bagan resmi kemnaker.go.id</span>
+                  <button type="button" class="btn-refresh-kemnaker" onclick="refreshKemnakerData(true)">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                       <polyline points="23 4 23 10 17 10"></polyline>
                       <polyline points="1 20 1 14 7 14"></polyline>
                       <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
@@ -4429,7 +4554,7 @@
               <div class="preview-scale-wrap">
                 <div class="preview-inner" id="previewInner">
                   <div id="card">
-                    <img id="bg" src="{{ url_for('static', filename='template_background_new.png') }}" alt="Background Template">
+                    <img id="bg" src="{{ url_for('static', filename='template_background_preview.webp') }}" alt="Background Template">
                     <div id="block-normal" class="block"></div>
                     <div id="block-flip" class="block"></div>
                   </div>
@@ -4452,7 +4577,7 @@
                 <div class="preview-scale-wrap bulk-active-scale-wrap">
                   <div class="preview-inner" id="bulkActivePreviewInner">
                     <div id="card-bulk-active" class="card-element">
-                      <img id="bg-bulk-active" src="{{ url_for('static', filename='template_background_new.png') }}" alt="Card Background">
+                      <img id="bg-bulk-active" src="{{ url_for('static', filename='template_background_preview.webp') }}" alt="Card Background">
                       <div id="block-normal-bulk-active" class="block"></div>
                       <div id="block-flip-bulk-active" class="block"></div>
                     </div>
@@ -4537,7 +4662,7 @@
                   <div class="sheet-scale-wrap">
                     <div class="sheet-preview-inner" id="sheetPreviewInner">
                       <div id="card-sheet" class="card-element">
-                        <img id="bg-sheet" src="{{ url_for('static', filename='template_background_new.png') }}" alt="Background Template">
+                        <img id="bg-sheet" src="{{ url_for('static', filename='template_background_preview.webp') }}" alt="Background Template">
                         <div id="block-normal-sheet" class="block"></div>
                         <div id="block-flip-sheet" class="block"></div>
                       </div>
@@ -4592,7 +4717,9 @@
                         <option value="__custom__">+ Upload Font (.ttf/.otf)...</option>
                       </select>
                       <div class="ps-size-combo" title="Ketik ukuran font nama">
-                        <input type="text" id="fontSizeNameInput" class="ps-size-input" value="auto" placeholder="auto">
+                        <div class="ps-size-input-box">
+                          <input type="text" id="fontSizeNameInput" class="ps-size-input" value="auto" placeholder="auto">
+                        </div>
                         <div class="ps-size-select-wrap">
                           <button type="button" class="ps-size-arrow-btn" tabindex="-1">
                             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -4642,7 +4769,9 @@
                         <option value="__custom__">+ Upload Font (.ttf/.otf)...</option>
                       </select>
                       <div class="ps-size-combo" title="Ketik ukuran font jabatan">
-                        <input type="text" id="fontSizePosInput" class="ps-size-input" value="auto" placeholder="auto">
+                        <div class="ps-size-input-box">
+                          <input type="text" id="fontSizePosInput" class="ps-size-input" value="auto" placeholder="auto">
+                        </div>
                         <div class="ps-size-select-wrap">
                           <button type="button" class="ps-size-arrow-btn" tabindex="-1">
                             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -4796,13 +4925,13 @@
   </section>
 
   <!-- Scripts -->
-  <script src="{{ url_for('static', filename='nametag.js') }}?v=20261123a"></script>
-  <script src="{{ url_for('static', filename='dropdown.js') }}?v=20261123a"></script>
+  <script src="{{ url_for('static', filename='nametag.js') }}?v=20261124a"></script>
+  <script src="{{ url_for('static', filename='dropdown.js') }}?v=20261124a"></script>
   <script>
     let currentTab = "single";
     let currentBulkIndex = 0;
 
-    const BG_TEMPLATE_URL = "{{ url_for('static', filename='template_background_new.png') }}";
+    const BG_TEMPLATE_URL = "{{ url_for('static', filename='template_background_preview.webp') }}";
 
     // Global settings state
     let currentContentMode = "both";
@@ -5031,32 +5160,58 @@
         });
       }
 
+      function repositionMenu() {
+        if (!combo.classList.contains("open")) return;
+        const rect = combo.getBoundingClientRect();
+        const vh = window.innerHeight;
+        const vw = window.innerWidth;
+        const menuW = 135;
+        const leftPos = Math.max(8, Math.min(rect.right - menuW, vw - menuW - 8));
+        const spaceBelow = vh - rect.bottom - 12;
+        const spaceAbove = rect.top - 12;
+        const openUp = spaceBelow < 180 && spaceAbove > spaceBelow;
+
+        menu.style.position = "fixed";
+        menu.style.left = leftPos + "px";
+        menu.style.right = "auto";
+        menu.style.width = menuW + "px";
+        menu.style.zIndex = "250000";
+
+        if (openUp) {
+          combo.classList.add("drop-up");
+          menu.classList.add("drop-up");
+          menu.style.top = "auto";
+          menu.style.bottom = (vh - rect.top + 5) + "px";
+          menu.style.maxHeight = Math.max(100, Math.min(220, spaceAbove)) + "px";
+        } else {
+          combo.classList.remove("drop-up");
+          menu.classList.remove("drop-up");
+          menu.style.bottom = "auto";
+          menu.style.top = (rect.bottom + 5) + "px";
+          menu.style.maxHeight = Math.max(100, Math.min(220, spaceBelow)) + "px";
+        }
+      }
+
       function openMenu() {
-        document.querySelectorAll(".custom-select-wrapper.open").forEach(w => {
-          w.classList.remove("open");
-          w.querySelector(".custom-select-trigger")?.setAttribute("aria-expanded", "false");
-          w.closest(".sheet-section")?.classList.remove("has-open-dropdown");
-          w.closest(".sheet-grid-2")?.classList.remove("has-open-dropdown");
-        });
+        if (typeof window.closeAllCustomDropdowns === "function") {
+          window.closeAllCustomDropdowns();
+        }
         document.querySelectorAll(".ps-size-combo.open").forEach(c => {
           if (c !== combo) {
-            c.classList.remove("open");
-            c.closest(".sheet-section")?.classList.remove("has-open-dropdown");
-            c.closest(".sheet-grid-2")?.classList.remove("has-open-dropdown");
+            if (typeof c._closePsSizeMenu === "function") c._closePsSizeMenu();
+            else c.classList.remove("open");
           }
         });
 
         rebuildMenu();
 
-        const rect = combo.getBoundingClientRect();
-        const spaceBelow = window.innerHeight - rect.bottom;
-        if (spaceBelow < 190 && rect.top > spaceBelow) {
-          combo.classList.add("drop-up");
-        } else {
-          combo.classList.remove("drop-up");
+        if (menu.parentNode !== document.body) {
+          document.body.appendChild(menu);
         }
 
         combo.classList.add("open");
+        menu.classList.add("open", "portal-open");
+        repositionMenu();
         const sec = combo.closest(".sheet-section");
         if (sec) sec.classList.add("has-open-dropdown");
         const grd = combo.closest(".sheet-grid-2");
@@ -5064,12 +5219,25 @@
       }
 
       function closeMenu() {
-        combo.classList.remove("open");
+        combo.classList.remove("open", "drop-up");
+        menu.classList.remove("open", "drop-up", "portal-open");
+        menu.style.position = "";
+        menu.style.left = "";
+        menu.style.right = "";
+        menu.style.top = "";
+        menu.style.bottom = "";
+        menu.style.width = "";
+        menu.style.maxHeight = "";
+        menu.style.zIndex = "";
+        if (menu.parentNode !== combo) {
+          combo.appendChild(menu);
+        }
         const sec = combo.closest(".sheet-section");
         if (sec) sec.classList.remove("has-open-dropdown");
         const grd = combo.closest(".sheet-grid-2");
         if (grd) grd.classList.remove("has-open-dropdown");
       }
+      combo._closePsSizeMenu = closeMenu;
 
       arrowWrap.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -5080,8 +5248,18 @@
         }
       });
 
+      window.addEventListener("scroll", (e) => {
+        if (!combo.classList.contains("open")) return;
+        if (e.target && e.target.closest && e.target.closest(".ps-size-menu")) return;
+        repositionMenu();
+      }, true);
+
+      window.addEventListener("resize", () => {
+        if (combo.classList.contains("open")) repositionMenu();
+      });
+
       document.addEventListener("click", (e) => {
-        if (!e.target.closest(".ps-size-combo")) {
+        if (!combo.contains(e.target) && !menu.contains(e.target)) {
           closeMenu();
         }
       });
@@ -5324,10 +5502,10 @@
       const batchStatusText = document.getElementById("kemnakerBatchStatusText");
       const dateBadge = document.getElementById("kemnakerDateBadge");
       const batchDateBadge = document.getElementById("kemnakerBatchDateBadge");
-      const refreshBtns = document.querySelectorAll(".btn-bubble-action[onclick*='refreshKemnakerData']");
+      const refreshBtns = document.querySelectorAll("[onclick*='refreshKemnakerData']");
 
       const defaultBtnHtml = `
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
           <polyline points="23 4 23 10 17 10"></polyline>
           <polyline points="1 20 1 14 7 14"></polyline>
           <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
@@ -5346,7 +5524,7 @@
         refreshBtns.forEach(b => {
           b.disabled = true;
           b.innerHTML = `
-            <svg class="spin-animation" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg class="spin-animation" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
               <line x1="12" y1="2" x2="12" y2="6"></line>
               <line x1="12" y1="18" x2="12" y2="22"></line>
               <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
@@ -5359,8 +5537,8 @@
             Memperbarui...
           `;
         });
-        if (statusText) statusText.textContent = "⏳ Memperbarui data struktur dari kemnaker.go.id...";
-        if (batchStatusText) batchStatusText.textContent = "⏳ Memperbarui data struktur dari kemnaker.go.id...";
+        if (statusText) statusText.textContent = "⏳ Memperbarui data...";
+        if (batchStatusText) batchStatusText.textContent = "⏳ Memperbarui data...";
       }
 
       try {
@@ -5377,10 +5555,10 @@
           if (dateBadge) dateBadge.textContent = shortDate;
           if (batchDateBadge) batchDateBadge.textContent = shortDate;
           if (statusText) {
-            statusText.textContent = "📅 Data terupdate: " + (data.date_formatted || "Hari ini");
+            statusText.textContent = "📅 Bagan resmi kemnaker.go.id";
           }
           if (batchStatusText) {
-            batchStatusText.textContent = "📅 Data terupdate: " + (data.date_formatted || "Hari ini");
+            batchStatusText.textContent = "📋 Bagan resmi kemnaker.go.id";
           }
           populateKemnakerUnits(data.units);
 
@@ -6346,6 +6524,9 @@
       modalSnapshot = captureSettingsSnapshot();
       const backdrop = document.getElementById("opt2SheetBackdrop");
       if (backdrop) {
+        if (backdrop.parentNode !== document.body) {
+          document.body.appendChild(backdrop);
+        }
         resetDrawerDragStyle();
         if (typeof syncAllModernDropdowns === "function") syncAllModernDropdowns();
         backdrop.classList.add("open");
@@ -6410,13 +6591,16 @@
     (function initOpt2ModalTouchHandlers() {
       const backdrop = document.getElementById("opt2SheetBackdrop");
       if (!backdrop) return;
+      if (backdrop.parentNode !== document.body) {
+        document.body.appendChild(backdrop);
+      }
       const drawer = backdrop.querySelector(".sheet-drawer");
       const handleBar = backdrop.querySelector(".sheet-handle-bar");
       const header = backdrop.querySelector(".sheet-header");
 
       backdrop.addEventListener("touchmove", function (e) {
         if (!backdrop.classList.contains("open")) return;
-        const inScrollable = e.target.closest(".sheet-content, .custom-select-dropdown, .ps-size-menu, .modal-bulk-gallery-strip");
+        const inScrollable = e.target.closest(".sheet-content, .custom-select-menu, .custom-select-options, .ps-size-menu, .modal-bulk-gallery-strip");
         if (!inScrollable) {
           e.preventDefault();
         }
@@ -6698,7 +6882,7 @@
           const batchUnitSelect = document.getElementById("kemnakerBatchUnitSelect");
           if (batchUnitSelect) batchUnitSelect.value = "";
           const batchStatusText = document.getElementById("kemnakerBatchStatusText");
-          if (batchStatusText) batchStatusText.textContent = "📋 Seluruh struktur pejabat unit kerja akan otomatis masuk ke daftar";
+          if (batchStatusText) batchStatusText.textContent = "📋 Bagan resmi kemnaker.go.id";
         }
 
         // Reset batch form to clean initial state before input

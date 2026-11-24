@@ -14,11 +14,6 @@ from urllib.parse import parse_qs
 
 from flask import Flask, render_template, request, send_file, flash, redirect, url_for, jsonify, send_from_directory
 
-import io
-import kemnaker_data
-import generate_notepad
-from generate_html import build_pdf_with_fallback as build_pdf
-from generate_html import build_pdf_multipage
 from paths import resource_path, output_dir, slugify, base_dir, is_frozen
 
 app = Flask(
@@ -27,6 +22,7 @@ app = Flask(
     static_folder=resource_path("static"),
 )
 app.secret_key = "dev-only-not-secret"  # fine for a local prototype
+app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 86400
 
 class VercelPathMiddleware:
     """WSGI middleware to normalize PATH_INFO from Vercel proxy/rewrites."""
@@ -55,12 +51,8 @@ OUTPUT_DIR = output_dir()
 
 
 @app.route("/", methods=["GET"])
-def index():
-    return redirect("/nametable")
-
-
 @app.route("/nametable", methods=["GET"])
-def nametable():
+def index():
     return render_template("index.html")
 
 
@@ -72,6 +64,7 @@ def notepad():
 @app.route("/generate_notepad", methods=["POST"])
 def generate_notepad_route():
     import json
+    import generate_notepad
     data = None
     if request.is_json:
         data = request.get_json(silent=True)
@@ -128,6 +121,7 @@ def download_sample_csv():
 @app.route("/api/kemnaker-units", methods=["GET"])
 @app.route("/kemnaker_data", methods=["GET"])
 def api_kemnaker_units():
+    import kemnaker_data
     force_refresh = request.args.get("refresh", "0") in ("1", "true", "True")
     data = kemnaker_data.get_kemnaker_data(force_refresh=force_refresh)
     resp = jsonify(data)
@@ -189,12 +183,6 @@ def proxy_kemnaker_photo():
         return redirect(raw_url, code=302)
 
 
-from generate import (
-    split_name_and_position, format_bulk_name, clean_titles,
-    clean_position_text, strip_trailing_punctuation, deduplicate_bulk_rows,
-    sanitize_text, apply_text_case
-)
-
 def _extract_card_options(form):
     """Extracts font, sizing, spacing, case, paper size, and custom asset options from request.form."""
     sides = form.get("sides", "2").strip()
@@ -235,6 +223,13 @@ def _extract_card_options(form):
 
 @app.route("/generate", methods=["POST"])
 def generate_single():
+    import kemnaker_data
+    from generate import (
+        format_bulk_name, clean_titles, clean_position_text,
+        strip_trailing_punctuation, sanitize_text
+    )
+    from generate_html import build_pdf_with_fallback as build_pdf
+
     content_mode = request.form.get("content_mode", "both").strip()
     if content_mode not in ("both", "name_only", "position_only"):
         content_mode = "both"
@@ -292,6 +287,13 @@ def generate_single():
 @app.route("/batch", methods=["POST"])
 @app.route("/generate_batch", methods=["POST"])
 def generate_batch():
+    import kemnaker_data
+    from generate import (
+        split_name_and_position, format_bulk_name,
+        clean_position_text, strip_trailing_punctuation, deduplicate_bulk_rows
+    )
+    from generate_html import build_pdf_multipage
+
     content_mode = request.form.get("content_mode", "both").strip()
     if content_mode not in ("both", "name_only", "position_only"):
         content_mode = "both"

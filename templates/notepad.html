@@ -13,8 +13,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,700&family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;1,600;1,700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600;1,700;1,800&family=Roboto:ital,wght@0,400;0,500;0,700;1,400;1,700&display=swap"
-    rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='dropdown.css') }}?v=20261123a">
+    rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript>
+    <link
+      href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,700&family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;1,600;1,700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600;1,700;1,800&family=Roboto:ital,wght@0,400;0,500;0,700;1,400;1,700&display=swap"
+      rel="stylesheet">
+  </noscript>
+  <link rel="stylesheet" href="{{ url_for('static', filename='dropdown.css') }}?v=20261124a">
 
   <style>
     /* =========================================================================
@@ -551,32 +556,56 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 8px;
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px solid #e2ecf5;
       font-size: 11px;
-      color: #64748b;
+      font-weight: 500;
+      color: #475569;
       gap: 8px;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
     }
 
+    .kemnaker-sync-bar span {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+    }
+
+    .btn-refresh-kemnaker,
     .btn-bubble-action {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      background: #ffffff;
+      justify-content: center;
+      gap: 5px;
+      background: linear-gradient(135deg, #eef4fb 0%, #e1ecf8 100%);
       color: var(--kemnaker-blue);
-      border: 1px solid #cbdbe9;
-      border-radius: 6px;
-      padding: 3px 8px;
-      font-size: 10.5px;
+      border: 1px solid #bfd3ea;
+      border-radius: 9999px;
+      padding: 5px 11px;
+      font-size: 11px;
       font-weight: 700;
       cursor: pointer;
-      transition: all 0.15s ease;
+      white-space: nowrap;
+      flex-shrink: 0;
+      box-shadow: 0 1px 2px rgba(21, 64, 106, 0.06);
+      transition: all 0.16s ease;
       font-family: inherit;
+      line-height: 1.2;
     }
 
+    .btn-refresh-kemnaker:hover,
     .btn-bubble-action:hover {
-      background: #f8fafc;
-      border-color: var(--kemnaker-blue);
+      background: linear-gradient(135deg, #e1ecf8 0%, #d3e3f4 100%);
+      border-color: #93b5d8;
+      color: var(--kemnaker-dark);
+    }
+
+    .btn-refresh-kemnaker:disabled {
+      opacity: 0.72;
+      cursor: wait;
     }
 
     /* Section Headers inside Card */
@@ -780,6 +809,7 @@
     .btn-calendar-trigger {
       position: absolute;
       right: 7px;
+      z-index: 2;
       width: 34px;
       height: 34px;
       background: #ffffff;
@@ -2218,6 +2248,8 @@
 
     @media (max-width: 768px) {
 
+      /* Force >= 16px computed font-size on mobile inputs so iOS Safari never auto-zooms,
+         while scaling visually down to ~13px for sleek compact proportions */
       .form-input,
       .form-textarea,
       .form-select,
@@ -2226,6 +2258,39 @@
       textarea,
       select {
         font-size: 16px !important;
+      }
+
+      textarea#inputTitle.form-textarea {
+        width: 123.08% !important;
+        max-width: none !important;
+        height: 82px !important;
+        min-height: 82px !important;
+        padding: 13px 14px !important;
+        border-radius: 12px !important;
+        transform: scale(0.8125);
+        transform-origin: top left;
+        margin-bottom: -15.38px !important;
+        resize: none !important;
+      }
+
+      input#inputDate.date-text-input {
+        flex: 0 0 123.08% !important;
+        width: 123.08% !important;
+        max-width: none !important;
+        height: 54px !important;
+        padding: 11px 54px 11px 14px !important;
+        border-radius: 12px !important;
+        transform: scale(0.8125);
+        transform-origin: top left;
+        margin-bottom: -10.12px !important;
+      }
+
+      .date-picker-wrapper {
+        align-items: flex-start;
+      }
+
+      .btn-calendar-trigger {
+        top: 5px;
       }
 
       .notepad-type-switcher {
@@ -2256,18 +2321,17 @@
       }
 
       .time-digit-input {
-        width: 46px;
-        height: 26px;
-        padding: 0;
+        width: 48px !important;
+        height: 28px !important;
+        padding: 0 !important;
+        transform: scale(0.8125);
+        transform-origin: center center;
+        margin: -2.6px -4.5px;
       }
 
       .time-arrow-btn {
         width: 40px;
         height: 12px;
-      }
-
-      .date-text-input {
-        height: 52px;
       }
 
       .tab-btn {
@@ -2298,8 +2362,65 @@
         border-radius: 12px;
       }
 
-      .form-textarea {
-        min-height: 86px;
+      input#inputSingleName.form-input {
+        width: 123.08% !important;
+        max-width: none !important;
+        height: 48px !important;
+        padding: 11px 14px !important;
+        border-radius: 12px !important;
+        transform: scale(0.8125);
+        transform-origin: top left;
+        margin-bottom: -9px !important;
+      }
+
+      textarea#inputSinglePos.form-textarea {
+        width: 123.08% !important;
+        max-width: none !important;
+        height: 82px !important;
+        min-height: 82px !important;
+        padding: 13px 14px !important;
+        border-radius: 12px !important;
+        transform: scale(0.8125);
+        transform-origin: top left;
+        margin-bottom: -15.38px !important;
+        resize: none !important;
+      }
+
+      textarea#inputBulkText.form-textarea {
+        width: 123.08% !important;
+        max-width: none !important;
+        height: 150px !important;
+        min-height: 150px !important;
+        padding: 13px 14px !important;
+        border-radius: 12px !important;
+        transform: scale(0.8125);
+        transform-origin: top left;
+        margin-bottom: -28.12px !important;
+        resize: none !important;
+      }
+
+      input#inlineEditName.form-input-sm {
+        width: 123.08% !important;
+        max-width: none !important;
+        height: 44px !important;
+        padding: 9px 12px !important;
+        border-radius: 10px !important;
+        transform: scale(0.8125);
+        transform-origin: top left;
+        margin-bottom: -8.25px !important;
+      }
+
+      textarea#inlineEditPos.form-input-sm {
+        width: 123.08% !important;
+        max-width: none !important;
+        height: 76px !important;
+        min-height: 76px !important;
+        padding: 10px 12px !important;
+        border-radius: 10px !important;
+        transform: scale(0.8125);
+        transform-origin: top left;
+        margin-bottom: -14.25px !important;
+        resize: none !important;
       }
 
       .nav-page-switcher {
@@ -2882,9 +3003,9 @@
                 </div>
 
                 <div class="kemnaker-sync-bar">
-                  <span id="kemnakerStatusText">📅 Bagan Kemnaker</span>
-                  <button type="button" class="btn-bubble-action" onclick="refreshNotepadKemnakerData()">
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <span id="kemnakerStatusText">📅 Bagan resmi kemnaker.go.id</span>
+                  <button type="button" class="btn-refresh-kemnaker" onclick="refreshNotepadKemnakerData()">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                       <polyline points="23 4 23 10 17 10"></polyline>
                       <polyline points="1 20 1 14 7 14"></polyline>
                       <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
@@ -3010,7 +3131,7 @@
 
   <!-- Shared Name Table & Notepad Utilities -->
   <script src="{{ url_for('static', filename='nametag.js') }}?v=20261123a"></script>
-  <script src="{{ url_for('static', filename='dropdown.js') }}?v=20261123a"></script>
+  <script src="{{ url_for('static', filename='dropdown.js') }}?v=20261124a"></script>
 
   <!-- JavaScript Logic -->
   <script>
@@ -4168,7 +4289,7 @@
           const dateTag = document.getElementById("kemnakerDateTag");
           if (dateTag && json.date_display) dateTag.textContent = json.date_display;
           if (statusEl) {
-            statusEl.textContent = json.fetched_at ? `📅 Data: ${json.fetched_at}` : "📅 Bagan Kemnaker";
+            statusEl.textContent = "📅 Bagan resmi kemnaker.go.id";
           }
         }
       } catch (err) {
