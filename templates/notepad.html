@@ -88,7 +88,7 @@
     }
 
     .nav-container {
-      max-width: 1240px;
+      max-width: 1420px;
       height: 100%;
       margin: 0 auto;
       padding: 0 24px;
@@ -363,7 +363,7 @@
     .hero-container {
       position: relative;
       width: 100%;
-      max-width: 1240px;
+      max-width: 1420px;
       margin: 0 auto;
       flex: 1 0 auto;
       box-sizing: border-box;
@@ -481,16 +481,406 @@
       display: none;
     }
 
-    /* --- Dashboard Grid --- */
+    /* --- Dashboard Grid: Desktop 3-Column Layout (Wider Info Left | Compact Preview Center | Wider Daftar Nama Right) --- */
     .dashboard-grid {
       display: grid;
-      grid-template-columns: 480px minmax(0, 1fr);
-      gap: 32px;
+      grid-template-columns: minmax(295px, 1fr) minmax(350px, 465px) minmax(340px, 1.15fr);
+      gap: 18px;
       margin-top: 10px;
       margin-bottom: 36px;
       align-items: start;
       width: 100%;
       box-sizing: border-box;
+    }
+
+    @media (min-width: 1061px) {
+      .desktop-preview-slot .preview-card-frame {
+        padding: 18px;
+      }
+      .desktop-preview-slot .notepad-preview-viewport {
+        padding: 12px;
+      }
+    }
+
+    .desktop-right-slot {
+      display: block;
+      min-width: 0;
+    }
+
+    /* Independent Role Cards (Pendamping & Peserta) */
+    .role-manager-card {
+      background: #f8fafc;
+      border: 1.5px solid #cbdbe9;
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 12px;
+      box-sizing: border-box;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .role-manager-card:last-child {
+      margin-bottom: 0;
+    }
+
+    .role-manager-card:focus-within {
+      border-color: #93b5d8;
+      box-shadow: 0 4px 12px rgba(21, 64, 106, 0.08);
+    }
+
+    .role-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e2ecf5;
+    }
+
+    .role-card-title-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-width: 0;
+    }
+
+    .role-card-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--kemnaker-blue);
+      flex-shrink: 0;
+    }
+
+    .role-card-dot.is-peserta {
+      background: #059669;
+    }
+
+    .role-card-title {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: var(--kemnaker-blue);
+      letter-spacing: -0.1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .desktop-right-slot .name-items-container {
+      margin-bottom: 0;
+    }
+
+    .desktop-right-slot .name-items-container:empty::before {
+      padding: 12px 10px;
+      font-size: 11.5px;
+    }
+
+    .desktop-right-slot .input-subpanel {
+      margin-bottom: 10px;
+      padding: 10px;
+    }
+
+    /* Inline Preview Trigger Buttons (visible only on mobile preview) */
+    .np-section-trigger-row {
+      display: none;
+    }
+
+    @media (max-width: 1060px) {
+      .np-section-trigger-row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-top: calc(4px + 4px * var(--np-trig-inv, 1));
+        padding-bottom: calc(2px + 4px * var(--np-trig-inv, 1));
+      }
+
+      .np-preview-trigger-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        background: linear-gradient(135deg, #15406a 0%, #0d2b45 100%);
+        color: #ffffff;
+        border: none;
+        border-radius: 9999px;
+        padding: 5px 12px;
+        min-height: 26px;
+        font-family: "Plus Jakarta Sans", Arial, sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 2px 7px rgba(21, 64, 106, 0.24);
+        transform: scale(var(--np-trig-inv, 1));
+        transform-origin: center center;
+        transition: opacity 0.15s ease, filter 0.15s ease;
+        letter-spacing: 0.15px;
+        line-height: 1.15;
+        white-space: nowrap;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .np-preview-trigger-btn:active {
+        filter: brightness(0.92);
+      }
+
+      .np-preview-trigger-btn.is-peserta {
+        background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        box-shadow: 0 2px 7px rgba(5, 150, 105, 0.24);
+      }
+
+      .np-empty-trigger-only .np-section-header {
+        color: #64748b;
+        opacity: 0.78;
+      }
+    }
+
+    /* Bottom Sheet Modal for Mobile List Editing (Identical to Name Table Pengaturan Modal) */
+    html.np-modal-open,
+    body.np-modal-open {
+      overflow: hidden !important;
+      overscroll-behavior: none !important;
+      touch-action: none;
+    }
+
+    .np-sheet-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.68);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 99999;
+      opacity: 0;
+      pointer-events: none;
+      visibility: hidden;
+      transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      overscroll-behavior: contain;
+      touch-action: none;
+    }
+
+    .np-sheet-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+      visibility: visible;
+    }
+
+    .np-sheet-drawer {
+      background: #ffffff;
+      width: 100%;
+      max-width: 640px;
+      max-height: 92vh;
+      max-height: 92dvh;
+      height: 88vh;
+      height: 88dvh;
+      border-radius: 24px 24px 0 0;
+      box-shadow: 0 -10px 40px -5px rgba(15, 23, 42, 0.35);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transform: translateY(100%);
+      transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+      overscroll-behavior: contain;
+      touch-action: pan-y;
+    }
+
+    .np-sheet-backdrop.open .np-sheet-drawer {
+      transform: translateY(0);
+    }
+
+    .np-sheet-handle-bar {
+      display: block;
+      position: relative;
+      width: 48px;
+      height: 5px;
+      background: #cbd5e1;
+      border-radius: 999px;
+      margin: 12px auto 6px;
+      cursor: grab;
+      flex-shrink: 0;
+      touch-action: none;
+    }
+
+    .np-sheet-handle-bar::before {
+      content: "";
+      position: absolute;
+      top: -14px;
+      bottom: -14px;
+      left: -60px;
+      right: -60px;
+    }
+
+    .np-sheet-header {
+      padding: 12px 18px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #ffffff;
+      flex-shrink: 0;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .np-sheet-title {
+      font-size: 15.5px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.25px;
+    }
+
+    .np-btn-close-sheet {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      color: #475569;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 15px;
+      transition: all 0.15s ease;
+    }
+
+    .np-btn-close-sheet:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .np-sheet-preview-box {
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 8px 14px 10px;
+      flex-shrink: 0;
+    }
+
+    .np-sheet-preview-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      gap: 8px;
+    }
+
+    .np-sheet-preview-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--kemnaker-blue);
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+
+    .np-sheet-preview-badge .badge-live {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #ef4444;
+    }
+
+    .np-sheet-preview-role-tag {
+      font-size: 10px;
+      font-weight: 700;
+      color: #475569;
+      background: #e2e8f0;
+      padding: 1.5px 7px;
+      border-radius: 9999px;
+    }
+
+    .np-modal-mini-frame {
+      background: #ffffff;
+      border: 1.44px solid #0f172a;
+      padding: 2.16px;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+    }
+
+    .np-modal-mini-inner {
+      border: 0.72px solid #0f172a;
+      padding: 7px 10px;
+      max-height: 112px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      font-family: Arial, sans-serif;
+      color: #000000;
+      font-size: 11px;
+      line-height: 1.42;
+      background: #ffffff;
+    }
+
+    .np-modal-mini-inner .np-section-header {
+      font-size: 11px;
+      margin-bottom: 4px;
+      padding-left: 0 !important;
+    }
+
+    .np-modal-mini-inner .np-list-container {
+      padding-left: 4px !important;
+      padding-right: 0 !important;
+    }
+
+    .np-modal-mini-inner .np-list-item {
+      font-size: 10.5px !important;
+      line-height: 1.4 !important;
+    }
+
+    .np-modal-mini-inner.is-placeholder {
+      opacity: 0.45;
+    }
+
+    .np-sheet-content {
+      padding: 14px 14px 32px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      touch-action: pan-y;
+      flex: 1;
+      background: #f1f5f9;
+      min-width: 0;
+    }
+
+    .np-sheet-content .role-manager-card {
+      background: #ffffff;
+      margin-bottom: 0;
+    }
+
+    .np-sheet-content[data-modal-role="pendamping"] #roleCard_peserta {
+      display: none !important;
+    }
+
+    .np-sheet-content[data-modal-role="peserta"] #roleCard_pendamping {
+      display: none !important;
+    }
+
+    .np-sheet-footer {
+      padding: 10px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+      border-top: 1px solid #e2e8f0;
+      background: #ffffff;
+      flex-shrink: 0;
+      display: flex;
+      gap: 10px;
+      box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.06);
+      z-index: 10;
+    }
+
+    .np-btn-apply-sheet {
+      flex: 1;
+      background: linear-gradient(135deg, #15406a 0%, #0d2b45 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 13.5px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 4px 12px rgba(21, 64, 106, 0.25);
     }
 
     .form-card,
@@ -780,8 +1170,8 @@
 
     .event-meta-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-      gap: 10px;
+      grid-template-columns: 1fr;
+      gap: 12px;
       width: 100%;
       box-sizing: border-box;
       align-items: stretch;
@@ -1031,20 +1421,33 @@
     }
 
     .btn-text-action {
-      background: none;
-      border: none;
+      background: linear-gradient(135deg, #eef4fb 0%, #e1ecf8 100%);
+      border: 1px solid #bfd3ea;
+      border-radius: 9999px;
       color: var(--kemnaker-blue);
       cursor: pointer;
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 700;
-      padding: 0;
+      padding: 2.5px 9px;
+      font-family: inherit;
       display: inline-flex;
       align-items: center;
-      gap: 3px;
+      gap: 4px;
+      box-shadow: 0 1px 2px rgba(21, 64, 106, 0.06);
+      transition: all 0.15s ease;
+      line-height: 1.2;
+      white-space: nowrap;
     }
 
     .btn-text-action:hover {
-      text-decoration: underline;
+      background: linear-gradient(135deg, #e1ecf8 0%, #d3e3f4 100%);
+      border-color: #93b5d8;
+      color: var(--kemnaker-dark);
+      transform: translateY(-0.5px);
+    }
+
+    .btn-text-action:active {
+      transform: scale(0.96);
     }
 
     /* Modern Time Stepper Component (Vertical Top/Bottom Arrows + Editable Side-by-Side Digits) */
@@ -1770,6 +2173,7 @@
       align-items: center;
       justify-content: flex-start;
       overflow: hidden;
+      overflow-anchor: none;
       box-sizing: border-box;
     }
 
@@ -1777,6 +2181,7 @@
       position: relative;
       margin: 0 auto;
       overflow: visible;
+      overflow-anchor: none;
       flex-shrink: 0;
     }
 
@@ -1786,6 +2191,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
+      overflow-anchor: none;
       width: max-content;
     }
 
@@ -2095,7 +2501,7 @@
     }
 
     .footer-container {
-      max-width: 1240px;
+      max-width: 1420px;
       margin: 0 auto;
       display: flex;
       align-items: center;
@@ -2147,7 +2553,10 @@
 
       .navbar,
       .form-card,
+      .desktop-right-slot,
       .preview-top-bar,
+      .np-section-trigger-row,
+      .np-sheet-backdrop,
       .footer,
       .hero-header,
       .np-page-caption {
@@ -2220,8 +2629,33 @@
         margin-bottom: 14px;
       }
 
-      .desktop-preview-slot {
+      .desktop-preview-slot,
+      .desktop-right-slot {
         display: none !important;
+      }
+
+      .event-meta-grid {
+        grid-template-columns: minmax(0, 1.38fr) minmax(0, 0.9fr) !important;
+        gap: 6px !important;
+        align-items: stretch !important;
+      }
+
+      .event-meta-grid .form-group {
+        margin-bottom: 10px;
+      }
+
+      .event-meta-grid .form-label {
+        font-size: 10.5px;
+        gap: 4px;
+        margin-bottom: 5px;
+        min-height: 18px;
+        white-space: nowrap;
+      }
+
+      .btn-text-action,
+      .badge-time-preview {
+        font-size: 10px;
+        padding: 1px 5px;
       }
 
       .mobile-preview-slot .preview-card-frame {
@@ -2274,15 +2708,16 @@
       }
 
       input#inputDate.date-text-input {
-        flex: 0 0 123.08% !important;
-        width: 123.08% !important;
+        flex: 0 0 138.89% !important;
+        width: 138.89% !important;
         max-width: none !important;
-        height: 54px !important;
-        padding: 11px 54px 11px 14px !important;
-        border-radius: 12px !important;
-        transform: scale(0.8125);
+        height: 61px !important;
+        padding: 10px 46px 10px 10px !important;
+        letter-spacing: -0.25px;
+        border-radius: 13px !important;
+        transform: scale(0.72);
         transform-origin: top left;
-        margin-bottom: -10.12px !important;
+        margin-bottom: -17.08px !important;
       }
 
       .date-picker-wrapper {
@@ -2290,7 +2725,10 @@
       }
 
       .btn-calendar-trigger {
-        top: 5px;
+        top: 7.5px;
+        right: 5px;
+        width: 28px;
+        height: 28px;
       }
 
       .notepad-type-switcher {
@@ -2316,22 +2754,35 @@
       }
 
       .time-stepper-widget {
-        height: 56px;
-        padding: 4px 12px;
+        height: 44px !important;
+        padding: 3px 5px !important;
+        gap: 2px !important;
+      }
+
+      .time-digits-pair {
+        gap: 1px;
       }
 
       .time-digit-input {
-        width: 48px !important;
-        height: 28px !important;
+        width: 33px !important;
+        height: 24px !important;
         padding: 0 !important;
         transform: scale(0.8125);
         transform-origin: center center;
-        margin: -2.6px -4.5px;
+        margin: -2.25px -3px;
       }
 
       .time-arrow-btn {
-        width: 40px;
-        height: 12px;
+        width: 27px;
+        height: 10px;
+      }
+
+      .time-stepper-widget .custom-select-wrapper.compact.pill-mini .custom-select-trigger {
+        height: 28px !important;
+        min-height: 28px !important;
+        padding: 0 4px !important;
+        font-size: 10.5px !important;
+        gap: 2px !important;
       }
 
       .tab-btn {
@@ -2343,7 +2794,7 @@
       .form-btn-group {
         flex-direction: column;
         gap: 8px;
-        margin-top: 12px;
+        margin-top: 8px;
       }
 
       .btn-generate {
@@ -2362,7 +2813,7 @@
         border-radius: 12px;
       }
 
-      input#inputSingleName.form-input {
+      input.np-single-name-input.form-input {
         width: 123.08% !important;
         max-width: none !important;
         height: 48px !important;
@@ -2373,7 +2824,7 @@
         margin-bottom: -9px !important;
       }
 
-      textarea#inputSinglePos.form-textarea {
+      textarea.np-single-pos-input.form-textarea {
         width: 123.08% !important;
         max-width: none !important;
         height: 82px !important;
@@ -2386,7 +2837,7 @@
         resize: none !important;
       }
 
-      textarea#inputBulkText.form-textarea {
+      textarea.np-bulk-textarea.form-textarea {
         width: 123.08% !important;
         max-width: none !important;
         height: 150px !important;
@@ -2399,7 +2850,7 @@
         resize: none !important;
       }
 
-      input#inlineEditName.form-input-sm {
+      input.inline-edit-name.form-input-sm {
         width: 123.08% !important;
         max-width: none !important;
         height: 44px !important;
@@ -2410,7 +2861,7 @@
         margin-bottom: -8.25px !important;
       }
 
-      textarea#inlineEditPos.form-input-sm {
+      textarea.inline-edit-pos.form-input-sm {
         width: 123.08% !important;
         max-width: none !important;
         height: 76px !important;
@@ -2603,7 +3054,12 @@
       }
 
       .event-meta-grid {
-        grid-template-columns: 1fr !important;
+        grid-template-columns: minmax(0, 1.38fr) minmax(0, 0.9fr) !important;
+        gap: 6px !important;
+      }
+
+      .event-meta-grid .badge-time-preview {
+        display: none;
       }
 
       .form-btn-group {
@@ -2757,13 +3213,13 @@
         </div>
       </div>
 
-      <!-- Dashboard Grid (Kiri: Form Input & List, Kanan: Live Preview) -->
+      <!-- Dashboard Grid: Desktop 3-Kolom (Info Kiri | Preview Tengah | Daftar Nama Kanan) -->
       <div class="dashboard-grid">
 
-        <!-- Kolom Kiri: Form Input -->
-        <div class="form-card">
+        <!-- Kolom Kiri: Informasi Kegiatan & Aksi Output -->
+        <div class="form-card" id="leftInfoCard">
 
-          <!-- Pilihan Konten Lembar Kecil (Langsung Gaya Tab Input Tunggal | Input Banyak Name Table) -->
+          <!-- Pilihan Konten Lembar Kecil -->
           <div id="kecilOptionsWrapper" class="tab-switch-wrap" style="display: none;">
             <div class="tab-switch-glider" id="kecilModeGlider" aria-hidden="true"></div>
             <button type="button" class="tab-btn" id="btnKecilPendamping" onclick="setKecilMode('pendamping')">
@@ -2793,7 +3249,7 @@
             </button>
           </div>
 
-          <!-- Mobile Unified Live Preview Slot (situated above inputs, matching Name Table) -->
+          <!-- Mobile Unified Live Preview Slot -->
           <div id="mobilePreviewSlot" class="mobile-preview-slot"></div>
 
           <div class="form-section-title">
@@ -2814,9 +3270,8 @@
               oninput="updateNotepadPreview()"></textarea>
           </div>
 
-          <!-- Event Meta Grid (Tanggal dengan Kalender Kustom & Waktu Editable + Panah Atas/Bawah) -->
+          <!-- Event Meta Grid: Desktop vertikal (Tanggal atas, Waktu bawah), Mobile sejajar -->
           <div class="event-meta-grid">
-            <!-- Tanggal dengan Kalender Popover Bertema Kemnaker -->
             <div class="form-group">
               <div class="form-label">
                 <span>Hari &amp; Tanggal</span>
@@ -2827,7 +3282,7 @@
                   placeholder="Pilih Hari &amp; Tanggal" oninput="updateNotepadPreview()">
                 <button type="button" class="btn-calendar-trigger" id="btnCalendarTrigger"
                   onclick="toggleCalendarPopover(event)" title="Buka Kalender Pemilih Tanggal">
-                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                     <line x1="16" y1="2" x2="16" y2="6"></line>
                     <line x1="8" y1="2" x2="8" y2="6"></line>
@@ -2838,7 +3293,6 @@
               </div>
             </div>
 
-            <!-- Jam Waktu: Ketik Langsung atau Panah Atas-Bawah Sebelahan -->
             <div class="form-group">
               <div class="form-label">
                 <span>Waktu / Jam</span>
@@ -2847,11 +3301,9 @@
               </div>
               <div class="time-stepper-widget">
                 <div class="time-digits-pair">
-                  <!-- Hour Column (Up / Input / Down) -->
                   <div class="time-digit-col">
                     <button type="button" class="time-arrow-btn" onclick="stepHour(1)" title="Tambah Jam (▲)">
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="3">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                         <polyline points="18 15 12 9 6 15"></polyline>
                       </svg>
                     </button>
@@ -2859,8 +3311,7 @@
                       value="11" aria-label="Jam" onfocus="this.select()" oninput="onManualTimeInput('hour')"
                       onblur="onManualTimeBlur('hour')" onkeydown="onTimeKeyDown(event, 'hour')">
                     <button type="button" class="time-arrow-btn" onclick="stepHour(-1)" title="Kurangi Jam (▼)">
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="3">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                         <polyline points="6 9 12 15 18 9"></polyline>
                       </svg>
                     </button>
@@ -2868,28 +3319,23 @@
 
                   <span class="time-separator-dots">:</span>
 
-                  <!-- Minute Column (Up / Input / Down per 15 min) -->
                   <div class="time-digit-col">
                     <button type="button" class="time-arrow-btn" onclick="stepMinute(15)" title="Tambah Menit (+15) (▲)">
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="3">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                         <polyline points="18 15 12 9 6 15"></polyline>
                       </svg>
                     </button>
                     <input type="text" id="timeMinInput" class="time-digit-input" inputmode="numeric" maxlength="2"
                       value="00" aria-label="Menit" onfocus="this.select()" oninput="onManualTimeInput('min')"
                       onblur="onManualTimeBlur('min')" onkeydown="onTimeKeyDown(event, 'min')">
-                    <button type="button" class="time-arrow-btn" onclick="stepMinute(-15)"
-                      title="Kurangi Menit (-15) (▼)">
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="3">
+                    <button type="button" class="time-arrow-btn" onclick="stepMinute(-15)" title="Kurangi Menit (-15) (▼)">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                         <polyline points="6 9 12 15 18 9"></polyline>
                       </svg>
                     </button>
                   </div>
                 </div>
 
-                <!-- Timezone Pill Selector (ModernDropdown pillMini) -->
                 <select id="timeTzSelect" class="time-tz-select" onchange="onTimezoneChange()">
                   <option value="WIB" selected>WIB</option>
                   <option value="WITA">WITA</option>
@@ -2897,164 +3343,6 @@
                 </select>
               </div>
             </div>
-          </div>
-
-          <!-- Section Kelola Daftar Nama -->
-          <div class="form-section-title">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-              <circle cx="9" cy="7" r="4"></circle>
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-            </svg>
-            <span>Daftar Nama</span>
-          </div>
-
-          <!-- Tabs Pendamping vs Peserta -->
-          <div class="list-tabs-header" id="listTabsHeader">
-            <div class="list-tabs-glider" id="listTabsGlider" aria-hidden="true"></div>
-            <button type="button" class="list-tab-btn active" id="tabBtnPendamping"
-              onclick="switchListTab('pendamping')">
-              <span class="lbl-desktop">Pendamping (Kemnaker)</span>
-              <span class="lbl-mobile">Pendamping</span>
-              <span class="list-tab-badge" id="badgeCountPendamping">0</span>
-            </button>
-            <button type="button" class="list-tab-btn" id="tabBtnPeserta" onclick="switchListTab('peserta')">
-              <span class="lbl-desktop">Peserta (Tamu)</span>
-              <span class="lbl-mobile">Peserta</span>
-              <span class="list-tab-badge" id="badgeCountPeserta">0</span>
-            </button>
-          </div>
-
-          <!-- Input Panel (Satuan vs Banyak) -->
-          <div class="input-subpanel" id="inputSubPanel">
-            <div class="subinput-tray" id="subinputTray">
-              <div class="subinput-glider" id="subinputGlider" aria-hidden="true"></div>
-              <button type="button" class="bubble-segment-btn active" id="btnInputModeSingle"
-                onclick="setInputMode('single')">Input Satuan</button>
-              <button type="button" class="bubble-segment-btn" id="btnInputModeBulk"
-                onclick="setInputMode('bulk')">Input Banyak</button>
-            </div>
-
-            <!-- Single Input Box -->
-            <div id="singleInputBox">
-              <div class="single-input-grid"
-                style="display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 10px;">
-                <input type="text" id="inputSingleName" class="form-input" placeholder="Nama Lengkap"
-                  onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('inputSinglePos')?.focus();}"
-                  style="font-size: 12.5px; padding: 8px 11px;">
-                <textarea id="inputSinglePos" rows="2" class="form-input form-textarea" placeholder="Jabatan / Posisi"
-                  oninput="autoSizePosField(this)"
-                  onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault();addSingleName();}"
-                  style="font-size: 12.5px; padding: 8px 11px; min-height: 54px; line-height: 1.4; resize: vertical;"></textarea>
-              </div>
-              <div class="single-input-actions" id="singleInputActions"
-                style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-                <button type="button" onclick="toggleKemnakerQuickPick()" id="btnQuickPickKemnaker"
-                  style="background:none;border:none;color:var(--kemnaker-blue);font-size:11.5px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px;">
-                  🏛️ Pilih Pejabat
-                </button>
-                <button type="button" class="btn-generate btn-add-single" onclick="addSingleName()"
-                  style="padding: 7px 14px; font-size: 12px; flex: none;">
-                  + Tambah
-                </button>
-              </div>
-
-              <!-- Collapsible Kemnaker Official Picker (Name Table Theme) -->
-              <div id="kemnakerPickerCollapse" class="kemnaker-selectors-box" style="display: none;">
-                <div class="form-group" style="margin-bottom: 10px;">
-                  <label for="kemnakerUnitSelect" class="form-label" style="margin-bottom: 5px;">
-                    <span>Unit Kerja</span>
-                    <span class="label-tag" id="kemnakerDateTag">Bagan Resmi</span>
-                  </label>
-                  <div class="input-wrapper">
-                    <div class="input-icon">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                      </svg>
-                    </div>
-                    <select id="kemnakerUnitSelect" class="form-input" onchange="onKemnakerUnitChange()"
-                      style="padding-left: 42px; cursor: pointer; font-weight: 600;">
-                      <option value="">-- Pilih Unit Kerja --</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div class="form-group" style="margin-bottom: 6px;">
-                  <label for="kemnakerOfficialSelect" class="form-label" style="margin-bottom: 5px;">
-                    <span>Pejabat &amp; Jabatan</span>
-                    <span class="label-tag" id="kemnakerCountBadge">0 Pilihan</span>
-                  </label>
-                  <div class="input-wrapper">
-                    <div class="input-icon">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-                      </svg>
-                    </div>
-                    <select id="kemnakerOfficialSelect" class="form-input" onchange="onKemnakerOfficialSelected()"
-                      disabled style="padding-left: 42px; cursor: pointer; font-weight: 600;">
-                      <option value="">-- Pilih Unit Kerja Terlebih Dahulu --</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div class="kemnaker-sync-bar">
-                  <span id="kemnakerStatusText">📅 Bagan resmi kemnaker.go.id</span>
-                  <button type="button" class="btn-refresh-kemnaker" onclick="refreshNotepadKemnakerData()">
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                      <polyline points="23 4 23 10 17 10"></polyline>
-                      <polyline points="1 20 1 14 7 14"></polyline>
-                      <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-                    </svg>
-                    Perbarui Data
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Bulk Input Box -->
-            <div id="bulkInputBox" style="display: none;">
-              <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 6px;">
-                <span id="bulkDetectBadge"
-                  style="font-size: 11px; font-weight: 700; color: #059669; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 2px 8px; border-radius: 9999px;">0
-                  siap</span>
-              </div>
-              <textarea id="inputBulkText" class="form-textarea" oninput="updateBulkDetectCount()"
-                placeholder="Tempel daftar nama &amp; jabatan (satu per baris)..."
-                style="min-height: 110px; font-size: 12px;"></textarea>
-              <div
-                style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; gap: 8px; flex-wrap: wrap;">
-                <label
-                  style="font-size: 11.5px; color: #334155; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; cursor: pointer;">
-                  <input type="checkbox" id="checkReplaceOnBulkImport">
-                  <span>Ganti daftar</span>
-                </label>
-                <button type="button" class="btn-generate" onclick="processBulkNames()"
-                  style="padding: 7px 14px; font-size: 12px; flex: none;">
-                  ✨ Tambah Data
-                </button>
-              </div>
-              <div id="bulkStatusFeedback"
-                style="display: none; margin-top: 8px; padding: 7px 10px; border-radius: 8px; background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; font-size: 11.5px; font-weight: 600;">
-              </div>
-            </div>
-          </div>
-
-          <!-- List Manager -->
-          <div class="active-list-header-bar">
-            <div class="active-list-title-wrap">
-              <span class="active-list-title-text" id="activeListTitleLabel">Daftar Pendamping</span>
-              <span class="active-list-count-pill" id="activeListCountPill">0 Orang</span>
-            </div>
-            <button type="button" class="btn-clear-list" onclick="clearCurrentList()">Kosongkan</button>
-          </div>
-
-          <div class="name-items-container" id="nameItemsContainer">
-            <!-- Dynamic Rows injected via JS -->
           </div>
 
           <!-- Action Buttons -->
@@ -3078,7 +3366,7 @@
           </div>
         </div>
 
-        <!-- Kolom Kanan: Desktop Preview Slot -->
+        <!-- Kolom Tengah: Live Preview Slot Desktop -->
         <div id="desktopPreviewSlot" class="desktop-preview-slot">
           <div class="preview-card-frame" id="previewCardFrame">
             <div class="preview-top-bar">
@@ -3098,6 +3386,249 @@
           </div>
         </div>
 
+        <!-- Kolom Kanan: Daftar Nama Pendamping & Peserta Independen (Desktop) -->
+        <div id="desktopRightColumn" class="desktop-right-slot">
+          <div class="form-card" id="desktopRightCard">
+            <div class="form-section-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              <span>Daftar Nama</span>
+            </div>
+
+            <div id="desktopListSlot">
+              <div id="daftarNamaWorkspace">
+
+                <!-- Role Card 1: Pendamping (Kemnaker) -->
+                <div class="role-manager-card" id="roleCard_pendamping">
+                  <div class="role-card-header">
+                    <div class="role-card-title-wrap">
+                      <span class="role-card-dot"></span>
+                      <span class="role-card-title">Pendamping</span>
+                      <span class="active-list-count-pill" id="roleCountPill_pendamping">0 Orang</span>
+                    </div>
+                    <button type="button" class="btn-clear-list" onclick="clearRoleList('pendamping')">Kosongkan</button>
+                  </div>
+
+                  <div class="input-subpanel">
+                    <div class="subinput-tray" id="subinputTray_pendamping">
+                      <div class="subinput-glider" id="subinputGlider_pendamping" aria-hidden="true"></div>
+                      <button type="button" class="bubble-segment-btn active" id="btnInputModeSingle_pendamping"
+                        onclick="setInputMode('single', 'pendamping')">Input Satuan</button>
+                      <button type="button" class="bubble-segment-btn" id="btnInputModeBulk_pendamping"
+                        onclick="setInputMode('bulk', 'pendamping')">Input Banyak</button>
+                    </div>
+
+                    <div id="singleInputBox_pendamping">
+                      <div class="single-input-grid" style="display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 10px;">
+                        <input type="text" id="inputSingleName_pendamping" class="form-input np-single-name-input"
+                          placeholder="Nama Lengkap"
+                          onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('inputSinglePos_pendamping')?.focus();}"
+                          style="font-size: 12.5px; padding: 8px 11px;">
+                        <textarea id="inputSinglePos_pendamping" rows="2" class="form-input form-textarea np-single-pos-input"
+                          placeholder="Jabatan / Posisi" oninput="autoSizePosField(this)"
+                          onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault();addSingleName('pendamping');}"
+                          style="font-size: 12.5px; padding: 8px 11px; min-height: 52px; line-height: 1.4; resize: vertical;"></textarea>
+                      </div>
+                      <div class="single-input-actions" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                        <button type="button" onclick="toggleKemnakerQuickPick()" id="btnQuickPickKemnaker"
+                          style="background:none;border:none;color:var(--kemnaker-blue);font-size:11.5px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px;">
+                          🏛️ Pilih Pejabat
+                        </button>
+                        <button type="button" class="btn-generate btn-add-single" onclick="addSingleName('pendamping')"
+                          style="padding: 7px 14px; font-size: 12px; flex: none;">
+                          + Tambah
+                        </button>
+                      </div>
+
+                      <!-- Collapsible Kemnaker Official Picker -->
+                      <div id="kemnakerPickerCollapse" class="kemnaker-selectors-box" style="display: none;">
+                        <div class="form-group" style="margin-bottom: 10px;">
+                          <label for="kemnakerUnitSelect" class="form-label" style="margin-bottom: 5px;">
+                            <span>Unit Kerja</span>
+                            <span class="label-tag" id="kemnakerDateTag">Bagan Resmi</span>
+                          </label>
+                          <div class="input-wrapper">
+                            <div class="input-icon">
+                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                              </svg>
+                            </div>
+                            <select id="kemnakerUnitSelect" class="form-input" onchange="onKemnakerUnitChange()"
+                              style="padding-left: 42px; cursor: pointer; font-weight: 600;">
+                              <option value="">-- Pilih Unit Kerja --</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 6px;">
+                          <label for="kemnakerOfficialSelect" class="form-label" style="margin-bottom: 5px;">
+                            <span>Pejabat &amp; Jabatan</span>
+                            <span class="label-tag" id="kemnakerCountBadge">0 Pilihan</span>
+                          </label>
+                          <div class="input-wrapper">
+                            <div class="input-icon">
+                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                              </svg>
+                            </div>
+                            <select id="kemnakerOfficialSelect" class="form-input" onchange="onKemnakerOfficialSelected()"
+                              disabled style="padding-left: 42px; cursor: pointer; font-weight: 600;">
+                              <option value="">-- Pilih Unit Kerja Terlebih Dahulu --</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="kemnaker-sync-bar">
+                          <span id="kemnakerStatusText">📅 Bagan resmi kemnaker.go.id</span>
+                          <button type="button" class="btn-refresh-kemnaker" onclick="refreshNotepadKemnakerData()">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                              <polyline points="23 4 23 10 17 10"></polyline>
+                              <polyline points="1 20 1 14 7 14"></polyline>
+                              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                            </svg>
+                            Perbarui Data
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div id="bulkInputBox_pendamping" style="display: none;">
+                      <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 6px;">
+                        <span id="bulkDetectBadge_pendamping"
+                          style="font-size: 11px; font-weight: 700; color: #059669; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 2px 8px; border-radius: 9999px;">0 siap</span>
+                      </div>
+                      <textarea id="inputBulkText_pendamping" class="form-textarea np-bulk-textarea"
+                        oninput="updateBulkDetectCount('pendamping')"
+                        placeholder="Tempel daftar pendamping (satu per baris)..."
+                        style="min-height: 100px; font-size: 12px;"></textarea>
+                      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; gap: 8px; flex-wrap: wrap;">
+                        <label style="font-size: 11.5px; color: #334155; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; cursor: pointer;">
+                          <input type="checkbox" id="checkReplaceOnBulkImport_pendamping">
+                          <span>Ganti daftar</span>
+                        </label>
+                        <button type="button" class="btn-generate" onclick="processBulkNames(false, 'pendamping')"
+                          style="padding: 7px 14px; font-size: 12px; flex: none;">
+                          ✨ Tambah Data
+                        </button>
+                      </div>
+                      <div id="bulkStatusFeedback_pendamping"
+                        style="display: none; margin-top: 8px; padding: 7px 10px; border-radius: 8px; background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; font-size: 11.5px; font-weight: 600;">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="name-items-container" id="nameItemsContainer_pendamping"></div>
+                </div>
+
+                <!-- Role Card 2: Peserta (Tamu) -->
+                <div class="role-manager-card" id="roleCard_peserta">
+                  <div class="role-card-header">
+                    <div class="role-card-title-wrap">
+                      <span class="role-card-dot is-peserta"></span>
+                      <span class="role-card-title">Peserta</span>
+                      <span class="active-list-count-pill" id="roleCountPill_peserta">0 Orang</span>
+                    </div>
+                    <button type="button" class="btn-clear-list" onclick="clearRoleList('peserta')">Kosongkan</button>
+                  </div>
+
+                  <div class="input-subpanel">
+                    <div class="subinput-tray" id="subinputTray_peserta">
+                      <div class="subinput-glider" id="subinputGlider_peserta" aria-hidden="true"></div>
+                      <button type="button" class="bubble-segment-btn active" id="btnInputModeSingle_peserta"
+                        onclick="setInputMode('single', 'peserta')">Input Satuan</button>
+                      <button type="button" class="bubble-segment-btn" id="btnInputModeBulk_peserta"
+                        onclick="setInputMode('bulk', 'peserta')">Input Banyak</button>
+                    </div>
+
+                    <div id="singleInputBox_peserta">
+                      <div class="single-input-grid" style="display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 10px;">
+                        <input type="text" id="inputSingleName_peserta" class="form-input np-single-name-input"
+                          placeholder="Nama Lengkap"
+                          onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('inputSinglePos_peserta')?.focus();}"
+                          style="font-size: 12.5px; padding: 8px 11px;">
+                        <textarea id="inputSinglePos_peserta" rows="2" class="form-input form-textarea np-single-pos-input"
+                          placeholder="Jabatan / Posisi" oninput="autoSizePosField(this)"
+                          onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault();addSingleName('peserta');}"
+                          style="font-size: 12.5px; padding: 8px 11px; min-height: 52px; line-height: 1.4; resize: vertical;"></textarea>
+                      </div>
+                      <div class="single-input-actions" style="display: flex; justify-content: flex-end; align-items: center; gap: 8px;">
+                        <button type="button" class="btn-generate btn-add-single" onclick="addSingleName('peserta')"
+                          style="padding: 7px 14px; font-size: 12px; flex: none;">
+                          + Tambah
+                        </button>
+                      </div>
+                    </div>
+
+                    <div id="bulkInputBox_peserta" style="display: none;">
+                      <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 6px;">
+                        <span id="bulkDetectBadge_peserta"
+                          style="font-size: 11px; font-weight: 700; color: #059669; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 2px 8px; border-radius: 9999px;">0 siap</span>
+                      </div>
+                      <textarea id="inputBulkText_peserta" class="form-textarea np-bulk-textarea"
+                        oninput="updateBulkDetectCount('peserta')"
+                        placeholder="Tempel daftar peserta / tamu (satu per baris)..."
+                        style="min-height: 100px; font-size: 12px;"></textarea>
+                      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; gap: 8px; flex-wrap: wrap;">
+                        <label style="font-size: 11.5px; color: #334155; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; cursor: pointer;">
+                          <input type="checkbox" id="checkReplaceOnBulkImport_peserta">
+                          <span>Ganti daftar</span>
+                        </label>
+                        <button type="button" class="btn-generate" onclick="processBulkNames(false, 'peserta')"
+                          style="padding: 7px 14px; font-size: 12px; flex: none;">
+                          ✨ Tambah Data
+                        </button>
+                      </div>
+                      <div id="bulkStatusFeedback_peserta"
+                        style="display: none; margin-top: 8px; padding: 7px 10px; border-radius: 8px; background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; font-size: 11.5px; font-weight: 600;">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="name-items-container" id="nameItemsContainer_peserta"></div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Mobile Bottom-Sheet Drawer Modal for Editing Daftar Nama -->
+      <div class="np-sheet-backdrop" id="npSheetBackdrop" onclick="if(event.target === this) closeNotepadListSheet()">
+        <div class="np-sheet-drawer">
+          <div class="np-sheet-handle-bar"></div>
+          <div class="np-sheet-header">
+            <div class="np-sheet-title" id="npSheetTitle">Kelola Daftar Nama</div>
+            <button type="button" class="np-btn-close-sheet" id="npBtnCloseSheet" onclick="closeNotepadListSheet()" title="Tutup">✕</button>
+          </div>
+          <div class="np-sheet-preview-box" id="npModalPreviewBox">
+            <div class="np-sheet-preview-bar">
+              <span class="np-sheet-preview-badge">
+                <span class="badge-live"></span>
+                <span>PRATINJAU BAGIAN</span>
+              </span>
+              <span class="np-sheet-preview-role-tag" id="npModalPreviewRoleTag">Pendamping</span>
+            </div>
+            <div class="np-modal-mini-frame">
+              <div class="np-modal-mini-inner" id="npModalMiniInner"></div>
+            </div>
+          </div>
+          <div class="np-sheet-content" id="npSheetBody" data-modal-role="pendamping">
+            <!-- #daftarNamaWorkspace is cleanly moved here when modal opens on Mobile -->
+          </div>
+          <div class="np-sheet-footer">
+            <button type="button" class="np-btn-apply-sheet" onclick="closeNotepadListSheet()">✓ Selesai</button>
+          </div>
+        </div>
       </div>
 
       <script>
@@ -3106,6 +3637,10 @@
             var f = document.getElementById("previewCardFrame");
             var s = document.getElementById("mobilePreviewSlot");
             if (f && s && f.parentNode !== s) s.appendChild(f);
+          }
+          var bd = document.getElementById("npSheetBackdrop");
+          if (bd && bd.parentNode !== document.body) {
+            document.body.appendChild(bd);
           }
         })();
       </script>
@@ -3139,8 +3674,11 @@
     let currentNotepadType = "besar"; // "besar" | "kecil"
     let currentKecilMode = "both";     // "pendamping" | "peserta" | "both"
     let currentLayoutBoth = "single_page"; // Always 1 A4 Landscape (22.2cm x 15.45cm fits comfortably in 29.7cm x 21cm A4)
-    let activeListTab = "pendamping";   // "pendamping" | "peserta"
-    let currentInputMode = "single";    // "single" | "bulk"
+    let activeListTab = "pendamping";   // Last focused / active role ("pendamping" | "peserta")
+    let roleInputMode = { pendamping: "single", peserta: "single" };
+    let currentInputMode = "single";
+    let activeMobileCarouselRole = "pendamping";
+    let activeMobileModalRole = null;
     let isDefaultPendampingSample = false;
     let isDefaultPesertaSample = false;
 
@@ -3150,7 +3688,7 @@
     let currentTz = "WIB";
 
     // Edit state
-    let editingItemIndex = null;
+    let editingItem = { role: null, index: null };
 
     let pendampingList = [];
     let pesertaList = [];
@@ -3478,15 +4016,14 @@
         btnB.classList.add("active");
         btnK.classList.remove("active");
         if (kecilOpts) kecilOpts.style.display = "none";
-        document.getElementById("listTabsHeader").style.display = "flex";
       } else {
         btnK.classList.add("active");
         btnB.classList.remove("active");
         if (kecilOpts) kecilOpts.style.display = "flex";
-        updateKecilModeTabs();
         requestAnimationFrame(() => updateKecilModeGlider());
       }
 
+      updateKecilModeTabs();
       updateTypeGlider();
       updateNotepadPreview();
       fitNotepadPreview();
@@ -3546,28 +4083,21 @@
       updateElementGlider(wrap, glider, activeBtn, true);
     }
 
-    function updateListTabsGlider(animate = true) {
-      updateElementGlider(
-        document.getElementById("listTabsHeader"),
-        document.getElementById("listTabsGlider"),
-        document.querySelector("#listTabsHeader .list-tab-btn.active"),
-        animate
-      );
-    }
-
-    function updateSubinputGlider(animate = true) {
-      updateElementGlider(
-        document.getElementById("subinputTray"),
-        document.getElementById("subinputGlider"),
-        document.querySelector("#subinputTray .bubble-segment-btn.active"),
-        animate
-      );
+    function updateSubinputGlider(animate = true, targetRole = null) {
+      const roles = targetRole ? [targetRole] : ["pendamping", "peserta"];
+      roles.forEach(role => {
+        const tray = document.getElementById(`subinputTray_${role}`);
+        const glider = document.getElementById(`subinputGlider_${role}`);
+        const activeBtn = tray ? tray.querySelector(".bubble-segment-btn.active") : null;
+        if (tray && glider && activeBtn) {
+          updateElementGlider(tray, glider, activeBtn, animate);
+        }
+      });
     }
 
     function updateAllNotepadGliders(animate = false) {
       updateTypeGlider();
       updateKecilModeGlider();
-      updateListTabsGlider(animate);
       updateSubinputGlider(animate);
     }
 
@@ -3584,102 +4114,96 @@
     }
 
     function updateKecilModeTabs() {
-      const tabPend = document.getElementById("tabBtnPendamping");
-      const tabPes = document.getElementById("tabBtnPeserta");
+      const cardPend = document.getElementById("roleCard_pendamping");
+      const cardPes = document.getElementById("roleCard_peserta");
+      if (!cardPend || !cardPes) return;
+
       if (currentNotepadType === "kecil") {
         if (currentKecilMode === "pendamping") {
-          tabPend.style.display = "flex";
-          tabPes.style.display = "none";
-          switchListTab("pendamping");
+          cardPend.style.display = "block";
+          cardPes.style.display = "none";
+          activeListTab = "pendamping";
         } else if (currentKecilMode === "peserta") {
-          tabPend.style.display = "none";
-          tabPes.style.display = "flex";
-          switchListTab("peserta");
+          cardPend.style.display = "none";
+          cardPes.style.display = "block";
+          activeListTab = "peserta";
         } else {
-          tabPend.style.display = "flex";
-          tabPes.style.display = "flex";
+          cardPend.style.display = "block";
+          cardPes.style.display = "block";
         }
       } else {
-        tabPend.style.display = "flex";
-        tabPes.style.display = "flex";
+        cardPend.style.display = "block";
+        cardPes.style.display = "block";
       }
-      requestAnimationFrame(() => updateListTabsGlider(false));
+      requestAnimationFrame(() => updateSubinputGlider(false));
     }
 
     function switchListTab(tab) {
       activeListTab = tab;
-      editingItemIndex = null;
-      document.getElementById("tabBtnPendamping").classList.toggle("active", tab === "pendamping");
-      document.getElementById("tabBtnPeserta").classList.toggle("active", tab === "peserta");
-      updateListTabsGlider(true);
-      document.getElementById("activeListTitleLabel").innerHTML = tab === "pendamping"
-        ? 'Daftar Pendamping <span class="lbl-desktop">(Kemnaker)</span>'
-        : 'Daftar Peserta <span class="lbl-desktop">(Tamu)</span>';
-
-      const quickBtn = document.getElementById("btnQuickPickKemnaker");
-      const pickerBox = document.getElementById("kemnakerPickerCollapse");
-      const actionsRow = document.getElementById("singleInputActions");
-      const isPendamping = tab === "pendamping";
-      if (quickBtn) quickBtn.style.display = isPendamping ? "inline-flex" : "none";
-      if (!isPendamping && pickerBox) pickerBox.style.display = "none";
-      if (actionsRow) actionsRow.style.justifyContent = isPendamping ? "space-between" : "flex-end";
-
+      editingItem = { role: null, index: null };
       renderNameList();
     }
 
-    function setInputMode(mode) {
+    function setInputMode(mode, role = null) {
+      const targetRole = role || activeListTab || "pendamping";
+      roleInputMode[targetRole] = mode;
       currentInputMode = mode;
-      document.getElementById("btnInputModeSingle").classList.toggle("active", mode === "single");
-      document.getElementById("btnInputModeBulk").classList.toggle("active", mode === "bulk");
-      updateSubinputGlider(true);
-      document.getElementById("singleInputBox").style.display = mode === "single" ? "block" : "none";
-      document.getElementById("bulkInputBox").style.display = mode === "bulk" ? "block" : "none";
+      const singleBtn = document.getElementById(`btnInputModeSingle_${targetRole}`);
+      const bulkBtn = document.getElementById(`btnInputModeBulk_${targetRole}`);
+      const singleBox = document.getElementById(`singleInputBox_${targetRole}`);
+      const bulkBox = document.getElementById(`bulkInputBox_${targetRole}`);
+      if (singleBtn) singleBtn.classList.toggle("active", mode === "single");
+      if (bulkBtn) bulkBtn.classList.toggle("active", mode === "bulk");
+      updateSubinputGlider(true, targetRole);
+      if (singleBox) singleBox.style.display = mode === "single" ? "block" : "none";
+      if (bulkBox) bulkBox.style.display = mode === "bulk" ? "block" : "none";
+    }
+
+    function getRoleList(role) {
+      return (role || activeListTab) === "peserta" ? pesertaList : pendampingList;
     }
 
     function getActiveList() {
-      return activeListTab === "pendamping" ? pendampingList : pesertaList;
+      return getRoleList(activeListTab);
     }
 
     function updateBadges() {
-      document.getElementById("badgeCountPendamping").textContent = pendampingList.length;
-      document.getElementById("badgeCountPeserta").textContent = pesertaList.length;
-      const countPill = document.getElementById("activeListCountPill");
-      if (countPill) {
-        const list = getActiveList();
-        countPill.textContent = `${list.length} Orang`;
-      }
+      const pillPend = document.getElementById("roleCountPill_pendamping");
+      const pillPes = document.getElementById("roleCountPill_peserta");
+      if (pillPend) pillPend.textContent = `${pendampingList.length} Orang`;
+      if (pillPes) pillPes.textContent = `${pesertaList.length} Orang`;
     }
 
-    // Render Name List with Drag-and-Drop and Inline Edit
-    function renderNameList() {
-      const container = document.getElementById("nameItemsContainer");
+    // Render Name Lists (independent Pendamping & Peserta cards) with Drag-and-Drop & Inline Edit
+    function renderSingleRoleList(role) {
+      const container = document.getElementById(`nameItemsContainer_${role}`);
+      if (!container) return;
       container.innerHTML = "";
-      const list = getActiveList();
+      const list = getRoleList(role);
 
       list.forEach((item, index) => {
         const row = document.createElement("div");
         row.dataset.index = index;
+        row.dataset.role = role;
 
-        if (editingItemIndex === index) {
-          // Inline Edit Mode
+        if (editingItem.role === role && editingItem.index === index) {
           row.className = "name-item-row editing";
           row.innerHTML = `
             <span class="item-num">${index + 1}</span>
             <div class="edit-inputs-container">
-              <input type="text" id="inlineEditName" class="form-input form-input-sm" value="${escapeHtml(item.name)}" placeholder="Nama Lengkap" onkeydown="handleInlineEditKey(event, ${index})">
-              <textarea id="inlineEditPos" rows="2" class="form-input form-textarea form-input-sm edit-pos-textarea" placeholder="Jabatan / Posisi" oninput="autoSizePosField(this)" onkeydown="handleInlineEditKey(event, ${index})">${escapeHtml(item.position || '')}</textarea>
+              <input type="text" id="inlineEditName_${role}" class="form-input form-input-sm inline-edit-name" value="${escapeHtml(item.name)}" placeholder="Nama Lengkap" onkeydown="handleInlineEditKey(event, ${index}, '${role}')">
+              <textarea id="inlineEditPos_${role}" rows="2" class="form-input form-textarea form-input-sm edit-pos-textarea inline-edit-pos" placeholder="Jabatan / Posisi" oninput="autoSizePosField(this)" onkeydown="handleInlineEditKey(event, ${index}, '${role}')">${escapeHtml(item.position || '')}</textarea>
             </div>
             <div class="item-actions">
-              <button type="button" class="btn-action-sm save" onclick="saveInlineEdit(${index})" title="Simpan Perubahan (Enter)">
+              <button type="button" class="btn-action-sm save" onclick="saveInlineEdit(${index}, '${role}')" title="Simpan Perubahan (Enter)">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
               </button>
-              <button type="button" class="btn-action-sm cancel" onclick="cancelInlineEdit()" title="Batal (Esc)">
+              <button type="button" class="btn-action-sm cancel" onclick="cancelInlineEdit('${role}')" title="Batal (Esc)">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
               </button>
             </div>
           `;
         } else {
-          // Regular Display Row with Smooth Whole-Box Pointer Drag-to-Reorder & Edit/Delete Actions
           row.className = "name-item-row";
           row.title = "Tarik kotak ke atas/bawah untuk mengubah urutan";
 
@@ -3692,40 +4216,55 @@
               <div class="item-pos">${escapeHtml(item.position || "-")}</div>
             </div>
             <div class="item-actions">
-              <button type="button" class="btn-action-sm edit" onclick="startInlineEdit(${index})" title="Edit nama &amp; jabatan (perbaiki typo)">
+              <button type="button" class="btn-action-sm edit" onclick="startInlineEdit(${index}, '${role}')" title="Edit nama &amp; jabatan">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
               </button>
-              <button type="button" class="btn-action-sm delete" onclick="deleteItem(${index})" title="Hapus">
+              <button type="button" class="btn-action-sm delete" onclick="deleteItem(${index}, '${role}')" title="Hapus">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
               </button>
             </div>
           `;
 
-          attachRowPointerDrag(row, index);
+          attachRowPointerDrag(row, index, role);
         }
 
         container.appendChild(row);
       });
+    }
+
+    function renderNameList(targetRole = null) {
+      if (targetRole) {
+        renderSingleRoleList(targetRole);
+      } else {
+        renderSingleRoleList("pendamping");
+        renderSingleRoleList("peserta");
+      }
 
       updateBadges();
       updateNotepadPreview();
-      if (editingItemIndex !== null) {
-        autoSizePosField(document.getElementById("inlineEditPos"));
+      if (typeof updateNpModalMiniPreview === "function") {
+        updateNpModalMiniPreview();
+      }
+      if (editingItem.role && editingItem.index !== null) {
+        autoSizePosField(document.getElementById(`inlineEditPos_${editingItem.role}`));
       }
     }
 
     function autoSizePosField(el) {
       if (!el) return;
+      if (window.innerWidth <= 768) return;
       el.style.height = "auto";
       el.style.height = Math.max(48, el.scrollHeight + 2) + "px";
     }
 
     // Inline Editing Functions
-    function startInlineEdit(index) {
-      editingItemIndex = index;
-      renderNameList();
+    function startInlineEdit(index, role = null) {
+      const targetRole = role || activeListTab || "pendamping";
+      activeListTab = targetRole;
+      editingItem = { role: targetRole, index };
+      renderNameList(targetRole);
       setTimeout(() => {
-        const inp = document.getElementById("inlineEditName");
+        const inp = document.getElementById(`inlineEditName_${targetRole}`);
         if (inp) {
           inp.focus();
           inp.select();
@@ -3733,14 +4272,16 @@
       }, 50);
     }
 
-    function cancelInlineEdit() {
-      editingItemIndex = null;
-      renderNameList();
+    function cancelInlineEdit(role = null) {
+      const prevRole = role || editingItem.role;
+      editingItem = { role: null, index: null };
+      renderNameList(prevRole);
     }
 
-    function saveInlineEdit(index) {
-      const nameInput = document.getElementById("inlineEditName");
-      const posInput = document.getElementById("inlineEditPos");
+    function saveInlineEdit(index, role = null) {
+      const targetRole = role || editingItem.role || activeListTab || "pendamping";
+      const nameInput = document.getElementById(`inlineEditName_${targetRole}`);
+      const posInput = document.getElementById(`inlineEditPos_${targetRole}`);
       if (!nameInput) return;
       const newName = nameInput.value.trim();
       const newPos = posInput ? posInput.value.replace(/\r?\n+/g, " ").trim() : "";
@@ -3749,88 +4290,106 @@
         nameInput.focus();
         return;
       }
-      markActiveListCustomized();
-      const list = getActiveList();
+      markRoleCustomized(targetRole);
+      const list = getRoleList(targetRole);
       if (list[index]) {
         list[index].name = newName;
         list[index].position = newPos;
       }
-      editingItemIndex = null;
-      renderNameList();
+      editingItem = { role: null, index: null };
+      renderNameList(targetRole);
     }
 
-    function handleInlineEditKey(e, index) {
+    function handleInlineEditKey(e, index, role) {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
-        saveInlineEdit(index);
+        saveInlineEdit(index, role);
       } else if (e.key === "Escape") {
         e.preventDefault();
-        cancelInlineEdit();
+        cancelInlineEdit(role);
       }
     }
 
-    function markActiveListCustomized() {
-      if (activeListTab === "pendamping") isDefaultPendampingSample = false;
+    function markRoleCustomized(role) {
+      if (role === "pendamping") isDefaultPendampingSample = false;
       else isDefaultPesertaSample = false;
     }
 
-    function addSingleName() {
-      const name = (document.getElementById("inputSingleName").value || "").trim();
-      const pos = (document.getElementById("inputSinglePos").value || "").replace(/\r?\n+/g, " ").trim();
+    function markActiveListCustomized() {
+      markRoleCustomized(activeListTab);
+    }
+
+    function addSingleName(role = null) {
+      const targetRole = role || activeListTab || "pendamping";
+      activeListTab = targetRole;
+      const nameEl = document.getElementById(`inputSingleName_${targetRole}`);
+      const posEl = document.getElementById(`inputSinglePos_${targetRole}`);
+      const name = (nameEl ? nameEl.value : "").trim();
+      const pos = (posEl ? posEl.value : "").replace(/\r?\n+/g, " ").trim();
 
       if (!name) {
         alert("Mohon masukkan nama terlebih dahulu.");
+        if (nameEl) nameEl.focus();
         return;
       }
 
-      markActiveListCustomized();
-      const list = getActiveList();
+      markRoleCustomized(targetRole);
+      const list = getRoleList(targetRole);
       list.push({ name: name, position: pos });
 
-      document.getElementById("inputSingleName").value = "";
-      const posEl = document.getElementById("inputSinglePos");
-      posEl.value = "";
-      posEl.style.height = "";
-      document.getElementById("inputSingleName").focus();
+      if (nameEl) nameEl.value = "";
+      if (posEl) {
+        posEl.value = "";
+        posEl.style.height = "";
+      }
+      if (nameEl && window.innerWidth > 768) nameEl.focus();
 
-      renderNameList();
+      renderNameList(targetRole);
     }
 
-    function deleteItem(index) {
-      markActiveListCustomized();
-      const list = getActiveList();
+    function deleteItem(index, role = null) {
+      const targetRole = role || activeListTab || "pendamping";
+      markRoleCustomized(targetRole);
+      const list = getRoleList(targetRole);
       list.splice(index, 1);
-      if (editingItemIndex === index) editingItemIndex = null;
-      renderNameList();
+      if (editingItem.role === targetRole && editingItem.index === index) {
+        editingItem = { role: null, index: null };
+      }
+      renderNameList(targetRole);
+    }
+
+    function clearRoleList(role = null) {
+      const targetRole = role || activeListTab || "pendamping";
+      markRoleCustomized(targetRole);
+      const list = getRoleList(targetRole);
+      list.length = 0;
+      if (editingItem.role === targetRole) {
+        editingItem = { role: null, index: null };
+      }
+      renderNameList(targetRole);
     }
 
     function clearCurrentList() {
-      if (confirm("Kosongkan daftar ini?")) {
-        markActiveListCustomized();
-        const list = getActiveList();
-        list.length = 0;
-        editingItemIndex = null;
-        renderNameList();
-      }
+      clearRoleList(activeListTab);
     }
 
     // Smartphone-Grade Smooth Pointer Drag-to-Reorder Engine (Mouse + Touch)
-    function attachRowPointerDrag(row, startIdx) {
+    function attachRowPointerDrag(row, startIdx, role) {
       row.addEventListener("contextmenu", (e) => {
-        if (editingItemIndex === null && !e.target.closest("input, textarea")) e.preventDefault();
+        if (editingItem.role === null && !e.target.closest("input, textarea")) e.preventDefault();
       });
       row.addEventListener("pointerdown", (e) => {
-        if (editingItemIndex !== null) return;
+        if (editingItem.role !== null) return;
         if (e.target.closest("button, input, textarea, select, a")) return;
         if (e.pointerType === "mouse" && e.button !== 0) return;
 
-        const list = getActiveList();
+        const list = getRoleList(role);
         if (list.length < 2) return;
 
         const rowRect = row.getBoundingClientRect();
         const fromDragZone = Boolean(e.target.closest(".item-drag-zone")) || (e.clientX - rowRect.left) <= 44;
         const isTouch = e.pointerType !== "mouse";
-        const container = document.getElementById("nameItemsContainer");
+        const container = document.getElementById(`nameItemsContainer_${role}`);
         if (!container) return;
 
         const startX = e.clientX;
@@ -3976,11 +4535,11 @@
           });
 
           if (targetIdx !== startIdx) {
-            markActiveListCustomized();
+            markRoleCustomized(role);
             const moved = list.splice(startIdx, 1)[0];
             list.splice(targetIdx, 0, moved);
-            editingItemIndex = null;
-            renderNameList();
+            editingItem = { role: null, index: null };
+            renderNameList(role);
           }
         }
 
@@ -4136,16 +4695,19 @@
       return unique;
     }
 
-    function updateBulkDetectCount() {
-      const textarea = document.getElementById("inputBulkText");
-      const badge = document.getElementById("bulkDetectBadge");
+    function updateBulkDetectCount(role = null) {
+      const targetRole = role || activeListTab || "pendamping";
+      const textarea = document.getElementById(`inputBulkText_${targetRole}`);
+      const badge = document.getElementById(`bulkDetectBadge_${targetRole}`);
       if (!textarea || !badge) return;
       const parsed = parseNotepadBulkData(textarea.value || "");
       badge.textContent = `${parsed.length} siap`;
     }
 
-    function processBulkNames(silent = false) {
-      const textarea = document.getElementById("inputBulkText");
+    function processBulkNames(silent = false, role = null) {
+      const targetRole = role || activeListTab || "pendamping";
+      activeListTab = targetRole;
+      const textarea = document.getElementById(`inputBulkText_${targetRole}`);
       const text = (textarea ? textarea.value : "").trim();
       if (!text) return 0;
 
@@ -4155,20 +4717,20 @@
         return 0;
       }
 
-      const replaceCheckbox = document.getElementById("checkReplaceOnBulkImport");
-      const isSampleActive = (activeListTab === "pendamping") ? isDefaultPendampingSample : isDefaultPesertaSample;
+      const replaceCheckbox = document.getElementById(`checkReplaceOnBulkImport_${targetRole}`);
+      const isSampleActive = (targetRole === "pendamping") ? isDefaultPendampingSample : isDefaultPesertaSample;
       const shouldReplace = isSampleActive || Boolean(replaceCheckbox && replaceCheckbox.checked);
 
       if (shouldReplace) {
-        if (activeListTab === "pendamping") {
+        if (targetRole === "pendamping") {
           pendampingList = [];
         } else {
           pesertaList = [];
         }
       }
 
-      markActiveListCustomized();
-      const list = getActiveList();
+      markRoleCustomized(targetRole);
+      const list = getRoleList(targetRole);
       const existingKeys = new Set(list.map(it => `${(it.name || "").toLowerCase()}||${(it.position || "").toLowerCase()}`));
       let addedCount = 0;
 
@@ -4182,18 +4744,18 @@
       });
 
       if (textarea) textarea.value = "";
-      updateBulkDetectCount();
+      updateBulkDetectCount(targetRole);
 
-      const feedback = document.getElementById("bulkStatusFeedback");
+      const feedback = document.getElementById(`bulkStatusFeedback_${targetRole}`);
       if (feedback) {
         feedback.textContent = `✓ ${addedCount} data ditambahkan.`;
         feedback.style.display = "block";
       }
 
       if (!silent) {
-        setInputMode("single");
+        setInputMode("single", targetRole);
       }
-      renderNameList();
+      renderNameList(targetRole);
       return addedCount;
     }
 
@@ -4392,8 +4954,8 @@
           const cleanedName = (typeof cleanTitles === "function") ? cleanTitles(rawName) : rawName;
           const expandedPos = (typeof expandKemnakerPosition === "function") ? expandKemnakerPosition(rawPos) : rawPos;
           const cleanedPos = (typeof cleanPositionText === "function") ? cleanPositionText(expandedPos).replace(/\n+/g, " ").trim() : expandedPos;
-          document.getElementById("inputSingleName").value = cleanedName || rawName;
-          const posField = document.getElementById("inputSinglePos");
+          document.getElementById("inputSingleName_pendamping").value = cleanedName || rawName;
+          const posField = document.getElementById("inputSinglePos_pendamping");
           posField.value = cleanedPos || rawPos;
           autoSizePosField(posField);
         }
@@ -4405,13 +4967,13 @@
       const list = isPend ? pendampingList : pesertaList;
       if (list.length > 0) {
         return {
-          section: { header: isPend ? "Pendamping :" : "", headerIndent: isPend ? 2 : 5, items: list, isPlaceholder: false },
+          section: { role, header: isPend ? "Pendamping :" : "", headerIndent: isPend ? 2 : 5, items: list, isPlaceholder: false },
           count: list.length
         };
       }
       const sample = isPend ? SAMPLE_PENDAMPING_PREVIEW : SAMPLE_PESERTA_PREVIEW;
       return {
-        section: { header: isPend ? "Pendamping :" : "", headerIndent: isPend ? 2 : 5, items: sample, isPlaceholder: true },
+        section: { role, header: isPend ? "Pendamping :" : "", headerIndent: isPend ? 2 : 5, items: sample, isPlaceholder: true },
         count: sample.length
       };
     }
@@ -4425,12 +4987,19 @@
       const time = (document.getElementById("inputTime").value || "").trim();
       const sep = currentNotepadType === "kecil" ? "," : "–";
       const useNum = true;
+      const isMobileView = window.innerWidth <= 1060;
 
       // Update title counter
       document.getElementById("titleCounter").textContent = `${rawTitle.length} karakter`;
 
       const wrap = document.getElementById("notepadSheetWrap");
       if (!wrap) return;
+      const vp = document.getElementById("previewViewport");
+      const prevScrollY = window.scrollY || window.pageYOffset || 0;
+      const prevVpH = vp ? vp.getBoundingClientRect().height : 0;
+      if (vp && prevVpH > 0) {
+        vp.style.minHeight = `${Math.ceil(prevVpH)}px`;
+      }
       wrap.innerHTML = "";
 
       if (currentNotepadType === "besar") {
@@ -4440,15 +5009,20 @@
 
         if (hasRealItems) {
           if (pendampingList.length > 0) {
-            sections.push({ header: "Pendamping :", headerIndent: 2, items: pendampingList, isPlaceholder: false });
+            sections.push({ role: "pendamping", header: "Pendamping :", headerIndent: 2, items: pendampingList, isPlaceholder: false });
+          } else if (isMobileView) {
+            sections.push({ role: "pendamping", header: "Pendamping :", headerIndent: 2, items: [], isPlaceholder: true, triggerOnly: true });
           }
+
           if (pesertaList.length > 0) {
-            sections.push({ header: "Peserta :", headerIndent: 5, items: pesertaList, isPlaceholder: false });
+            sections.push({ role: "peserta", header: "Peserta :", headerIndent: 5, items: pesertaList, isPlaceholder: false });
+          } else if (isMobileView) {
+            sections.push({ role: "peserta", header: "Peserta :", headerIndent: 5, items: [], isPlaceholder: true, triggerOnly: true });
           }
           previewTotalItems = pendampingList.length + pesertaList.length;
         } else {
-          sections.push({ header: "Pendamping :", headerIndent: 2, items: SAMPLE_PENDAMPING_PREVIEW, isPlaceholder: true });
-          sections.push({ header: "Peserta :", headerIndent: 5, items: SAMPLE_PESERTA_PREVIEW, isPlaceholder: true });
+          sections.push({ role: "pendamping", header: "Pendamping :", headerIndent: 2, items: SAMPLE_PENDAMPING_PREVIEW, isPlaceholder: true });
+          sections.push({ role: "peserta", header: "Peserta :", headerIndent: 5, items: SAMPLE_PESERTA_PREVIEW, isPlaceholder: true });
           previewTotalItems = SAMPLE_PENDAMPING_PREVIEW.length + SAMPLE_PESERTA_PREVIEW.length;
         }
         const stack = document.createElement("div");
@@ -4489,9 +5063,9 @@
           wrap.appendChild(stack);
           autoFitPreviewBox(boxEl, "kecil", pesSpec.count);
         } else {
-          // Both Pendamping & Peserta
+          // Both Pendamping & Peserta: Mobile uses horizontal swipe carousel, Desktop preview stacks top-and-bottom vertically
           const boxesToFit = [];
-          const useMobileCarousel = window.innerWidth <= 768 && currentLayoutBoth === "single_page";
+          const useMobileCarousel = window.innerWidth <= 1060 && currentLayoutBoth === "single_page";
           if (useMobileCarousel) {
             const cWrap = document.createElement("div");
             cWrap.className = "np-mobile-carousel-wrap";
@@ -4549,11 +5123,19 @@
             wrap.appendChild(cWrap);
 
             function syncSlidePill(isSecond, animate = true) {
+              activeMobileCarouselRole = isSecond ? "peserta" : "pendamping";
               pillPend.classList.toggle("active", !isSecond);
               pillPes.classList.toggle("active", isSecond);
               updateElementGlider(tabsBar, slideGlider, isSecond ? pillPes : pillPend, animate);
             }
-            requestAnimationFrame(() => syncSlidePill(false, false));
+            requestAnimationFrame(() => {
+              if (activeMobileCarouselRole === "peserta") {
+                track.scrollLeft = slide2.offsetLeft;
+                syncSlidePill(true, false);
+              } else {
+                syncSlidePill(false, false);
+              }
+            });
 
             pillPend.addEventListener("click", () => {
               syncSlidePill(false, true);
@@ -4571,30 +5153,8 @@
 
             boxesToFit.push({ el: boxPend, count: pendSpec.count });
             boxesToFit.push({ el: boxPes, count: pesSpec.count });
-          } else if (currentLayoutBoth === "single_page") {
-            const container = document.createElement("div");
-            container.className = "np-page-slot";
-
-            const row = document.createElement("div");
-            row.className = "np-landscape-row";
-
-            const boxPend = buildPreviewBoxElement({
-              boxType: "kecil",
-              title, titleIsPlaceholder, date, time, sep, useNum,
-              sections: [pendSpec.section]
-            });
-            const boxPes = buildPreviewBoxElement({
-              boxType: "kecil",
-              title, titleIsPlaceholder, date, time, sep, useNum,
-              sections: [pesSpec.section]
-            });
-            row.appendChild(boxPend);
-            row.appendChild(boxPes);
-            container.appendChild(row);
-            wrap.appendChild(container);
-            boxesToFit.push({ el: boxPend, count: pendSpec.count });
-            boxesToFit.push({ el: boxPes, count: pesSpec.count });
           } else {
+            // Desktop Preview: stacked top & bottom vertically so 3-column layout stays sleek (PDF output still matches user layout!)
             const stack = document.createElement("div");
             stack.className = "np-pages-stack";
 
@@ -4627,6 +5187,12 @@
       }
 
       fitNotepadPreview();
+      if (vp) {
+        vp.style.minHeight = "";
+      }
+      if (prevVpH > 0 && prevScrollY > 0 && Math.abs((window.scrollY || window.pageYOffset || 0) - prevScrollY) > 1) {
+        window.scrollTo(0, prevScrollY);
+      }
     }
 
     function buildPreviewBoxElement({ boxType, isFullBesar = false, title, titleIsPlaceholder = false, date, time, sep, useNum, sections }) {
@@ -4667,23 +5233,50 @@
         inner.appendChild(metaBlock);
       }
 
-      // 3. List Sections
+      // 3. List Sections (+ Mobile inline dynamic trigger button placed directly below each section's items)
       const secWrap = document.createElement("div");
       secWrap.className = "np-sections-wrap";
+      const showMobileTriggers = window.innerWidth <= 1060;
 
-      sections.forEach((sec, sIdx) => {
+      sections.forEach((sec) => {
         const secEl = document.createElement("div");
-        secEl.className = `np-section${sec.isPlaceholder ? " is-placeholder" : ""}`;
+        secEl.className = `np-section${sec.isPlaceholder ? " is-placeholder" : ""}${sec.triggerOnly ? " np-empty-trigger-only" : ""}`;
         if (sec.header) {
           const hdr = document.createElement("div");
           hdr.className = `np-section-header${sec.headerIndent > 3 ? " indent-peserta" : ""}`;
           hdr.textContent = sec.header;
           secEl.appendChild(hdr);
         }
-        const listEl = document.createElement("div");
-        listEl.className = "np-list-container";
-        renderPreviewItems(listEl, sec.items || [], sep, useNum, 12.0, 20.7);
-        secEl.appendChild(listEl);
+        if (!sec.triggerOnly) {
+          const listEl = document.createElement("div");
+          listEl.className = "np-list-container";
+          renderPreviewItems(listEl, sec.items || [], sep, useNum, 12.0, 20.7);
+          secEl.appendChild(listEl);
+        }
+        if (showMobileTriggers && sec.role) {
+          const trigRow = document.createElement("div");
+          trigRow.className = "np-section-trigger-row";
+          const roleCount = sec.role === "pendamping" ? pendampingList.length : pesertaList.length;
+          const roleName = sec.role === "pendamping" ? "Pendamping" : "Peserta";
+          const btnLabel = roleCount > 0 ? `+ ${roleName} (${roleCount})` : `+ Isi ${roleName}`;
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = `np-preview-trigger-btn${sec.role === "peserta" ? " is-peserta" : ""}`;
+          btn.dataset.triggerRole = sec.role;
+          btn.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            openNotepadListSheet(sec.role);
+          };
+          btn.innerHTML = `
+            <span>${btnLabel}</span>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          `;
+          trigRow.appendChild(btn);
+          secEl.appendChild(trigRow);
+        }
         secWrap.appendChild(secEl);
       });
 
@@ -4813,6 +5406,7 @@
           holder.style.height = `${targetH}px`;
           const boxEl = holder.querySelector(".notepad-box-element");
           if (boxEl) {
+            boxEl.style.setProperty("--np-trig-inv", (1 / sc).toFixed(4));
             boxEl.style.transform = `scale(${sc})`;
             boxEl.style.transformOrigin = "top left";
           }
@@ -4845,6 +5439,7 @@
         stage.style.width = `${scaledWidth}px`;
         stage.style.height = `${scaledHeight}px`;
       }
+      wrap.style.setProperty("--np-trig-inv", (1 / scale).toFixed(4));
       wrap.style.transformOrigin = "top left";
       wrap.style.transform = `scale(${scale})`;
 
@@ -4864,12 +5459,15 @@
 
     function validateNotepadInputs() {
       // Auto-import & clean any unimported bulk text directly before validating
-      if (currentInputMode === "bulk") {
-        const bulkVal = (document.getElementById("inputBulkText").value || "").trim();
-        if (bulkVal) {
-          processBulkNames(true);
+      ["pendamping", "peserta"].forEach(role => {
+        if (roleInputMode[role] === "bulk") {
+          const bulkEl = document.getElementById(`inputBulkText_${role}`);
+          const bulkVal = (bulkEl ? bulkEl.value : "").trim();
+          if (bulkVal) {
+            processBulkNames(true, role);
+          }
         }
-      }
+      });
 
       const titleEl = document.getElementById("inputTitle");
       const dateEl = document.getElementById("inputDate");
@@ -4894,16 +5492,20 @@
         return false;
       }
 
-      const focusListInput = (tab) => {
-        if (activeListTab !== tab) switchListTab(tab);
-        const target = document.getElementById(currentInputMode === "bulk" ? "inputBulkText" : "inputSingleName");
+      const focusListInput = (role) => {
+        activeListTab = role;
+        if (window.innerWidth <= 1060) {
+          openNotepadListSheet(role);
+          return;
+        }
+        const target = document.getElementById(roleInputMode[role] === "bulk" ? `inputBulkText_${role}` : `inputSingleName_${role}`);
         if (target) target.focus();
       };
 
       if (currentNotepadType === "besar") {
         if (pendampingList.length === 0 && pesertaList.length === 0) {
           alert("Silakan masukkan minimal 1 nama pada Daftar Pendamping atau Peserta terlebih dahulu.");
-          focusListInput(activeListTab);
+          focusListInput(activeListTab || "pendamping");
           return false;
         }
       } else {
@@ -4972,22 +5574,263 @@
       document.body.removeChild(form);
     }
 
+    // Mobile Bottom-Sheet Modal Controller (Identical UX & Swipe-Down Physics to Name Table)
+    let npLockedModalScrollY = 0;
+    let isNpModalBodyLocked = false;
+
+    function lockNpModalBody() {
+      if (isNpModalBodyLocked) return;
+      npLockedModalScrollY = window.scrollY || window.pageYOffset || 0;
+      isNpModalBodyLocked = true;
+      document.documentElement.classList.add("np-modal-open");
+      document.body.classList.add("np-modal-open");
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${npLockedModalScrollY}px`;
+      document.body.style.left = "0";
+      document.body.style.right = "0";
+      document.body.style.width = "100%";
+      document.body.style.overflow = "hidden";
+    }
+
+    function unlockNpModalBody() {
+      document.documentElement.classList.remove("np-modal-open");
+      document.body.classList.remove("np-modal-open");
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.width = "";
+      document.body.style.overflow = "";
+      if (isNpModalBodyLocked) {
+        const restoreY = npLockedModalScrollY;
+        isNpModalBodyLocked = false;
+        window.scrollTo(0, restoreY);
+      }
+    }
+
+    function resetNpDrawerDragStyle() {
+      const drawer = document.querySelector("#npSheetBackdrop .np-sheet-drawer");
+      if (drawer) {
+        drawer.style.transition = "";
+        drawer.style.transform = "";
+      }
+    }
+
+    function updateNpModalMiniPreview() {
+      const inner = document.getElementById("npModalMiniInner");
+      const roleTag = document.getElementById("npModalPreviewRoleTag");
+      const backdrop = document.getElementById("npSheetBackdrop");
+      if (!inner || !backdrop || !backdrop.classList.contains("open")) return;
+
+      const role = activeMobileModalRole || activeListTab || "pendamping";
+      const isPend = role === "pendamping";
+      const list = isPend ? pendampingList : pesertaList;
+      const isPlaceholder = list.length === 0;
+      const displayItems = isPlaceholder
+        ? (isPend ? SAMPLE_PENDAMPING_PREVIEW : SAMPLE_PESERTA_PREVIEW)
+        : list;
+      const sep = currentNotepadType === "kecil" ? "," : "–";
+
+      if (roleTag) {
+        roleTag.textContent = isPend
+          ? `Pendamping (${list.length} Orang)`
+          : `Peserta (${list.length} Orang)`;
+      }
+
+      inner.classList.toggle("is-placeholder", isPlaceholder);
+      inner.innerHTML = "";
+
+      const headerLabel = (currentNotepadType === "kecil" && !isPend) ? "Peserta :" : (isPend ? "Pendamping :" : "Peserta :");
+      const hdr = document.createElement("div");
+      hdr.className = "np-section-header";
+      hdr.textContent = headerLabel;
+      inner.appendChild(hdr);
+
+      const listEl = document.createElement("div");
+      listEl.className = "np-list-container";
+      renderPreviewItems(listEl, displayItems, sep, true, 10.5, 15.0);
+      inner.appendChild(listEl);
+
+      if (!isPlaceholder) {
+        inner.scrollTop = inner.scrollHeight;
+      } else {
+        inner.scrollTop = 0;
+      }
+    }
+
+    function openNotepadListSheet(role = "pendamping") {
+      const targetRole = role === "peserta" ? "peserta" : "pendamping";
+      activeListTab = targetRole;
+      activeMobileModalRole = targetRole;
+
+      const backdrop = document.getElementById("npSheetBackdrop");
+      const sheetBody = document.getElementById("npSheetBody");
+      const sheetTitle = document.getElementById("npSheetTitle");
+      const workspace = document.getElementById("daftarNamaWorkspace");
+
+      if (!backdrop || !sheetBody || !workspace) return;
+      if (backdrop.parentNode !== document.body) {
+        document.body.appendChild(backdrop);
+      }
+
+      if (sheetBody && workspace.parentNode !== sheetBody) {
+        sheetBody.appendChild(workspace);
+      }
+      sheetBody.setAttribute("data-modal-role", targetRole);
+      sheetBody.scrollTop = 0;
+
+      if (sheetTitle) {
+        sheetTitle.textContent = targetRole === "pendamping"
+          ? "Daftar Pendamping"
+          : "Daftar Peserta";
+      }
+
+      // Ensure target card is visible when opened inside modal
+      const card = document.getElementById(`roleCard_${targetRole}`);
+      if (card) card.style.display = "block";
+
+      resetNpDrawerDragStyle();
+      backdrop.classList.add("open");
+      lockNpModalBody();
+      updateNpModalMiniPreview();
+
+      requestAnimationFrame(() => {
+        updateSubinputGlider(false, targetRole);
+        syncNotepadDropdowns();
+      });
+      setTimeout(() => {
+        updateSubinputGlider(false, targetRole);
+      }, 150);
+    }
+    window.openNotepadListSheet = openNotepadListSheet;
+
+    function closeNotepadListSheet() {
+      if (document.activeElement && typeof document.activeElement.blur === "function") {
+        document.activeElement.blur();
+      }
+      activeMobileModalRole = null;
+      if (typeof window.closeAllCustomDropdowns === "function") {
+        window.closeAllCustomDropdowns();
+      }
+      resetNpDrawerDragStyle();
+      const backdrop = document.getElementById("npSheetBackdrop");
+      if (backdrop) {
+        backdrop.classList.remove("open");
+      }
+      unlockNpModalBody();
+      updateNotepadPreview();
+    }
+    window.closeNotepadListSheet = closeNotepadListSheet;
+
+    (function initNpModalTouchHandlers() {
+      const backdrop = document.getElementById("npSheetBackdrop");
+      if (!backdrop) return;
+      if (backdrop.parentNode !== document.body) {
+        document.body.appendChild(backdrop);
+      }
+      const drawer = backdrop.querySelector(".np-sheet-drawer");
+      const handleBar = backdrop.querySelector(".np-sheet-handle-bar");
+      const header = backdrop.querySelector(".np-sheet-header");
+
+      backdrop.addEventListener("touchmove", function (e) {
+        if (!backdrop.classList.contains("open")) return;
+        const inScrollable = e.target.closest(".np-sheet-content, .np-modal-mini-inner, .custom-select-menu, .custom-select-options");
+        if (!inScrollable) {
+          e.preventDefault();
+        }
+      }, { passive: false });
+
+      if (!drawer) return;
+      let startY = 0;
+      let startTime = 0;
+      let currentDeltaY = 0;
+      let isDraggingSheet = false;
+
+      function onDragStart(e) {
+        if (e.target.closest("button, a, input, select, .np-btn-close-sheet")) return;
+        const touch = e.touches && e.touches[0];
+        if (!touch) return;
+        startY = touch.clientY;
+        startTime = Date.now();
+        currentDeltaY = 0;
+        isDraggingSheet = true;
+        drawer.style.transition = "none";
+      }
+
+      function onDragMove(e) {
+        if (!isDraggingSheet) return;
+        const touch = e.touches && e.touches[0];
+        if (!touch) return;
+        currentDeltaY = Math.max(0, touch.clientY - startY);
+        if (currentDeltaY > 0) {
+          e.preventDefault();
+          drawer.style.transform = `translateY(${currentDeltaY}px)`;
+        }
+      }
+
+      function onDragEnd() {
+        if (!isDraggingSheet) return;
+        isDraggingSheet = false;
+        const elapsed = Math.max(1, Date.now() - startTime);
+        const velocity = currentDeltaY / elapsed;
+        if (currentDeltaY > 75 || (currentDeltaY > 28 && velocity > 0.45)) {
+          drawer.style.transition = "transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)";
+          drawer.style.transform = "translateY(100%)";
+          setTimeout(() => {
+            closeNotepadListSheet();
+          }, 160);
+        } else {
+          drawer.style.transition = "transform 0.22s cubic-bezier(0.16, 1, 0.3, 1)";
+          drawer.style.transform = "translateY(0)";
+          setTimeout(() => {
+            if (!isDraggingSheet && drawer) {
+              drawer.style.transition = "";
+              drawer.style.transform = "";
+            }
+          }, 230);
+        }
+        currentDeltaY = 0;
+      }
+
+      [handleBar, header].forEach(el => {
+        if (!el) return;
+        el.addEventListener("touchstart", onDragStart, { passive: true });
+        el.addEventListener("touchmove", onDragMove, { passive: false });
+        el.addEventListener("touchend", onDragEnd, { passive: true });
+        el.addEventListener("touchcancel", onDragEnd, { passive: true });
+      });
+    })();
+
     function adaptNotepadPreviewLayout() {
       const isMobile = window.innerWidth <= 1060;
       const frame = document.getElementById("previewCardFrame");
       const mobileSlot = document.getElementById("mobilePreviewSlot");
       const desktopSlot = document.getElementById("desktopPreviewSlot");
-      if (!frame || !mobileSlot || !desktopSlot) return;
+      const workspace = document.getElementById("daftarNamaWorkspace");
+      const desktopListSlot = document.getElementById("desktopListSlot");
 
-      if (isMobile) {
-        if (frame.parentNode !== mobileSlot) {
-          mobileSlot.appendChild(frame);
-        }
-      } else {
-        if (frame.parentNode !== desktopSlot) {
-          desktopSlot.appendChild(frame);
+      if (frame && mobileSlot && desktopSlot) {
+        if (isMobile) {
+          if (frame.parentNode !== mobileSlot) {
+            mobileSlot.appendChild(frame);
+          }
+        } else {
+          if (frame.parentNode !== desktopSlot) {
+            desktopSlot.appendChild(frame);
+          }
         }
       }
+
+      if (!isMobile) {
+        if (activeMobileModalRole) {
+          closeNotepadListSheet();
+        }
+        if (workspace && desktopListSlot && workspace.parentNode !== desktopListSlot) {
+          desktopListSlot.appendChild(workspace);
+        }
+        updateKecilModeTabs();
+      }
+
       fitNotepadPreview();
     }
 
@@ -4996,7 +5839,7 @@
       initNotepadDropdowns();
       setTodayDate();
       updateTimeDisplay();
-      switchListTab("pendamping");
+      renderNameList();
       setNotepadType("besar");
       adaptNotepadPreviewLayout();
       updateAllNotepadGliders(false);
@@ -5008,25 +5851,25 @@
         document.fonts.ready.then(() => updateAllNotepadGliders(false));
       }
       window.addEventListener("load", () => updateAllNotepadGliders(false));
-      let wasMobilePreviewWidth = window.innerWidth <= 768;
+      let wasMobileView = window.innerWidth <= 1060;
       let lastNotepadViewportWidth = window.innerWidth;
       window.addEventListener("resize", () => {
         const nextWidth = window.innerWidth;
         if (Math.abs(nextWidth - lastNotepadViewportWidth) < 2) return;
         lastNotepadViewportWidth = nextWidth;
-        const nowMobilePreviewWidth = nextWidth <= 768;
-        updateAllNotepadGliders(false);
-        if (nowMobilePreviewWidth !== wasMobilePreviewWidth && currentNotepadType === "kecil" && currentKecilMode === "both") {
-          wasMobilePreviewWidth = nowMobilePreviewWidth;
+        const nowMobileView = nextWidth <= 1060;
+        adaptNotepadPreviewLayout();
+        if (nowMobileView !== wasMobileView) {
+          wasMobileView = nowMobileView;
           updateNotepadPreview();
         }
-        wasMobilePreviewWidth = nowMobilePreviewWidth;
-        adaptNotepadPreviewLayout();
+        updateAllNotepadGliders(false);
       });
       window.addEventListener("orientationchange", () => setTimeout(() => {
         lastNotepadViewportWidth = window.innerWidth;
-        updateAllNotepadGliders(false);
         adaptNotepadPreviewLayout();
+        updateNotepadPreview();
+        updateAllNotepadGliders(false);
       }, 120));
     });
   </script>

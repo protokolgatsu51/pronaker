@@ -245,8 +245,17 @@
       }
 
       const selectedOpt = this.optionsContainer.querySelector(".custom-select-option.selected");
-      if (selectedOpt) {
-        setTimeout(() => selectedOpt.scrollIntoView({ block: "nearest" }), 50);
+      if (selectedOpt && this.optionsContainer.scrollHeight > this.optionsContainer.clientHeight) {
+        setTimeout(() => {
+          const cont = this.optionsContainer;
+          const optTop = selectedOpt.offsetTop;
+          const optBottom = optTop + selectedOpt.offsetHeight;
+          if (optTop < cont.scrollTop) {
+            cont.scrollTop = optTop;
+          } else if (optBottom > cont.scrollTop + cont.clientHeight) {
+            cont.scrollTop = optBottom - cont.clientHeight;
+          }
+        }, 50);
       }
     }
 
