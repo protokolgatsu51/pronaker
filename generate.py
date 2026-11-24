@@ -132,35 +132,53 @@ LEADING_LIST_PREFIX_PATTERN = re.compile(
 FRONT_TITLES_PATTERN = re.compile(
     r'^\s*(?:'
     r'Prof(?:esor)?\.?|'
+    r'Dr\.?\s*\(\s*H\.?\s*C\.?\s*\)|\(\s*H\.?\s*C\.?\s*\)|H\.?\s*C\.?|'
+    r'Dr\.?\s+rer\.?\s*(?:nat|pol|oec|soc|medic|publ|sec|hort|for|techn)\.?|'
+    r'Dr\.?(?:\s*[-–]\s*|\s+)(?:Eng|Ing|Phil|Sc|Med|Agr|Tech(?:n)?|Jur|Theol|Pol|Paed|Oec|Soc|Biol|Chem|Phys|Math|Nat|Hum|Psi|Kom|Ed|Kn|Si|Ag|Pd)\.?|'
+    r'rer\.?\s*(?:nat|pol|oec|soc|medic|publ|sec|hort|for|techn)\.?|(?:Eng|Ing)\.|'
     r'Drs\.?|Dra\.?|Drg\.?|Drh\.?|Dr\.?|'
-    r'Ir\.?|Apt\.?|Ns\.?|'
+    r'Ir\.?|Apt\.?|Ns\.?|Gr\.?|Bdn\.?|'
     r'K\.?\s*H\.?|KH\.?|Kiai\s+Haji|Kyai\s+Haji|'
+    r'T\.?\s*G\.?\s*K\.?\s*H\.?|T\.?\s*G\.?\s*H\.?|TGKH\.?|TGH\.?|Tgk\.?|'
     r'Hjh\.?|Hj\.?|H\.|(?:\bH\b\.?)|Haji|Hajjah|Hajah|'
-    r'Ust(?:adz)?\.?|Habib|Sayyid|'
+    r'Ust(?:adz(?:ah)?)?\.?|Habib|Sayyid|Syarifah|Pdt\.?|Romo|Mgr\.?|'
     r'Bpk\.?|Bapak|Ibu|Sdri?\.?|Saudara|Saudari|'
-    r'Plt\.?|Plh\.?|Pj\.?|'
-    r'Jenderal|Letjen|Mayjen|Brigjen|Kolonel|Letkol|Mayor|Kapten|Lettu|Letda|'
-    r'Irjen(?:\s+Pol)?\.?|Brigjen(?:\s+Pol)?\.?|Kombes(?:\s+Pol)?\.?|AKBP|Kompol|AKP|Iptu|Ipda'
+    r'Plt\.?|Plh\.?|Pj\.?|Pjs\.?|Yth\.?|'
+    r'(?:Jenderal(?:\s+Besar)?|Let(?:nan)?\s+Jenderal|Letjen|May(?:or)?\s+Jenderal|Mayjen|Brig(?:adir)?\s+Jenderal|Brigjen|'
+    r'Laksamana(?:\s+(?:Madya|Muda|Pertama))?|Laksdya|Laksda|Laksma|'
+    r'Marsekal(?:\s+(?:Madya|Muda|Pertama))?|Marsdya|Marsda|Marsma|'
+    r'Kolonel|Let(?:nan)?\s+Kolonel|Letkol|Mayor|Kapten|Let(?:nan)?\s+(?:Satu|Dua)|Lettu|Letda|'
+    r'Komisaris\s+Jenderal|Komjen|Inspektur\s+Jenderal|Irjen|Kombes|AKBP|Kompol|AKP|Iptu|Ipda)'
+    r'(?:\s+(?:TNI(?:\s+(?:AD|AL|AU))?|Pol(?:ri)?\.?|Laut(?:\s*\([A-Za-z]+\))?|(?:Mar|Inf|Kav|Arm|Arh|Czi|Chb|Cpl|Ckm|Chk|Cpm|Cku|Cba|Sus|Tek|Kal|Adm|Kes|Pas|Lek|Pnb|Nav)\.?))?'
+    r'(?:\s+(?:\(\s*Purn\.?\s*\)|Purn\.?))?|'
+    r'TNI(?:\s+(?:AD|AL|AU))?(?:\s+(?:\(\s*Purn\.?\s*\)|Purn\.?))?|'
+    r'Polri(?:\s+(?:\(\s*Purn\.?\s*\)|Purn\.?))?|'
+    r'Pol\.(?:\s+(?:\(\s*Purn\.?\s*\)|Purn\.?))?|'
+    r'\(\s*Purn\.?\s*\)|Purn\.|'
+    r'(?:Mar|Inf|Kav|Arm|Arh|Czi|Chb|Cpl|Ckm|Chk|Cpm|Cku|Cba|Sus|Tek|Kal|Adm|Kes|Pas|Lek|Pnb|Nav)\.'
     r')(?:[\.\s\:\-\/–—]+|$)',
     re.IGNORECASE
 )
 
 TITLE_TOKEN_PATTERN = re.compile(
     r'^(?:'
-    r'[SMDA]\.\s*[A-Za-z]+(?:\.\s*[A-Za-z]+)*\.?|'
-    r'Sp\.\s*[A-Za-z]+(?:\s*\([A-Za-z]+\)|-[A-Za-z0-9]+|(?:\.\s*[A-Za-z]+)*)\.?|'
+    r'[SMDA]\.\s*[A-Za-z]+(?:\.\s*[A-Za-z]+)*(?:\s*\([A-Za-z0-9\s\.\-]+\))?\.?|'
+    r'S\.?\s*Tr\.?(?:\.\s*[A-Za-z]+|[A-Za-z]+)*\.?|A\.?\s*Md\.?(?:\.\s*[A-Za-z]+|[A-Za-z]+)*\.?|D\.?\s*(?:III|IV|3|4)\.?|'
+    r'Sp\.\s*[A-Za-z]+(?:\s*\([A-Za-z0-9\s\.\-]+\)|-[A-Za-z0-9\-]+|(?:\.\s*[A-Za-z]+)*)*\.?|'
     r'Subsp\.\s*[A-Za-z]+(?:\.\s*[A-Za-z]+)*\.?|'
+    r'Dipl\.?\s*-?\s*[A-Za-z]+\.?|Dr\.?\s*(?:Eng|Ing|Phil|Sc|Med|Agr|Tech(?:n)?|Jur|Theol|Pol|H\.?\s*C\.?)\.?|'
     r'Ph\.?\s*D\.?|PhD\.?|'
     r'M\.?\s*B\.?\s*A\.?|MBA\.?|'
     r'M\.?\s*(?:Bus|Com|Sc|Eng|Ed|Fin|Phil|Arch|Tech|Law|Res|Des|Pub\.?\s*Pol|Int\.?\s*Rel)\.?|'
-    r'B\.?\s*[A-Z]\.?\s*(?:Sc|A)?\.?|'
-    r'LL\.?\s*M\.?|LLM|'
-    r'Ed\.?\s*D\.?|D\.?\s*Sc\.?|D\.?\s*B\.?\s*A\.?|'
+    r'B\.?\s*(?:Sc|Eng|A|Com|Ed|Bus|Tech|Fin|Acc|Arch|Pharm|Psych|Phil|Law|B\.?A|I\.?T|C\.?A|S\.?)\.?(?:\s*\([A-Za-z]+\))?|'
+    r'LL\.?\s*[BM]\.?|LL[BM]\.?|'
+    r'Ed\.?\s*D\.?|EdD\.?|D\.?\s*Sc\.?|DSc\.?|D\.?\s*B\.?\s*A\.?|DBA\.?|D\.?\s*Eng\.?|DEng\.?|Psy\.?\s*D\.?|'
+    r'\(\s*H\.?\s*C\.?\s*\)|H\.?\s*C\.?|\(\s*Purn\.?\s*\)|Purn\.?|'
     r'I\.?\s*P\.?\s*[UMP]\b\.?|IP[UMP]\.?|'
     r'(?:ASEAN|Asean)\s+Eng\.?|'
     r'A\.?\s*C\.?\s*P\.?\s*E\.?|ACPE\.?|C\.?\s*P\.?\s*E\.?|CPE\.?|'
     r'(?:SE|SH|ST|SKom|SPd|SSos|SIP|SIKom|SKM|SPi|SPt|SHut|SAg|SFarm|SPsi|SSn|SKed|SStat|SAkt|SIK|SHum|SFils|STr\w*|AMd\w*)\b\.?|'
-    r'(?:MM|MH|MT|ME|MSi|MPd|MKes|MKM|MKom|MA|MSc|MEng|MP|MKn|MAP|MPA|MPP|MPH|MAg|MFarm|MPsi|MSn|MEcon|MARS|MFin|MMgt|MTech|MPhil|BSc|BEng|BA|BBA|BCom|BEd)\b\.?|'
+    r'(?:MM|MH|MT|ME|MSi|MPd|MKes|MKM|MKom|MA|MSc|MEng|MP|MKn|MAP|MPA|MPP|MPH|MAg|MFarm|MPsi|MSn|MEcon|MARS|MFin|MMgt|MTech|MPhil|MHum|MHan|MAk|MIKom|MIP|MKP|MHut|MFils|MStat|BSc|BEng|BA|BBA|BCom|BEd)\b\.?|'
     r'FINASIM|FACS|FICS|'
     r'CMA|CPA|CIA|CHRP|CPHR|QIA|CBV|CPMA|'
     r'CFA|CFP|QWP|FRM|PMP|CAPM|'
@@ -175,19 +193,21 @@ TITLE_TOKEN_PATTERN = re.compile(
 BACK_TITLES_PATTERN = re.compile(
     r'(?:,\s*|\s+)(?:'
     r'[SMDA]\.\s*[A-Za-z]+(?:\.\s*[A-Za-z]+)*(?:\s*\([A-Za-z0-9\s\.\-]+\))?\.?|'
-    r'Sp\.\s*[A-Za-z]+(?:\s*\([A-Za-z0-9\s\.\-]+\)|-[A-Za-z0-9]+|(?:\.\s*[A-Za-z]+)*)\.?|'
-    r'Subsp\.\s*[A-Za-z]+(?:\s*\([A-Za-z0-9\s\.\-]+\)|-[A-Za-z0-9]+|(?:\.\s*[A-Za-z]+)*)\.?|'
+    r'Sp\.\s*[A-Za-z]+(?:\s*\([A-Za-z0-9\s\.\-]+\)|-[A-Za-z0-9\-]+|(?:\.\s*[A-Za-z]+)*)*\.?|'
+    r'Subsp\.\s*[A-Za-z]+(?:\s*\([A-Za-z0-9\s\.\-]+\)|-[A-Za-z0-9\-]+|(?:\.\s*[A-Za-z]+)*)\.?|'
+    r'Dipl\.?\s*-?\s*[A-Za-z]+\.?|Dr\.?\s*(?:Eng|Ing|Phil|Sc|Med|Agr|Tech(?:n)?|Jur|Theol|Pol|H\.?\s*C\.?)\.?|'
     r'Ph\.?\s*D\.?|PhD\.?|'
     r'M\.?\s*B\.?\s*A\.?|MBA\.?|'
     r'M\.?\s*(?:Bus|Com|Sc|Eng|Ed|Fin|Phil|Arch|Tech|Law|Res|Des|Pub\.?\s*Pol|Int\.?\s*Rel)\.?|'
-    r'B\.?\s*[A-Z]\.?\s*(?:Sc|A)?\.?|'
-    r'LL\.?\s*M\.?|LLM|'
-    r'Ed\.?\s*D\.?|D\.?\s*Sc\.?|D\.?\s*B\.?\s*A\.?|'
+    r'B\.?\s*(?:Sc|Eng|A|Com|Ed|Bus|Tech|Fin|Acc|Arch|Pharm|Psych|Phil|Law|B\.?A|I\.?T|C\.?A|S\.?)\.?(?:\s*\([A-Za-z]+\))?|'
+    r'LL\.?\s*[BM]\.?|LL[BM]|'
+    r'Ed\.?\s*D\.?|EdD|D\.?\s*Sc\.?|DSc|D\.?\s*B\.?\s*A\.?|DBA|D\.?\s*Eng\.?|DEng|Psy\.?\s*D\.?|'
+    r'\(\s*H\.?\s*C\.?\s*\)|H\.?\s*C\.?|\(\s*Purn\.?\s*\)|Purn\.?|'
     r'I\.?\s*P\.?\s*[UMP]\b\.?|IP[UMP]\.?|'
     r'(?:ASEAN|Asean)\s+Eng\.?|'
     r'A\.?\s*C\.?\s*P\.?\s*E\.?|ACPE\.?|C\.?\s*P\.?\s*E\.?|CPE\.?|'
     r'(?:SE|SH|ST|SKom|SPd|SSos|SIP|SIKom|SKM|SPi|SPt|SHut|SAg|SFarm|SPsi|SSn|SKed|SStat|SAkt|SIK|SHum|SFils|STr\w*|AMd\w*)\b\.?|'
-    r'(?:MM|MH|MT|ME|MSi|MPd|MKes|MKM|MKom|MA|MSc|MEng|MP|MKn|MAP|MPA|MPP|MPH|MAg|MFarm|MPsi|MSn|MEcon|MARS|MFin|MMgt|MTech|MPhil|BSc|BEng|BA|BBA|BCom|BEd)\b\.?|'
+    r'(?:MM|MH|MT|ME|MSi|MPd|MKes|MKM|MKom|MA|MSc|MEng|MP|MKn|MAP|MPA|MPP|MPH|MAg|MFarm|MPsi|MSn|MEcon|MARS|MFin|MMgt|MTech|MPhil|MHum|MHan|MAk|MIKom|MIP|MKP|MHut|MFils|MStat|BSc|BEng|BA|BBA|BCom|BEd)\b\.?|'
     r'FINASIM|FACS|FICS|'
     r'CMA|CPA|CIA|CHRP|CPHR|QIA|CBV|CPMA|'
     r'CFA|CFP|QWP|FRM|PMP|CAPM|'
@@ -207,8 +227,8 @@ def clean_titles(name):
     # 0. Sanitize tabs, NBSP, zero-width spaces, and control chars
     s = sanitize_text(name)
 
-    # 1. Strip parenthesized religious/academic titles e.g. "(H.) " or "(Hj.) " or "(Dr.) "
-    s = re.sub(r'^\s*\((?:H\.|Hj\.|Haji|Hajjah|Hajah|Hjh\.?|Dr\.?|Drs\.?|Dra\.?)\)\s*', '', s, flags=re.IGNORECASE).strip()
+    # 1. Strip parenthesized religious/academic titles e.g. "(H.) " or "(Hj.) " or "(Dr.) " or "(H.C.) "
+    s = re.sub(r'^\s*\((?:H\.|Hj\.|Haji|Hajjah|Hajah|Hjh\.?|Dr\.?|Drs\.?|Dra\.?|H\.?\s*C\.?)\)\s*', '', s, flags=re.IGNORECASE).strip()
 
     # 2. Strip leading numbering or bullet markers (e.g. "1. ", "2) ", "- ", "> ", "· ", "• ")
     prev = None
@@ -228,8 +248,8 @@ def clean_titles(name):
         prev = s
         s = BACK_TITLES_PATTERN.sub('', s).strip()
 
-    # 4b. Strip parenthesized trailing titles/subspecialties e.g. "(K)", "(Konsultan)", "(Han)"
-    s = re.sub(r'\s*\((?:K|Konsultan|Sp\.[A-Za-z]+|[A-Za-z0-9\.\s\-]+)\)\s*$', '', s, flags=re.IGNORECASE).strip()
+    # 4b. Strip parenthesized trailing titles/subspecialties e.g. "(K)", "(Konsultan)", "(Han)", "(H.C.)", "(Purn.)"
+    s = re.sub(r'\s*\((?:K|Konsultan|Purn\.?|Sp\.[A-Za-z]+|H\.?\s*C\.?|[A-Za-z0-9\.\s\-]+)\)\s*$', '', s, flags=re.IGNORECASE).strip()
 
     # 5. Clean leftover punctuation at ends (preserving trailing period ONLY if part of a single initial e.g. 'R.', 'P.')
     s = re.sub(r'^[,\.\s\-–—>·•\:\=\|\/]+', '', s).strip()
@@ -440,10 +460,11 @@ def split_name_and_position(line):
             if name_part and pos_part:
                 return name_part, pos_part
         else:
-            name_part = strip_trailing_punctuation(before_paren)
-            pos_part = inside_paren
-            if name_part and pos_part:
-                return name_part, pos_part
+            if not TITLE_TOKEN_PATTERN.match(inside_paren):
+                name_part = strip_trailing_punctuation(before_paren)
+                pos_part = inside_paren
+                if name_part and pos_part:
+                    return name_part, pos_part
 
     # 2. Check explicit strong delimiters
     delims = ['|', ';', ':', ' - ', ' – ', ' — ', ' / ', '=']
@@ -456,17 +477,25 @@ def split_name_and_position(line):
     if ',' in line:
         parts = [p.strip() for p in line.split(',') if p.strip()]
         if len(parts) >= 2:
-            last_part = parts[-1]
-            is_title = bool(TITLE_TOKEN_PATTERN.match(last_part))
-            if not is_title:
-                return strip_trailing_punctuation(", ".join(parts[:-1])), last_part
+            split_idx = 1
+            while split_idx < len(parts):
+                seg = parts[split_idx].strip(', ').strip()
+                tokens = [t for t in seg.split() if t]
+                if seg and (TITLE_TOKEN_PATTERN.match(seg) or (tokens and all(TITLE_TOKEN_PATTERN.match(t) for t in tokens))):
+                    split_idx += 1
+                else:
+                    break
+            if split_idx < len(parts):
+                return strip_trailing_punctuation(", ".join(parts[:split_idx])), ", ".join(parts[split_idx:]).strip()
 
-    # 4. Check for single dash or slash between words
-    for d in ['-', '/']:
-        if d in line:
-            parts = line.split(d, 1)
-            if parts[0].strip() and parts[1].strip():
-                return strip_trailing_punctuation(parts[0].strip()), parts[1].strip()
+    # 4. Single dash (with whitespace on at least one side so Dr.-Ing. / hyphenated names stay intact) or slash
+    dash_m = re.match(r'^(.*?)(?:\s+-|-\s+)(.+)$', line)
+    if dash_m and dash_m.group(1).strip() and dash_m.group(2).strip():
+        return strip_trailing_punctuation(dash_m.group(1).strip()), dash_m.group(2).strip()
+    if '/' in line:
+        parts = line.split('/', 1)
+        if parts[0].strip() and parts[1].strip():
+            return strip_trailing_punctuation(parts[0].strip()), parts[1].strip()
 
     # 5. Check if line contains position indicators starting with PLT / Plt / Plh / Pj separated by space
     pos_match = re.search(r'\s+(?:PLT\.?|Plt\.?|PLH\.?|Plh\.?|Pj\.?|PJ\.?)\s+', line)

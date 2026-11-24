@@ -889,7 +889,7 @@ function renderCard(name, position, options = {}) {
 // ---------------------------------------------------------------------------
 const LEADING_LIST_PREFIX_PATTERN = /^\s*(?:\[\d{1,2}[\/\-\.]\d{1,2}(?:[\/\-\.]\d{2,4})?,?\s*\d{1,2}[\.:]\d{2}(?::\d{2})?(?:\s*[APap][Mm])?\]\s*[^:\n]{1,50}:\s*|\(?\d+[\.\)\:\-\]]*|\[?\d+\]|[-*•·–—>→+~▪▫◦■/\\|]+)\s*/;
 
-const FRONT_TITLES_PATTERN = /^\s*(?:Prof(?:esor)?\.?|Dr\.?\s*\(\s*H\.?\s*C\.?\s*\)|\(\s*H\.?\s*C\.?\s*\)|H\.?\s*C\.?|Drs\.?|Dra\.?|Drg\.?|Drh\.?|Dr\.?|Ir\.?|Apt\.?|Ns\.?|Gr\.?|K\.?\s*H\.?|KH\.?|Kiai\s+Haji|Kyai\s+Haji|Hjh\.?|Hj\.?|H\.|(?:\bH\b\.?)|Haji|Hajjah|Hajah|Ust(?:adz)?\.?|Habib|Sayyid|Bpk\.?|Bapak|Ibu|Sdri?\.?|Saudara|Saudari|Plt\.?|Plh\.?|Pj\.?|Jenderal|Letjen|Mayjen|Brigjen|Kolonel|Letkol|Mayor|Kapten|Lettu|Letda|Irjen(?:\s+Pol)?\.?|Brigjen(?:\s+Pol)?\.?|Kombes(?:\s+Pol)?\.?|AKBP|Kompol|AKP|Iptu|Ipda)(?:[\.\s\:\-\/–—]+|$)/i;
+const FRONT_TITLES_PATTERN = /^\s*(?:Prof(?:esor)?\.?|Dr\.?\s*\(\s*H\.?\s*C\.?\s*\)|\(\s*H\.?\s*C\.?\s*\)|H\.?\s*C\.?|Dr\.?\s+rer\.?\s*(?:nat|pol|oec|soc|medic|publ|sec|hort|for|techn)\.?|Dr\.?(?:\s*[-–]\s*|\s+)(?:Eng|Ing|Phil|Sc|Med|Agr|Tech(?:n)?|Jur|Theol|Pol|Paed|Oec|Soc|Biol|Chem|Phys|Math|Nat|Hum|Psi|Kom|Ed|Kn|Si|Ag|Pd)\.?|rer\.?\s*(?:nat|pol|oec|soc|medic|publ|sec|hort|for|techn)\.?|(?:Eng|Ing)\.|Drs\.?|Dra\.?|Drg\.?|Drh\.?|Dr\.?|Ir\.?|Apt\.?|Ns\.?|Gr\.?|Bdn\.?|K\.?\s*H\.?|KH\.?|Kiai\s+Haji|Kyai\s+Haji|T\.?\s*G\.?\s*K\.?\s*H\.?|T\.?\s*G\.?\s*H\.?|TGKH\.?|TGH\.?|Tgk\.?|Hjh\.?|Hj\.?|H\.|(?:\bH\b\.?)|Haji|Hajjah|Hajah|Ust(?:adz(?:ah)?)?\.?|Habib|Sayyid|Syarifah|Pdt\.?|Romo|Mgr\.?|Bpk\.?|Bapak|Ibu|Sdri?\.?|Saudara|Saudari|Plt\.?|Plh\.?|Pj\.?|Pjs\.?|Yth\.?|(?:Jenderal(?:\s+Besar)?|Let(?:nan)?\s+Jenderal|Letjen|May(?:or)?\s+Jenderal|Mayjen|Brig(?:adir)?\s+Jenderal|Brigjen|Laksamana(?:\s+(?:Madya|Muda|Pertama))?|Laksdya|Laksda|Laksma|Marsekal(?:\s+(?:Madya|Muda|Pertama))?|Marsdya|Marsda|Marsma|Kolonel|Let(?:nan)?\s+Kolonel|Letkol|Mayor|Kapten|Let(?:nan)?\s+(?:Satu|Dua)|Lettu|Letda|Komisaris\s+Jenderal|Komjen|Inspektur\s+Jenderal|Irjen|Kombes|AKBP|Kompol|AKP|Iptu|Ipda)(?:\s+(?:TNI(?:\s+(?:AD|AL|AU))?|Pol(?:ri)?\.?|Laut(?:\s*\([A-Za-z]+\))?|(?:Mar|Inf|Kav|Arm|Arh|Czi|Chb|Cpl|Ckm|Chk|Cpm|Cku|Cba|Sus|Tek|Kal|Adm|Kes|Pas|Lek|Pnb|Nav)\.?))?(?:\s+(?:\(\s*Purn\.?\s*\)|Purn\.?))?|TNI(?:\s+(?:AD|AL|AU))?(?:\s+(?:\(\s*Purn\.?\s*\)|Purn\.?))?|Polri(?:\s+(?:\(\s*Purn\.?\s*\)|Purn\.?))?|Pol\.(?:\s+(?:\(\s*Purn\.?\s*\)|Purn\.?))?|\(\s*Purn\.?\s*\)|Purn\.|(?:Mar|Inf|Kav|Arm|Arh|Czi|Chb|Cpl|Ckm|Chk|Cpm|Cku|Cba|Sus|Tek|Kal|Adm|Kes|Pas|Lek|Pnb|Nav)\.)(?:[\.\s\:\-\/–—]+|$)/i;
 
 function isValidOfficialName(name) {
   if (!name) return false;
@@ -900,9 +900,9 @@ function isValidOfficialName(name) {
   return true;
 }
 
-const TITLE_TOKEN_PATTERN = /^(?:[SMDA]\.\s*[A-Za-z]+(?:\.\s*[A-Za-z]+)*(?:\s*\([A-Za-z0-9\s\.\-]+\))?\.?|S\.?\s*Tr\.?(?:\.\s*[A-Za-z]+|[A-Za-z]+)*\.?|A\.?\s*Md\.?(?:\.\s*[A-Za-z]+|[A-Za-z]+)*\.?|D\.?\s*(?:III|IV|3|4)\.?|Sp\.\s*[A-Za-z]+(?:\s*\([A-Za-z0-9\s\.\-]+\)|-[A-Za-z0-9\-]+|(?:\.\s*[A-Za-z]+)*)\.?|Subsp\.\s*[A-Za-z]+(?:\.\s*[A-Za-z]+)*\.?|Ph\.?\s*D\.?|PhD\.?|M\.?\s*B\.?\s*A\.?|MBA\.?|M\.?\s*(?:Bus|Com|Sc|Eng|Ed|Fin|Phil|Arch|Tech|Law|Res|Des|Pub\.?\s*Pol|Int\.?\s*Rel)\.?|B\.?\s*(?:Sc|Eng|A|Com|Ed|Bus|Tech|Fin|Acc|Arch|Pharm|Psych|Phil|Law|B\.?A|I\.?T|C\.?A|S\.?)\.?(?:\s*\([A-Za-z]+\))?|LL\.?\s*[BM]\.?|LL[BM]\.?|Ed\.?\s*D\.?|EdD\.?|D\.?\s*Sc\.?|DSc\.?|D\.?\s*B\.?\s*A\.?|DBA\.?|Psy\.?\s*D\.?|\(\s*H\.?\s*C\.?\s*\)|H\.?\s*C\.?|I\.?\s*P\.?\s*[UMP]\.?|IP[UMP]\.?|(?:ASEAN|Asean)\s+Eng\.?|P\.?\s*Eng\.?|C\.?\s*Eng\.?|A\.?\s*C\.?\s*P\.?\s*E\.?|ACPE\.?|C\.?\s*P\.?\s*E\.?|CPE\.?|Psikolog\.?|Kons\.?|Gr\.?|Apt\.?|Ns\.?|Bdn\.?|(?:SE|SH|ST|SP|SKom|SPd|SSos|SIP|SIKom|SKM|SKep|SGz|SPi|SPt|SHut|SAg|SFarm|SPsi|SSn|SKed|SStat|SAkt|SIK|SHum|SFils|STr\w*|AMd\w*)\.?|(?:MM|MH|MT|ME|MSi|MPd|MKes|MKom|MA|MSc|MEng|MP|MKn|MAP|MAg|MFarm|MPsi|MSn|MEcon|MARS|MPH|MPP|MPA|MKM|MIKom|MIP|MKP|MHut|MHum|MFils|MStat|MFin|MMgt|MTech|MPhil|BSc|BEng|BA|BBA|BCom|BEd)\.?|(?:FINASIM|FACS|FICS|FIHA|FACC|FESC|FACP|FRCS|MRCP|CMA|CPA|CIA|CHRP|CPHR|QIA|CBV|CPMA|CFA|CFP|QWP|FRM|PRM|CWM|RFP|PMP|CAPM|PRINCE2|CSM|CSPO|ITIL|TOGAF|CISA|CISM|CISSP|CGEIT|CRISC|CEH|OSCP|CIPM|CIPP|CDPSE|CRA|CRP|CRGP|CRMP|CRMO|CERG|CCRP|CSO|CGO|CGP|FCCA|ACCA|FCA|ACMA|CGMA|CIMA|SHRM-?S?CP|SPHR|GPHR|PHR|CAFM|BKP|CTA|ACPA|CA)\.?|(?:[A-Z]\.){3,6}|Ak\.?|Akt\.?|MM\.?PD\.?|\(K\)|Konsultan)$/i;
+const TITLE_TOKEN_PATTERN = /^(?:[SMDA]\.\s*[A-Za-z]+(?:\.\s*[A-Za-z]+)*(?:\s*\([A-Za-z0-9\s\.\-]+\))?\.?|S\.?\s*Tr\.?(?:\.\s*[A-Za-z]+|[A-Za-z]+)*\.?|A\.?\s*Md\.?(?:\.\s*[A-Za-z]+|[A-Za-z]+)*\.?|D\.?\s*(?:III|IV|3|4)\.?|Sp\.\s*[A-Za-z]+(?:\s*\([A-Za-z0-9\s\.\-]+\)|-[A-Za-z0-9\-]+|(?:\.\s*[A-Za-z]+)*)*\.?|Subsp\.\s*[A-Za-z]+(?:\.\s*[A-Za-z]+)*\.?|Dipl\.?\s*-?\s*[A-Za-z]+\.?|Dr\.?\s*(?:Eng|Ing|Phil|Sc|Med|Agr|Tech(?:n)?|Jur|Theol|Pol|H\.?\s*C\.?)\.?|Ph\.?\s*D\.?|PhD\.?|M\.?\s*B\.?\s*A\.?|MBA\.?|M\.?\s*(?:Bus|Com|Sc|Eng|Ed|Fin|Phil|Arch|Tech|Law|Res|Des|Pub\.?\s*Pol|Int\.?\s*Rel)\.?|B\.?\s*(?:Sc|Eng|A|Com|Ed|Bus|Tech|Fin|Acc|Arch|Pharm|Psych|Phil|Law|B\.?A|I\.?T|C\.?A|S\.?)\.?(?:\s*\([A-Za-z]+\))?|LL\.?\s*[BM]\.?|LL[BM]\.?|Ed\.?\s*D\.?|EdD\.?|D\.?\s*Sc\.?|DSc\.?|D\.?\s*B\.?\s*A\.?|DBA\.?|D\.?\s*Eng\.?|DEng\.?|Psy\.?\s*D\.?|\(\s*H\.?\s*C\.?\s*\)|H\.?\s*C\.?|\(\s*Purn\.?\s*\)|Purn\.?|I\.?\s*P\.?\s*[UMP]\.?|IP[UMP]\.?|(?:ASEAN|Asean)\s+Eng\.?|P\.?\s*Eng\.?|C\.?\s*Eng\.?|A\.?\s*C\.?\s*P\.?\s*E\.?|ACPE\.?|C\.?\s*P\.?\s*E\.?|CPE\.?|Psikolog\.?|Kons\.?|Gr\.?|Apt\.?|Ns\.?|Bdn\.?|(?:SE|SH|ST|SP|SKom|SPd|SSos|SIP|SIKom|SKM|SKep|SGz|SPi|SPt|SHut|SAg|SFarm|SPsi|SSn|SKed|SStat|SAkt|SIK|SHum|SFils|STr\w*|AMd\w*)\.?|(?:MM|MH|MT|ME|MSi|MPd|MKes|MKom|MA|MSc|MEng|MP|MKn|MAP|MAg|MFarm|MPsi|MSn|MEcon|MARS|MPH|MPP|MPA|MKM|MIKom|MIP|MKP|MHut|MHum|MHan|MAk|MFils|MStat|MFin|MMgt|MTech|MPhil|BSc|BEng|BA|BBA|BCom|BEd)\.?|(?:FINASIM|FACS|FICS|FIHA|FACC|FESC|FACP|FRCS|MRCP|CMA|CPA|CIA|CHRP|CPHR|QIA|CBV|CPMA|CFA|CFP|QWP|FRM|PRM|CWM|RFP|PMP|CAPM|PRINCE2|CSM|CSPO|ITIL|TOGAF|CISA|CISM|CISSP|CGEIT|CRISC|CEH|OSCP|CIPM|CIPP|CDPSE|CRA|CRP|CRGP|CRMP|CRMO|CERG|CCRP|CSO|CGO|CGP|FCCA|ACCA|FCA|ACMA|CGMA|CIMA|SHRM-?S?CP|SPHR|GPHR|PHR|CAFM|BKP|CTA|ACPA|CA)\.?|(?:[A-Z]\.){3,6}|Ak\.?|Akt\.?|MM\.?PD\.?|\(K\)|Konsultan)$/i;
 
-const BACK_TITLES_PATTERN = /(?:,\s*|\s+)(?:[SMDA]\.\s*[A-Za-z]+(?:\.\s*[A-Za-z]+)*(?:\s*\([A-Za-z0-9\s\.\-]+\))?\.?|S\.?\s*Tr\.?(?:\.\s*[A-Za-z]+|[A-Za-z]+)*\.?|A\.?\s*Md\.?(?:\.\s*[A-Za-z]+|[A-Za-z]+)*\.?|D\.?\s*(?:III|IV|3|4)|Sp\.\s*[A-Za-z]+(?:\s*\([A-Za-z0-9\s\.\-]+\)|-[A-Za-z0-9\-]+|(?:\.\s*[A-Za-z]+)*)\.?|Subsp\.\s*[A-Za-z]+(?:\s*\([A-Za-z0-9\s\.\-]+\)|-[A-Za-z0-9\-]+|(?:\.\s*[A-Za-z]+)*)\.?|Ph\.?\s*D\.?|PhD|M\.?\s*B\.?\s*A\.?|MBA|M\.?\s*(?:Bus|Com|Sc|Eng|Ed|Fin|Phil|Arch|Tech|Law|Res|Des|Pub\.?\s*Pol|Int\.?\s*Rel)\.?|B\.?\s*(?:Sc|Eng|A|Com|Ed|Bus|Tech|Fin|Acc|Arch|Pharm|Psych|Phil|Law|B\.?A|I\.?T|C\.?A|S\.?)\.?|LL\.?\s*[BM]\.?|LL[BM]|Ed\.?\s*D\.?|EdD|D\.?\s*Sc\.?|DSc|D\.?\s*B\.?\s*A\.?|DBA|Psy\.?\s*D\.?|\(\s*H\.?\s*C\.?\s*\)|H\.?\s*C\.?|I\.?\s*P\.?\s*[UMP]\b\.?|(?:ASEAN|Asean)\s+Eng\.?|P\.?\s*Eng\.?|C\.?\s*Eng\.?|A\.?\s*C\.?\s*P\.?\s*E|ACPE|C\.?\s*P\.?\s*E|CPE|Psikolog|Kons\.?|Gr\.?|Apt\.?|Ns\.?|Bdn\.?|(?:SE|SH|ST|SP|SKom|SPd|SSos|SIP|SIKom|SKM|SKep|SGz|SPi|SPt|SHut|SAg|SFarm|SPsi|SSn|SKed|SStat|SAkt|SIK|SHum|SFils|STr\w*|AMd\w*)\b|(?:MM|MH|MT|ME|MSi|MPd|MKes|MKM|MKom|MA|MSc|MEng|MP|MKn|MAP|MPA|MPP|MPH|MAg|MFarm|MPsi|MSn|MEcon|MARS|MIKom|MIP|MKP|MHut|MHum|MFils|MStat|MFin|MMgt|MTech|MPhil|BSc|BEng|BA|BBA|BCom|BEd)\b|FINASIM|FACS|FICS|FIHA|FACC|FESC|FACP|FRCS|MRCP|CMA|CPA|CIA|CHRP|CPHR|QIA|CBV|CPMA|CFA|CFP|QWP|FRM|PRM|CWM|RFP|PMP|CAPM|PRINCE2|CSM|CSPO|ITIL|TOGAF|CISA|CISM|CISSP|CGEIT|CRISC|CEH|OSCP|CIPM|CIPP|CDPSE|CRA|CRP|CRGP|CRMP|CRMO|CERG|CCRP|CSO|CGO|CGP|FCCA|ACCA|FCA|ACMA|CGMA|CIMA|SHRM-?S?CP|SPHR|GPHR|PHR|CAFM|Ak\.?|Akt\.?|CA\b|BKP|CTA|ACPA|MM\.?PD|(?:[A-Z]\.){3,8}(?![A-Za-z0-9])|H\.|Hj\.|Haji|Hajjah|Hajah|Hjh\.?)(?:\.+(?=$|[\s,\)\]\-;:/])|(?=$|[\s,\)\]\-;:/]))/gi;
+const BACK_TITLES_PATTERN = /(?:,\s*|\s+)(?:[SMDA]\.\s*[A-Za-z]+(?:\.\s*[A-Za-z]+)*(?:\s*\([A-Za-z0-9\s\.\-]+\))?\.?|S\.?\s*Tr\.?(?:\.\s*[A-Za-z]+|[A-Za-z]+)*\.?|A\.?\s*Md\.?(?:\.\s*[A-Za-z]+|[A-Za-z]+)*\.?|D\.?\s*(?:III|IV|3|4)|Sp\.\s*[A-Za-z]+(?:\s*\([A-Za-z0-9\s\.\-]+\)|-[A-Za-z0-9\-]+|(?:\.\s*[A-Za-z]+)*)*\.?|Subsp\.\s*[A-Za-z]+(?:\s*\([A-Za-z0-9\s\.\-]+\)|-[A-Za-z0-9\-]+|(?:\.\s*[A-Za-z]+)*)\.?|Dipl\.?\s*-?\s*[A-Za-z]+\.?|Dr\.?\s*(?:Eng|Ing|Phil|Sc|Med|Agr|Tech(?:n)?|Jur|Theol|Pol|H\.?\s*C\.?)\.?|Ph\.?\s*D\.?|PhD|M\.?\s*B\.?\s*A\.?|MBA|M\.?\s*(?:Bus|Com|Sc|Eng|Ed|Fin|Phil|Arch|Tech|Law|Res|Des|Pub\.?\s*Pol|Int\.?\s*Rel)\.?|B\.?\s*(?:Sc|Eng|A|Com|Ed|Bus|Tech|Fin|Acc|Arch|Pharm|Psych|Phil|Law|B\.?A|I\.?T|C\.?A|S\.?)\.?(?:\s*\([A-Za-z]+\))?|LL\.?\s*[BM]\.?|LL[BM]|Ed\.?\s*D\.?|EdD|D\.?\s*Sc\.?|DSc|D\.?\s*B\.?\s*A\.?|DBA|D\.?\s*Eng\.?|DEng|Psy\.?\s*D\.?|\(\s*H\.?\s*C\.?\s*\)|H\.?\s*C\.?|\(\s*Purn\.?\s*\)|Purn\.?|I\.?\s*P\.?\s*[UMP]\b\.?|IP[UMP]\b\.?|(?:ASEAN|Asean)\s+Eng\.?|P\.?\s*Eng\.?|C\.?\s*Eng\.?|A\.?\s*C\.?\s*P\.?\s*E|ACPE|C\.?\s*P\.?\s*E|CPE|Psikolog|Kons\.?|Gr\.?|Apt\.?|Ns\.?|Bdn\.?|(?:SE|SH|ST|SP|SKom|SPd|SSos|SIP|SIKom|SKM|SKep|SGz|SPi|SPt|SHut|SAg|SFarm|SPsi|SSn|SKed|SStat|SAkt|SIK|SHum|SFils|STr\w*|AMd\w*)\b|(?:MM|MH|MT|ME|MSi|MPd|MKes|MKM|MKom|MA|MSc|MEng|MP|MKn|MAP|MPA|MPP|MPH|MAg|MFarm|MPsi|MSn|MEcon|MARS|MIKom|MIP|MKP|MHut|MHum|MHan|MAk|MFils|MStat|MFin|MMgt|MTech|MPhil|BSc|BEng|BA|BBA|BCom|BEd)\b|FINASIM|FACS|FICS|FIHA|FACC|FESC|FACP|FRCS|MRCP|CMA|CPA|CIA|CHRP|CPHR|QIA|CBV|CPMA|CFA|CFP|QWP|FRM|PRM|CWM|RFP|PMP|CAPM|PRINCE2|CSM|CSPO|ITIL|TOGAF|CISA|CISM|CISSP|CGEIT|CRISC|CEH|OSCP|CIPM|CIPP|CDPSE|CRA|CRP|CRGP|CRMP|CRMO|CERG|CCRP|CSO|CGO|CGP|FCCA|ACCA|FCA|ACMA|CGMA|CIMA|SHRM-?S?CP|SPHR|GPHR|PHR|CAFM|Ak\.?|Akt\.?|CA\b|BKP|CTA|ACPA|MM\.?PD|(?:[A-Z]\.){3,8}(?![A-Za-z0-9])|H\.|Hj\.|Haji|Hajjah|Hajah|Hjh\.?)(?:\.+(?=$|[\s,\)\]\-;:/])|(?=$|[\s,\)\]\-;:/]))/gi;
 
 function cleanTitles(name) {
   if (!name) return "";
@@ -935,8 +935,8 @@ function cleanTitles(name) {
     s = s.replace(BACK_TITLES_PATTERN, "").trim();
   }
 
-  // 4b. Strip parenthesized trailing titles/subspecialties e.g. "(K)", "(Konsultan)", "(Han)", "(H.C.)"
-  s = s.replace(/\s*\((?:K|Konsultan|Sp\.[A-Za-z]+|H\.?\s*C\.?|[A-Za-z0-9\.\s\-]+)\)\s*$/i, "").trim();
+  // 4b. Strip parenthesized trailing titles/subspecialties e.g. "(K)", "(Konsultan)", "(Han)", "(H.C.)", "(Purn.)"
+  s = s.replace(/\s*\((?:K|Konsultan|Purn\.?|Sp\.[A-Za-z]+|H\.?\s*C\.?|[A-Za-z0-9\.\s\-]+)\)\s*$/i, "").trim();
 
   // 5. Clean leftover punctuation at ends (preserving trailing period ONLY if part of a single initial e.g. 'R.', 'P.')
   s = s.replace(/^[,\.\s\-–—>·•\:\=\|\/]+/, "").trim();
@@ -1268,15 +1268,21 @@ function splitNameAndPosition(line) {
     return commaRes;
   }
 
-  // 4. Single dash or slash between words
-  for (const d of ["-", "/"]) {
-    if (line.includes(d)) {
-      const idx = line.indexOf(d);
-      const left = line.substring(0, idx).trim();
-      const right = line.substring(idx + 1).trim();
-      if (left && right) {
-        return { name: stripTrailingPunctuation(left), position: right };
-      }
+  // 4. Single dash (only with whitespace on at least one side so Dr.-Ing. or hyphenated names stay intact) or slash
+  const dashWithSpaceMatch = line.match(/^(.*?)(?:\s+-|-\s+)(.+)$/);
+  if (dashWithSpaceMatch) {
+    const left = dashWithSpaceMatch[1].trim();
+    const right = dashWithSpaceMatch[2].trim();
+    if (left && right) {
+      return { name: stripTrailingPunctuation(left), position: right };
+    }
+  }
+  if (line.includes("/")) {
+    const idx = line.indexOf("/");
+    const left = line.substring(0, idx).trim();
+    const right = line.substring(idx + 1).trim();
+    if (left && right) {
+      return { name: stripTrailingPunctuation(left), position: right };
     }
   }
 
