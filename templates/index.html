@@ -1991,7 +1991,7 @@
       display: block;
     }
 
-    /* Header Settings Button (Inline with PREVIEW LANGSUNG) */
+    /* Header Settings Button */
     .preview-top-bar {
       display: flex;
       align-items: center;
@@ -2001,6 +2001,26 @@
       padding-bottom: 12px;
       border-bottom: 1px solid #f1f5f9;
       flex-wrap: wrap;
+    }
+
+    .desktop-preview-slot .preview-top-bar {
+      display: none;
+    }
+
+    .desktop-single-settings-bar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      margin-top: 12px;
+    }
+
+    .preview-bottom-info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 11.5px;
+      color: #64748b;
     }
 
     .btn-top-settings {
@@ -3436,7 +3456,8 @@
       .bulk-desktop-list-view,
       .bulk-stack-header,
       .bulk-cards-list,
-      .preview-bottom-info {
+      .preview-bottom-info,
+      .desktop-single-settings-bar {
         display: none !important;
       }
 
@@ -4534,10 +4555,6 @@
         <div class="preview-showcase desktop-preview-slot" id="desktopPreviewSlot">
           <div class="preview-card-frame" id="previewCardFrame">
             <div class="preview-top-bar">
-              <div class="preview-headline">
-                <span class="badge-live"></span>
-                <span id="previewHeadlineText">PREVIEW LANGSUNG</span>
-              </div>
               <div class="font-pill-status" id="fontStatusPill" style="display: none;">
                 <span class="status-circle"></span>
                 <span id="fontStatus">Myriad Pro Memuat…</span>
@@ -4559,6 +4576,12 @@
                     <div id="block-flip" class="block"></div>
                   </div>
                 </div>
+              </div>
+              <div class="desktop-single-settings-bar">
+                <button type="button" class="btn-top-settings" onclick="openOpt2Sheet()" id="btnSingleDesktopSettings" title="Pengaturan Desain &amp; Format">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                  <span class="btn-top-settings-full">Pengaturan</span>
+                </button>
               </div>
             </div>
 
@@ -4605,6 +4628,17 @@
               <!-- Desktop View: Vertical Stack of Cards -->
               <div class="bulk-desktop-list-view" id="bulkDesktopListView">
                 <div class="bulk-stack-header">
+                  <span class="bulk-stack-hint">Semua lembar digabung dalam 1 file PDF</span>
+                  <button type="button" class="btn-top-settings" onclick="openOpt2Sheet()" id="btnBulkDesktopSettings" title="Pengaturan Desain &amp; Format">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    <span class="btn-top-settings-full">Pengaturan</span>
+                  </button>
+                </div>
+
+                <div id="bulkCardsList" class="bulk-cards-list"></div>
+
+                <div class="preview-bottom-info" style="margin-top: 12px;">
+                  <span>Setiap nama dicetak pada lembar terpisah</span>
                   <span class="bulk-stack-badge" id="bulkStackBadge">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -4614,14 +4648,6 @@
                     </svg>
                     <span id="bulkTotalSheetsText">0 Lembar PDF</span>
                   </span>
-                  <span class="bulk-stack-hint">Semua lembar digabung dalam 1 file PDF</span>
-                </div>
-
-                <div id="bulkCardsList" class="bulk-cards-list"></div>
-
-                <div class="preview-bottom-info" style="margin-top: 12px;">
-                  <span>Setiap nama dicetak pada lembar terpisah</span>
-                  <span id="bulkBottomStatus">Total: <strong>0 Halaman PDF</strong></span>
                 </div>
               </div>
             </div>
@@ -6825,7 +6851,6 @@
       const batchContent = document.getElementById("tabBatchContent");
       const singlePreview = document.getElementById("singlePreviewContainer");
       const bulkPreview = document.getElementById("bulkPreviewContainer");
-      const headline = document.getElementById("previewHeadlineText");
 
       if (tab === "single") {
         singleBtn.classList.add("active");
@@ -6834,7 +6859,6 @@
         batchContent.style.display = "none";
         if (singlePreview) singlePreview.style.display = "block";
         if (bulkPreview) bulkPreview.style.display = "none";
-        if (headline) headline.textContent = "PREVIEW LANGSUNG";
 
         if (currentGlobalSource === "kemnaker") {
           const singleContainer = document.getElementById("kemnakerSelectorsContainer");
@@ -6869,7 +6893,6 @@
         singleContent.style.display = "none";
         if (singlePreview) singlePreview.style.display = "none";
         if (bulkPreview) bulkPreview.style.display = "block";
-        if (headline) headline.textContent = "PREVIEW LANGSUNG";
 
         const bulkTools = document.getElementById("bulkBtnGroupTools");
         if (bulkTools) {
@@ -7027,14 +7050,12 @@
       const textarea = document.getElementById("bulk_data");
       const container = document.getElementById("bulkCardsList");
       const totalSheetsText = document.getElementById("bulkTotalSheetsText");
-      const bottomStatus = document.getElementById("bulkBottomStatus");
 
       if (!textarea || !container) return;
       currentBulkRows = parseBulkData(textarea.value);
 
       if (!currentBulkRows || currentBulkRows.length === 0) {
         if (totalSheetsText) totalSheetsText.textContent = "0 Lembar PDF";
-        if (bottomStatus) bottomStatus.innerHTML = "Total: <strong>0 Halaman PDF</strong>";
         container.innerHTML = `
           <div class="bulk-empty-state">
             <div class="bulk-empty-icon">
@@ -7053,7 +7074,6 @@
       }
 
       if (totalSheetsText) totalSheetsText.textContent = currentBulkRows.length + " Lembar PDF";
-      if (bottomStatus) bottomStatus.innerHTML = `Total: <strong>${currentBulkRows.length} Halaman PDF</strong> (Siap Cetak)`;
 
       // Calculate responsive scale for each card (100% flush, 0px margin kanan/kiri)
       const cardWidthPx = CARD.PAGE_W * PT_TO_PX;

@@ -911,9 +911,48 @@
       background: #f0f6fc;
       border: 1.5px solid #cbdbe9;
       border-radius: 12px;
-      padding: 12px;
+      padding: 10px 11px;
       margin-top: 10px;
       box-sizing: border-box;
+    }
+
+    #kemnakerPickerCollapse .form-label {
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    #kemnakerPickerCollapse .label-tag {
+      font-size: 10.5px;
+      padding: 1.5px 7px;
+    }
+
+    #kemnakerPickerCollapse .custom-select-trigger {
+      min-height: 34px;
+      height: 34px;
+      padding: 5px 11px;
+      font-size: 12.5px;
+      border-radius: 10px;
+      gap: 8px;
+    }
+
+    #kemnakerPickerCollapse .custom-select-icon {
+      width: 15px;
+      height: 15px;
+    }
+
+    #kemnakerPickerCollapse .custom-select-icon svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    #kemnakerPickerCollapse .custom-select-trigger .custom-select-opt-avatar {
+      width: 22px;
+      height: 22px;
+    }
+
+    #kemnakerPickerCollapse .custom-select-chevron {
+      width: 13px;
+      height: 13px;
     }
 
     .input-wrapper {
@@ -1791,6 +1830,7 @@
 
     /* Items Container & Elevated Card Rows (Show all items directly, no nested scroll conflict) */
     .name-items-container {
+      position: relative;
       max-height: none;
       overflow: visible;
       border: 1.5px solid #cbd5e1;
@@ -1800,6 +1840,18 @@
       margin-bottom: 14px;
       width: 100%;
       box-sizing: border-box;
+    }
+
+    .name-items-container:not(:empty)::after {
+      content: "";
+      position: absolute;
+      top: 10px;
+      bottom: 10px;
+      left: 32px;
+      width: 0;
+      border-left: 2px dashed rgba(21, 64, 106, 0.28);
+      pointer-events: none;
+      z-index: 0;
     }
 
     .name-items-container:empty::before {
@@ -1814,10 +1866,11 @@
 
     .name-item-row {
       position: relative;
+      z-index: 1;
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 10px 10px 10px 15px;
+      padding: 10px 10px 10px 12px;
       background: #ffffff;
       border: 1.5px solid #cbd5e1;
       border-radius: 11px;
@@ -1830,6 +1883,7 @@
       box-sizing: border-box;
       user-select: none;
       -webkit-user-select: none;
+      -moz-user-select: none;
       -webkit-touch-callout: none;
     }
 
@@ -1837,8 +1891,8 @@
       display: inline-flex;
       align-items: center;
       align-self: stretch;
-      margin: -10px 0 -10px -15px;
-      padding: 10px 4px 10px 15px;
+      margin: -10px 0 -10px -12px;
+      padding: 10px 4px 10px 12px;
       touch-action: none;
       cursor: grab;
       flex-shrink: 0;
@@ -1848,30 +1902,11 @@
       margin-bottom: 0;
     }
 
-    .name-item-row::before {
-      content: "";
-      position: absolute;
-      left: 5px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 3.5px;
-      height: 22px;
-      border-radius: 99px;
-      background: #cbd5e1;
-      transition: height 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), width 0.18s ease, background 0.18s ease;
-    }
-
     .name-item-row:hover {
       background: #ffffff;
       border-color: #93c5fd;
       box-shadow: 0 4px 12px -2px rgba(21, 64, 106, 0.12);
       transform: translateY(-1px);
-    }
-
-    .name-item-row:hover::before {
-      width: 4px;
-      height: 28px;
-      background: var(--kemnaker-blue);
     }
 
     .name-item-row:active:not(.editing) {
@@ -1880,16 +1915,17 @@
 
     /* Smartphone-Grade Smooth Pointer Drag Effects */
     .name-item-row.drag-placeholder {
-      opacity: 0.35;
-      background: #e2edf7 !important;
-      border: 1.5px dashed #15406a !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+      background: transparent !important;
+      border-color: transparent !important;
       box-shadow: none !important;
-      transform: none !important;
     }
 
     .name-item-row.drag-floating {
       position: fixed;
-      z-index: 99999;
+      z-index: 999999 !important;
       pointer-events: none;
       margin: 0 !important;
       background: #ffffff !important;
@@ -1900,12 +1936,6 @@
       transition: box-shadow 0.15s ease, transform 0.15s ease !important;
     }
 
-    .name-item-row.drag-floating::before {
-      width: 4px;
-      height: 26px;
-      background: var(--kemnaker-blue);
-    }
-
     /* Inline Editing Row */
     .name-item-row.editing {
       cursor: default;
@@ -1914,11 +1944,6 @@
       box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
       transform: none !important;
       align-items: center;
-    }
-
-    .name-item-row.editing::before {
-      background: #22c55e;
-      height: 24px;
     }
 
     .edit-inputs-container {
@@ -2048,59 +2073,78 @@
 
     /* Action Buttons */
     .form-btn-group {
-      display: flex;
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
       gap: 10px;
       margin-top: 10px;
       width: 100%;
       box-sizing: border-box;
     }
 
+    @media (max-width: 440px) {
+      .form-btn-group {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-btn-group .btn-generate,
+    .form-btn-group .btn-print {
+      width: 100%;
+    }
+
     .btn-generate {
-      flex: 2;
-      background: linear-gradient(135deg, #059669 0%, #047857 100%);
-      color: #ffffff;
-      border: none;
-      border-radius: var(--radius-sm);
-      padding: 12px 18px;
-      font-size: 13.5px;
-      font-weight: 700;
-      cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
-      transition: all 0.2s;
+      padding: 12px 14px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+      white-space: nowrap;
+      text-decoration: none;
+      width: auto;
       font-family: inherit;
     }
 
     .btn-generate:hover {
-      background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
       transform: translateY(-1px);
-      box-shadow: 0 6px 16px rgba(5, 150, 105, 0.35);
+      box-shadow: 0 6px 18px rgba(16, 185, 129, 0.45);
     }
 
     .btn-print {
-      flex: 1;
-      background: #ffffff;
-      color: var(--kemnaker-blue);
-      border: 1.5px solid var(--kemnaker-blue);
-      border-radius: var(--radius-sm);
-      padding: 12px 14px;
-      font-size: 13.5px;
-      font-weight: 700;
-      cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      transition: all 0.2s;
+      gap: 7px;
+      padding: 12px 14px;
+      background: #ffffff;
+      color: var(--kemnaker-blue);
+      border: 1.5px solid var(--kemnaker-blue);
+      border-radius: 12px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(21, 64, 106, 0.08);
+      white-space: nowrap;
+      width: 100%;
       font-family: inherit;
     }
 
     .btn-print:hover {
-      background: #f0f6fc;
+      background: #eef3f8;
+      border-color: var(--kemnaker-dark);
+      color: var(--kemnaker-dark);
       transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(21, 64, 106, 0.16);
     }
 
     /* --- Preview Section --- */
@@ -2353,7 +2397,7 @@
 
     .notepad-box-inner {
       border: 0.72px solid #000000;
-      padding: 11px 0 8px 0;
+      padding: 6px 0 8px 0;
       height: 100%;
       box-sizing: border-box;
       display: flex;
@@ -2379,8 +2423,8 @@
       text-align: center;
       text-transform: uppercase;
       line-height: 13.8px;
-      padding: 0 7px;
-      margin-bottom: 7px;
+      padding: 0 11px;
+      margin-bottom: 5px;
       color: #1F3864;
       /* Navy Blue 0x1F3864 */
       white-space: pre-line;
@@ -2414,7 +2458,7 @@
     }
 
     .np-meta-block.no-title {
-      margin-top: 7px;
+      margin-top: 12px;
     }
 
     .np-meta-row {
@@ -2483,7 +2527,7 @@
       align-items: baseline;
       margin: 0;
       padding-left: 17px;
-      padding-right: 6px;
+      padding-right: 8px;
       color: #000000;
     }
 
@@ -2825,6 +2869,13 @@
         gap: 2px !important;
       }
 
+      #kemnakerPickerCollapse .custom-select-trigger {
+        min-height: 39px;
+        height: 39px;
+        padding: 6px 11px;
+        font-size: 13px;
+      }
+
       .tab-btn {
         padding: 8px 10px;
         font-size: 12px;
@@ -3087,9 +3138,28 @@
         align-items: stretch !important;
       }
 
+      #pendampingTopActionSlot {
+        width: 100%;
+        display: flex;
+      }
+
+      .single-input-actions:has(#btnRefreshKemnakerNp) {
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+      }
+
+      .single-input-actions:has(#btnRefreshKemnakerNp) #pendampingTopActionSlot {
+        width: auto;
+      }
+
       .btn-add-single {
         width: 100% !important;
         justify-content: center !important;
+      }
+
+      #kemnakerBottomActionSlot .btn-add-single {
+        width: auto !important;
       }
 
       .event-meta-grid {
@@ -3291,14 +3361,6 @@
           <!-- Mobile Unified Live Preview Slot -->
           <div id="mobilePreviewSlot" class="mobile-preview-slot"></div>
 
-          <div class="form-section-title">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-              <polyline points="14 2 14 8 20 8"></polyline>
-            </svg>
-            <span>Informasi Kegiatan</span>
-          </div>
-
           <div class="form-group">
             <label class="form-label" for="inputTitle">
               <span>Judul Kegiatan</span>
@@ -3389,7 +3451,7 @@
           <!-- Action Buttons -->
           <div class="form-btn-group">
             <button type="button" class="btn-generate" onclick="generateAndDownloadPDF()">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                 <polyline points="7 10 12 15 17 10"></polyline>
                 <line x1="12" y1="15" x2="12" y2="3"></line>
@@ -3397,7 +3459,7 @@
               <span>Unduh File</span>
             </button>
             <button type="button" class="btn-print" onclick="printNotepad()">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                 <polyline points="6 9 6 2 18 2 18 9"></polyline>
                 <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
                 <rect x="6" y="14" width="12" height="8"></rect>
@@ -3410,13 +3472,6 @@
         <!-- Kolom Tengah: Live Preview Slot Desktop -->
         <div id="desktopPreviewSlot" class="desktop-preview-slot">
           <div class="preview-card-frame" id="previewCardFrame">
-            <div class="preview-top-bar">
-              <div class="preview-headline">
-                <span class="badge-live"></span>
-                <span>PREVIEW LANGSUNG</span>
-              </div>
-            </div>
-
             <div class="notepad-preview-viewport" id="previewViewport">
               <div class="notepad-scale-stage" id="notepadScaleStage">
                 <div class="notepad-sheet-wrap" id="notepadSheetWrap">
@@ -3430,16 +3485,6 @@
         <!-- Kolom Kanan: Daftar Nama Pendamping & Peserta Independen (Desktop) -->
         <div id="desktopRightColumn" class="desktop-right-slot">
           <div class="form-card" id="desktopRightCard">
-            <div class="form-section-title">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                <circle cx="9" cy="7" r="4"></circle>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-              </svg>
-              <span>Daftar Nama</span>
-            </div>
-
             <div id="desktopListSlot">
               <div id="daftarNamaWorkspace">
 
@@ -3466,11 +3511,11 @@
                     <div id="singleInputBox_pendamping">
                       <div class="single-input-grid" style="display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 10px;">
                         <input type="text" id="inputSingleName_pendamping" class="form-input np-single-name-input"
-                          placeholder="Nama Lengkap"
+                          placeholder="Nama Lengkap" oninput="onNotepadNameInput(this)"
                           onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('inputSinglePos_pendamping')?.focus();}"
                           style="font-size: 12.5px; padding: 8px 11px;">
                         <textarea id="inputSinglePos_pendamping" rows="2" class="form-input form-textarea np-single-pos-input"
-                          placeholder="Jabatan / Posisi" oninput="autoSizePosField(this)"
+                          placeholder="Jabatan / Posisi" oninput="onNotepadPosInput(this); autoSizePosField(this)"
                           onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault();addSingleName('pendamping');}"
                           style="font-size: 12.5px; padding: 8px 11px; min-height: 52px; line-height: 1.4; resize: vertical;"></textarea>
                       </div>
@@ -3479,49 +3524,51 @@
                           style="background:none;border:none;color:var(--kemnaker-blue);font-size:11.5px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px;">
                           🏛️ Pilih Pejabat
                         </button>
-                        <button type="button" class="btn-generate btn-add-single" onclick="addSingleName('pendamping')"
-                          style="padding: 7px 14px; font-size: 12px; flex: none;">
-                          + Tambah
-                        </button>
+                        <div id="pendampingTopActionSlot" style="display: inline-flex; align-items: center;">
+                          <button type="button" id="btnAddSingle_pendamping" class="btn-generate btn-add-single" onclick="addSingleName('pendamping')"
+                            style="padding: 7px 14px; font-size: 12px; flex: none;">
+                            + Tambah
+                          </button>
+                        </div>
                       </div>
 
                       <!-- Collapsible Kemnaker Official Picker -->
                       <div id="kemnakerPickerCollapse" class="kemnaker-selectors-box" style="display: none;">
-                        <div class="form-group" style="margin-bottom: 10px;">
-                          <label for="kemnakerUnitSelect" class="form-label" style="margin-bottom: 5px;">
+                        <div class="form-group" style="margin-bottom: 8px;">
+                          <label for="kemnakerUnitSelect" class="form-label" style="margin-bottom: 4px;">
                             <span>Unit Kerja</span>
                             <span class="label-tag" id="kemnakerDateTag">Bagan Resmi</span>
                           </label>
                           <div class="input-wrapper">
                             <div class="input-icon">
-                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                 stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                                 <polyline points="9 22 9 12 15 12 15 22"></polyline>
                               </svg>
                             </div>
                             <select id="kemnakerUnitSelect" class="form-input" onchange="onKemnakerUnitChange()"
-                              style="padding-left: 42px; cursor: pointer; font-weight: 600;">
+                              style="padding-left: 36px; cursor: pointer; font-weight: 600;">
                               <option value="">-- Pilih Unit Kerja --</option>
                             </select>
                           </div>
                         </div>
 
                         <div class="form-group" style="margin-bottom: 6px;">
-                          <label for="kemnakerOfficialSelect" class="form-label" style="margin-bottom: 5px;">
+                          <label for="kemnakerOfficialSelect" class="form-label" style="margin-bottom: 4px;">
                             <span>Pejabat &amp; Jabatan</span>
                             <span class="label-tag" id="kemnakerCountBadge">0 Pilihan</span>
                           </label>
                           <div class="input-wrapper">
                             <div class="input-icon">
-                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                 stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
                                 <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
                               </svg>
                             </div>
                             <select id="kemnakerOfficialSelect" class="form-input" onchange="onKemnakerOfficialSelected()"
-                              disabled style="padding-left: 42px; cursor: pointer; font-weight: 600;">
+                              disabled style="padding-left: 36px; cursor: pointer; font-weight: 600;">
                               <option value="">-- Pilih Unit Kerja Terlebih Dahulu --</option>
                             </select>
                           </div>
@@ -3529,25 +3576,22 @@
 
                         <div class="kemnaker-sync-bar">
                           <span id="kemnakerStatusText">📅 Bagan resmi kemnaker.go.id</span>
-                          <button type="button" class="btn-refresh-kemnaker" onclick="refreshNotepadKemnakerData()">
-                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                              <polyline points="23 4 23 10 17 10"></polyline>
-                              <polyline points="1 20 1 14 7 14"></polyline>
-                              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-                            </svg>
-                            Perbarui Data
-                          </button>
+                          <div id="kemnakerBottomActionSlot" style="display: inline-flex; align-items: center;">
+                            <button type="button" id="btnRefreshKemnakerNp" class="btn-refresh-kemnaker" onclick="refreshNotepadKemnakerData()">
+                              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                <polyline points="23 4 23 10 17 10"></polyline>
+                                <polyline points="1 20 1 14 7 14"></polyline>
+                                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                              </svg>
+                              Perbarui Data
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
 
                     <div id="bulkInputBox_pendamping" style="display: none;">
-                      <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 6px;">
-                        <span id="bulkDetectBadge_pendamping"
-                          style="font-size: 11px; font-weight: 700; color: #059669; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 2px 8px; border-radius: 9999px;">0 siap</span>
-                      </div>
                       <textarea id="inputBulkText_pendamping" class="form-textarea np-bulk-textarea"
-                        oninput="updateBulkDetectCount('pendamping')"
                         placeholder="Tempel daftar pendamping (satu per baris)..."
                         style="min-height: 100px; font-size: 12px;"></textarea>
                       <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; gap: 8px; flex-wrap: wrap;">
@@ -3559,9 +3603,6 @@
                           style="padding: 7px 14px; font-size: 12px; flex: none;">
                           ✨ Tambah Data
                         </button>
-                      </div>
-                      <div id="bulkStatusFeedback_pendamping"
-                        style="display: none; margin-top: 8px; padding: 7px 10px; border-radius: 8px; background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; font-size: 11.5px; font-weight: 600;">
                       </div>
                     </div>
                   </div>
@@ -3592,11 +3633,11 @@
                     <div id="singleInputBox_peserta">
                       <div class="single-input-grid" style="display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 10px;">
                         <input type="text" id="inputSingleName_peserta" class="form-input np-single-name-input"
-                          placeholder="Nama Lengkap"
+                          placeholder="Nama Lengkap" oninput="onNotepadNameInput(this)"
                           onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('inputSinglePos_peserta')?.focus();}"
                           style="font-size: 12.5px; padding: 8px 11px;">
                         <textarea id="inputSinglePos_peserta" rows="2" class="form-input form-textarea np-single-pos-input"
-                          placeholder="Jabatan / Posisi" oninput="autoSizePosField(this)"
+                          placeholder="Jabatan / Posisi" oninput="onNotepadPosInput(this); autoSizePosField(this)"
                           onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault();addSingleName('peserta');}"
                           style="font-size: 12.5px; padding: 8px 11px; min-height: 52px; line-height: 1.4; resize: vertical;"></textarea>
                       </div>
@@ -3609,12 +3650,7 @@
                     </div>
 
                     <div id="bulkInputBox_peserta" style="display: none;">
-                      <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 6px;">
-                        <span id="bulkDetectBadge_peserta"
-                          style="font-size: 11px; font-weight: 700; color: #059669; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 2px 8px; border-radius: 9999px;">0 siap</span>
-                      </div>
                       <textarea id="inputBulkText_peserta" class="form-textarea np-bulk-textarea"
-                        oninput="updateBulkDetectCount('peserta')"
                         placeholder="Tempel daftar peserta / tamu (satu per baris)..."
                         style="min-height: 100px; font-size: 12px;"></textarea>
                       <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; gap: 8px; flex-wrap: wrap;">
@@ -3626,9 +3662,6 @@
                           style="padding: 7px 14px; font-size: 12px; flex: none;">
                           ✨ Tambah Data
                         </button>
-                      </div>
-                      <div id="bulkStatusFeedback_peserta"
-                        style="display: none; margin-top: 8px; padding: 7px 10px; border-radius: 8px; background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; font-size: 11.5px; font-weight: 600;">
                       </div>
                     </div>
                   </div>
@@ -4232,13 +4265,10 @@
           row.innerHTML = `
             <span class="item-num">${index + 1}</span>
             <div class="edit-inputs-container">
-              <input type="text" id="inlineEditName_${role}" class="form-input form-input-sm inline-edit-name" value="${escapeHtml(item.name)}" placeholder="Nama Lengkap" onkeydown="handleInlineEditKey(event, ${index}, '${role}')">
-              <textarea id="inlineEditPos_${role}" rows="2" class="form-input form-textarea form-input-sm edit-pos-textarea inline-edit-pos" placeholder="Jabatan / Posisi" oninput="autoSizePosField(this)" onkeydown="handleInlineEditKey(event, ${index}, '${role}')">${escapeHtml(item.position || '')}</textarea>
+              <input type="text" id="inlineEditName_${role}" class="form-input form-input-sm inline-edit-name" value="${escapeHtml(item.name)}" placeholder="Nama Lengkap" oninput="liveUpdateInlineEdit(${index}, '${role}')" onkeydown="handleInlineEditKey(event, ${index}, '${role}')">
+              <textarea id="inlineEditPos_${role}" rows="2" class="form-input form-textarea form-input-sm edit-pos-textarea inline-edit-pos" placeholder="Jabatan / Posisi" oninput="liveUpdateInlineEdit(${index}, '${role}'); autoSizePosField(this)" onkeydown="handleInlineEditKey(event, ${index}, '${role}')">${escapeHtml(item.position || '')}</textarea>
             </div>
             <div class="item-actions">
-              <button type="button" class="btn-action-sm save" onclick="saveInlineEdit(${index}, '${role}')" title="Simpan Perubahan (Enter)">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              </button>
               <button type="button" class="btn-action-sm cancel" onclick="cancelInlineEdit('${role}')" title="Batal (Esc)">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
               </button>
@@ -4246,6 +4276,7 @@
           `;
         } else {
           row.className = "name-item-row";
+          row.setAttribute("draggable", "false");
           row.title = "Tarik kotak ke atas/bawah untuk mengubah urutan";
 
           row.innerHTML = `
@@ -4298,24 +4329,154 @@
       el.style.height = Math.max(48, el.scrollHeight + 2) + "px";
     }
 
-    // Inline Editing Functions
+    const _NP_MINOR_POS_WORDS = new Set(["dan", "atau", "di", "ke", "dari", "yang", "pada", "untuk", "serta", "dalam", "atas", "terhadap"]);
+
+    function formatNotepadNameCase(str) {
+      if (!str) return "";
+      return String(str).replace(/(^|[\s\-\/(\["“‘])([A-Za-zÀ-ÖØ-öø-ÿ])([A-Za-zÀ-ÖØ-öø-ÿ']*)/g, (m, pre, first, rest) => {
+        return pre + first.toUpperCase() + rest.toLowerCase();
+      });
+    }
+
+    function formatNotepadPositionCase(str) {
+      if (!str) return "";
+      const parts = String(str).split(/(\s+)/);
+      let wordIdx = 0;
+      return parts.map((tok) => {
+        if (!tok || /^\s+$/.test(tok)) return tok;
+        const letters = tok.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ]/g, "");
+        if (!letters) {
+          wordIdx++;
+          return tok;
+        }
+        const isFirstWord = wordIdx === 0;
+        wordIdx++;
+        // Preserve any word typed ALL-UPPERCASE (e.g. KEMNAKER, RI, PLN, PT, TA, PEP)
+        if (letters === letters.toUpperCase()) {
+          return tok;
+        }
+        // Lowercase words -> Title Case (with Indonesian minor connectors kept lowercase after word 0)
+        if (letters === letters.toLowerCase()) {
+          if (!isFirstWord && _NP_MINOR_POS_WORDS.has(letters) && /^[a-z]+$/.test(tok)) {
+            return tok;
+          }
+          return tok.replace(/([A-Za-zÀ-ÖØ-öø-ÿ])([A-Za-zÀ-ÖØ-öø-ÿ']*)/, (m, f, r) => f.toUpperCase() + r.toLowerCase());
+        }
+        // Mixed case: ensure initial letter is uppercase while keeping inner caps untouched
+        return tok.replace(/^([^A-Za-zÀ-ÖØ-öø-ÿ]*)([a-zà-öø-ÿ])/, (m, pre, c) => pre + c.toUpperCase());
+      }).join("");
+    }
+
+    function applyLiveInputCase(el, formatterFn) {
+      if (!el || typeof formatterFn !== "function") return;
+      const val = el.value;
+      const formatted = formatterFn(val);
+      if (formatted !== val) {
+        let s = null, e = null;
+        try {
+          s = el.selectionStart;
+          e = el.selectionEnd;
+        } catch (_) { }
+        el.value = formatted;
+        if (s !== null && e !== null) {
+          try { el.setSelectionRange(s, e); } catch (_) { }
+        }
+      }
+    }
+
+    function onNotepadNameInput(el) {
+      applyLiveInputCase(el, formatNotepadNameCase);
+    }
+
+    function onNotepadPosInput(el) {
+      applyLiveInputCase(el, formatNotepadPositionCase);
+    }
+
+    // Inline Editing Functions (Auto-saves live as typed, zero checkmark click needed)
+    let editingSnapshot = null;
+
     function startInlineEdit(index, role = null) {
+      finishActiveInlineEdit();
       const targetRole = role || activeListTab || "pendamping";
       activeListTab = targetRole;
+      const list = getRoleList(targetRole);
+      if (list[index]) {
+        editingSnapshot = { role: targetRole, index, name: list[index].name, position: list[index].position || "" };
+      } else {
+        editingSnapshot = null;
+      }
       editingItem = { role: targetRole, index };
       renderNameList(targetRole);
       setTimeout(() => {
         const inp = document.getElementById(`inlineEditName_${targetRole}`);
         if (inp) {
           inp.focus();
-          inp.select();
+          const len = inp.value.length;
+          try { inp.setSelectionRange(len, len); } catch (_) { }
         }
-      }, 50);
+      }, 40);
+    }
+
+    function liveUpdateInlineEdit(index, role = null) {
+      const targetRole = role || editingItem.role || activeListTab || "pendamping";
+      const nameInput = document.getElementById(`inlineEditName_${targetRole}`);
+      const posInput = document.getElementById(`inlineEditPos_${targetRole}`);
+      if (!nameInput) return;
+
+      applyLiveInputCase(nameInput, formatNotepadNameCase);
+      if (posInput) applyLiveInputCase(posInput, formatNotepadPositionCase);
+
+      const newName = nameInput.value.trim();
+      const newPos = posInput ? posInput.value.replace(/\r?\n+/g, " ").trim() : "";
+      const list = getRoleList(targetRole);
+      if (newName && list[index]) {
+        markRoleCustomized(targetRole);
+        list[index].name = newName;
+        list[index].position = newPos;
+        updateNotepadPreview();
+        if (typeof updateNpModalMiniPreview === "function") {
+          updateNpModalMiniPreview();
+        }
+      }
+    }
+
+    function finishActiveInlineEdit() {
+      if (editingItem.role === null || editingItem.index === null) return true;
+      const targetRole = editingItem.role;
+      const index = editingItem.index;
+      const nameInput = document.getElementById(`inlineEditName_${targetRole}`);
+      const posInput = document.getElementById(`inlineEditPos_${targetRole}`);
+      const list = getRoleList(targetRole);
+      if (nameInput && list[index]) {
+        const formattedName = formatNotepadNameCase(nameInput.value.trim());
+        const formattedPos = posInput ? formatNotepadPositionCase(posInput.value.replace(/\r?\n+/g, " ").trim()) : "";
+        if (formattedName) {
+          markRoleCustomized(targetRole);
+          list[index].name = formattedName;
+          list[index].position = formattedPos;
+        } else if (editingSnapshot && editingSnapshot.role === targetRole && editingSnapshot.index === index) {
+          list[index].name = editingSnapshot.name;
+          list[index].position = editingSnapshot.position;
+        }
+      }
+      editingItem = { role: null, index: null };
+      editingSnapshot = null;
+      renderNameList(targetRole);
+      return true;
     }
 
     function cancelInlineEdit(role = null) {
       const prevRole = role || editingItem.role;
+      const prevIdx = editingItem.index;
+      if (editingSnapshot && editingSnapshot.role === prevRole && editingSnapshot.index === prevIdx) {
+        const list = getRoleList(prevRole);
+        if (list[prevIdx]) {
+          list[prevIdx].name = editingSnapshot.name;
+          list[prevIdx].position = editingSnapshot.position;
+        }
+      }
       editingItem = { role: null, index: null };
+      editingSnapshot = null;
       renderNameList(prevRole);
     }
 
@@ -4324,8 +4485,8 @@
       const nameInput = document.getElementById(`inlineEditName_${targetRole}`);
       const posInput = document.getElementById(`inlineEditPos_${targetRole}`);
       if (!nameInput) return;
-      const newName = nameInput.value.trim();
-      const newPos = posInput ? posInput.value.replace(/\r?\n+/g, " ").trim() : "";
+      const newName = formatNotepadNameCase(nameInput.value.trim());
+      const newPos = posInput ? formatNotepadPositionCase(posInput.value.replace(/\r?\n+/g, " ").trim()) : "";
       if (!newName) {
         alert("Nama tidak boleh kosong.");
         nameInput.focus();
@@ -4338,8 +4499,15 @@
         list[index].position = newPos;
       }
       editingItem = { role: null, index: null };
+      editingSnapshot = null;
       renderNameList(targetRole);
     }
+
+    document.addEventListener("pointerdown", (e) => {
+      if (editingItem.role === null || editingItem.index === null) return;
+      if (e.target && e.target.closest(".name-item-row.editing")) return;
+      finishActiveInlineEdit();
+    });
 
     function handleInlineEditKey(e, index, role) {
       if (e.key === "Enter" && !e.shiftKey) {
@@ -4365,8 +4533,8 @@
       activeListTab = targetRole;
       const nameEl = document.getElementById(`inputSingleName_${targetRole}`);
       const posEl = document.getElementById(`inputSinglePos_${targetRole}`);
-      const name = (nameEl ? nameEl.value : "").trim();
-      const pos = (posEl ? posEl.value : "").replace(/\r?\n+/g, " ").trim();
+      const name = formatNotepadNameCase((nameEl ? nameEl.value : "").trim());
+      const pos = formatNotepadPositionCase((posEl ? posEl.value : "").replace(/\r?\n+/g, " ").trim());
 
       if (!name) {
         alert("Mohon masukkan nama terlebih dahulu.");
@@ -4414,28 +4582,28 @@
       clearRoleList(activeListTab);
     }
 
-    // Smartphone-Grade Smooth Pointer Drag-to-Reorder Engine (Mouse + Touch)
+    // Universal Cross-OS / Cross-Browser Pointer + Touch Drag-to-Reorder Engine
     function attachRowPointerDrag(row, startIdx, role) {
       row.addEventListener("contextmenu", (e) => {
         if (editingItem.role === null && !e.target.closest("input, textarea")) e.preventDefault();
       });
-      row.addEventListener("pointerdown", (e) => {
-        if (editingItem.role !== null) return;
-        if (e.target.closest("button, input, textarea, select, a")) return;
-        if (e.pointerType === "mouse" && e.button !== 0) return;
+      row.addEventListener("dragstart", (e) => {
+        e.preventDefault();
+      });
 
+      function startPointerSession(startX, startY, pointerId, isTouchInput, fromDragZone, origEvent) {
         const list = getRoleList(role);
         if (list.length < 2) return;
-
-        const rowRect = row.getBoundingClientRect();
-        const fromDragZone = Boolean(e.target.closest(".item-drag-zone")) || (e.clientX - rowRect.left) <= 44;
-        const isTouch = e.pointerType !== "mouse";
         const container = document.getElementById(`nameItemsContainer_${role}`);
         if (!container) return;
 
-        const startX = e.clientX;
-        const startY = e.clientY;
+        const scrollParent = container.closest(".np-sheet-content");
+        const getScrollPos = () => scrollParent
+          ? scrollParent.scrollTop
+          : (window.scrollY || window.pageYOffset || 0);
+
         let dragActive = false;
+        let ended = false;
         let holdTimer = null;
         let floatingClone = null;
         let rows = [];
@@ -4443,27 +4611,27 @@
         let startRowTop = 0;
         let startRowHeight = 0;
         let startScrollY = 0;
-        let slotStep = 0;
+        let rowGap = 7;
         let targetIdx = startIdx;
 
         function beginDrag() {
-          if (dragActive) return;
+          if (dragActive || ended) return;
           dragActive = true;
-          if (isTouch && navigator.vibrate) {
+          if (isTouchInput && navigator.vibrate) {
             try { navigator.vibrate(15); } catch (_) { }
           }
 
           rows = Array.from(container.querySelectorAll(".name-item-row"));
           rowRects = rows.map(r => r.getBoundingClientRect());
-          startScrollY = window.scrollY || window.pageYOffset || 0;
+          startScrollY = getScrollPos();
           const selfRect = rowRects[startIdx];
           if (!selfRect) return;
 
           startRowTop = selfRect.top;
           startRowHeight = selfRect.height;
-          slotStep = (rowRects.length > 1)
-            ? (rowRects[1].top - rowRects[0].top)
-            : (selfRect.height + 7);
+          if (rowRects.length > 1) {
+            rowGap = Math.max(0, rowRects[1].top - rowRects[0].bottom);
+          }
 
           floatingClone = row.cloneNode(true);
           floatingClone.classList.add("drag-floating");
@@ -4473,9 +4641,10 @@
           floatingClone.style.height = `${selfRect.height}px`;
           document.body.appendChild(floatingClone);
 
+          // Completely hide original background slot box so nothing overlaps underneath
           row.classList.add("drag-placeholder");
           document.body.style.userSelect = "none";
-          try { row.setPointerCapture(e.pointerId); } catch (_) { }
+          document.body.style.webkitUserSelect = "none";
         }
 
         function updateOrderFromY(clientY) {
@@ -4484,7 +4653,7 @@
           const floatTop = startRowTop + dy;
           floatingClone.style.top = `${floatTop}px`;
 
-          const curScrollY = window.scrollY || window.pageYOffset || 0;
+          const curScrollY = getScrollPos();
           const scrollDelta = curScrollY - startScrollY;
           const floatMidY = floatTop + startRowHeight / 2;
           let newIdx = startIdx;
@@ -4501,57 +4670,76 @@
             targetIdx = newIdx;
           }
 
-          // Smoothly slide sibling items & placeholder into position
+          const shiftDownAmount = startRowHeight + rowGap;
           rows.forEach((r, idx) => {
             if (idx === startIdx) {
-              r.style.transform = targetIdx !== startIdx ? `translateY(${(targetIdx - startIdx) * slotStep}px)` : "";
+              r.style.transform = "";
             } else if (targetIdx > startIdx && idx > startIdx && idx <= targetIdx) {
-              r.style.transform = `translateY(${-slotStep}px)`;
+              r.style.transform = `translateY(${-shiftDownAmount}px)`;
             } else if (targetIdx < startIdx && idx >= targetIdx && idx < startIdx) {
-              r.style.transform = `translateY(${slotStep}px)`;
+              r.style.transform = `translateY(${shiftDownAmount}px)`;
             } else {
               r.style.transform = "";
             }
           });
 
-          // Gently auto-scroll page only when pointer nears viewport edge in the drag direction
-          const vh = window.innerHeight || 800;
-          const contRect = container.getBoundingClientRect();
-          if (clientY >= 0 && clientY < 44 && dy < 0 && curScrollY > 0 && contRect.top < 44) {
-            window.scrollBy(0, -10);
-          } else if (clientY <= vh && clientY > vh - 44 && dy > 0 && contRect.bottom > vh - 12) {
-            window.scrollBy(0, 10);
-          }
-        }
-
-        function onTouchMoveLock(tev) {
-          if (dragActive && tev.cancelable) {
-            tev.preventDefault();
-            if (tev.touches && tev.touches[0]) {
-              updateOrderFromY(tev.touches[0].clientY);
+          // Gently auto-scroll whichever scroller owns this container (modal body on mobile, window on desktop)
+          if (scrollParent) {
+            const spRect = scrollParent.getBoundingClientRect();
+            if (clientY < spRect.top + 40 && dy < 0 && scrollParent.scrollTop > 0) {
+              scrollParent.scrollTop -= 10;
+            } else if (clientY > spRect.bottom - 40 && dy > 0 && scrollParent.scrollTop + scrollParent.clientHeight < scrollParent.scrollHeight) {
+              scrollParent.scrollTop += 10;
+            }
+          } else {
+            const vh = window.innerHeight || 800;
+            const contRect = container.getBoundingClientRect();
+            if (clientY >= 0 && clientY < 48 && dy < 0 && curScrollY > 0 && contRect.top < 48) {
+              window.scrollBy(0, -10);
+            } else if (clientY <= vh && clientY > vh - 48 && dy > 0 && contRect.bottom > vh - 12) {
+              window.scrollBy(0, 10);
             }
           }
         }
 
-        function onPointerMove(ev) {
+        function onTouchMoveWindow(tev) {
+          const t = tev.touches && tev.touches[0];
+          if (!t) return;
+          const distY = Math.abs(t.clientY - startY);
+          const distX = Math.abs(t.clientX - startX);
+          if (!dragActive) {
+            if (fromDragZone && (distY >= 2 || distX >= 2)) {
+              if (tev.cancelable) tev.preventDefault();
+              beginDrag();
+              updateOrderFromY(t.clientY);
+            } else if (!fromDragZone && (distY > 8 || distX > 8)) {
+              cleanupListeners();
+            }
+            return;
+          }
+          if (tev.cancelable) tev.preventDefault();
+          updateOrderFromY(t.clientY);
+        }
+
+        function onPointerMoveWindow(ev) {
+          if (pointerId !== null && ev.pointerId !== pointerId) return;
           const distY = Math.abs(ev.clientY - startY);
           const distX = Math.abs(ev.clientX - startX);
 
           if (!dragActive) {
-            if (!isTouch) {
-              if (distY >= 4 || (fromDragZone && distX >= 3)) {
+            if (!isTouchInput) {
+              if (distY >= 3 || (fromDragZone && distX >= 2)) {
                 if (ev.cancelable) ev.preventDefault();
                 beginDrag();
                 updateOrderFromY(ev.clientY);
               }
             } else if (fromDragZone) {
-              if (distY >= 3 || distX >= 3) {
+              if (distY >= 2 || distX >= 2) {
                 if (ev.cancelable) ev.preventDefault();
                 beginDrag();
                 updateOrderFromY(ev.clientY);
               }
             } else if (distY > 8 || distX > 8) {
-              // User swiped quickly to scroll the page; cancel long-press lift
               cleanupListeners();
             }
             return;
@@ -4561,7 +4749,8 @@
           updateOrderFromY(ev.clientY);
         }
 
-        function onPointerEnd() {
+        function onPointerEnd(ev) {
+          if (ev && pointerId !== null && ev.pointerId !== undefined && ev.pointerId !== pointerId) return;
           cleanupListeners();
           if (!dragActive) return;
 
@@ -4570,6 +4759,7 @@
             floatingClone = null;
           }
           document.body.style.userSelect = "";
+          document.body.style.webkitUserSelect = "";
           rows.forEach(r => {
             r.classList.remove("drag-placeholder");
             r.style.transform = "";
@@ -4585,31 +4775,63 @@
         }
 
         function cleanupListeners() {
+          ended = true;
           if (holdTimer) {
             clearTimeout(holdTimer);
             holdTimer = null;
           }
-          try { row.releasePointerCapture(e.pointerId); } catch (_) { }
-          document.removeEventListener("touchmove", onTouchMoveLock);
-          document.removeEventListener("pointermove", onPointerMove);
-          document.removeEventListener("pointerup", onPointerEnd);
-          document.removeEventListener("pointercancel", onPointerEnd);
+          window.removeEventListener("touchmove", onTouchMoveWindow, true);
+          window.removeEventListener("touchend", onPointerEnd, true);
+          window.removeEventListener("touchcancel", onPointerEnd, true);
+          window.removeEventListener("pointermove", onPointerMoveWindow, true);
+          window.removeEventListener("pointerup", onPointerEnd, true);
+          window.removeEventListener("pointercancel", onPointerEnd, true);
+          window.removeEventListener("blur", onPointerEnd);
         }
 
-        document.addEventListener("touchmove", onTouchMoveLock, { passive: false });
-        document.addEventListener("pointermove", onPointerMove, { passive: false });
-        document.addEventListener("pointerup", onPointerEnd);
-        document.addEventListener("pointercancel", onPointerEnd);
+        window.addEventListener("touchmove", onTouchMoveWindow, { capture: true, passive: false });
+        window.addEventListener("touchend", onPointerEnd, { capture: true, passive: true });
+        window.addEventListener("touchcancel", onPointerEnd, { capture: true, passive: true });
+        window.addEventListener("pointermove", onPointerMoveWindow, { capture: true, passive: false });
+        window.addEventListener("pointerup", onPointerEnd, { capture: true, passive: true });
+        window.addEventListener("pointercancel", onPointerEnd, { capture: true, passive: true });
+        window.addEventListener("blur", onPointerEnd);
 
-        if (isTouch) {
-          if (fromDragZone) {
-            if (e.cancelable) e.preventDefault();
-            beginDrag();
-          } else {
-            holdTimer = setTimeout(() => beginDrag(), 200);
-          }
+        if (origEvent && (!isTouchInput || fromDragZone) && origEvent.cancelable) {
+          origEvent.preventDefault();
         }
-      });
+        if (isTouchInput && !fromDragZone) {
+          holdTimer = setTimeout(() => beginDrag(), 180);
+        }
+      }
+
+      if (window.PointerEvent) {
+        row.addEventListener("pointerdown", (e) => {
+          if (editingItem.role !== null) return;
+          if (e.target.closest("button, input, textarea, select, a")) return;
+          if (e.pointerType === "mouse" && e.button !== 0) return;
+          const rowRect = row.getBoundingClientRect();
+          const fromDragZone = Boolean(e.target.closest(".item-drag-zone")) || (e.clientX - rowRect.left) <= 46;
+          startPointerSession(e.clientX, e.clientY, e.pointerId, e.pointerType !== "mouse", fromDragZone, e);
+        });
+      } else {
+        row.addEventListener("mousedown", (e) => {
+          if (editingItem.role !== null || e.button !== 0) return;
+          if (e.target.closest("button, input, textarea, select, a")) return;
+          const rowRect = row.getBoundingClientRect();
+          const fromDragZone = Boolean(e.target.closest(".item-drag-zone")) || (e.clientX - rowRect.left) <= 46;
+          startPointerSession(e.clientX, e.clientY, null, false, fromDragZone, e);
+        });
+        row.addEventListener("touchstart", (e) => {
+          if (editingItem.role !== null) return;
+          if (e.target.closest("button, input, textarea, select, a")) return;
+          const t = e.touches && e.touches[0];
+          if (!t) return;
+          const rowRect = row.getBoundingClientRect();
+          const fromDragZone = Boolean(e.target.closest(".item-drag-zone")) || (t.clientX - rowRect.left) <= 46;
+          startPointerSession(t.clientX, t.clientY, null, true, fromDragZone, e);
+        }, { passive: false });
+      }
     }
 
     // Smart Bulk Parser (shared Name Table degree/format cleaner + messy multi-line support)
@@ -4699,20 +4921,21 @@
           i++;
         }
 
-        // Clean Name (strip academic/honorific degrees & messy punctuation, preserve full clean name)
+        // Clean Name (strip academic/honorific degrees & messy punctuation, normalize Title Case)
         let cleanName = (typeof cleanTitles === "function")
           ? cleanTitles(rawName)
           : rawName.replace(/\.+$/, "").trim();
         cleanName = (typeof stripTrailingPunctuation === "function")
           ? stripTrailingPunctuation(cleanName)
           : cleanName;
+        cleanName = formatNotepadNameCase(cleanName);
 
-        // Clean Position
+        // Clean Position (preserve all-caps acronyms/words, Title-Case lowercase input)
         rawPos = rawPos.replace(NOTEPAD_POS_PREFIX_RE, "").trim();
         let cleanPos = (typeof cleanPositionText === "function")
           ? cleanPositionText(rawPos)
           : rawPos.replace(/\.+$/, "").trim();
-        cleanPos = cleanPos.replace(/\n+/g, " ").replace(/\s+/g, " ").trim();
+        cleanPos = formatNotepadPositionCase(cleanPos.replace(/\n+/g, " ").replace(/\s+/g, " ").trim());
 
         const validName = (typeof isValidOfficialName === "function")
           ? isValidOfficialName(cleanName)
@@ -4785,13 +5008,6 @@
       });
 
       if (textarea) textarea.value = "";
-      updateBulkDetectCount(targetRole);
-
-      const feedback = document.getElementById(`bulkStatusFeedback_${targetRole}`);
-      if (feedback) {
-        feedback.textContent = `✓ ${addedCount} data ditambahkan.`;
-        feedback.style.display = "block";
-      }
 
       if (!silent) {
         setInputMode("single", targetRole);
@@ -4907,9 +5123,25 @@
 
     function toggleKemnakerQuickPick() {
       const box = document.getElementById("kemnakerPickerCollapse");
+      const topSlot = document.getElementById("pendampingTopActionSlot");
+      const bottomSlot = document.getElementById("kemnakerBottomActionSlot");
+      const addBtn = document.getElementById("btnAddSingle_pendamping");
+      const refreshBtn = document.getElementById("btnRefreshKemnakerNp");
       const isVisible = box.style.display === "block";
-      box.style.display = isVisible ? "none" : "block";
-      if (!isVisible && kemnakerUnitsList.length === 0) {
+      const nextVisible = !isVisible;
+      box.style.display = nextVisible ? "block" : "none";
+
+      if (topSlot && bottomSlot && addBtn && refreshBtn) {
+        if (nextVisible) {
+          topSlot.appendChild(refreshBtn);
+          bottomSlot.appendChild(addBtn);
+        } else {
+          topSlot.appendChild(addBtn);
+          bottomSlot.appendChild(refreshBtn);
+        }
+      }
+
+      if (nextVisible && kemnakerUnitsList.length === 0) {
         loadKemnakerData(false);
       }
     }
@@ -4995,9 +5227,9 @@
           const cleanedName = (typeof cleanTitles === "function") ? cleanTitles(rawName) : rawName;
           const expandedPos = (typeof expandKemnakerPosition === "function") ? expandKemnakerPosition(rawPos) : rawPos;
           const cleanedPos = (typeof cleanPositionText === "function") ? cleanPositionText(expandedPos).replace(/\n+/g, " ").trim() : expandedPos;
-          document.getElementById("inputSingleName_pendamping").value = cleanedName || rawName;
+          document.getElementById("inputSingleName_pendamping").value = formatNotepadNameCase(cleanedName || rawName);
           const posField = document.getElementById("inputSinglePos_pendamping");
-          posField.value = cleanedPos || rawPos;
+          posField.value = formatNotepadPositionCase(cleanedPos || rawPos);
           autoSizePosField(posField);
         }
       }
@@ -5236,7 +5468,7 @@
       }
     }
 
-    function buildPreviewBoxElement({ boxType, isFullBesar = false, title, titleIsPlaceholder = false, date, time, sep, useNum, sections }) {
+    function buildPreviewBoxElement({ boxType, isFullBesar = false, title, titleIsPlaceholder = false, date, time, sep, useNum, sections, hideMobileTriggers = false }) {
       const box = document.createElement("div");
       box.className = `notepad-box-element ${boxType}${isFullBesar ? " full" : ""}`;
 
@@ -5277,7 +5509,7 @@
       // 3. List Sections (+ Mobile inline dynamic trigger button placed directly below each section's items)
       const secWrap = document.createElement("div");
       secWrap.className = "np-sections-wrap";
-      const showMobileTriggers = window.innerWidth <= 1060;
+      const showMobileTriggers = !hideMobileTriggers && window.innerWidth <= 1060;
 
       sections.forEach((sec) => {
         const secEl = document.createElement("div");
@@ -5410,8 +5642,18 @@
         });
       };
 
-      for (let i = startIdx; i < scaleCandidates.length; i++) {
-        applyScale(scaleCandidates[i]);
+      const canUseBesarSpacious =
+        boxType === "besar" &&
+        startIdx === 0 &&
+        !boxEl.querySelector(".np-empty-trigger-only") &&
+        boxEl.querySelectorAll(".np-section").length === 2;
+
+      const activeCandidates = canUseBesarSpacious
+        ? [{ fs: 12.0, lh: 20.7, secGap: 46, hdrMb: 11, metaMb: 17 }, ...scaleCandidates.slice(startIdx)]
+        : scaleCandidates.slice(startIdx);
+
+      for (let i = 0; i < activeCandidates.length; i++) {
+        applyScale(activeCandidates[i]);
         if (inner.scrollHeight <= inner.clientHeight + 1) {
           break;
         }
@@ -5499,6 +5741,7 @@
     }
 
     function validateNotepadInputs() {
+      finishActiveInlineEdit();
       // Auto-import & clean any unimported bulk text directly before validating
       ["pendamping", "peserta"].forEach(role => {
         if (roleInputMode[role] === "bulk") {
@@ -5578,8 +5821,381 @@
 
     function printNotepad() {
       if (!validateNotepadInputs()) return;
-      window.print();
+
+      const title = (document.getElementById("inputTitle").value || "").trim();
+      const date = (document.getElementById("inputDate").value || "").trim();
+      const time = (document.getElementById("inputTime").value || "").trim();
+      const sep = currentNotepadType === "kecil" ? "," : "–";
+      const useNum = true;
+
+      const pages = [];
+      if (currentNotepadType === "besar") {
+        const sections = [];
+        if (pendampingList.length > 0) {
+          sections.push({ role: "pendamping", header: "Pendamping :", headerIndent: 2, items: pendampingList, isPlaceholder: false });
+        }
+        if (pesertaList.length > 0) {
+          sections.push({ role: "peserta", header: "Peserta :", headerIndent: 5, items: pesertaList, isPlaceholder: false });
+        }
+        pages.push({
+          widthPt: 595.32,
+          heightPt: 841.92,
+          slots: [{
+            boxType: "besar",
+            isFullBesar: true,
+            leftPt: 70.58,
+            topPt: 72.0,
+            sections,
+            count: pendampingList.length + pesertaList.length
+          }]
+        });
+      } else if (currentKecilMode === "pendamping") {
+        pages.push({
+          widthPt: 595.32,
+          heightPt: 841.92,
+          slots: [{
+            boxType: "kecil",
+            isFullBesar: false,
+            leftPt: 108.14,
+            topPt: 72.0,
+            sections: [{ role: "pendamping", header: "Pendamping :", headerIndent: 2, items: pendampingList, isPlaceholder: false }],
+            count: pendampingList.length
+          }]
+        });
+      } else if (currentKecilMode === "peserta") {
+        pages.push({
+          widthPt: 595.32,
+          heightPt: 841.92,
+          slots: [{
+            boxType: "kecil",
+            isFullBesar: false,
+            leftPt: 108.14,
+            topPt: 72.0,
+            sections: [{ role: "peserta", header: "", headerIndent: 0, items: pesertaList, isPlaceholder: false }],
+            count: pesertaList.length
+          }]
+        });
+      } else if (currentLayoutBoth === "single_page") {
+        pages.push({
+          widthPt: 841.92,
+          heightPt: 595.32,
+          slots: [
+            {
+              boxType: "kecil",
+              isFullBesar: false,
+              leftPt: 86.24,
+              topPt: 72.0,
+              sections: [{ role: "pendamping", header: "Pendamping :", headerIndent: 2, items: pendampingList, isPlaceholder: false }],
+              count: pendampingList.length
+            },
+            {
+              boxType: "kecil",
+              isFullBesar: false,
+              leftPt: 440.96,
+              topPt: 72.0,
+              sections: [{ role: "peserta", header: "", headerIndent: 0, items: pesertaList, isPlaceholder: false }],
+              count: pesertaList.length
+            }
+          ]
+        });
+      } else {
+        pages.push({
+          widthPt: 595.32,
+          heightPt: 841.92,
+          slots: [{
+            boxType: "kecil",
+            isFullBesar: false,
+            leftPt: 108.14,
+            topPt: 72.0,
+            sections: [{ role: "pendamping", header: "Pendamping :", headerIndent: 2, items: pendampingList, isPlaceholder: false }],
+            count: pendampingList.length
+          }]
+        });
+        pages.push({
+          widthPt: 595.32,
+          heightPt: 841.92,
+          slots: [{
+            boxType: "kecil",
+            isFullBesar: false,
+            leftPt: 108.14,
+            topPt: 72.0,
+            sections: [{ role: "peserta", header: "", headerIndent: 0, items: pesertaList, isPlaceholder: false }],
+            count: pesertaList.length
+          }]
+        });
+      }
+
+      // Measure & auto-fit exact box elements off-screen so inline styles bake accurately
+      const measureHost = document.createElement("div");
+      measureHost.style.position = "fixed";
+      measureHost.style.left = "-99999px";
+      measureHost.style.top = "0";
+      measureHost.style.visibility = "hidden";
+      measureHost.style.pointerEvents = "none";
+      document.body.appendChild(measureHost);
+
+      let pagesHtml = "";
+      try {
+        pages.forEach((p) => {
+          let slotsHtml = "";
+          p.slots.forEach((slot) => {
+            const boxEl = buildPreviewBoxElement({
+              boxType: slot.boxType,
+              isFullBesar: slot.isFullBesar,
+              title,
+              titleIsPlaceholder: false,
+              date,
+              time,
+              sep,
+              useNum,
+              sections: slot.sections,
+              hideMobileTriggers: true
+            });
+            measureHost.appendChild(boxEl);
+            autoFitPreviewBox(boxEl, slot.boxType, slot.count);
+            slotsHtml += `<div class="np-print-slot" style="left:${slot.leftPt}pt;top:${slot.topPt}pt;">${boxEl.outerHTML}</div>`;
+          });
+          pagesHtml += `<div class="np-print-page" style="width:${p.widthPt}pt;height:${p.heightPt}pt;">${slotsHtml}</div>`;
+        });
+      } finally {
+        measureHost.remove();
+      }
+
+      const firstPage = pages[0];
+      const pageWPt = `${firstPage.widthPt}pt`;
+      const pageHPt = `${firstPage.heightPt}pt`;
+
+      const printHtml = `
+        <!DOCTYPE html>
+        <html lang="id">
+        <head>
+          <meta charset="UTF-8">
+          <title>Cetak Note Pad Kemnaker RI</title>
+          <style>
+            @page {
+              size: ${pageWPt} ${pageHPt};
+              margin: 0;
+            }
+            @media print {
+              *, *:before, *:after {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
+              }
+            }
+            * {
+              margin: 0;
+              padding: 0;
+              box-sizing: border-box;
+            }
+            html, body {
+              margin: 0 !important;
+              padding: 0 !important;
+              width: ${pageWPt} !important;
+              background: #ffffff !important;
+              font-family: Arial, sans-serif;
+            }
+            .np-print-page {
+              position: relative;
+              overflow: hidden;
+              background: #ffffff;
+              page-break-after: always;
+              break-after: page;
+            }
+            .np-print-page:last-child {
+              page-break-after: auto;
+              break-after: auto;
+            }
+            .np-print-slot {
+              position: absolute;
+            }
+            /* Preview box uses 1px CSS == 1pt PDF, so scale by 96/72 in print to match exact physical mm */
+            .np-print-slot .notepad-box-element {
+              transform: scale(1.33333333);
+              transform-origin: top left;
+              box-shadow: none !important;
+              margin: 0 !important;
+            }
+            .notepad-box-element {
+              background: #ffffff;
+              font-family: Arial, sans-serif;
+              color: #000000;
+              box-sizing: border-box;
+              border: 1.44px solid #000000;
+              padding: 2.16px;
+              overflow: hidden;
+            }
+            .notepad-box-inner {
+              border: 0.72px solid #000000;
+              padding: 6px 0 8px 0;
+              height: 100%;
+              box-sizing: border-box;
+              display: flex;
+              flex-direction: column;
+              overflow: hidden;
+            }
+            .notepad-box-element.besar {
+              width: 442.4px;
+              height: 644.4px;
+            }
+            .notepad-box-element.kecil {
+              width: 314.72px;
+              height: 438.07px;
+            }
+            .np-title {
+              font-family: Arial, sans-serif;
+              font-size: 12px;
+              font-weight: bold;
+              text-align: center;
+              text-transform: uppercase;
+              line-height: 13.8px;
+              padding: 0 11px;
+              margin-bottom: 5px;
+              color: #1F3864;
+              white-space: pre-line;
+              word-wrap: break-word;
+              overflow-wrap: break-word;
+            }
+            .notepad-box-element.kecil .np-title {
+              font-size: 11px;
+              line-height: 12.2px;
+            }
+            .np-title-divider {
+              border-bottom: 0.75px solid #000000;
+              width: 100%;
+              margin: 0;
+              flex-shrink: 0;
+            }
+            .np-meta-block {
+              margin-top: 20px;
+              margin-bottom: 17px;
+              padding-left: 43px;
+              padding-right: 7px;
+            }
+            .np-meta-block.no-title {
+              margin-top: 12px;
+            }
+            .np-meta-row {
+              display: flex;
+              align-items: baseline;
+              font-family: Arial, sans-serif;
+              font-size: 14px;
+              line-height: 18.5px;
+              color: #1F3864;
+              margin: 0;
+            }
+            .np-meta-lbl {
+              width: 47px;
+              flex-shrink: 0;
+              font-weight: normal;
+            }
+            .np-meta-col {
+              width: 10px;
+              flex-shrink: 0;
+              text-align: left;
+              font-weight: normal;
+            }
+            .np-meta-val {
+              flex: 1;
+              min-width: 0;
+              font-weight: normal;
+              word-wrap: break-word;
+              overflow-wrap: break-word;
+            }
+            .np-sections-wrap {
+              display: flex;
+              flex-direction: column;
+            }
+            .np-section + .np-section {
+              margin-top: 25px;
+            }
+            .np-section-header {
+              font-family: Arial, sans-serif;
+              font-size: 12px;
+              line-height: 1.2;
+              font-weight: normal;
+              text-align: left;
+              margin-top: 0;
+              margin-bottom: 11px;
+              color: #000000;
+              padding-left: 4px;
+            }
+            .np-section-header.indent-peserta {
+              padding-left: 4px;
+            }
+            .np-list-item {
+              font-family: Arial, sans-serif;
+              font-size: 12px;
+              line-height: 20.7px;
+              text-align: left;
+              display: flex;
+              align-items: baseline;
+              margin: 0;
+              padding-left: 17px;
+              padding-right: 8px;
+              color: #000000;
+            }
+            .np-list-item.no-num {
+              padding-left: 35px;
+            }
+            .np-list-num {
+              width: 18px;
+              flex-shrink: 0;
+              font-weight: bold;
+            }
+            .np-item-content {
+              flex: 1;
+              min-width: 0;
+              word-wrap: break-word;
+              overflow-wrap: break-word;
+            }
+            .np-name {
+              font-weight: bold;
+              color: #000000;
+            }
+            .np-pos {
+              font-weight: normal;
+              color: #000000;
+            }
+          </style>
+        </head>
+        <body>
+          ${pagesHtml}
+          <script>
+            function doPrint() {
+              setTimeout(() => {
+                window.focus();
+                window.print();
+              }, 250);
+            }
+            if (document.readyState === 'complete') {
+              doPrint();
+            } else {
+              window.addEventListener('load', doPrint);
+            }
+          <\/script>
+        </body>
+        </html>
+      `;
+
+      let printIframe = document.getElementById("printNotepadIframe");
+      if (!printIframe) {
+        printIframe = document.createElement("iframe");
+        printIframe.id = "printNotepadIframe";
+        printIframe.style.position = "fixed";
+        printIframe.style.right = "0";
+        printIframe.style.bottom = "0";
+        printIframe.style.width = "0";
+        printIframe.style.height = "0";
+        printIframe.style.border = "none";
+        document.body.appendChild(printIframe);
+      }
+
+      printIframe.contentDocument.open();
+      printIframe.contentDocument.write(printHtml);
+      printIframe.contentDocument.close();
     }
+    window.printNotepad = printNotepad;
 
     // PDF Download Form Post
     function generateAndDownloadPDF() {
@@ -5746,6 +6362,7 @@
     window.openNotepadListSheet = openNotepadListSheet;
 
     function closeNotepadListSheet() {
+      finishActiveInlineEdit();
       if (document.activeElement && typeof document.activeElement.blur === "function") {
         document.activeElement.blur();
       }

@@ -93,10 +93,20 @@ def wrap_text_lines(c, text, font_name, font_size, max_width):
             else:
                 if current_line:
                     all_lines.append(" ".join(current_line))
+                    current_line = []
+                # Split unbroken super-long tokens so text never overflows borders
+                if c.stringWidth(word, font_name, font_size) <= max_width:
                     current_line = [word]
                 else:
-                    all_lines.append(word)
-                    current_line = []
+                    chunk = ""
+                    for ch in word:
+                        if chunk and c.stringWidth(chunk + ch, font_name, font_size) > max_width:
+                            all_lines.append(chunk)
+                            chunk = ch
+                        else:
+                            chunk += ch
+                    if chunk:
+                        current_line = [chunk]
         if current_line:
             all_lines.append(" ".join(current_line))
     return all_lines
@@ -251,21 +261,23 @@ def draw_notepad_box(c, box_x, box_y, box_w, box_h, data, mode="besar"):
     # 2. Draw Judul (Center, Bold, Navy Blue #1F3864)
     if title_text:
         title_fs = 12.0 if mode == "besar" else 11.0
-        # Title width fits inner width with 7pt padding on each side (inner_w - 14.0)
-        title_lines = wrap_text_lines(c, title_text, font_bold, title_fs, inner_w - 14.0)
+        # 11pt horizontal padding on each side prevents long uppercase lines from touching the inner border
+        title_lines = wrap_text_lines(c, title_text, font_bold, title_fs, inner_w - 22.0)
         line_h = 13.8 if mode == "besar" else 12.0
         
         c.setFillColor(COLOR_NAVY)
         c.setFont(font_bold, title_fs)
-        # First title line baseline matches Word/PDF top margin (y=87.4 in Besar, 86.5-87.3 in Kecil)
-        cur_y = inner_y + inner_h - 22.2
+        # Halved top gap above Judul (~7pt visible whitespace above cap-height)
+        title_top_drop = 15.6 if mode == "besar" else 14.9
+        cur_y = inner_y + inner_h - title_top_drop
         for i, tl in enumerate(title_lines):
             if i > 0:
                 cur_y -= line_h
             c.drawCentredString(inner_x + (inner_w / 2.0), cur_y, tl)
         
         # 3. Horizontal Divider Line under Judul (0.72pt solid black across inner box)
-        cur_y -= 14.2  # Spacing before divider line (matches exact Word paragraph border)
+        # Halved bottom gap below Judul (~7.2pt from last baseline to divider)
+        cur_y -= 7.2
         div_y = cur_y
         c.setStrokeColor(COLOR_BLACK)
         c.setLineWidth(0.72)
@@ -305,7 +317,7 @@ def draw_notepad_box(c, box_x, box_y, box_w, box_h, data, mode="besar"):
     # Indentation matching Contoh PDF
     num_x = inner_x + 18.8
     text_x = inner_x + 36.8
-    max_item_w = (inner_x + inner_w - 6.0) - text_x
+    max_item_w = (inner_x + inner_w - 8.0) - text_x
 
     # Auto-fit scale table: preserves standard 12pt / 20.7pt unless wrapping or item count exceeds box height
     avail_list_h = max(40.0, (cur_y - (inner_y + 10.0)))
@@ -335,8 +347,14 @@ def draw_notepad_box(c, box_x, box_y, box_w, box_h, data, mode="besar"):
         elif total_items > 7:
             start_idx = 1
 
-    chosen = scale_candidates[-1]
-    for cand in scale_candidates[start_idx:]:
+    # In Notepad Besar, add 1 extra blank line (+20.7pt) between Pendamping and Peserta when space permits
+    active_candidates = list(scale_candidates[start_idx:])
+    if mode == "besar" and len(sections) == 2 and start_idx == 0:
+        spacious_cand = (12.0, 20.7, 20.7, 34.0, 62.7, 30.0, 26.0)
+        active_candidates.insert(0, spacious_cand)
+
+    chosen = active_candidates[-1]
+    for cand in active_candidates:
         req_h = _measure_sections_height(
             c, sections, sep, font_reg, font_bold,
             cand[0], cand[1], cand[2], max_item_w,
