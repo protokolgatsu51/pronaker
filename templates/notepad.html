@@ -854,6 +854,10 @@
       margin-bottom: 0;
     }
 
+    .np-sheet-content .role-manager-card.unified-input-card {
+      margin-bottom: 12px;
+    }
+
     .np-sheet-content[data-modal-role="pendamping"] #roleCard_peserta {
       display: none !important;
     }
@@ -1731,6 +1735,158 @@
       margin-bottom: 14px;
     }
 
+    .desktop-right-slot .unified-input-card {
+      margin-bottom: 12px;
+    }
+
+    .unified-input-card .input-subpanel {
+      margin-bottom: 0;
+    }
+
+    .unified-role-tray {
+      position: relative;
+      display: flex;
+      gap: 4px;
+      padding: 4px;
+      background: #dbe4ef;
+      border: 1px solid #cbd5e1;
+      border-radius: 11px;
+      margin-bottom: 10px;
+      isolation: isolate;
+      user-select: none;
+    }
+
+    .unified-role-glider {
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #15406a 0%, #0d2b45 100%);
+      box-shadow: 0 3px 10px rgba(21, 64, 106, 0.28);
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0;
+      transition: transform 0.32s cubic-bezier(0.34, 1.25, 0.64, 1),
+        width 0.32s cubic-bezier(0.34, 1.25, 0.64, 1),
+        height 0.32s cubic-bezier(0.34, 1.25, 0.64, 1),
+        background 0.25s ease,
+        box-shadow 0.25s ease,
+        opacity 0.2s ease;
+    }
+
+    .unified-role-glider.ready {
+      opacity: 1;
+    }
+
+    .unified-role-glider.is-peserta {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      box-shadow: 0 3px 10px rgba(5, 150, 105, 0.28);
+    }
+
+    .unified-role-glider.no-animate {
+      transition: none !important;
+    }
+
+    .unified-role-btn {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      min-width: 0;
+      border: none;
+      background: transparent !important;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 7px 10px;
+      color: #334155;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: none !important;
+      transition: color 0.2s ease;
+      font-family: inherit;
+      white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .unified-role-btn.active {
+      color: #ffffff;
+      font-weight: 800;
+    }
+
+    .unified-role-btn .role-card-dot {
+      width: 7px;
+      height: 7px;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .unified-role-btn.active .role-card-dot {
+      background: #ffffff !important;
+      transform: scale(1.1);
+    }
+
+    .np-unified-textarea {
+      width: 100%;
+      min-height: 82px;
+      max-height: 210px;
+      font-size: 12.5px;
+      line-height: 1.45;
+      padding: 9px 11px;
+      resize: vertical;
+      box-sizing: border-box;
+    }
+
+    .unified-input-helper {
+      display: none;
+      font-size: 10.5px;
+      line-height: 1.35;
+      color: #64748b;
+      margin-top: 6px;
+      margin-bottom: 2px;
+      padding: 0 2px;
+      border-radius: 7px;
+      transition: all 0.2s ease;
+    }
+
+    .unified-input-helper.is-warn {
+      display: block;
+      color: #b45309;
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      padding: 5px 8px;
+      font-weight: 700;
+    }
+
+    @keyframes npFieldWarnNudge {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-3px); }
+      75% { transform: translateX(3px); }
+    }
+
+    .np-field-warn {
+      border-color: #f59e0b !important;
+      box-shadow: 0 0 0 3.5px rgba(245, 158, 11, 0.18) !important;
+      background-color: #fffdf5 !important;
+      animation: npFieldWarnNudge 0.26s ease;
+    }
+
+    .np-field-warn-msg {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #b45309;
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 7px;
+      padding: 4px 8px;
+      margin-top: 6px;
+      line-height: 1.3;
+    }
+
     .input-subpanel .form-input,
     .input-subpanel .form-textarea {
       background: #ffffff;
@@ -1834,7 +1990,7 @@
       position: relative;
       max-height: none;
       overflow: visible;
-      border: 1.5px solid #cbd5e1;
+      border: 1px solid #cbd5e1;
       border-radius: 12px;
       padding: 8px;
       background: #e8eef5;
@@ -1843,18 +1999,24 @@
       box-sizing: border-box;
     }
 
-    /* Background connector behind list cards: thick solid continuous bar spanning card 1..N */
+    /* Background connector behind list cards: thick solid continuous bar integrated with PRONAKER role theme */
     .name-items-container:has(.name-item-row:nth-child(2))::after {
       content: "";
       position: absolute;
-      top: 32px;
-      bottom: 32px;
-      left: 31px;
-      width: 5px;
+      top: 33px;
+      bottom: 33px;
+      left: 30px;
+      width: 6px;
       border-radius: 999px;
-      background: rgba(21, 64, 106, 0.22);
+      background: linear-gradient(180deg, rgba(21, 64, 106, 0.16) 0%, rgba(29, 78, 137, 0.30) 50%, rgba(21, 64, 106, 0.16) 100%);
+      box-shadow: inset 0 0 0 1px rgba(21, 64, 106, 0.08);
       pointer-events: none;
       z-index: 0;
+    }
+
+    #nameItemsContainer_peserta:has(.name-item-row:nth-child(2))::after {
+      background: linear-gradient(180deg, rgba(5, 150, 105, 0.16) 0%, rgba(16, 185, 129, 0.32) 50%, rgba(5, 150, 105, 0.16) 100%);
+      box-shadow: inset 0 0 0 1px rgba(5, 150, 105, 0.08);
     }
 
     .name-items-container:empty::before {
@@ -1875,7 +2037,7 @@
       gap: 10px;
       padding: 10px 10px 10px 12px;
       background: #ffffff;
-      border: 1.5px solid #cbd5e1;
+      border: 1px solid #cbd5e1;
       border-radius: 11px;
       margin-bottom: 7px;
       cursor: grab;
@@ -1896,23 +2058,28 @@
       align-items: center;
       align-self: stretch;
       margin: -10px 0 -10px -12px;
-      padding: 10px 4px 10px 12px;
+      padding: 10px 4px 10px 11px;
       touch-action: none;
       cursor: grab;
       flex-shrink: 0;
     }
 
-    /* Dashed vertical guide behind number box (clipped above 1st & below last item) */
+    /* Dashed vertical guide behind number box (clipped above 1st & below last item, themed per role) */
     .name-item-row:not(:only-child) .item-drag-zone::after {
       content: "";
       position: absolute;
       top: 0;
       bottom: 0;
-      left: 23.25px;
-      width: 1.5px;
-      background-image: repeating-linear-gradient(to bottom, rgba(21, 64, 106, 0.36) 0 4px, transparent 4px 8px);
+      left: 23px;
+      width: 2px;
+      background-image: repeating-linear-gradient(to bottom, rgba(21, 64, 106, 0.42) 0 4px, transparent 4px 8px);
       pointer-events: none;
       z-index: 1;
+      transition: opacity 0.15s ease;
+    }
+
+    #nameItemsContainer_peserta .name-item-row:not(:only-child) .item-drag-zone::after {
+      background-image: repeating-linear-gradient(to bottom, rgba(5, 150, 105, 0.44) 0 4px, transparent 4px 8px);
     }
 
     .name-item-row:first-child:not(:only-child) .item-drag-zone::after {
@@ -2015,17 +2182,45 @@
       font-size: 11px;
       font-weight: 800;
       color: var(--kemnaker-blue);
-      background: #eef4fb;
-      border: 1px solid #cbdcf0;
-      min-width: 24px;
+      background: linear-gradient(135deg, #eef4fb 0%, #e1ecf8 100%);
+      border: 1px solid #bfdbfe;
+      width: 26px;
+      min-width: 26px;
       height: 24px;
-      padding: 0 5px;
+      padding: 0 2px;
       border-radius: 7px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
       box-sizing: border-box;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .name-item-row:hover .item-num {
+      transform: scale(1.06);
+      box-shadow: 0 2px 6px rgba(21, 64, 106, 0.16);
+    }
+
+    #nameItemsContainer_peserta .item-num {
+      color: #047857;
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+      border-color: #a7f3d0;
+    }
+
+    #nameItemsContainer_peserta .name-item-row:hover {
+      border-color: #6ee7b7;
+      box-shadow: 0 4px 12px -2px rgba(5, 150, 105, 0.14);
+    }
+
+    #nameItemsContainer_peserta .name-item-row:hover .item-num {
+      box-shadow: 0 2px 6px rgba(5, 150, 105, 0.18);
+    }
+
+    #roleCountPill_peserta {
+      color: #047857;
+      background: #ecfdf5;
+      border-color: #a7f3d0;
     }
 
     .item-text-box {
@@ -2834,7 +3029,7 @@
 
       .form-card>.form-group,
       .single-input-grid,
-      [id^="bulkInputBox_"],
+      .unified-input-wrap,
       .date-input-clip {
         overflow-x: hidden;
         overflow-x: clip;
@@ -2970,16 +3165,16 @@
         resize: none !important;
       }
 
-      textarea.np-bulk-textarea.form-textarea {
+      textarea.np-unified-textarea.form-textarea {
         width: 123.08% !important;
         max-width: none !important;
-        height: 150px !important;
-        min-height: 150px !important;
-        padding: 13px 14px !important;
+        height: 112px !important;
+        min-height: 112px !important;
+        padding: 12px 14px !important;
         border-radius: 12px !important;
         transform: scale(0.8125);
         transform-origin: top left;
-        margin-bottom: -28.12px !important;
+        margin-bottom: -21px !important;
         resize: none !important;
       }
 
@@ -3409,7 +3604,7 @@
               <span id="titleCounter" style="font-size: 11px; color: #94a3b8;">0 karakter</span>
             </label>
             <textarea id="inputTitle" class="form-textarea" placeholder="Masukkan Judul Kegiatan"
-              oninput="updateNotepadPreview()"></textarea>
+              oninput="clearNotepadFieldWarns(); updateNotepadPreview()"></textarea>
           </div>
 
           <!-- Event Meta Grid: Desktop vertikal (Tanggal atas, Waktu bawah), Mobile sejajar -->
@@ -3422,7 +3617,7 @@
               <div class="date-picker-wrapper" id="datePickerWrapper">
                 <div class="date-input-clip">
                   <input type="text" id="inputDate" class="form-input date-text-input"
-                    placeholder="Pilih Hari &amp; Tanggal" oninput="updateNotepadPreview()">
+                    placeholder="Pilih Hari &amp; Tanggal" oninput="clearNotepadFieldWarns(); updateNotepadPreview()">
                 </div>
                 <button type="button" class="btn-calendar-trigger" id="btnCalendarTrigger"
                   onclick="toggleCalendarPopover(event)" title="Buka Kalender Pemilih Tanggal">
@@ -3542,135 +3737,116 @@
             <div id="desktopListSlot">
               <div id="daftarNamaWorkspace">
 
+                <!-- Panel Input Tunggal Terpadu (Pendamping & Peserta, Satuan maupun Banyak) -->
+                <div class="role-manager-card unified-input-card" id="unifiedInputCard">
+                  <div class="input-subpanel">
+                    <div class="unified-role-tray" id="unifiedRoleTray" role="group" aria-label="Pilih Daftar Tujuan">
+                      <div class="unified-role-glider" id="unifiedRoleGlider" aria-hidden="true"></div>
+                      <button type="button" class="unified-role-btn active" id="btnTargetRole_pendamping"
+                        onclick="setTargetInputRole('pendamping')">
+                        <span>Pendamping</span>
+                      </button>
+                      <button type="button" class="unified-role-btn" id="btnTargetRole_peserta"
+                        onclick="setTargetInputRole('peserta')">
+                        <span>Peserta</span>
+                      </button>
+                    </div>
+
+                    <div class="unified-input-wrap">
+                      <textarea id="unifiedInputText" rows="3" class="form-textarea np-unified-textarea"
+                        placeholder="Masukkan nama &amp; jabatan pendamping (bisa 1 atau banyak)..."
+                        oninput="onUnifiedTextInput(this)"
+                        onkeydown="if((event.ctrlKey || event.metaKey) && event.key === 'Enter'){event.preventDefault(); submitUnifiedInput(false);}"></textarea>
+                    </div>
+                    <div class="unified-input-helper" id="unifiedInputHelper"></div>
+
+                    <div class="single-input-actions"
+                      style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
+                      <button type="button" onclick="toggleKemnakerQuickPick()" id="btnQuickPickKemnaker"
+                        style="background:none;border:none;color:var(--kemnaker-blue);font-size:11.5px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px;">
+                        🏛️ Pilih Pejabat
+                      </button>
+                      <div id="unifiedTopActionSlot" style="display: inline-flex; align-items: center; margin-left: auto;">
+                        <button type="button" id="btnAddUnified" class="btn-generate btn-add-single"
+                          onclick="submitUnifiedInput(false)"
+                          style="padding: 7px 14px; font-size: 12px; flex: none;">
+                          + Tambah
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- Collapsible Kemnaker Official Picker -->
+                    <div id="kemnakerPickerCollapse" class="kemnaker-selectors-box" style="display: none;">
+                      <div class="form-group" style="margin-bottom: 8px;">
+                        <label for="kemnakerUnitSelect" class="form-label" style="margin-bottom: 4px;">
+                          <span>Unit Kerja</span>
+                          <span class="label-tag" id="kemnakerDateTag">Bagan Resmi</span>
+                        </label>
+                        <div class="input-wrapper">
+                          <div class="input-icon">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg>
+                          </div>
+                          <select id="kemnakerUnitSelect" class="form-input" onchange="onKemnakerUnitChange()"
+                            style="padding-left: 36px; cursor: pointer; font-weight: 600;">
+                            <option value="">-- Pilih Unit Kerja --</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="form-group" style="margin-bottom: 6px;">
+                        <label for="kemnakerOfficialSelect" class="form-label" style="margin-bottom: 4px;">
+                          <span>Pejabat &amp; Jabatan</span>
+                          <span class="label-tag" id="kemnakerCountBadge">0 Pilihan</span>
+                        </label>
+                        <div class="input-wrapper">
+                          <div class="input-icon">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                            </svg>
+                          </div>
+                          <select id="kemnakerOfficialSelect" class="form-input"
+                            onchange="onKemnakerOfficialSelected()" disabled
+                            style="padding-left: 36px; cursor: pointer; font-weight: 600;">
+                            <option value="">-- Pilih Unit Kerja Terlebih Dahulu --</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="kemnaker-sync-bar">
+                        <span id="kemnakerStatusText">📅 Bagan resmi kemnaker.go.id</span>
+                        <div id="kemnakerBottomActionSlot" style="display: inline-flex; align-items: center;">
+                          <button type="button" id="btnRefreshKemnakerNp" class="btn-refresh-kemnaker"
+                            onclick="refreshNotepadKemnakerData()">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                              stroke-width="2.2">
+                              <polyline points="23 4 23 10 17 10"></polyline>
+                              <polyline points="1 20 1 14 7 14"></polyline>
+                              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                            </svg>
+                            Perbarui Data
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <!-- Role Card 1: Pendamping (Kemnaker) -->
                 <div class="role-manager-card" id="roleCard_pendamping">
                   <div class="role-card-header">
                     <div class="role-card-title-wrap">
-                      <span class="role-card-dot"></span>
                       <span class="role-card-title">Pendamping</span>
                       <span class="active-list-count-pill" id="roleCountPill_pendamping">0 Orang</span>
                     </div>
                     <button type="button" class="btn-clear-list"
                       onclick="clearRoleList('pendamping')">Kosongkan</button>
                   </div>
-
-                  <div class="input-subpanel">
-                    <div class="subinput-tray" id="subinputTray_pendamping">
-                      <div class="subinput-glider" id="subinputGlider_pendamping" aria-hidden="true"></div>
-                      <button type="button" class="bubble-segment-btn active" id="btnInputModeSingle_pendamping"
-                        onclick="setInputMode('single', 'pendamping')">Input Satuan</button>
-                      <button type="button" class="bubble-segment-btn" id="btnInputModeBulk_pendamping"
-                        onclick="setInputMode('bulk', 'pendamping')">Input Banyak</button>
-                    </div>
-
-                    <div id="singleInputBox_pendamping">
-                      <div class="single-input-grid"
-                        style="display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 10px;">
-                        <input type="text" id="inputSingleName_pendamping" class="form-input np-single-name-input"
-                          placeholder="Nama Lengkap" oninput="onNotepadNameInput(this)"
-                          onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('inputSinglePos_pendamping')?.focus();}"
-                          style="font-size: 12.5px; padding: 8px 11px;">
-                        <textarea id="inputSinglePos_pendamping" rows="2"
-                          class="form-input form-textarea np-single-pos-input" placeholder="Jabatan / Posisi"
-                          oninput="onNotepadPosInput(this); autoSizePosField(this)"
-                          onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault();addSingleName('pendamping');}"
-                          style="font-size: 12.5px; padding: 8px 11px; min-height: 52px; line-height: 1.4; resize: vertical;"></textarea>
-                      </div>
-                      <div class="single-input-actions"
-                        style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-                        <button type="button" onclick="toggleKemnakerQuickPick()" id="btnQuickPickKemnaker"
-                          style="background:none;border:none;color:var(--kemnaker-blue);font-size:11.5px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px;">
-                          🏛️ Pilih Pejabat
-                        </button>
-                        <div id="pendampingTopActionSlot" style="display: inline-flex; align-items: center;">
-                          <button type="button" id="btnAddSingle_pendamping" class="btn-generate btn-add-single"
-                            onclick="addSingleName('pendamping')"
-                            style="padding: 7px 14px; font-size: 12px; flex: none;">
-                            + Tambah
-                          </button>
-                        </div>
-                      </div>
-
-                      <!-- Collapsible Kemnaker Official Picker -->
-                      <div id="kemnakerPickerCollapse" class="kemnaker-selectors-box" style="display: none;">
-                        <div class="form-group" style="margin-bottom: 8px;">
-                          <label for="kemnakerUnitSelect" class="form-label" style="margin-bottom: 4px;">
-                            <span>Unit Kerja</span>
-                            <span class="label-tag" id="kemnakerDateTag">Bagan Resmi</span>
-                          </label>
-                          <div class="input-wrapper">
-                            <div class="input-icon">
-                              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                              </svg>
-                            </div>
-                            <select id="kemnakerUnitSelect" class="form-input" onchange="onKemnakerUnitChange()"
-                              style="padding-left: 36px; cursor: pointer; font-weight: 600;">
-                              <option value="">-- Pilih Unit Kerja --</option>
-                            </select>
-                          </div>
-                        </div>
-
-                        <div class="form-group" style="margin-bottom: 6px;">
-                          <label for="kemnakerOfficialSelect" class="form-label" style="margin-bottom: 4px;">
-                            <span>Pejabat &amp; Jabatan</span>
-                            <span class="label-tag" id="kemnakerCountBadge">0 Pilihan</span>
-                          </label>
-                          <div class="input-wrapper">
-                            <div class="input-icon">
-                              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-                              </svg>
-                            </div>
-                            <select id="kemnakerOfficialSelect" class="form-input"
-                              onchange="onKemnakerOfficialSelected()" disabled
-                              style="padding-left: 36px; cursor: pointer; font-weight: 600;">
-                              <option value="">-- Pilih Unit Kerja Terlebih Dahulu --</option>
-                            </select>
-                          </div>
-                        </div>
-
-                        <div class="kemnaker-sync-bar">
-                          <span id="kemnakerStatusText">📅 Bagan resmi kemnaker.go.id</span>
-                          <div id="kemnakerBottomActionSlot" style="display: inline-flex; align-items: center;">
-                            <button type="button" id="btnRefreshKemnakerNp" class="btn-refresh-kemnaker"
-                              onclick="refreshNotepadKemnakerData()">
-                              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2.2">
-                                <polyline points="23 4 23 10 17 10"></polyline>
-                                <polyline points="1 20 1 14 7 14"></polyline>
-                                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-                              </svg>
-                              Perbarui Data
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div id="bulkInputBox_pendamping" style="display: none;">
-                      <textarea id="inputBulkText_pendamping" class="form-textarea np-bulk-textarea"
-                        placeholder="Tempel daftar pendamping (satu per baris)..."
-                        style="min-height: 100px; font-size: 12px;"></textarea>
-                      <div
-                        style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; gap: 8px; flex-wrap: wrap;">
-                        <label
-                          style="font-size: 11.5px; color: #334155; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; cursor: pointer;">
-                          <input type="checkbox" id="checkReplaceOnBulkImport_pendamping">
-                          <span>Ganti daftar</span>
-                        </label>
-                        <button type="button" class="btn-generate" onclick="processBulkNames(false, 'pendamping')"
-                          style="padding: 7px 14px; font-size: 12px; flex: none;">
-                          ✨ Tambah Data
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
                   <div class="name-items-container" id="nameItemsContainer_pendamping"></div>
                 </div>
 
@@ -3678,63 +3854,11 @@
                 <div class="role-manager-card" id="roleCard_peserta">
                   <div class="role-card-header">
                     <div class="role-card-title-wrap">
-                      <span class="role-card-dot is-peserta"></span>
                       <span class="role-card-title">Peserta</span>
                       <span class="active-list-count-pill" id="roleCountPill_peserta">0 Orang</span>
                     </div>
                     <button type="button" class="btn-clear-list" onclick="clearRoleList('peserta')">Kosongkan</button>
                   </div>
-
-                  <div class="input-subpanel">
-                    <div class="subinput-tray" id="subinputTray_peserta">
-                      <div class="subinput-glider" id="subinputGlider_peserta" aria-hidden="true"></div>
-                      <button type="button" class="bubble-segment-btn active" id="btnInputModeSingle_peserta"
-                        onclick="setInputMode('single', 'peserta')">Input Satuan</button>
-                      <button type="button" class="bubble-segment-btn" id="btnInputModeBulk_peserta"
-                        onclick="setInputMode('bulk', 'peserta')">Input Banyak</button>
-                    </div>
-
-                    <div id="singleInputBox_peserta">
-                      <div class="single-input-grid"
-                        style="display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 10px;">
-                        <input type="text" id="inputSingleName_peserta" class="form-input np-single-name-input"
-                          placeholder="Nama Lengkap" oninput="onNotepadNameInput(this)"
-                          onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('inputSinglePos_peserta')?.focus();}"
-                          style="font-size: 12.5px; padding: 8px 11px;">
-                        <textarea id="inputSinglePos_peserta" rows="2"
-                          class="form-input form-textarea np-single-pos-input" placeholder="Jabatan / Posisi"
-                          oninput="onNotepadPosInput(this); autoSizePosField(this)"
-                          onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault();addSingleName('peserta');}"
-                          style="font-size: 12.5px; padding: 8px 11px; min-height: 52px; line-height: 1.4; resize: vertical;"></textarea>
-                      </div>
-                      <div class="single-input-actions"
-                        style="display: flex; justify-content: flex-end; align-items: center; gap: 8px;">
-                        <button type="button" class="btn-generate btn-add-single" onclick="addSingleName('peserta')"
-                          style="padding: 7px 14px; font-size: 12px; flex: none;">
-                          + Tambah
-                        </button>
-                      </div>
-                    </div>
-
-                    <div id="bulkInputBox_peserta" style="display: none;">
-                      <textarea id="inputBulkText_peserta" class="form-textarea np-bulk-textarea"
-                        placeholder="Tempel daftar peserta / tamu (satu per baris)..."
-                        style="min-height: 100px; font-size: 12px;"></textarea>
-                      <div
-                        style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; gap: 8px; flex-wrap: wrap;">
-                        <label
-                          style="font-size: 11.5px; color: #334155; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; cursor: pointer;">
-                          <input type="checkbox" id="checkReplaceOnBulkImport_peserta">
-                          <span>Ganti daftar</span>
-                        </label>
-                        <button type="button" class="btn-generate" onclick="processBulkNames(false, 'peserta')"
-                          style="padding: 7px 14px; font-size: 12px; flex: none;">
-                          ✨ Tambah Data
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
                   <div class="name-items-container" id="nameItemsContainer_peserta"></div>
                 </div>
 
@@ -4227,22 +4351,70 @@
       updateElementGlider(wrap, glider, activeBtn, true);
     }
 
+    function updateUnifiedRoleGlider(animate = true) {
+      const tray = document.getElementById("unifiedRoleTray");
+      const glider = document.getElementById("unifiedRoleGlider");
+      const targetRole = activeListTab === "peserta" ? "peserta" : "pendamping";
+      const activeBtn = document.getElementById(`btnTargetRole_${targetRole}`);
+      if (!tray || !glider || !activeBtn || tray.style.display === "none") return;
+      glider.classList.toggle("is-peserta", targetRole === "peserta");
+      updateElementGlider(tray, glider, activeBtn, animate);
+    }
+
     function updateSubinputGlider(animate = true, targetRole = null) {
-      const roles = targetRole ? [targetRole] : ["pendamping", "peserta"];
-      roles.forEach(role => {
-        const tray = document.getElementById(`subinputTray_${role}`);
-        const glider = document.getElementById(`subinputGlider_${role}`);
-        const activeBtn = tray ? tray.querySelector(".bubble-segment-btn.active") : null;
-        if (tray && glider && activeBtn) {
-          updateElementGlider(tray, glider, activeBtn, animate);
-        }
-      });
+      updateUnifiedRoleGlider(animate);
     }
 
     function updateAllNotepadGliders(animate = false) {
       updateTypeGlider();
       updateKecilModeGlider();
-      updateSubinputGlider(animate);
+      updateUnifiedRoleGlider(animate);
+    }
+
+    function setTargetInputRole(role, opts = {}) {
+      const targetRole = role === "peserta" ? "peserta" : "pendamping";
+      activeListTab = targetRole;
+
+      const btnPend = document.getElementById("btnTargetRole_pendamping");
+      const btnPes = document.getElementById("btnTargetRole_peserta");
+      if (btnPend) btnPend.classList.toggle("active", targetRole === "pendamping");
+      if (btnPes) btnPes.classList.toggle("active", targetRole === "peserta");
+
+      const quickPickBtn = document.getElementById("btnQuickPickKemnaker");
+      if (quickPickBtn) {
+        quickPickBtn.style.display = targetRole === "pendamping" ? "inline-flex" : "none";
+      }
+      if (targetRole !== "pendamping") {
+        const pickerBox = document.getElementById("kemnakerPickerCollapse");
+        if (pickerBox && pickerBox.style.display === "block") {
+          toggleKemnakerQuickPick(false);
+        }
+      }
+
+      const txt = document.getElementById("unifiedInputText");
+      if (txt) {
+        txt.placeholder = targetRole === "pendamping"
+          ? "Masukkan nama & jabatan pendamping (bisa 1 atau banyak)..."
+          : "Masukkan nama & jabatan peserta (bisa 1 atau banyak)...";
+      }
+
+      updateUnifiedRoleGlider(opts.animate !== false);
+
+      if (opts.syncModal !== false) {
+        const backdrop = document.getElementById("npSheetBackdrop");
+        const sheetBody = document.getElementById("npSheetBody");
+        const sheetTitle = document.getElementById("npSheetTitle");
+        if (backdrop && backdrop.classList.contains("open") && sheetBody) {
+          activeMobileModalRole = targetRole;
+          sheetBody.setAttribute("data-modal-role", targetRole);
+          if (sheetTitle) {
+            sheetTitle.textContent = targetRole === "pendamping" ? "Daftar Pendamping" : "Daftar Peserta";
+          }
+          const card = document.getElementById(`roleCard_${targetRole}`);
+          if (card) card.style.display = "block";
+          updateNpModalMiniPreview();
+        }
+      }
     }
 
     function setKecilMode(mode) {
@@ -4260,47 +4432,41 @@
     function updateKecilModeTabs() {
       const cardPend = document.getElementById("roleCard_pendamping");
       const cardPes = document.getElementById("roleCard_peserta");
+      const roleTray = document.getElementById("unifiedRoleTray");
       if (!cardPend || !cardPes) return;
 
       if (currentNotepadType === "kecil") {
         if (currentKecilMode === "pendamping") {
           cardPend.style.display = "block";
           cardPes.style.display = "none";
-          activeListTab = "pendamping";
+          if (roleTray) roleTray.style.display = "none";
+          setTargetInputRole("pendamping", { animate: false, syncModal: false });
         } else if (currentKecilMode === "peserta") {
           cardPend.style.display = "none";
           cardPes.style.display = "block";
-          activeListTab = "peserta";
+          if (roleTray) roleTray.style.display = "none";
+          setTargetInputRole("peserta", { animate: false, syncModal: false });
         } else {
           cardPend.style.display = "block";
           cardPes.style.display = "block";
+          if (roleTray) roleTray.style.display = "flex";
         }
       } else {
         cardPend.style.display = "block";
         cardPes.style.display = "block";
+        if (roleTray) roleTray.style.display = "flex";
       }
-      requestAnimationFrame(() => updateSubinputGlider(false));
+      requestAnimationFrame(() => updateUnifiedRoleGlider(false));
     }
 
     function switchListTab(tab) {
-      activeListTab = tab;
+      setTargetInputRole(tab);
       editingItem = { role: null, index: null };
       renderNameList();
     }
 
     function setInputMode(mode, role = null) {
-      const targetRole = role || activeListTab || "pendamping";
-      roleInputMode[targetRole] = mode;
-      currentInputMode = mode;
-      const singleBtn = document.getElementById(`btnInputModeSingle_${targetRole}`);
-      const bulkBtn = document.getElementById(`btnInputModeBulk_${targetRole}`);
-      const singleBox = document.getElementById(`singleInputBox_${targetRole}`);
-      const bulkBox = document.getElementById(`bulkInputBox_${targetRole}`);
-      if (singleBtn) singleBtn.classList.toggle("active", mode === "single");
-      if (bulkBtn) bulkBtn.classList.toggle("active", mode === "bulk");
-      updateSubinputGlider(true, targetRole);
-      if (singleBox) singleBox.style.display = mode === "single" ? "block" : "none";
-      if (bulkBox) bulkBox.style.display = mode === "bulk" ? "block" : "none";
+      if (role) setTargetInputRole(role, { syncModal: false });
     }
 
     function getRoleList(role) {
@@ -4550,6 +4716,64 @@
       renderNameList(prevRole);
     }
 
+    const UNIFIED_HELPER_DEFAULT = "";
+    let _npWarnAutoTimer = null;
+
+    function clearNotepadFieldWarns() {
+      if (_npWarnAutoTimer) {
+        clearTimeout(_npWarnAutoTimer);
+        _npWarnAutoTimer = null;
+      }
+      document.querySelectorAll(".np-field-warn").forEach(el => el.classList.remove("np-field-warn"));
+      document.querySelectorAll(".np-field-warn-msg").forEach(el => el.remove());
+      const helper = document.getElementById("unifiedInputHelper");
+      if (helper) {
+        helper.classList.remove("is-warn");
+        helper.textContent = UNIFIED_HELPER_DEFAULT;
+      }
+    }
+
+    function showNotepadFieldWarn(targetEl, msg, focusEl = null) {
+      clearNotepadFieldWarns();
+      if (targetEl) {
+        targetEl.classList.remove("np-field-warn");
+        void targetEl.offsetWidth;
+        targetEl.classList.add("np-field-warn");
+      }
+
+      if (targetEl && targetEl.id === "unifiedInputText") {
+        const helper = document.getElementById("unifiedInputHelper");
+        if (helper) {
+          helper.textContent = `⚠ ${msg}`;
+          helper.classList.add("is-warn");
+        }
+      } else if (targetEl) {
+        const group = targetEl.closest(".form-group") || targetEl.parentNode;
+        if (group) {
+          const badge = document.createElement("div");
+          badge.className = "np-field-warn-msg";
+          badge.textContent = `⚠ ${msg}`;
+          group.appendChild(badge);
+        }
+      }
+
+      const elToFocus = focusEl || targetEl;
+      if (elToFocus) {
+        try {
+          elToFocus.scrollIntoView({ behavior: "smooth", block: "center" });
+        } catch (_) { }
+        try {
+          elToFocus.focus({ preventScroll: true });
+        } catch (_) {
+          try { elToFocus.focus(); } catch (__) { }
+        }
+      }
+
+      _npWarnAutoTimer = setTimeout(() => {
+        clearNotepadFieldWarns();
+      }, 6000);
+    }
+
     function saveInlineEdit(index, role = null) {
       const targetRole = role || editingItem.role || activeListTab || "pendamping";
       const nameInput = document.getElementById(`inlineEditName_${targetRole}`);
@@ -4558,8 +4782,7 @@
       const newName = formatNotepadNameCase(nameInput.value.trim());
       const newPos = posInput ? formatNotepadPositionCase(posInput.value.replace(/\r?\n+/g, " ").trim()) : "";
       if (!newName) {
-        alert("Nama tidak boleh kosong.");
-        nameInput.focus();
+        showNotepadFieldWarn(nameInput, "Nama tidak boleh kosong.", nameInput);
         return;
       }
       markRoleCustomized(targetRole);
@@ -4598,32 +4821,71 @@
       markRoleCustomized(activeListTab);
     }
 
-    function addSingleName(role = null) {
-      const targetRole = role || activeListTab || "pendamping";
-      activeListTab = targetRole;
-      const nameEl = document.getElementById(`inputSingleName_${targetRole}`);
-      const posEl = document.getElementById(`inputSinglePos_${targetRole}`);
-      const name = formatNotepadNameCase((nameEl ? nameEl.value : "").trim());
-      const pos = formatNotepadPositionCase((posEl ? posEl.value : "").replace(/\r?\n+/g, " ").trim());
+    let isUnifiedFromKemnaker = false;
 
-      if (!name) {
-        alert("Mohon masukkan nama terlebih dahulu.");
-        if (nameEl) nameEl.focus();
-        return;
+    function autoSizeUnifiedField(el) {
+      if (!el) return;
+      if (window.innerWidth <= 1060) return;
+      el.style.height = "auto";
+      el.style.height = Math.min(210, Math.max(82, el.scrollHeight + 2)) + "px";
+    }
+
+    function onUnifiedTextInput(el) {
+      isUnifiedFromKemnaker = false;
+      clearNotepadFieldWarns();
+      autoSizeUnifiedField(el);
+    }
+
+    function submitUnifiedInput(silent = false, explicitRole = null) {
+      const targetRole = explicitRole || activeListTab || "pendamping";
+      activeListTab = targetRole;
+      const textarea = document.getElementById("unifiedInputText");
+      const text = (textarea ? textarea.value : "").trim();
+      if (!text) {
+        if (!silent) {
+          showNotepadFieldWarn(textarea, "Masukkan nama terlebih dahulu sebelum menambah.");
+        }
+        return 0;
       }
+
+      const parsed = parseNotepadBulkData(text);
+      if (parsed.length === 0) {
+        if (!silent) {
+          showNotepadFieldWarn(textarea, "Format belum terbaca. Contoh: Muzakir, Direktur atau 1 baris nama.");
+        }
+        return 0;
+      }
+      clearNotepadFieldWarns();
 
       markRoleCustomized(targetRole);
       const list = getRoleList(targetRole);
-      list.push({ name: name, position: pos });
+      const existingKeys = new Set(list.map(it => `${(it.name || "").toLowerCase()}||${(it.position || "").toLowerCase()}`));
+      let addedCount = 0;
 
-      if (nameEl) nameEl.value = "";
-      if (posEl) {
-        posEl.value = "";
-        posEl.style.height = "";
+      parsed.forEach(item => {
+        const k = `${item.name.toLowerCase()}||${item.position.toLowerCase()}`;
+        if (!existingKeys.has(k)) {
+          existingKeys.add(k);
+          list.push(item);
+          addedCount++;
+        }
+      });
+
+      if (textarea) {
+        textarea.value = "";
+        textarea.style.height = "";
       }
-      if (nameEl && window.innerWidth > 768) nameEl.focus();
+      isUnifiedFromKemnaker = false;
 
+      if (textarea && !silent && window.innerWidth > 768) {
+        textarea.focus();
+      }
       renderNameList(targetRole);
+      return addedCount;
+    }
+
+    function addSingleName(role = null) {
+      return submitUnifiedInput(false, role);
     }
 
     function deleteItem(index, role = null) {
@@ -4907,8 +5169,9 @@
     // Smart Bulk Parser (shared Name Table degree/format cleaner + messy multi-line support)
     const NOTEPAD_HEADER_SKIP_RE = /^(?:no\.?|nomor|nama(?:\s+lengkap|\s+pejabat|\s+pegawai|\s+peserta)?|jabatan|posisi|unit(?:\s+kerja)?|instansi|daftar\s+(?:pendamping|peserta|hadir|tamu|pejabat)|pendamping(?:\s+kemnaker)?|peserta(?:\s+tamu|\s+audiensi)?|tamu(?:\s+undangan)?|[-_=*•·\s]{2,}):?$/i;
     const NOTEPAD_BULLET_RE = /^\s*(?:\(?\d+[\.\)\:\-\]\,]*\s+|[-*•·–—>→+~▪▫◦■]+\s+)/;
+    const NOTEPAD_NAME_PREFIX_RE = /^\s*(?:Nama(?:\s+Lengkap|\s+Peserta|\s+Pendamping|\s+Pejabat)?)\s*[:\-–—]\s*/i;
     const NOTEPAD_POS_PREFIX_RE = /^\s*(?:Jabatan|Posisi|Sebagai|Unit(?:\s+Kerja)?|Instansi|Bagian)\s*[:\-–—]\s*/i;
-    const NOTEPAD_WA_TS_RE = /^\s*\[\d{1,2}[\/\-\.]\d{1,2}(?:[\/\-\.]\d{2,4})?,?\s*\d{1,2}[\.:]\d{2}(?::\d{2})?(?:\s*[APap][Mm])?\]\s*[^:\n]{1,50}:\s*/;
+    const NOTEPAD_WA_TS_RE = /^\s*\[(?:\d{1,2}[\/\-\.]\d{1,2}(?:[\/\-\.]\d{2,4})?,?\s*\d{1,2}[\.:]\d{2}(?::\d{2})?|\d{1,2}[\.:]\d{2}(?::\d{2})?(?:\s*[APap][Mm])?,?\s*\d{1,2}[\/\-\.]\d{1,2}(?:[\/\-\.]\d{2,4})?)(?:\s*[APap][Mm])?\]\s*[^:\n]{1,50}:\s*/;
 
     function _preprocessBulkLine(raw) {
       let s = String(raw || "")
@@ -4919,6 +5182,7 @@
       const hadBullet = NOTEPAD_BULLET_RE.test(s);
       // Remove outer markdown formatting around lines e.g. "*1. Budi Santoso*"
       s = s.replace(/^[*_~`"'“”‘’]+|[*_~`"'“”‘’]+$/g, "").trim();
+      s = s.replace(NOTEPAD_NAME_PREFIX_RE, "").trim();
       return { text: s, hadBullet };
     }
 
@@ -4934,6 +5198,13 @@
       return false;
     }
 
+    const NOTEPAD_STANDALONE_MARKER_RE = /^\s*(?:\(?\d{1,3}[\.\)\:\-\]\,]*|[-*•·–—>→▪▫◦■]+)\s*$/;
+
+    function _isStandaloneListMarker(line) {
+      if (!line) return false;
+      return NOTEPAD_STANDALONE_MARKER_RE.test(String(line).trim());
+    }
+
     function _hasExplicitDelimiter(line) {
       if (!line) return false;
       const noBullet = line.replace(NOTEPAD_BULLET_RE, "").trim();
@@ -4941,23 +5212,45 @@
       for (const d of [" - ", " – ", " — ", " / ", " : ", "="]) {
         if (noBullet.includes(d)) return true;
       }
+      if (typeof splitNameAndPosition === "function") {
+        const probe = splitNameAndPosition(noBullet);
+        if (probe && probe.position && probe.position.trim() && !_looksLikePositionLine(probe.name)) return true;
+      }
       return false;
+    }
+
+    const NOTEPAD_POS_KEYWORD_RE = /\b(?:menteri|wakil\s+menteri|wamenaker|menaker|direktur|dirjen|direktorat|sekretaris|sesjen|sesditjen|sesitjen|sesbadan|inspektur|irjen|kepala|kabag|kasubbag|kabid|kasubbid|kasi|koordinator|subkoordinator|ketua|wakil\s+ketua|bendahara|anggota|staf\s+ahli|staf\s+khusus|tenaga\s+ahli|ta\b|protokol|ajudan|walpri|pengawal|adc|manajer|manager|ceo|cto|cfo|coo|presiden|gubernur|bupati|walikota|rektor|dekan|dosen|guru|pejabat|yayasan|asosiasi|himpunan|federasi|konfederasi|serikat|dpd|dpp|dpc|kementerian|kemnaker|badan|biro|pusat|balai|divisi|bagian|bidang|seksi|subbag|staff|officer|pic|humas|perwakilan)\b/i;
+
+    function _looksLikePositionLine(line) {
+      if (!line) return false;
+      const clean = String(line).replace(NOTEPAD_BULLET_RE, "").trim();
+      return NOTEPAD_POS_PREFIX_RE.test(clean) || NOTEPAD_POS_KEYWORD_RE.test(clean);
     }
 
     function parseNotepadBulkData(rawText) {
       if (!rawText) return [];
       const lines = String(rawText).split(/\r?\n/);
 
-      // Group blank-line blocks to detect clean 2-line per-person cards as well
+      // Group blank-line blocks, standalone markers (e.g. "1.\nMuzakir, Direktur"), & 2-line (Nama\nJabatan) pairs cleanly
       const records = [];
       let i = 0;
+      let pendingStandaloneBullet = false;
       while (i < lines.length) {
         const curInfo = _preprocessBulkLine(lines[i]);
         const cur = curInfo.text;
         if (!cur || _isHeaderTableRow(cur)) {
+          pendingStandaloneBullet = false;
           i++;
           continue;
         }
+        if (_isStandaloneListMarker(cur)) {
+          pendingStandaloneBullet = true;
+          i++;
+          continue;
+        }
+
+        const curHadBullet = curInfo.hadBullet || pendingStandaloneBullet;
+        pendingStandaloneBullet = false;
 
         const splitCur = (typeof splitNameAndPosition === "function")
           ? splitNameAndPosition(cur)
@@ -4973,12 +5266,16 @@
           const prevWasBlank = (i === 0) || !_preprocessBulkLine(lines[i - 1]).text;
           const nextNextIsBlank = (i + 2 >= lines.length) || !_preprocessBulkLine(lines[i + 2]).text;
           const nextHasRolePrefix = NOTEPAD_POS_PREFIX_RE.test(next);
-          const nextIsCleanRoleLine = next && !_isHeaderTableRow(next) && !nextInfo.hadBullet && !_hasExplicitDelimiter(next);
+          const nextIsCleanRoleLine = next && !_isHeaderTableRow(next) && !_isStandaloneListMarker(next) && !nextInfo.hadBullet && !_hasExplicitDelimiter(next);
+          const pairByPosHint = nextIsCleanRoleLine && !_looksLikePositionLine(rawName) && _looksLikePositionLine(next);
 
           if (nextHasRolePrefix) {
             rawPos = next.replace(NOTEPAD_POS_PREFIX_RE, "").trim();
             i += 2;
-          } else if (curInfo.hadBullet && nextIsCleanRoleLine) {
+          } else if (curHadBullet && nextIsCleanRoleLine) {
+            rawPos = next;
+            i += 2;
+          } else if (pairByPosHint) {
             rawPos = next;
             i += 2;
           } else if (prevWasBlank && nextNextIsBlank && nextIsCleanRoleLine) {
@@ -5039,51 +5336,7 @@
     }
 
     function processBulkNames(silent = false, role = null) {
-      const targetRole = role || activeListTab || "pendamping";
-      activeListTab = targetRole;
-      const textarea = document.getElementById(`inputBulkText_${targetRole}`);
-      const text = (textarea ? textarea.value : "").trim();
-      if (!text) return 0;
-
-      const parsed = parseNotepadBulkData(text);
-      if (parsed.length === 0) {
-        if (!silent) alert("Tidak ditemukan nama valid pada teks yang dimasukkan.");
-        return 0;
-      }
-
-      const replaceCheckbox = document.getElementById(`checkReplaceOnBulkImport_${targetRole}`);
-      const isSampleActive = (targetRole === "pendamping") ? isDefaultPendampingSample : isDefaultPesertaSample;
-      const shouldReplace = isSampleActive || Boolean(replaceCheckbox && replaceCheckbox.checked);
-
-      if (shouldReplace) {
-        if (targetRole === "pendamping") {
-          pendampingList = [];
-        } else {
-          pesertaList = [];
-        }
-      }
-
-      markRoleCustomized(targetRole);
-      const list = getRoleList(targetRole);
-      const existingKeys = new Set(list.map(it => `${(it.name || "").toLowerCase()}||${(it.position || "").toLowerCase()}`));
-      let addedCount = 0;
-
-      parsed.forEach(item => {
-        const k = `${item.name.toLowerCase()}||${item.position.toLowerCase()}`;
-        if (!existingKeys.has(k)) {
-          existingKeys.add(k);
-          list.push(item);
-          addedCount++;
-        }
-      });
-
-      if (textarea) textarea.value = "";
-
-      if (!silent) {
-        setInputMode("single", targetRole);
-      }
-      renderNameList(targetRole);
-      return addedCount;
+      return submitUnifiedInput(silent, role);
     }
 
     let kemnakerUnitsList = [];
@@ -5191,14 +5444,16 @@
       loadKemnakerData(true);
     }
 
-    function toggleKemnakerQuickPick() {
+    function toggleKemnakerQuickPick(forceState = null) {
       const box = document.getElementById("kemnakerPickerCollapse");
-      const topSlot = document.getElementById("pendampingTopActionSlot");
+      const topSlot = document.getElementById("unifiedTopActionSlot");
       const bottomSlot = document.getElementById("kemnakerBottomActionSlot");
-      const addBtn = document.getElementById("btnAddSingle_pendamping");
+      const addBtn = document.getElementById("btnAddUnified");
       const refreshBtn = document.getElementById("btnRefreshKemnakerNp");
+      if (!box) return;
       const isVisible = box.style.display === "block";
-      const nextVisible = !isVisible;
+      const nextVisible = forceState === null ? !isVisible : Boolean(forceState);
+      if (nextVisible === isVisible) return;
       box.style.display = nextVisible ? "block" : "none";
 
       if (topSlot && bottomSlot && addBtn && refreshBtn) {
@@ -5213,6 +5468,9 @@
 
       if (nextVisible && kemnakerUnitsList.length === 0) {
         loadKemnakerData(false);
+      }
+      if (typeof scheduleDesktopPreviewFollow === "function") {
+        scheduleDesktopPreviewFollow(false);
       }
     }
 
@@ -5297,10 +5555,17 @@
           const cleanedName = (typeof cleanTitles === "function") ? cleanTitles(rawName) : rawName;
           const expandedPos = (typeof expandKemnakerPosition === "function") ? expandKemnakerPosition(rawPos) : rawPos;
           const cleanedPos = (typeof cleanPositionText === "function") ? cleanPositionText(expandedPos).replace(/\n+/g, " ").trim() : expandedPos;
-          document.getElementById("inputSingleName_pendamping").value = formatNotepadNameCase(cleanedName || rawName);
-          const posField = document.getElementById("inputSinglePos_pendamping");
-          posField.value = formatNotepadPositionCase(cleanedPos || rawPos);
-          autoSizePosField(posField);
+          const finalName = formatNotepadNameCase(cleanedName || rawName);
+          const finalPos = formatNotepadPositionCase(cleanedPos || rawPos);
+          const lineText = finalPos ? `${finalName} — ${finalPos}` : finalName;
+
+          const inputEl = document.getElementById("unifiedInputText");
+          if (inputEl) {
+            const cur = inputEl.value.trim();
+            inputEl.value = (!cur || isUnifiedFromKemnaker) ? lineText : `${cur}\n${lineText}`;
+            isUnifiedFromKemnaker = true;
+            autoSizeUnifiedField(inputEl);
+          }
         }
       }
     }
@@ -5874,16 +6139,11 @@
 
     function validateNotepadInputs() {
       finishActiveInlineEdit();
-      // Auto-import & clean any unimported bulk text directly before validating
-      ["pendamping", "peserta"].forEach(role => {
-        if (roleInputMode[role] === "bulk") {
-          const bulkEl = document.getElementById(`inputBulkText_${role}`);
-          const bulkVal = (bulkEl ? bulkEl.value : "").trim();
-          if (bulkVal) {
-            processBulkNames(true, role);
-          }
-        }
-      });
+      // Auto-import any unsubmitted text cleanly into the currently selected list before validating
+      const unifiedEl = document.getElementById("unifiedInputText");
+      if (unifiedEl && unifiedEl.value.trim()) {
+        submitUnifiedInput(true);
+      }
 
       const titleEl = document.getElementById("inputTitle");
       const dateEl = document.getElementById("inputDate");
@@ -5892,62 +6152,58 @@
       const time = (document.getElementById("inputTime").value || "").trim();
 
       if (!title) {
-        alert("Silakan masukkan judul kegiatan terlebih dahulu.");
-        if (titleEl) titleEl.focus();
+        showNotepadFieldWarn(titleEl, "Judul kegiatan belum diisi.");
         return false;
       }
       if (!date) {
-        alert("Silakan masukkan hari dan tanggal terlebih dahulu.");
-        if (dateEl) dateEl.focus();
+        showNotepadFieldWarn(dateEl, "Hari & tanggal belum diisi.");
         return false;
       }
       if (!time) {
-        alert("Silakan masukkan waktu terlebih dahulu.");
+        const timeWidget = document.querySelector(".time-stepper-widget");
         const hrEl = document.getElementById("timeHourInput");
-        if (hrEl) hrEl.focus();
+        showNotepadFieldWarn(timeWidget, "Waktu belum diisi.", hrEl);
         return false;
       }
 
-      const focusListInput = (role) => {
-        activeListTab = role;
+      const focusListInput = (role, warnMsg) => {
+        setTargetInputRole(role, { animate: false, syncModal: false });
         if (window.innerWidth <= 1060) {
           openNotepadListSheet(role);
+          setTimeout(() => {
+            showNotepadFieldWarn(document.getElementById("unifiedInputText"), warnMsg);
+          }, 120);
           return;
         }
-        const target = document.getElementById(roleInputMode[role] === "bulk" ? `inputBulkText_${role}` : `inputSingleName_${role}`);
-        if (target) target.focus();
+        showNotepadFieldWarn(document.getElementById("unifiedInputText"), warnMsg);
       };
 
       if (currentNotepadType === "besar") {
         if (pendampingList.length === 0 && pesertaList.length === 0) {
-          alert("Silakan masukkan minimal 1 nama pada Daftar Pendamping atau Peserta terlebih dahulu.");
-          focusListInput(activeListTab || "pendamping");
+          focusListInput(activeListTab || "pendamping", "Tambahkan minimal 1 nama Pendamping atau Peserta.");
           return false;
         }
       } else {
         if (currentKecilMode === "pendamping" && pendampingList.length === 0) {
-          alert("Silakan masukkan minimal 1 nama Pendamping terlebih dahulu.");
-          focusListInput("pendamping");
+          focusListInput("pendamping", "Tambahkan minimal 1 nama Pendamping terlebih dahulu.");
           return false;
         }
         if (currentKecilMode === "peserta" && pesertaList.length === 0) {
-          alert("Silakan masukkan minimal 1 nama Peserta terlebih dahulu.");
-          focusListInput("peserta");
+          focusListInput("peserta", "Tambahkan minimal 1 nama Peserta terlebih dahulu.");
           return false;
         }
         if (currentKecilMode === "both") {
           if (pendampingList.length === 0) {
-            alert("Silakan masukkan minimal 1 nama Pendamping terlebih dahulu.");
-            focusListInput("pendamping");
+            focusListInput("pendamping", "Tambahkan minimal 1 nama Pendamping terlebih dahulu.");
             return false;
           }
           if (pesertaList.length === 0) {
-            alert("Silakan masukkan minimal 1 nama Peserta terlebih dahulu.");
-            focusListInput("peserta");
+            focusListInput("peserta", "Tambahkan minimal 1 nama Peserta terlebih dahulu.");
             return false;
           }
         }
       }
+      clearNotepadFieldWarns();
       return true;
     }
 
@@ -6449,7 +6705,7 @@
 
     function openNotepadListSheet(role = "pendamping") {
       const targetRole = role === "peserta" ? "peserta" : "pendamping";
-      activeListTab = targetRole;
+      setTargetInputRole(targetRole, { animate: false, syncModal: false });
       activeMobileModalRole = targetRole;
 
       const backdrop = document.getElementById("npSheetBackdrop");
@@ -6484,11 +6740,11 @@
       updateNpModalMiniPreview();
 
       requestAnimationFrame(() => {
-        updateSubinputGlider(false, targetRole);
+        updateUnifiedRoleGlider(false);
         syncNotepadDropdowns();
       });
       setTimeout(() => {
-        updateSubinputGlider(false, targetRole);
+        updateUnifiedRoleGlider(false);
       }, 150);
     }
     window.openNotepadListSheet = openNotepadListSheet;
@@ -6648,12 +6904,12 @@
 
     function computeDesktopPreviewTargets() {
       if (window.innerWidth <= 1060 || document.body.classList.contains("np-modal-open")) {
-        return { y1: 0, y2: 0, isSplitBoth: false };
+        return { y1: 0, y2: 0, maxY1: 0, maxY2: 0, isSplitBoth: false };
       }
       const grid = document.querySelector(".dashboard-grid");
       const f1 = document.getElementById("previewCardFrame");
       const f2 = document.getElementById("previewCardFrameSecond");
-      if (!grid || !f1) return { y1: 0, y2: 0, isSplitBoth: false };
+      if (!grid || !f1) return { y1: 0, y2: 0, maxY1: 0, maxY2: 0, isSplitBoth: false };
 
       const gridRect = grid.getBoundingClientRect();
       const card1H = f1.offsetHeight;
@@ -6671,29 +6927,36 @@
         const rolePes = document.getElementById("roleCard_peserta");
         const pesStartInGrid = rolePes ? Math.max(0, rolePes.getBoundingClientRect().top - gridRect.top) : card2NaturalTop;
 
-        // Card 1 (Pendamping): stays within Pendamping zone above Peserta and leaves calmly above when scrolled down
-        const maxY1 = Math.max(0, (pesStartInGrid - 18) - card1H);
-        const desiredTop1 = Math.max(vpTop, vpCenter - card1H * 0.5);
-        const y1 = Math.max(0, Math.min(maxY1, desiredTop1 - gridRect.top));
-
-        // Card 2 (Peserta): positioned lower aligned with #roleCard_peserta, then smoothly follows viewport within Peserta zone
-        const minAbsTop2 = Math.max(card1H + 18, pesStartInGrid);
-        const maxAbsTop2 = Math.max(minAbsTop2, gridRect.height - card2H);
+        // Card 2 (Peserta): NEVER exceed gridRect.height (so it never overlaps footer or pushes scroll overflow)
+        const maxAbsTop2 = Math.max(card2NaturalTop, gridRect.height - card2H);
+        const minAbsTop2 = Math.min(maxAbsTop2, Math.max(card1H + 18, pesStartInGrid));
         const desiredTop2 = Math.max(vpTop, vpCenter - card2H * 0.5);
         const targetAbsTop2 = Math.max(minAbsTop2, Math.min(maxAbsTop2, desiredTop2 - gridRect.top));
-        const y2 = Math.max(0, targetAbsTop2 - card2NaturalTop);
-        return { y1, y2, isSplitBoth: true };
+        const maxY2 = Math.max(0, maxAbsTop2 - card2NaturalTop);
+        const y2 = Math.max(0, Math.min(maxY2, targetAbsTop2 - card2NaturalTop));
+
+        // Card 1 (Pendamping): stays within Pendamping zone above Card 2 and never touches Card 2 or leaves grid
+        const maxY1 = Math.max(0, Math.min(pesStartInGrid - 18 - card1H, targetAbsTop2 - 18 - card1H, gridRect.height - card1H));
+        const desiredTop1 = Math.max(vpTop, vpCenter - card1H * 0.5);
+        const y1 = Math.max(0, Math.min(maxY1, desiredTop1 - gridRect.top));
+        return { y1, y2, maxY1, maxY2, isSplitBoth: true };
       }
 
       const maxY1 = Math.max(0, gridRect.height - card1H);
-      if (maxY1 < 2) return { y1: 0, y2: 0, isSplitBoth: false };
+      if (maxY1 < 2) return { y1: 0, y2: 0, maxY1: 0, maxY2: 0, isSplitBoth: false };
       const desiredTop1 = Math.max(vpTop, vpCenter - card1H * 0.5);
       const y1 = Math.max(0, Math.min(maxY1, desiredTop1 - gridRect.top));
-      return { y1, y2: 0, isSplitBoth: false };
+      return { y1, y2: 0, maxY1, maxY2: 0, isSplitBoth: false };
     }
 
     function tickDesktopPreviewFollow() {
       desktopFollowRaf = null;
+      const bounds = computeDesktopPreviewTargets();
+      desktopFollowTargetY1 = bounds.y1;
+      desktopFollowTargetY2 = bounds.y2;
+      desktopFollowCurY1 = Math.max(0, Math.min(bounds.maxY1, desktopFollowCurY1));
+      desktopFollowCurY2 = Math.max(0, Math.min(bounds.maxY2, desktopFollowCurY2));
+
       const d1 = desktopFollowTargetY1 - desktopFollowCurY1;
       const d2 = desktopFollowTargetY2 - desktopFollowCurY2;
       if (Math.abs(d1) <= 0.35 && Math.abs(d2) <= 0.35) {
@@ -6729,6 +6992,9 @@
 
       desktopFollowTargetY1 = next.y1;
       desktopFollowTargetY2 = next.y2;
+      desktopFollowCurY1 = Math.max(0, Math.min(next.maxY1, desktopFollowCurY1));
+      desktopFollowCurY2 = Math.max(0, Math.min(next.maxY2, desktopFollowCurY2));
+
       const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       if (immediate || layoutSwitched || reduceMotion) {
         if (desktopFollowRaf) {
@@ -6740,6 +7006,7 @@
         applyDesktopCardTransforms(desktopFollowCurY1, desktopFollowCurY2);
         return;
       }
+      applyDesktopCardTransforms(desktopFollowCurY1, desktopFollowCurY2);
       if (!desktopFollowRaf) {
         desktopFollowRaf = requestAnimationFrame(tickDesktopPreviewFollow);
       }
@@ -6752,6 +7019,7 @@
       updateTimeDisplay();
       renderNameList();
       setNotepadType("besar");
+      setTargetInputRole("pendamping", { animate: false, syncModal: false });
       adaptNotepadPreviewLayout();
       updateAllNotepadGliders(false);
       scheduleDesktopPreviewFollow(true);
@@ -6768,6 +7036,13 @@
         scheduleDesktopPreviewFollow(true);
       });
       window.addEventListener("scroll", () => scheduleDesktopPreviewFollow(false), { passive: true });
+      if (typeof ResizeObserver === "function") {
+        const colObs = new ResizeObserver(() => scheduleDesktopPreviewFollow(false));
+        ["leftInfoCard", "desktopRightCard", "previewCardFrame", "previewCardFrameSecond"].forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) colObs.observe(el);
+        });
+      }
       let wasMobileView = window.innerWidth <= 1060;
       let lastNotepadViewportWidth = window.innerWidth;
       window.addEventListener("resize", () => {

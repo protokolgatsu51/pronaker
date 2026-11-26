@@ -36,48 +36,6 @@
       }
     ]
   },
-  "binapenta-pkk": {
-    "unit_name": "Binapenta & PKK",
-    "slug": "binapenta-pkk",
-    "order": 5,
-    "leader": {
-      "name": "Prof. Dr. Sugeng Heri Suseno S.Pi., M.Si.",
-      "position": "Direktur Jenderal Pembinaan Penempatan Tenaga Kerja dan Perluasan Kesempatan Kerja",
-      "photo": "https://portal.kemnaker.go.id/storage/attachments/574/8b7/b2a/Wt7QoRGESMDFhE4CkU97TWK6MRtc4ipLn9GWoXCd.jpg"
-    },
-    "staff": [
-      {
-        "name": "Iwan Darmawan",
-        "position": "Sekretaris Direktorat Jenderal Pembinaan Penempatan Tenaga Kerja dan Perluasan Kesempatan Kerja",
-        "photo": ""
-      },
-      {
-        "name": "Isnarti Hasan, S.E., M.Si.",
-        "position": "Direktur Penempatan Tenaga Kerja",
-        "photo": ""
-      },
-      {
-        "name": "Nuryanti, S.E., M.E.",
-        "position": "Direktur Perluasan Kesempatan Kerja",
-        "photo": ""
-      },
-      {
-        "name": "Rendra Setiawan, S.S.",
-        "position": "Direktur Pengendalian Penggunaan Tenaga Kerja Asing",
-        "photo": ""
-      },
-      {
-        "name": "Soman Wisnu Darma, S.Si., M.T.",
-        "position": "Direktur Pembinaan Pengantar Kerja",
-        "photo": ""
-      },
-      {
-        "name": "Aris Budiyanto",
-        "position": "Kepala Balai Besar Perluasan Kesempatan Kerja Bandung Barat",
-        "photo": ""
-      }
-    ]
-  },
   "sekretariat-jendral": {
     "unit_name": "Sekretariat Jenderal",
     "slug": "sekretariat-jendral",
@@ -140,38 +98,6 @@
       }
     ]
   },
-  "barenbang": {
-    "unit_name": "Barenbang",
-    "slug": "barenbang",
-    "order": 3,
-    "leader": {
-      "name": "Prof. Anwar Sanusi, Ph.D.",
-      "position": "Kepala Badan Perencanaan dan Pengembangan Ketenagakerjaan",
-      "photo": "https://portal.kemnaker.go.id/storage/attachments/94f/583/869/bwy651M4P2th1DI0MNYYovsePGsi6m7BM7irFO8k.jpg"
-    },
-    "staff": [
-      {
-        "name": "Hery Budoyo, S.T., M.M.",
-        "position": "Sekretaris Badan Perencanaan dan Pengembangan Ketenagakerjaan",
-        "photo": ""
-      },
-      {
-        "name": "Dr. Ghazmahadi, S.T., M.M.",
-        "position": "Kepala Pusat Pengembangan Kebijakan Ketenagakerjaan",
-        "photo": "https://portal.kemnaker.go.id/storage/attachments/626/5d5/955/KQcgAnIDuhgQN76jf69po7pBKeM2f3izfBxvssuB.png"
-      },
-      {
-        "name": "Dr. Mohammad Mustafa Sarinanto, M.Eng.",
-        "position": "Kepala Pusat Perencanaan Ketenagakerjaan",
-        "photo": "https://portal.kemnaker.go.id/storage/attachments/c96/ec4/02d/dVKsrHlYr2Xhd9WCP0ZaGqnTbOE4QGnp9qiDyNgH.jpg"
-      },
-      {
-        "name": "Baderi, S.Sos., M.E.",
-        "position": "Kepala Pusat Data dan Teknologi Informasi Ketenagakerjaan",
-        "photo": "https://portal.kemnaker.go.id/storage/attachments/69f/4b0/e48/nxdpb3JKyANoatffByiHdc9NkOFTHguFVpW26NaA.jpg"
-      }
-    ]
-  },
   "phi-jsk": {
     "unit_name": "PHI - JSK",
     "slug": "phi-jsk",
@@ -201,6 +127,137 @@
         "name": "Dhatun Kuswandari, S.H., M.H.",
         "position": "Direktur Hubungan Kerja dan Pengupahan",
         "photo": "https://portal.kemnaker.go.id/storage/attachments/317/61c/04d/Ubof0UqDB1mA9b0nks4Fy16GJMHcbb0tg6u5lsRZ.jpg"
+      }
+    ]
+  },
+  "binapenta-pkk": {
+    "unit_name": "Binapenta & PKK",
+    "slug": "binapenta-pkk",
+    "order": 5,
+    "leader": {
+      "name": "Prof. Dr. Sugeng Heri Suseno S.Pi., M.Si.",
+      "position": "Direktur Jenderal Pembinaan Penempatan Tenaga Kerja dan Perluasan Kesempatan Kerja",
+      "photo": "https://portal.kemnaker.go.id/storage/attachments/574/8b7/b2a/Wt7QoRGESMDFhE4CkU97TWK6MRtc4ipLn9GWoXCd.jpg"
+    },
+    "staff": [
+      {
+        "name": "Iwan Darmawan",
+        "position": "Sekretaris Direktorat Jenderal Pembinaan Penempatan Tenaga Kerja dan Perluasan Kesempatan Kerja",
+        "photo": ""
+      },
+      {
+        "name": "Isnarti Hasan, S.E., M.Si.",
+        "position": "Direktur Penempatan Tenaga Kerja",
+        "photo": ""
+      },
+      {
+        "name": "Nuryanti, S.E., M.E.",
+        "position": "Direktur Perluasan Kesempatan Kerja",
+        "photo": ""
+      },
+      {
+        "name": "Rendra Setiawan, S.S.",
+        "position": "Direktur Pengendalian Penggunaan Tenaga Kerja Asing",
+        "photo": ""
+      },
+      {
+        "name": "Soman Wisnu Darma, S.Si., M.T.",
+        "position": "Direktur Pembinaan Pengantar Kerja",
+        "photo": ""
+      },
+      {
+        "name": "Aris Budiyanto",
+        "position": "Kepala Balai Besar Perluasan Kesempatan Kerja Bandung Barat",
+        "photo": ""
+      }
+    ]
+  },
+  "binwasnaker-k3": {
+    "unit_name": "Binwasnaker & K3",
+    "slug": "binwasnaker-k3",
+    "order": 7,
+    "leader": {
+      "name": "Ir. Ismail Pakaya, M.E.",
+      "position": "Direktur Jenderal Pembinaan Pengawasan Ketenagakerjaan Keselamatan dan Kesehatan Kerja",
+      "photo": ""
+    },
+    "staff": [
+      {
+        "name": "Drs. Muhamad Idham, M.K.K.K.",
+        "position": "Direktur Pembinaan Pengawas Ketenagakerjaan dan Penguji Keselamatan dan Kesehatan Kerja",
+        "photo": ""
+      },
+      {
+        "name": "Yuli Adiratna, S.H., M.Hum.",
+        "position": "Direktur Sistem Pengawasan Ketenagakerjaan",
+        "photo": ""
+      },
+      {
+        "name": "dr. Muzakir, M.K.M",
+        "position": "Direktur Kelembagaan Keselamatan dan Kesehatan Kerja",
+        "photo": ""
+      },
+      {
+        "name": "Muchamad Yusuf, S.T., M.Si.",
+        "position": "Direktur Pengujian, Promosi dan Pengendalian Keselamatan dan Kesehatan Kerja",
+        "photo": ""
+      },
+      {
+        "name": "dr. Yessie Kualasari, M.K.K.K",
+        "position": "Kepala Balai Besar Keselamatan dan Kesehatan Kerja Jakarta",
+        "photo": "https://portal.kemnaker.go.id/storage/attachments/425/05b/3c3/qMR4vvUzRpOMXCGpwJs2uogV4Py6FGu62lcbv7l3.K"
+      },
+      {
+        "name": "Asmanidar Kuraisy, S.Si., M.Si.",
+        "position": "Kepala Balai Keselamatan dan Kesehatan Kerja Makassar",
+        "photo": ""
+      },
+      {
+        "name": "Muhammad Fertiaz, S.K.M., M.K.K.K.",
+        "position": "Kepala Balai Keselamatan dan Kesehatan Kerja Bandung",
+        "photo": ""
+      },
+      {
+        "name": "dr. Santi Yuliandari, M.Kes.",
+        "position": "Kepala Balai Keselamatan dan Kesehatan Kerja Medan",
+        "photo": ""
+      },
+      {
+        "name": "dr. Erwin Anjasmara Ichsan, M.K.M.",
+        "position": "Kepala Balai Keselamatan dan Kesehatan Kerja Samarinda",
+        "photo": ""
+      }
+    ]
+  },
+  "barenbang": {
+    "unit_name": "Barenbang",
+    "slug": "barenbang",
+    "order": 3,
+    "leader": {
+      "name": "Prof. Anwar Sanusi, Ph.D.",
+      "position": "Kepala Badan Perencanaan dan Pengembangan Ketenagakerjaan",
+      "photo": "https://portal.kemnaker.go.id/storage/attachments/94f/583/869/bwy651M4P2th1DI0MNYYovsePGsi6m7BM7irFO8k.jpg"
+    },
+    "staff": [
+      {
+        "name": "Hery Budoyo, S.T., M.M.",
+        "position": "Sekretaris Badan Perencanaan dan Pengembangan Ketenagakerjaan",
+        "photo": ""
+      },
+      {
+        "name": "Dr. Ghazmahadi, S.T., M.M.",
+        "position": "Kepala Pusat Pengembangan Kebijakan Ketenagakerjaan",
+        "photo": "https://portal.kemnaker.go.id/storage/attachments/626/5d5/955/KQcgAnIDuhgQN76jf69po7pBKeM2f3izfBxvssuB.png"
+      },
+      {
+        "name": "Dr. Mohammad Mustafa Sarinanto, M.Eng.",
+        "position": "Kepala Pusat Perencanaan Ketenagakerjaan",
+        "photo": "https://portal.kemnaker.go.id/storage/attachments/c96/ec4/02d/dVKsrHlYr2Xhd9WCP0ZaGqnTbOE4QGnp9qiDyNgH.jpg"
+      },
+      {
+        "name": "Baderi, S.Sos., M.E.",
+        "position": "Kepala Pusat Data dan Teknologi Informasi Ketenagakerjaan",
+        "photo": "https://portal.kemnaker.go.id/storage/attachments/69f/4b0/e48/nxdpb3JKyANoatffByiHdc9NkOFTHguFVpW26NaA.jpg"
       }
     ]
   },
@@ -314,63 +371,6 @@
       {
         "name": "Moh. Amir Syarifuddin, S.T., M.M.",
         "position": "Kepala Sekretariat Badan Nasional Sertifikasi Profesi",
-        "photo": ""
-      }
-    ]
-  },
-  "binwasnaker-k3": {
-    "unit_name": "Binwasnaker & K3",
-    "slug": "binwasnaker-k3",
-    "order": 7,
-    "leader": {
-      "name": "Ir. Ismail Pakaya, M.E.",
-      "position": "Direktur Jenderal Pembinaan Pengawasan Ketenagakerjaan Keselamatan dan Kesehatan Kerja",
-      "photo": ""
-    },
-    "staff": [
-      {
-        "name": "Drs. Muhamad Idham, M.K.K.K.",
-        "position": "Direktur Pembinaan Pengawas Ketenagakerjaan dan Penguji Keselamatan dan Kesehatan Kerja",
-        "photo": ""
-      },
-      {
-        "name": "Yuli Adiratna, S.H., M.Hum.",
-        "position": "Direktur Sistem Pengawasan Ketenagakerjaan",
-        "photo": ""
-      },
-      {
-        "name": "dr. Muzakir, M.K.M",
-        "position": "Direktur Kelembagaan Keselamatan dan Kesehatan Kerja",
-        "photo": ""
-      },
-      {
-        "name": "Muchamad Yusuf, S.T., M.Si.",
-        "position": "Direktur Pengujian, Promosi dan Pengendalian Keselamatan dan Kesehatan Kerja",
-        "photo": ""
-      },
-      {
-        "name": "dr. Yessie Kualasari, M.K.K.K",
-        "position": "Kepala Balai Besar Keselamatan dan Kesehatan Kerja Jakarta",
-        "photo": "https://portal.kemnaker.go.id/storage/attachments/425/05b/3c3/qMR4vvUzRpOMXCGpwJs2uogV4Py6FGu62lcbv7l3.K"
-      },
-      {
-        "name": "Asmanidar Kuraisy, S.Si., M.Si.",
-        "position": "Kepala Balai Keselamatan dan Kesehatan Kerja Makassar",
-        "photo": ""
-      },
-      {
-        "name": "Muhammad Fertiaz, S.K.M., M.K.K.K.",
-        "position": "Kepala Balai Keselamatan dan Kesehatan Kerja Bandung",
-        "photo": ""
-      },
-      {
-        "name": "dr. Santi Yuliandari, M.Kes.",
-        "position": "Kepala Balai Keselamatan dan Kesehatan Kerja Medan",
-        "photo": ""
-      },
-      {
-        "name": "dr. Erwin Anjasmara Ichsan, M.K.M.",
-        "position": "Kepala Balai Keselamatan dan Kesehatan Kerja Samarinda",
         "photo": ""
       }
     ]

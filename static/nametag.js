@@ -1136,7 +1136,7 @@ function splitNameAndPosition(line) {
 
   // Pre-clean WhatsApp timestamps / formatting & weird Unicode dashes
   line = line
-    .replace(/^\s*\[\d{1,2}[\/\-\.]\d{1,2}(?:[\/\-\.]\d{2,4})?,?\s*\d{1,2}[\.:]\d{2}(?::\d{2})?(?:\s*[APap][Mm])?\]\s*[^:\n]{1,50}:\s*/, "")
+    .replace(/^\s*\[(?:\d{1,2}[\/\-\.]\d{1,2}(?:[\/\-\.]\d{2,4})?,?\s*\d{1,2}[\.:]\d{2}(?::\d{2})?|\d{1,2}[\.:]\d{2}(?::\d{2})?(?:\s*[APap][Mm])?,?\s*\d{1,2}[\/\-\.]\d{1,2}(?:[\/\-\.]\d{2,4})?)(?:\s*[APap][Mm])?\]\s*[^:\n]{1,50}:\s*/, "")
     .replace(/[\u2010\u2011\u2012\u2212]/g, "-")
     .replace(/^[*_~`]+|[*_~`]+$/g, "")
     .trim();

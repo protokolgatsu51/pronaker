@@ -8629,27 +8629,41 @@
         return typeof stripTrailingPunctuation === "function" ? stripTrailingPunctuation(s) : s;
       };
 
+      const markMissingPrintField = (el) => {
+        if (!el) return;
+        const origBorder = el.style.borderColor;
+        const origShadow = el.style.boxShadow;
+        el.style.borderColor = "#f59e0b";
+        el.style.boxShadow = "0 0 0 3.5px rgba(245, 158, 11, 0.2)";
+        try { el.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (_) { }
+        try { el.focus({ preventScroll: true }); } catch (_) { try { el.focus(); } catch (__) { } }
+        const clearHighlight = () => {
+          el.style.borderColor = origBorder;
+          el.style.boxShadow = origShadow;
+          el.removeEventListener("input", clearHighlight);
+        };
+        el.addEventListener("input", clearHighlight);
+        setTimeout(clearHighlight, 5000);
+      };
+
       if (currentTab === "single") {
         const n = (nameInput ? nameInput.value : "").trim();
         const p = (positionInput ? positionInput.value : "").trim();
         if (currentContentMode === "name_only") {
           if (!n) {
-            alert("Silakan masukkan nama pada kolom input terlebih dahulu.");
-            if (nameInput) nameInput.focus();
+            markMissingPrintField(nameInput);
             return;
           }
           cards = [{ name: cleanName(n), position: "" }];
         } else if (currentContentMode === "position_only") {
           if (!p) {
-            alert("Silakan masukkan jabatan pada kolom input terlebih dahulu.");
-            if (positionInput) positionInput.focus();
+            markMissingPrintField(positionInput);
             return;
           }
           cards = [{ name: "", position: cleanPos(p) }];
         } else {
           if (!n) {
-            alert("Silakan masukkan nama pada kolom input terlebih dahulu.");
-            if (nameInput) nameInput.focus();
+            markMissingPrintField(nameInput);
             return;
           }
           cards = [{ name: cleanName(n), position: cleanPos(p) }];
@@ -8658,8 +8672,7 @@
         const textarea = document.getElementById("bulk_data");
         const rows = parseBulkData(textarea ? textarea.value : "");
         if (!rows || rows.length === 0) {
-          alert("Silakan isi data bulk terlebih dahulu sebelum mencetak.");
-          if (textarea) textarea.focus();
+          markMissingPrintField(textarea);
           return;
         }
         cards = rows.map(r => ({
